@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WE4U</title>
-    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link rel="stylesheet" href="/we4u/public/css/style.css">
 </head>
 
 <body>
@@ -34,7 +34,7 @@
             <a href="#" class="sign-up-btn">Sign Up</a>
         </div>
         <div class="hero-image">
-        <img src="../../../public/images/realistic-scene-with-health-worker-taking-care-elderly-patient (1).jpg" alt="Caregivers">
+        <img src="/we4u/public/images/realistic-scene-with-health-worker-taking-care-elderly-patient (1).jpg" alt="Caregivers">
             
         </div>
     </section>
