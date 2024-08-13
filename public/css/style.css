@@ -1,0 +1,98 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7f9;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0072ff;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-info a {
+    text-decoration: none;
+    color: #0072ff;
+}
+
+.sign-in-btn {
+    padding: 8px 20px;
+    background-color: #0072ff;
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 100px;
+    background-color: #e0f7f9;
+}
+
+.hero-text {
+    max-width: 50%;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: black;
+}
+
+.hero-text p {
+    font-size: 18px;
+    margin: 20px 0;
+    color: black;
+}
+
+.sign-up-btn {
+    padding: 12px 24px;
+    background-color: #4a79f9;
+    color: white;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.hero-image img {
+    max-width: 100%;
+    border-radius: 20px;
+}
