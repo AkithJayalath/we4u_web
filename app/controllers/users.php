@@ -73,8 +73,8 @@
           // REGISTER THE USER
           if($this->usersModel->register($data)){
             // after registering the user, redirect him to the login page
-            // redirect('users/login');
-            die('User Registered');
+            redirect('users/login');
+            // die('User Registered');
           } else {
             die('Something went wrong');
           }   
@@ -103,101 +103,80 @@
 
   }
 
-  // public function register(){
-  //   if($_SERVER['REQUEST_METHOD'] == 'POST'){
-  //     // FORM IS SUBMITTING
-  //     // Value the data
-  //     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+  public function login(){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      // FORM IS SUBMITTING
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-  //     //INPUT DATA
-  //     $data = [
-  //       'name' => trim($_POST['name']),
-  //       'email' => trim($_POST['email']),
-  //       'password' => trim($_POST['password']),
-  //       'confirm_password' => trim($_POST['confirm_password']), 
+      $data = [
+        
+        'email' => trim($_POST['email']),
+        'password' => trim($_POST['password']),
 
-  //       'name_err' => '',
-  //       'email_err' => '',
-  //       'password_err' => '',
-  //       'confirm_password_err' => '', 
-  //     ];
+        'email_err' => '',
+        'password_err' => '',
+      ];
 
-  //     //validate data
-  //     // validate name
-  //     if(empty($data['name'])){
-  //       $data['name_err'] = 'Please Enter The Name';
-  //     }
+      // VALIDATE
+      // validate email
+      if(empty($data['email'])){
+        $data['email_err'] = 'Please Enter The Email' ; 
+      }
+      else {
+        if($this->usersModel->findUserByEmail($data['email'])){
+          // user is found
+        }
+        else{
+          // user is not found
+          $data['email_err'] = 'User Not Found';
+        }
+      }
 
-  //     //validate email
-  //     if(empty($data['email'])){
-  //       $data['email_err'] = 'Please Enter The Email';
-  //     }
-  //     else{
-  //       // cheking if the email already registered or not
-  //       if($this->usersModel->findUserByEmail($data['email'])){
-  //         $data['email_err'] = 'User Already Registered';
-  //       }
-  //     }
+      // validte password
+      if(empty($data['password'])){
+        $data['password_err'] = 'Please Enter The Password';
+      }
 
-  //     //password validation
-  //     if(empty($data['password'])){
-  //       $data['password_err'] = 'Please Enter The Password';
-  //     }
-  //     else{
-  //       if($data['password'] != $data['confirm_password'] ){
-  //         $data['password_err'] = 'Password is not matching';
-  //       }
-  //     }
+      // If no error found login the user
+      if(empty($data['email_err']) && empty($data['password_err'])){
+        // log the user
+        $loggedUser = $this->usersModel->login($data['email'], $data['password']);
 
-  //     //confirm password
-  //     if(empty($data['confirm_password'])){
-  //       $data['confirm_password_err'] = 'Please Enter The Password Again';
-  //     }
-  //     else{
-  //       if($data['password'] != $data['confirm_password'] ){
-  //         $data['confirm_password_err'] = 'Password is not matching';
-  //       }
-  //     }
-      
-  //     // if the validation is completed without errors
-  //     if(empty($data['name_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
+        if($loggedUser){
+          // user is authenticated
+          // can create user sesstions
+          // redirect('pages/index');
+          die('User Authenticated');
+        }
+        else{
+          $data['password_err'] = 'Password Incorrect';
 
-  //       // Hash password
-  //       $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+          // load view with erros
+          $this->view('users/v_login', $data);
 
-  //       // REGISTER THE USER
-  //       if($this->usersModel->register($data)){
-  //         die('User is Registered');
-  //         // redirect('users/login');
-  //       }
-  //       else {
-  //         die('Something Went Wrong');
-  //       }
-  //     }
-  //     else {
-  //       $this->view('users/v_register', $data);
-  //     }
+        }
+      }
+      else {
+        // load view with error
+        $this->view('users/v_login', $data);
+        
+      }
 
+    }
+    else {
+      // initial form 
+      $data = [
+        
+        'email' => '',
+        'password' => '',
 
-  //   }
-  //   else {
-  //     //initial form 
-  //     $data = [
-  //       'name' => '',
-  //       'email' => '',
-  //       'password' => '',
-  //       'confirm_password' => '', 
-
-  //       'name_err' => '',
-  //       'email_err' => '',
-  //       'password_err' => '',
-  //       'confirm_password_err' => '', 
-  //     ];
-  //     // load the view
-  //     $this->view('users/v_register', $data);
-  //   }
-    
-  // }
+        'email_err' => '',
+        'password_err' => '',
+      ];
+      // load the view
+    $this->view('users/v_login', $data);
+    }
+  }
 
 }
 ?>
