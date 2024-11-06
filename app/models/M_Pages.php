@@ -8,9 +8,15 @@
         }
 
         public function getUsers(){
-            $this->db->query('SELECT * FROM Users');
-            return $this->db->resultSet();
+            try {
+                $this->db->query('SELECT * FROM user');
+                return $this->db->resultSet();
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
+                return [];
+            }
         }
+        
     }
 
 
