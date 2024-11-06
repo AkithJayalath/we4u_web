@@ -1,0 +1,1 @@
+// used to override the apache roots so that the browser will redirect to the bootloader file which will initialize the webapp
