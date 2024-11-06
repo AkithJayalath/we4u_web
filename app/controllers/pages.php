@@ -1,6 +1,6 @@
 <?php
 class pages extends controller{
-   // private $pagesModel;
+    private $pagesModel;
     public function __construct(){
         $this->pagesModel = $this->model('M_Pages');
        
