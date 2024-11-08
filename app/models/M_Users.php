@@ -23,12 +23,19 @@
       }
     }
 
+    public function validateDate($date) {
+      $d = DateTime::createFromFormat('Y-m-d', $date);
+      return $d && $d->format('Y-m-d') === $date;
+  }
+
     // Register the User
     public function register($data){
-      $this->db->query('INSERT INTO user(username, email, password, role) VALUES(:name, :email, :password, :role )');
+      $this->db->query('INSERT INTO user(username,email,gender,date_of_birth,password, role) VALUES(:username, :email,:gender,:dob ,:password, :role )');
 
-      $this->db->bind(':name' , $data['name']);
+      $this->db->bind(':username' , $data['username']);
       $this->db->bind(':email' , $data['email']);
+      $this->db->bind(':gender' , $data['gender']);
+      $this->db->bind(':dob' , $data['dob']);
       $this->db->bind(':password' , $data['password']);
       $this->db->bind(':role' , 'Careseeker');
 

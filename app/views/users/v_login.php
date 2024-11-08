@@ -1,12 +1,16 @@
-<?php require APPROOT.'/views/includes/components/header.php'; ?>
+<?php require APPROOT.'/views/includes/header.php'; ?>
+<body class="login">
+<!--Top navbar  -->
+<?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
 
   <div class="page-body-container">
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
-
+    <div class="top-container">
+    <div class="main-container">
     <div class="form-container">
     <div class="form_header">
-    <center><h1>User Login</h1></center>
-    <p><b>Please Fill the form to login.</b></p>
+    <center><h1>User Sign in</h1></center>
+    <p><b>Please Fill the form to Sign in.</b></p>
     </div>
 
     <form action="" method="POST" >
@@ -29,7 +33,9 @@
   </div>
 
   </div>
+</div>
+  </div>
 
 
-<?php require APPROOT.'/views/includes/components/footer.php'?>
+<?php require APPROOT.'/views/includes/footer.php'?>
 
