@@ -13,21 +13,25 @@
 
         // INPUT DATA
         $data = [
-          'name' => trim($_POST['name']),
+          'username' => trim($_POST['username']),
           'email' => trim($_POST['email']),
+          'gender' => trim($_POST['gender']),
+          'dob' => trim($_POST['dob']),
           'password' => trim($_POST['password']),
           'confirm_password' => trim($_POST['confirm_password']),
 
-          'name_err' => '',
+          'username_err' => '',
           'email_err' => '',
+          'gender_err' => '',
+          'dob_err' =>'',
           'password_err' => '',
           'confirm_password_err' => ''
         ];
 
         // validation part
-        // validate name
-        if(empty($data['name'])){
-          $data['name_err'] = 'Please enter name';
+        // validate username
+        if(empty($data['username'])){
+          $data['username_err'] = 'Please enter username';
         }
 
         // validate email
@@ -39,6 +43,16 @@
             $data['email_err'] = 'Email is already taken';
           }
         }
+        // validate gender
+        if(empty($data['gender'])){
+          $data['gender_err'] = 'Please add gender';
+        }
+
+        if(empty($data['dob'])){
+          $data['dob_err'] = 'Please add a date of birth';
+      } elseif (!$this->usersModel->validateDate($data['dob'])) { 
+          $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
+      }
 
         // validate password
         if(empty($data['password'])){
@@ -65,7 +79,7 @@
         }
 
         // if the validation completes successfully
-        if(empty($data['name_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
+        if(empty($data['username_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['dob_err'])){
           // now we can register the user
           // Hash the password
           $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -86,13 +100,17 @@
       } else {
         // the form is not submitting
         $data =[
-          'name' => '',
+          'username' => '',
           'email' => '',
+          'gender' =>'',
+          'dob' => '',
           'password' => '',
           'confirm_password' => '',
 
-          'name_err' => '',
+          'username_err' => '',
           'email_err' => '',
+          'gender_err' => '',
+          'dob_err' => '',
           'password_err' => '',
           'confirm_password_err' => ''
         ];
@@ -168,7 +186,7 @@
       $data = [
         
         'email' => '',
-        'password' => '',
+        'password' => '***********',
 
         'email_err' => '',
         'password_err' => '',
