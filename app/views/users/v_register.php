@@ -1,5 +1,7 @@
 <?php require APPROOT.'/views/includes/components/header.php'; ?>
 
+
+
   <div class="form-container">
     <div class="form_header">
       <center><h1>Register</h1></center>
@@ -33,5 +35,9 @@
       <input type="submit" value="Register" class="reg-form-btn">
 
     </form>
-  </div>
+
+
+<?php require APPROOT.'/views/includes/components/footer.php'; ?>
+
+
 
