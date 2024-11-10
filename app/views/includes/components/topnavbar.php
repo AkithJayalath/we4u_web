@@ -33,5 +33,3 @@ $current_page = basename($_SERVER['REQUEST_URI']);
         </div>
     </nav>
     <div class="bottom space"></div>
-    
-    
