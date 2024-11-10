@@ -163,8 +163,8 @@
         if($loggedUser){
           // user is authenticated
           // can create user sesstions
-          // redirect('pages/index');
-          die('User Authenticated');
+         $this->createUserSession($loggedUser);
+          
         }
         else{
           $data['password_err'] = 'Password Incorrect';
@@ -186,7 +186,7 @@
       $data = [
         
         'email' => '',
-        'password' => '***********',
+        'password' => '',
 
         'email_err' => '',
         'password_err' => '',
@@ -194,7 +194,38 @@
       // load the view
     $this->view('users/v_login', $data);
     }
+
   }
+
+  public function createUserSession($user){
+    
+    $_SESSION ['user_id']=$user->user_id;
+    $_SESSION ['user_email']=$user->email;
+    $_SESSION ['user_name']=$user->username;
+
+    redirect('pages/index');
+    
+  }
+
+  public function logout(){
+    unset($_SESSION ['user_id']);
+    unset($_SESSION ['user_email']);
+    unset($_SESSION ['user_name']);
+    session_destroy();
+
+    redirect('users/login');
+
+  }
+
+  public function isLoggedIn(){
+    if(isset($_SESSION['user_id'])){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
 
 }
 ?>
