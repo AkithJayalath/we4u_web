@@ -17,6 +17,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #e0f7f9;
 }
+
+/* Add this div class to container the content of each page */
 .top-container{
   padding-top: 80px;
 }
