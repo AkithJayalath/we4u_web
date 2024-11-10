@@ -40,12 +40,19 @@
       $this->db->bind(':role' , 'Careseeker');
 
 
-      if($this->db->execute()){
-        return true;
-      }
-      else {
+      if ($this->db->execute()) {
+        // Get the ID of the newly created user
+        $newUserId = $this->db->lastInsertId();
+
+        // Insert only the careseeker_id into the Careseeker table
+        $this->db->query('INSERT INTO careseeker(careseeker_id) VALUES(:careseeker_id)');
+        $this->db->bind(':careseeker_id', $newUserId);
+        
+        // Execute the query and return true if successful
+        return $this->db->execute();
+    } else {
         return false;
-      }
+    }
     }
 
     // Login the User
