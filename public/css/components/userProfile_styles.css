@@ -92,7 +92,10 @@ header p {
 
 .profile-form {
     display: flex;
+    justify-content: space-between;
+    height: 100%;
     gap: 20px;
+    padding-bottom: 20px;
 }
 
 .form-left, .form-right {
@@ -114,4 +117,43 @@ input {
     border-radius: 5px;
     font-size: 14px;
     color: #333;
+}
+
+
+.save-cancel {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Adds space between the buttons */
+    margin-top: 20px; /* Adjust gap between form and buttons */
+}
+
+.save-btn, .cancel-button {
+    width: 150px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.save-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+}
+
+.cancel-button {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cancel-button:hover {
+    background-color: #e53935;
 }
