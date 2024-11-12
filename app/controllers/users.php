@@ -226,6 +226,27 @@
   }
 
 
+  // view careseeker profile
+  public function viewCareseekerProfile(){
+    if($this->isLoggedIn()){
+      $userId= $_SESSION['user_id'];
+      $profileData=$this->usersModel->getCareseekerProfile($userId);
+      $data =[
+        'profileData'=>$profileData
+      ];
+      if($profileData){
+        $this->view('careseeker/v_profile',$data);
+      }else{
+        echo "profile not found.";
+      }
+    }else{
+      redirect('users/v_login');
+    }
+  }
+
+
+
+
 
 }
 ?>

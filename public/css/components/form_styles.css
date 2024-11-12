@@ -2,6 +2,8 @@
 
 /* Main container styling */
  .main-container {
+    max-width: 600px; 
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

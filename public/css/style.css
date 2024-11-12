@@ -7,6 +7,7 @@
 @import url('components/footer_styles.css');
 @import url('components/topnavbar_styles.css');
 @import url('components/form_styles.css');
+@import url('components/userProfile_styles.css');
 
 
 
@@ -16,11 +17,17 @@ body {
     
     font-family: Arial, sans-serif;
     background-color: #e0f7f9;
+    
 }
 
 /* Add this div class to container the content of each page */
-.top-container{
-  padding-top: 80px;
+.top-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 200px);
 }
 
 /* Hero Section */

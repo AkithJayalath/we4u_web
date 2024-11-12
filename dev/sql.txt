@@ -133,3 +133,8 @@ CREATE TABLE Announcement (
     publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- When the announcement was published 
     FOREIGN KEY (admin_id) REFERENCES User(user_id) ON DELETE SET NULL 
 );
+
+
+-- create a view to get profile info
+CREATE VIEW careseeker_profile AS 
+SELECT * FROM user JOIN careseeker ON user.user_id =careseeker.careseeker_id;
