@@ -5,7 +5,7 @@
 <div class="top-container">
     <div class="container">
    
-        <div class="gradient-bar"> <button class="edit-button">Edit</button></div> <!-- Gradient bar behind the profile section -->
+        <div class="gradient-bar"> <a href="<?php echo URLROOT; ?>/users/editProfile" class="edit-button">Edit</a></div> <!-- Gradient bar behind the profile section -->
         
         <header>
             <h2>Welcome,<?php echo $data['profileData'][0]->username; ?></h2>
@@ -61,7 +61,11 @@
                 <label>Rating</label>
                 <input type="text" value="<?php echo $data['profileData'][0]->rating; ?>" readonly>
             </div>
+            
         </form>
+        <div class="save-cancel"><a href="<?php echo URLROOT; ?>/users/deleteUser" class="cancel-button">Delete User</a>
+            </div>
+
     </div>
 </div>
 <?php require APPROOT.'/views/includes/footer.php' ?>

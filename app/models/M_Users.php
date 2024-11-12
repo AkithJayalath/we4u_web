@@ -83,5 +83,51 @@
 
       return $results;
     }
+
+    // update profile
+    public function updateCareseekerProfile($data) {
+      // Update `user` table
+      $this->db->query('UPDATE user SET 
+                          username = :username,
+                          email = :email,
+                          date_of_birth = :date_of_birth,
+                          gender = :gender
+                        WHERE user_id = :user_id');
+  
+      $this->db->bind(':username', $data['username']);
+      $this->db->bind(':email', $data['email']);
+      $this->db->bind(':date_of_birth', $data['date_of_birth']);
+      $this->db->bind(':gender', $data['gender']);
+      $this->db->bind(':user_id', $data['user_id']);
+      $this->db->execute(); // Execute the user update query
+  
+      // If there's a password update, execute it separately
+      if (!empty($data['password'])) {
+          $this->db->query('UPDATE user SET password = :password WHERE user_id = :user_id');
+          $this->db->bind(':password', $data['password']);
+          $this->db->bind(':user_id', $data['user_id']);
+          $this->db->execute(); // Execute the password update query
+      }
+  
+      // Update `careseeker` table
+      $this->db->query('UPDATE careseeker SET 
+                          address = :address,
+                          contact_info = :contact_info
+                        WHERE careseeker_id = :user_id');
+  
+      $this->db->bind(':address', $data['address']);
+      $this->db->bind(':contact_info', $data['contact_info']);
+      $this->db->bind(':user_id', $data['user_id']);
+      return $this->db->execute(); // Execute and return the result of the careseeker update query
   }
-?>
+
+
+  public function deleteUser($userId){
+    $this->db->query('DELETE FROM user WHERE user_id =:user_id');
+    $this->db->bind(':user_id',$userId);
+    return $this->db->execute();
+  }
+
+}
+
+  
