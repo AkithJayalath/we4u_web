@@ -29,24 +29,34 @@
   }
 
     // Register the User
-    public function register($data){
-      $this->db->query('INSERT INTO user(username,email,gender,date_of_birth,password, role) VALUES(:username, :email,:gender,:dob ,:password, :role )');
-
-      $this->db->bind(':username' , $data['username']);
-      $this->db->bind(':email' , $data['email']);
-      $this->db->bind(':gender' , $data['gender']);
-      $this->db->bind(':dob' , $data['dob']);
-      $this->db->bind(':password' , $data['password']);
-      $this->db->bind(':role' , 'Careseeker');
-
-
-      if($this->db->execute()){
-        return true;
+    public function register($data) {
+      // Insert into the User table
+      $this->db->query('INSERT INTO user(username, email, gender, date_of_birth, password, role) 
+                        VALUES(:username, :email, :gender, :dob, :password, :role)');
+      
+      $this->db->bind(':username', $data['username']);
+      $this->db->bind(':email', $data['email']);
+      $this->db->bind(':gender', $data['gender']);
+      $this->db->bind(':dob', $data['dob']);
+      $this->db->bind(':password', $data['password']);
+      $this->db->bind(':role', 'Careseeker');
+  
+      // Execute the query and check if the insertion was successful
+      if ($this->db->execute()) {
+          // Get the ID of the newly created user
+          $newUserId = $this->db->lastInsertId();
+  
+          // Insert only the careseeker_id into the Careseeker table
+          $this->db->query('INSERT INTO careseeker(careseeker_id) VALUES(:careseeker_id)');
+          $this->db->bind(':careseeker_id', $newUserId);
+          
+          // Execute the query and return true if successful
+          return $this->db->execute();
+      } else {
+          return false;
       }
-      else {
-        return false;
-      }
-    }
+  }
+  
 
     // Login the User
     public function login($email, $password){
