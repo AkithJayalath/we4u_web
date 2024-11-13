@@ -200,6 +200,7 @@
   public function createUserSession($user){
     
     $_SESSION ['user_id']=$user->user_id;
+    $_SESSION ['user_profile_picture'] = $user->profile_picture;
     $_SESSION ['user_email']=$user->email;
     $_SESSION ['user_name']=$user->username;
 
@@ -209,6 +210,7 @@
 
   public function logout(){
     unset($_SESSION ['user_id']);
+    unset($_SESSION ['user_profile_picture']);
     unset($_SESSION ['user_email']);
     unset($_SESSION ['user_name']);
     session_destroy();
@@ -253,12 +255,15 @@
 
         // Get current profile data for the user to prefill the form if it's a GET request
         $profileData = $this->usersModel->getCareseekerProfile($userId);
+        $currentProfilePicture = $profileData[0]->profile_picture; // Current profile picture name from database
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $data = [
                 'user_id' => $userId,
+                'profile_picture' => $_FILES['profile_picture'],
+                'profile_picture_name' => time().'_'.$_FILES['profile_picture']['name'],
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
                 'date_of_birth' => trim($_POST['date_of_birth']),
@@ -270,6 +275,7 @@
                 
                 // Error fields
                 'username_err' => '',
+                'profile_picture_err' =>'',
                 'email_err' => '',
                 'dob_err' => '',
                 'password_err' => '',
@@ -278,6 +284,31 @@
                 'contact_info_err' => '',
                 'gender_err' => ''
             ];
+
+            // Handle profile picture upload/update
+            if (!empty($data['profile_picture']['name'])) { // Only process if a new image is uploaded
+                $profileImagePath = '/images/profile_imgs/' . $data['profile_picture_name'];
+                
+                if (!empty($currentProfilePicture)) {
+                    // Update existing profile picture by deleting the old one
+                    $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
+                    if (updateImage($oldImagePath, $data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
+                        // Successfully updated
+                    } else {
+                        $data['profile_picture_err'] = 'Failed to update profile picture.';
+                    }
+                } else {
+                    // Upload a new profile picture
+                    if (uploadImage($data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs')) {
+                        // Successfully uploaded
+                    } else {
+                        $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
+                    }
+                }
+            } else {
+                // No new profile picture uploaded, retain the old one
+                $data['profile_picture_name'] = $currentProfilePicture;
+            }
 
             // Validation
             // Validate username
@@ -334,7 +365,7 @@
             }
 
             // Check if there are no errors
-            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err'])) {
+            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err']) && empty($data['profile_picture_err'])) {
                 
                 // Hash new password if entered
                 if (!empty($data['password'])) {
@@ -345,6 +376,7 @@
 
                 // Update the user profile
                 if ($this->usersModel->updateCareseekerProfile($data)) {
+                    $_SESSION['user_profile_picture'] = $data['profile_picture_name'];
                     redirect('users/viewCareseekerProfile');
                 } else {
                     die('Something went wrong. Please try again.');
@@ -359,12 +391,15 @@
                 'user_id' => $userId,
                 'username' => $profileData[0]->username,
                 'email' => $profileData[0]->email,
+                'profile_picture' => $profileData[0]->profile_picture,
+                'profile_picture_name' => '',
                 'date_of_birth' => $profileData[0]->date_of_birth,
                 'address' => $profileData[0]->address,
                 'contact_info' => $profileData[0]->contact_info,
                 'gender' => $profileData[0]->gender,
                 'username_err' => '',
                 'email_err' => '',
+                'profile_picture_err' => '',
                 'dob_err' => '',
                 'password_err' => '',
                 'confirm_password_err' => '',
@@ -380,12 +415,18 @@
     }
 }
 
+
 public function deleteUser() {
   if ($this->isLoggedIn()) {
 
     $userId = $_SESSION['user_id'];
 
       if($this->usersModel->deleteUser($userId)){
+        unset($_SESSION ['user_id']);
+        unset($_SESSION ['user_profile_picture']);
+        unset($_SESSION ['user_email']);
+        unset($_SESSION ['user_name']);
+        session_destroy();
 
         redirect('/');
 

@@ -19,7 +19,15 @@
         </header>
 
         <div class="profile-section">
-            <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-pic">
+            <div class="profile-pic">
+            <img src="<?= isset($data['profileData'][0]->profile_picture) && $data['profileData'][0]->profile_picture 
+                        ? URLROOT . '/images/profile_imgs/' . $data['profileData'][0]->profile_picture 
+                        : URLROOT . '/images/def_profile_pic.jpg'; ?>" 
+                        alt="Profile Picture" class="profile-pic" id="profile_image_placeholder">
+
+
+            </div>
+            
             <div class="profile-nameEmail">
                 <h3 style="display:inline"><?php echo $data['profileData'][0]->username; ?></h3>
                 <p style="display:inline">/#<?php echo $data['profileData'][0]->user_id; ?></p>

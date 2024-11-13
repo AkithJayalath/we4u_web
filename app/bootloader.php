@@ -2,6 +2,7 @@
     // Load Helper
     require_once 'helpers/URL_Helper.php';
     require_once 'helpers/Session_Helper.php';
+    require_once 'helpers/imageUpload_Helper.php';
 
     // This is the initial file that will be executed.
     // Other files to be executed will be redirected from here.
