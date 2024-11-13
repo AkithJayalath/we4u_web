@@ -100,6 +100,14 @@
       $this->db->bind(':gender', $data['gender']);
       $this->db->bind(':user_id', $data['user_id']);
       $this->db->execute(); // Execute the user update query
+
+      // If there's a profile_pic update, execute it separately
+      if (!empty($data['profile_picture'])) {
+        $this->db->query('UPDATE user SET profile_picture = :profile_picture WHERE user_id = :user_id');
+        $this->db->bind(':profile_picture', $data['profile_picture_name']);
+        $this->db->bind(':user_id', $data['user_id']);
+        $this->db->execute(); // Execute the profile_picture update query
+    }
   
       // If there's a password update, execute it separately
       if (!empty($data['password'])) {
