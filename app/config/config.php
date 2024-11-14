@@ -12,4 +12,8 @@
 
     // WEBSITE NAME
     define('SITENAME','WE4U');
+
+    // PUBROOT
+    define('PUBROOT',dirname(dirname(dirname(__FILE__))).'\public');
+
 ?>

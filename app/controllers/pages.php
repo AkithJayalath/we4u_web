@@ -7,7 +7,8 @@ class pages extends controller{
     }
 
     public function index(){
-       
+       $data = [];
+       $this->view('careseeker/v_index',$data);
     }
 
     public function home(){

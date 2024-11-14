@@ -9,6 +9,7 @@
 @import url('components/form_styles.css');
 @import url('moderator/careseekerrequests.css');
 @import url('moderator/interview.css');
+@import url('components/userProfile_styles.css');
 
 /* root colors */
 :root{
@@ -26,9 +27,17 @@ body {
     
     font-family: Arial, sans-serif;
     background-color: #e0f7f9;
+    
 }
-.top-container{
-  padding-top: 80px;
+
+/* Add this div class to container the content of each page */
+.top-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 200px);
 }
 
 /* Hero Section */
