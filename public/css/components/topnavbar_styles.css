@@ -13,10 +13,11 @@
 .navbar {
     position: fixed;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     background: #fff;
-    padding: 15px 20px;
+    padding: 10px 20px;
     margin: 10px; /* Adds space on all sides */
     border-radius: 30px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -45,6 +46,7 @@
     display: flex;
     align-items: center;
     list-style: none;
+    margin-left: 350px;
 }
 
 .nav-links li {
@@ -84,7 +86,8 @@
 .contact-signin {
     display: flex;
     align-items: center;
-    font-size: 50px
+    font-size: 50px;
+    gap:5px;
 }
 
 .contact-number {
@@ -101,7 +104,7 @@
 }
 
 .signin-btn {
-    background-color: #007bff;
+    background-color: #0051ff;
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -142,6 +145,100 @@
 .nav-links li.forward a:hover:before {
     transform: scaleX(1);
     transform-origin: left;
+}
+
+
+/* profile pic */
+.navbar .profile{
+    
+    display: flex;
+    flex-direction: row;
+    margin-left: 100px;
+
+}
+
+.navbar .profile .pic img{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    margin-top: 7px;
+}
+
+.navbar .profile .user-name{
+    font-size: 15px;
+    font-weight: 600;
+    padding: 15px 20px;
+    margin-top: 10px;
+    color:#5e5d5d;
+}
+
+
+
+
+
+
+
+
+/* Media query for tablets and smaller devices */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 20px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links li {
+        margin: 8px 0;
+    }
+
+    .nav-links li a {
+        font-size: 18px;
+    }
+
+    .signin-btn {
+        padding: 6px 12px;
+        font-size: 16px;
+    }
+
+    .contact-number {
+        font-size: 15px;
+        margin-right: 10px;
+    }
+
+    .profile .user-name {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}
+
+/* Media query for very small devices (e.g., phones) */
+@media (max-width: 480px) {
+    .nav-links {
+        font-size: 14px;
+    }
+
+    .nav-links li a {
+        font-size: 16px;
+    }
+
+    .signin-btn {
+        font-size: 14px;
+    }
+
+    .profile .pic img {
+        height: 30px;
+        width: 30px;
+    }
 }
 
 
