@@ -26,159 +26,22 @@
         <div class="table-cell">Action</div>
       </div>
       <div class="table-body">
+
+      <?php foreach($data['requests'] as $request) : ?>
+
         <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
+          <div class="table-cell"><a href="#"><?php echo $request->request_id; ?></a></div>
+          <div class="table-cell"><?php echo $request->request_date; ?></div>
+          <div class="table-cell"><?php echo $request->careseeker_id; ?></div>
+          <div class="table-cell"><?php echo $request->status; ?></div>
           <div class="table-cell">
             <button class="accept">Accept</button>
           </div>
         </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="accept">Accept</button>
-          </div>
-        </div>
+
+      <?php endforeach; ?>
+
+        
         <!-- Your existing table rows here -->
       </div>
     </div>

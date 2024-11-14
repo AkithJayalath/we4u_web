@@ -7,7 +7,11 @@
     }
 
     public function careseekerrequests(){
-      $data = [];
+      $requests = $this->moderatorModel->get_requests();
+
+      $data = [
+        'requests' => $requests
+      ];
 
       $this->view('moderator/v_careseekerrequests', $data);
     }
@@ -31,9 +35,17 @@
     }
 
     public function interview(){
-      $data = [];
+      $data = [
+        
+      ];
 
       $this->view('moderator/v_interview', $data);
+    }
+
+    public function announcementdetails(){
+      $data = [];
+
+      $this->view('moderator/v_announcements', $data);
     }
 
 
