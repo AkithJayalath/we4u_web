@@ -1,3 +1,4 @@
+<script src="<?php echo URLROOT; ?>/js/navbar.js"></script>
 </body>
 <footer>
   <div class="footer-container">
