@@ -18,6 +18,10 @@ class pages extends controller{
         ];
        $this->view('home/homepage',$data);
     }
+
+    public function about() {
+        require_once APPROOT . '/views/v_about.php';
+    }
 }
 
 

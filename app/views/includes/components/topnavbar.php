@@ -8,7 +8,7 @@
             <li><a href="#">Consultants</a></li>
             <li><a href="#">Blogs</a></li>
             <li class="separator">|</li>
-            <li><a href="#">About Us</a></li>
+            <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>
             <li><a href="#">Help and Advice</a></li>
         </ul>
         <?php if(isset($_SESSION['user_id'])) : ?>
