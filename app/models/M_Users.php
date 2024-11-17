@@ -136,6 +136,24 @@
     return $this->db->execute();
   }
 
+
+  public function getApprovalStatus($user_id, $role) {
+    if ($role == 'Caregiver') {
+        $sql = "SELECT is_approved FROM caregiver WHERE caregiver_id = :user_id";
+    } elseif ($role == 'Consultant') {
+        $sql = "SELECT is_approved FROM consultant WHERE consultant_id = :user_id";
+    } else {
+        return 'approved'; // Other roles don’t require approval
+    }
+
+    $this->db->query($sql);
+    $this->db->bind(':user_id', $user_id);
+    $row = $this->db->single();
+
+    return $row ? $row->is_approved : 'pending'; // Return the status or 'pending' if no record is found
+}
+
+
 }
 
   
