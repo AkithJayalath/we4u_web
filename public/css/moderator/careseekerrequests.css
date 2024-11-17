@@ -85,3 +85,13 @@
 .table-cell:last-child {
   text-transform: capitalize;
 }
+
+.view-req-action-btn{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}

@@ -242,7 +242,7 @@
         echo "profile not found.";
       }
     }else{
-      redirect('users/v_login');
+      redirect('users/login');
     }
   }
 

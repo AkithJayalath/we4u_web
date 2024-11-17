@@ -35,7 +35,7 @@
           <div class="table-cell"><?php echo $request->careseeker_id; ?></div>
           <div class="table-cell"><?php echo $request->status; ?></div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
 

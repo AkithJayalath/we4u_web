@@ -32,7 +32,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -41,7 +41,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -50,7 +50,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -59,7 +59,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -68,7 +68,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -77,7 +77,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -86,7 +86,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -95,7 +95,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -104,7 +104,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -113,7 +113,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -122,7 +122,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -131,7 +131,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -140,7 +140,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -149,7 +149,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -158,7 +158,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -167,7 +167,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <div class="table-row">
@@ -176,7 +176,7 @@
           <div class="table-cell">Jacob Marcus</div>
           <div class="table-cell">accepted</div>
           <div class="table-cell">
-            <button class="accept">Accept</button>
+            <button class="view-req-action-btn">Accept</button>
           </div>
         </div>
         <!-- Your existing table rows here -->
