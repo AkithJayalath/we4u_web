@@ -1,3 +1,13 @@
+<?php 
+    $required_styles = [
+        'moderator/viewrequest',
+        // 'components/sidebar',
+        
+    ];
+    echo loadCSS($required_styles);
+?>
+
+
 <?php require APPROOT.'/views/includes/header.php'; ?>
 <div>
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>

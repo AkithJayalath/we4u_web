@@ -22,32 +22,5 @@
         <?php else: ?>
             <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/login'">Sign In</button>
         <?php endif; ?>
-<<<<<<< HEAD
-        <div class="contact-signin">
-            <span class="contact-number">
-                <img src="/we4u/public/images/phone_icon.png" alt="Phone" class="phone-icon"> 011 057 4115
-            </span> 
-            
-            <?php if(isset($_SESSION['user_id'])) : ?>
-                <!-- Show "Logout" button if the user is logged in -->
-                <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/logout'">Logout</button>
-            <?php else : ?>
-                    <?php
-                    // Check if we're on the login page
-                    $current_page = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)); // Ensures only the path name is compared
-                    if ($current_page == 'login') : ?>
-                        <!-- Show "Register" button if on the login page -->
-                        <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/register'">Register</button>
-                    <?php else : ?>
-                        <!-- Show "Sign In" button if not on the login page -->
-                        <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/login'">Sign In</button>
-                    <?php endif; ?>
-            <?php endif; ?>
-
-        </div>
-    </nav>
-    <div class="bottom space"></div>
-=======
     </div>
 </nav>
->>>>>>> eb205c6bf61a646becb2f1605c932e61c8b11bc1

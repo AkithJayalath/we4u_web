@@ -7,11 +7,11 @@
   <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
 
   <div class="m-container">
-  <div class="search-section">
+  <div class="ac-search-section">
     <input type="text" placeholder="Search" />
     <div>
-      <img src="notification-icon.png" class="notification-icon" />
-      <img src="profile-pic.png" class="profile-pic" />
+      <img src="notification-icon.png" class="ac-notification-icon" />
+      <img src="profile-pic.png" class="ac-profile-pic" />
     </div>
   </div>
 
