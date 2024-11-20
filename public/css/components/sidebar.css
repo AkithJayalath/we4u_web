@@ -10,7 +10,7 @@
 :root{
   --base-clr: #ffffff;
   --line-clr: #42434a;
-  --hover-clr: #225333;
+  --hover-clr: #08DCC1;
   --text-clr: #222222;
   --accent-clr: #5e63ff;
   --secondary-text-clr: #bobb3c1;
@@ -22,7 +22,7 @@
   box-sizing: border-box;
 }
 
-.page-body-container{
+page-body-container{
   min-height: 100vh;
   min-height: 100dvh;
   /* background-color: var(--base-clr); */

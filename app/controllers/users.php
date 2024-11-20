@@ -430,7 +430,7 @@
             $this->view('careseeker/v_edit', $data);
         }
     } else {
-        redirect('users/v_login');
+        redirect('users/login');
     }
 }
 
