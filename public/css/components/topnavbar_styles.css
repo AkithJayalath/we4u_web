@@ -13,16 +13,30 @@
 .navbar {
     position: fixed;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     background: #fff;
-    padding: 15px 20px;
-    margin: 10px; /* Adds space on all sides */
+    padding: 10px 20px;
+    margin: 20px;/* Adds space on all sides */
+    margin-left: 50px;
+    margin-right: 50px;
     border-radius: 30px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     left: 0;
     right: 0;
     z-index: 1000;
+    
+}
+
+.navbar.hide {
+    transform: translateY(-110%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.navbar.show {
+    transform: translateY(0); /* Reset transform to show navbar */
+    opacity: 1; /* Restore opacity for smooth fade-in */
 }
 
 .bottom-space{
@@ -45,6 +59,8 @@
     display: flex;
     align-items: center;
     list-style: none;
+    margin-left: 20px;
+    gap: 30px;
 }
 
 .nav-links li {
@@ -84,7 +100,9 @@
 .contact-signin {
     display: flex;
     align-items: center;
-    font-size: 50px
+    font-size: 50px;
+    gap:5px;
+    margin-right: 20px;
 }
 
 .contact-number {
@@ -101,7 +119,7 @@
 }
 
 .signin-btn {
-    background-color: #007bff;
+    background-color: #0051ff;
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -109,6 +127,7 @@
     cursor: pointer;
     font-size: 18px;
     transition: background-color 0.3s ease;
+    margin-left: 10px;
 }
 
 .signin-btn:hover {
@@ -145,3 +164,167 @@
 }
 
 
+/* profile pic */
+.navbar .profile{
+    
+    display: flex;
+    flex-direction: row;
+    margin-left: 100px;
+
+}
+
+.navbar .profile .pic img{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    margin-top: 7px;
+}
+
+.navbar .profile .user-name{
+    font-size: 15px;
+    font-weight: 600;
+    padding: 15px 20px;
+    margin-top: 10px;
+    color:#5e5d5d;
+}
+
+
+
+
+
+
+
+
+/* Media query for tablets and smaller devices */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 20px;
+    }
+
+    .logo a {
+        font-size: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links li {
+        margin: 8px 0;
+    }
+
+    .nav-links li a {
+        font-size: 18px;
+    }
+
+    .signin-btn {
+        padding: 6px 12px;
+        font-size: 16px;
+    }
+
+    .contact-number {
+        font-size: 15px;
+        margin-right: 10px;
+    }
+
+    .profile .user-name {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}
+
+/* Media query for very small devices (e.g., phones) */
+@media (max-width: 480px) {
+    .nav-links {
+        font-size: 14px;
+    }
+
+    .nav-links li a {
+        font-size: 16px;
+    }
+
+    .signin-btn {
+        font-size: 14px;
+    }
+
+    .profile .pic img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
+
+/* Toggle Menu Button Styles */
+.menu-toggle {
+    display: none; /* Default: Hidden on larger screens */
+    cursor: pointer;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: #333;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Animation for Toggle Button */
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translateY(10px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-10px);
+}
+
+/* Responsive Navigation Links */
+.nav-links-container {
+    display: none; /* Hidden by default on smaller screens */
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    width: 250px;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-links-container.active {
+    display: flex; /* Show when active */
+}
+
+/* Adjust Links Inside Toggle Menu */
+.nav-links li {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.nav-links li a {
+    font-size: 18px;
+    color: #333;
+}
+
+/* Hide Contact and Sign-in Section on Small Screens */
+@media (max-width: 768px) {
+    .contact-signin {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: flex; /* Show the toggle button on smaller screens */
+    }
+}

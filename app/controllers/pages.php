@@ -7,7 +7,8 @@ class pages extends controller{
     }
 
     public function index(){
-       
+       $data = [];
+       $this->view('careseeker/v_index',$data);
     }
 
     public function home(){
@@ -16,6 +17,10 @@ class pages extends controller{
             'users'=>$users
         ];
        $this->view('home/homepage',$data);
+    }
+
+    public function about() {
+        require_once APPROOT . '/views/v_about.php';
     }
 }
 

@@ -12,14 +12,18 @@ CREATE TABLE User (
 ); 
 
 -- Caregiver table with a foreign key reference to User 
-CREATE TABLE Caregiver ( 
-    caregiver_id INT PRIMARY KEY, 
-    FOREIGN KEY (caregiver_id) REFERENCES User(user_id) ON DELETE CASCADE, 
-    experience TEXT, 
-    availability_status BOOLEAN, 
-    region VARCHAR(100), -- store caregiver's region for location-based display 
-    rating DECIMAL(3, 2) DEFAULT 0, -- Average rating for display 
-    bio TEXT 
+CREATE TABLE caregiver (
+    caregiver_id INT PRIMARY KEY,
+    FOREIGN KEY (caregiver_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    address VARCHAR(255),
+    contact_info VARCHAR(100),
+    years_of_experience INT,
+    availability_status BOOLEAN,
+    caregiver_type ENUM('long', 'short', 'both'),
+    specialty TEXT,
+    skills TEXT, 
+    national_id VARCHAR(50),
+    is_approved ENUM('pending', 'approved', 'rejected') DEFAULT 'pending'
 ); 
 
 -- Careseeker table with a foreign key reference to User 
@@ -133,3 +137,8 @@ CREATE TABLE Announcement (
     publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- When the announcement was published 
     FOREIGN KEY (admin_id) REFERENCES User(user_id) ON DELETE SET NULL 
 );
+
+
+-- create a view to get profile info
+CREATE VIEW careseeker_profile AS 
+SELECT * FROM user JOIN careseeker ON user.user_id =careseeker.careseeker_id;
