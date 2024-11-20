@@ -27,7 +27,7 @@
             'confirm_password' => trim($_POST['confirm_password']),
             
             
-            
+            // g
   
             'username_err' => '',
             'email_err' => '',
