@@ -1,0 +1,248 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.calendar-container {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.calendar-header button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.calendar-header button:hover {
+  background-color: #003f7f;
+}
+
+.calendar-header select {
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.day-header {
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+}
+
+.day {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: 150px; /* Increased height */
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.day:hover {
+  background-color: #f0f8ff;
+}
+
+.blank {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.day-number {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.appointments {
+  margin-top: 10px;
+  max-height: 80px; /* Limit appointments area height */
+  overflow-y: auto;
+}
+
+.appointments ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointments li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.appointments li button.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 3px 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.appointments li button.delete-btn:hover {
+  background-color: #d93636;
+}
+
+.add-appointment {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  display: none;
+}
+
+.day:hover .add-appointment {
+  display: block;
+}
+
+.add-appointment:hover {
+  background-color: #218838;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.modal-content input[type="text"], .modal-content input[type="time"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.modal-content button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.close {
+  color: red;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: darkred;
+}
+
+#detailsModal {
+  width: 400px;
+  max-width: 90%;
+}
+
+#detailsModal button {
+  margin-top: 10px;
+}
+
+#editButton, #deleteButton {
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#editButton:hover {
+  background-color: #e0a800;
+}
+
+#deleteButton {
+  background-color: #ff4d4d;
+}
+
+#deleteButton:hover {
+  background-color: #d93636;
+}
+
+
