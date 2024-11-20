@@ -53,7 +53,9 @@ CREATE TABLE Consultant (
     expertise TEXT, 
     availability_status BOOLEAN,  
     rating DECIMAL(3, 2) DEFAULT 0,  
-    bio TEXT 
+    bio TEXT ,
+    is_approved ENUM('pending', 'approved', 'rejected') DEFAULT 'pending'
+    
 ); 
 
 -- ApprovalRequest table for handling approval requests 
@@ -64,6 +66,7 @@ CREATE TABLE ApprovalRequest (
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     status ENUM('Pending', 'Approved', 'Declined') DEFAULT 'Pending', 
     comments TEXT, 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE 
 ); 
 
@@ -138,7 +141,28 @@ CREATE TABLE Announcement (
     FOREIGN KEY (admin_id) REFERENCES User(user_id) ON DELETE SET NULL 
 );
 
+-- Interview table for storing interviews for approval requests by the moderator
+CREATE TABLE interviews (
+    interview_id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id INT NOT NULL,
+    request_date DATE NOT NULL,
+    interview_time TIME NOT NULL,
+    service VARCHAR(255) NOT NULL,
+    platform VARCHAR(255) NOT NULL,
+    meeting_link VARCHAR(255),
+    provider_id VARCHAR(255) NOT NULL,
+    provider_name VARCHAR(255) NOT NULL,
+    provider_email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (request_id) REFERENCES approvalrequest(request_id) ON DELETE CASCADE
+);
+
+
 
 -- create a view to get profile info
 CREATE VIEW careseeker_profile AS 
 SELECT * FROM user JOIN careseeker ON user.user_id =careseeker.careseeker_id;
+
+
+
+
