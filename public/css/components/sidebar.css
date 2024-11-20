@@ -9,12 +9,34 @@
 
 
 
+
+:root{
+  --base-clr: #ffffff;
+  --line-clr: #42434a;
+  --hover-clr: #08DCC1;
+  --text-clr: #222222;
+  --accent-clr: #5e63ff;
+  --secondary-text-clr: #bobb3c1;
+}
+
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+
+
+
+page-body-container{
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* background-color: var(--base-clr); */
+  /* color: var(--text-clr); */
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
 
 
 
