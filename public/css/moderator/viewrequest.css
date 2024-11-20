@@ -1,0 +1,338 @@
+/* view-caregiver-details.css */
+.m-i-d-main-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+}
+
+.m-i-d-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.m-i-d-header-content h2 {
+  font-size: 1.8rem;
+  color: #1a237e;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.m-i-d-application-id {
+  display: inline-block;
+  font-size: 1rem;
+  color: #546e7a;
+  background: #f5f7fa;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.m-i-d-status-badge {
+  background: linear-gradient(45deg, #ffecb3, #ffe082);
+  color: #f57f17;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 167, 38, 0.2);
+}
+
+.m-i-d-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.m-i-d-info-section {
+  background: #fafbfc;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.m-i-d-section-header {
+  margin-bottom: 24px;
+}
+
+.m-i-d-section-header h3 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.m-i-d-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.m-i-d-info-item {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.m-i-d-info-item:hover {
+  transform: translateY(-2px);
+}
+
+.m-i-d-label {
+  display: block;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.m-i-d-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.m-i-d-documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.m-i-d-doc-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.m-i-d-doc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.m-i-d-doc-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+.m-i-d-doc-icon i {
+  color: #4b5563;
+  font-size: 1.25rem;
+}
+
+.m-i-d-doc-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.m-i-d-doc-title {
+  color: #374151;
+  font-weight: 500;
+}
+
+.m-i-d-doc-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.m-i-d-view-btn,
+.m-i-d-download-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.m-i-d-view-btn {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.m-i-d-view-btn:hover {
+  background: #d1d5db;
+}
+
+.m-i-d-download-btn {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 6px 8px;
+}
+
+.m-i-d-download-btn:hover {
+  background: #bfdbfe;
+}
+
+.m-i-d-action-panel {
+  display: flex;
+  gap: 16px;
+  padding-top: 32px;
+  border-top: 2px solid #f0f2f5;
+}
+
+.m-i-d-reject-btn,
+.m-i-d-interview-btn,
+.m-i-d-approve-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  cursor: pointer;
+}
+
+.m-i-d-reject-btn {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+}
+
+.m-i-d-interview-btn {
+  background: #ebf8ff;
+  color: #3182ce;
+  border: 1px solid #bee3f8;
+}
+
+.m-i-d-approve-btn {
+  background: #f0fff4;
+  color: #38a169;
+  border: 1px solid #c6f6d5;
+}
+
+@media (max-width: 768px) {
+  .m-i-d-main-container {
+    margin: 1rem;
+    padding: 20px;
+  }
+
+  .m-i-d-profile-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .m-i-d-action-panel {
+    flex-direction: column;
+  }
+
+  .m-i-d-reject-btn,
+  .m-i-d-interview-btn,
+  .m-i-d-approve-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .m-i-d-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .m-i-d-header-content h2 {
+    font-size: 1.5rem;
+  }
+}
+
+
+/* model css for confirmation */
+.m-i-d-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.m-i-d-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  margin: 20vh auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.m-i-d-modal-content h2 {
+  color: #1a237e;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.m-i-d-modal-content p {
+  color: #546e7a;
+  margin-bottom: 1.5rem;
+}
+
+.m-i-d-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.m-i-d-modal-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.m-i-d-confirm-btn {
+  background: #e53e3e;
+  color: white;
+  border: none;
+}
+
+.m-i-d-cancel-btn {
+  background: #e2e8f0;
+  color: #4a5568;
+  border: none;
+}
+
+.m-i-d-confirm-btn:hover {
+  background: #c53030;
+}
+
+.m-i-d-cancel-btn:hover {
+  background: #cbd5e0;
+}
+
+@media (max-width: 768px) {
+  .m-i-d-modal-content {
+      width: 95%;
+      margin: 15vh auto;
+      padding: 1.5rem;
+  }
+  
+  .m-i-d-modal-buttons {
+      flex-direction: column;
+  }
+  
+  .m-i-d-modal-btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+  }
+}
