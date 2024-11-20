@@ -7,9 +7,38 @@
 @import url('components/footer_styles.css');
 @import url('components/topnavbar_styles.css');
 @import url('components/form_styles.css');
-@import url('components/userProfile_styles.css');
+@import url('moderator/careseekerrequests.css'); 
+ @import url('moderator/interview.css'); 
+ @import url('components/userProfile_styles.css');
+ @import url('components/homepage_styles.css');
 
 
+/* root colors */
+:root{
+    --base-clr: #ffffff;
+    --line-clr: #42434a;
+    --hover-clr: #225333;
+    --text-clr: #222222;
+    --accent-clr: #3952cc;
+    --secondary-text-clr: #bobb3c1;
+  }
+
+page-body-container{
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* background-color: var(--base-clr); */
+    /* color: var(--text-clr); */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    /* margin-top: 80px; */
+    padding-top: 100px;
+    
+}
+@media(max-width: 768px){
+    page-body-container{
+        grid-template-columns: 1fr;
+    }
+}
 
 
 /* Body */
@@ -17,43 +46,23 @@ body {
     
     font-family: Arial, sans-serif;
     background-color: #e0f7f9;
+    justify-content: center;
     
 }
 
 /* Add this div class to container the content of each page */
 .top-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding-top: 120px;
-    padding-bottom: 60px;
-    min-height: calc(100vh - 200px);
+    padding-top: 100px;
+    padding-bottom: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
 }
 
-/* Hero Section */
-.hero-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 60px 100px;
-    background-color: #e0f7f9;
-}
 
-.hero-text {
-    max-width: 50%;
-}
-
-.hero-text h1 {
-    font-size: 48px;
-    font-weight: bold;
-    color: black;
-}
-
-.hero-text p {
-    font-size: 18px;
-    margin: 20px 0;
-    color: black;
-}
 
 .sign-up-btn {
     padding: 12px 24px;
@@ -64,8 +73,4 @@ body {
     text-decoration: none;
 }
 
-.hero-image img {
-    max-width: 100%;
-    border-radius: 20px;
-}
 

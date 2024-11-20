@@ -163,6 +163,23 @@
         if($loggedUser){
           // user is authenticated
           // can create user sesstions
+           // Check if user is a Caregiver or Consultant and needs approval
+           if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
+            $approvalStatus = $this->usersModel->getApprovalStatus($loggedUser->user_id, $loggedUser->role);
+
+            if ($approvalStatus === 'pending') {
+                // Approval pending - show message
+                $data['email_err'] = 'Your account is pending approval. Please wait for confirmation.';
+                $this->view('users/v_login', $data);
+                return;
+            } elseif ($approvalStatus === 'rejected') {
+                // Account rejected - show message
+                $data['email_err'] = 'Your account has been rejected. Please contact support for further assistance.';
+                $this->view('users/v_login', $data);
+                return;
+            }
+        }
+        // If approved or no approval required, create session
          $this->createUserSession($loggedUser);
           
         }
@@ -203,6 +220,7 @@
     $_SESSION ['user_profile_picture'] = $user->profile_picture;
     $_SESSION ['user_email']=$user->email;
     $_SESSION ['user_name']=$user->username;
+    $_SESSION['user_role'] = $user->role;
 
     redirect('pages/index');
     
@@ -213,6 +231,7 @@
     unset($_SESSION ['user_profile_picture']);
     unset($_SESSION ['user_email']);
     unset($_SESSION ['user_name']);
+    unset($_SESSION ['user_role']);
     session_destroy();
 
     redirect('users/login');
@@ -242,7 +261,7 @@
         echo "profile not found.";
       }
     }else{
-      redirect('users/v_login');
+      redirect('users/login');
     }
   }
 
@@ -411,7 +430,7 @@
             $this->view('careseeker/v_edit', $data);
         }
     } else {
-        redirect('users/v_login');
+        redirect('users/login');
     }
 }
 
