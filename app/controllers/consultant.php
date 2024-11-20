@@ -1,23 +1,3 @@
-<?php
-
-class  controller{
-    
-    public function consultantview(){
-        $this->view('consultant/c_view');
-    }
-    public function consultantreg(){
-        $this->view('consultant/c_reg');
-    }
-    public function consultantedit(){
-        $this->view('consultant/c_edit');
-    }
-    public function consultantland(){
-        $this->view('consultant/c_land');
-    }
-}
-
-?>
-
 
 <?php
   class consultant extends controller{
@@ -58,8 +38,8 @@ class  controller{
             'contact_info_err' => '',
             'type_of_consultant_err' => '',
             'password_err' => '',
-            'confirm_password_err' => '',
-            'documents_err' => ''
+            'confirm_password_err' => ''
+
           ];
   
           // validation part
@@ -104,7 +84,7 @@ class  controller{
 
          // validate type of caregiver
          if(empty($data['type_of_consultant'])){
-          $data['type_of_consultant_err'] = 'Please add type';
+          $data['type_of_consultant_err'] = 'Please select type';
         }
   
           // validate password
@@ -183,18 +163,26 @@ class  controller{
      'dob_err' => '',
      'address_err' => '',
      'contact_info_err' => '',
-     'type_of_caregiver_err' => '',
      'password_err' => '',
      'confirm_password_err' => '',
 
  ];
 
  // Load registration form view
- $this->view('consulatnt/consultantreg', $data);
+ $this->view('consulatnt/c_reg', $data);
 }
     }
 
-
+  public function consultantview(){
+      $this->view('consultant/c_view');
+  }
+  
+  public function consultantedit(){
+      $this->view('consultant/c_edit');
+  }
+  public function consultantland(){
+      $this->view('consultant/c_land');
+  }
 
 
     

@@ -51,6 +51,19 @@
                 <img src="/we4u/public/images/hands.jpeg" alt="Team Member 4">
                 <h3>Michael Brown</h3>
             </div>
+            <div class="team-member">
+                <img src="/we4u/public/images/hands.jpeg" alt="Team Member 4">
+                <h3>Michael Brown</h3>
+            </div>
+            <div class="team-member">
+                <img src="/we4u/public/images/hands.jpeg" alt="Team Member 4">
+                <h3>Michael Brown</h3>
+            </div>
+            <div class="team-member">
+                <img src="/we4u/public/images/hands.jpeg" alt="Team Member 4">
+                <h3>Michael Brown</h3>
+            </div>
+            
         </div>
         <div class="team-navigation">
             <span class="active"></span>

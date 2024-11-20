@@ -1,9 +1,10 @@
+/* Base Layout */
 .sections {
     padding-top: 100px;
     scroll-snap-type: y mandatory;
     justify-content: center;
     align-items: center;
-    padding: 100px 100px;
+    padding: 100px 50px; /* Reduce padding on smaller screens */
     width: 90%;
 }
 
@@ -15,6 +16,7 @@ section {
 /* Story Section */
 .story {
     display: flex;
+    flex-direction: row;
 }
 
 .story .content {
@@ -31,86 +33,62 @@ section {
 }
 
 .story .content p {
-    width: 600px;
+    width: 100%; /* Allow full width for mobile */
     line-height: 1.6;
     font-size: 18px;
 }
 
 .story .strimg {
     flex: 1;
-    width: 600px;
+    width: 100%; /* Adjust for responsive scaling */
     margin: auto;
     animation: fadeInRight 2s ease;
 }
 
 .story img {
     width: 100%;
-    max-width: 500px;
-    margin-left: 35%;
+    max-width: 400px; /* Restrict size on smaller screens */
+    margin-left: 0; /* Center on mobile */
     height: auto;
     border-radius: 10px;
     object-fit: cover;
 }
 
-/* Keyframes for Animations */
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-}
-
-@keyframes fadeInRight {
-    0% {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0px);
-    }
-}
-
 /* Benefits Section */
 .benifits {
     display: flex;
+    flex-direction: row; /* Keep row layout for large screens */
 }
 
 .benifits .benimg {
     flex: 1;
-    width: 600px;
     margin: auto;
-    margin-left: 10%;
     animation: fadeInRight 2s ease;
 }
 
 .benifits img {
-    width: 450px;
-    height: 450px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
 }
 
 .benifits .bcontent {
     flex: 1;
-    margin-top: 10%;
-    margin-left: 15%;
+    margin: 0 auto; /* Center on mobile */
     animation: fadeInUp 2s ease;
 }
 
 .benifits .bcontent h2 {
     color: #013CC6;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: bold;
     margin-bottom: 20px;
 }
 
 .benifits .bcontent p {
-    width: 600px;
+    width: 100%;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .benifits .reg-btn {
@@ -122,47 +100,46 @@ section {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .benifits .reg-btn:hover {
     background-color: #08DCC1;
 }
 
-/* Team Section - Swipe Carousel */
+/* Team Section */
 .team {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 50px 20px;
+    padding: 50px 10px;
     overflow: hidden;
     position: relative;
+    margin-bottom: 30px;
 }
 
 .team h2 {
-    color: #013CC6;
-    font-size: 40px;
-    font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
 }
 
 .team-carousel {
     display: flex;
-    gap: 30px;
-    animation: autoSwipe 10s linear infinite;
-    transition: transform 0.5s ease-in-out;
+    gap: 15px; /* Reduce gap for mobile */
+    animation: autoSwipe 20s linear infinite;
+    transition: transform 0.7s ease-in-out;
+    justify-content: center; /* Center content on mobile */
 }
 
 .team-member {
     text-align: center;
     flex: 0 0 auto;
-    width: 150px;
+    width: 100px; /* Reduce width for mobile */
 }
 
 .team-member img {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
@@ -170,49 +147,10 @@ section {
 }
 
 .team-member h3 {
-    font-size: 18px;
+    font-size: 14px;
     color: #013CC6;
     font-weight: bold;
     margin: 0;
-}
-
-/* Keyframes for Carousel Auto-Swipe */
-@keyframes autoSwipe {
-    0% {
-        transform: translateX(0%);
-    }
-    25% {
-        transform: translateX(-25%);
-    }
-    50% {
-        transform: translateX(-50%);
-    }
-    75% {
-        transform: translateX(-75%);
-    }
-    100% {
-        transform: translateX(0%);
-    }
-}
-
-.team-navigation {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.team-navigation span {
-    width: 10px;
-    height: 10px;
-    background-color: #c4c4c4;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.team-navigation span.active {
-    background-color: #013CC6;
 }
 
 /* Career Section */
@@ -223,7 +161,7 @@ section {
 
 .career .ccontent h2 {
     color: #013CC6;
-    font-size: 45px;
+    font-size: 35px;
     font-weight: bold;
     margin-bottom: 15px;
 }
@@ -231,64 +169,39 @@ section {
 .career .ccontent p {
     width: 100%;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: 16px;
     color: #384F6F;
 }
 
 .career .role {
     display: flex;
+    flex-wrap: wrap; /* Allow wrapping for small screens */
+    justify-content: center;
     margin-top: 60px;
 }
 
-.career .role .cg {
-    flex: 1;
-    margin-left: 20%;
-}
-
-.career .role .cg h2 {
-    color: #013CC6;
-    font-size: 24px;
-}
-
-.career .role .cg p {
-    font-size: 15px;
-    width: 500px;
-    color: #666666;
-    margin-top: 10px;
-}
-
+.career .role .cg,
 .career .role .con {
-    flex: 1;
+    flex: 1 1 100%; /* Full width on smaller screens */
+    margin: 20px 0;
+    text-align: center;
 }
 
+.career .role .cg h2,
 .career .role .con h2 {
     color: #013CC6;
     font-size: 24px;
 }
 
+.career .role .cg p,
 .career .role .con p {
     font-size: 15px;
-    width: 500px;
+    width: 100%;
     color: #666666;
     margin-top: 10px;
 }
 
-.career .role .cg .reg-cg {
-    padding: 8px 16px;
-    background-color: #4089FF;
-    color: #ffffff;
-    font-size: 16px;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 50px;
-}
-
-.career .role .cg .reg-cg:hover {
-    background-color: #08DCC1;
-}
-
+.career .role .cg .reg-cg,
 .career .role .con .reg-con {
     padding: 8px 16px;
     background-color: #4089FF;
@@ -301,6 +214,63 @@ section {
     margin-top: 30px;
 }
 
+.career .role .cg .reg-cg:hover,
 .career .role .con .reg-con:hover {
     background-color: #08DCC1;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .story,
+    .benifits {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .story .content,
+    .benifits .bcontent {
+        margin: 0;
+    }
+
+    .story img,
+    .benifits img {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .team-carousel {
+        gap: 10px;
+    }
+
+    .team-member {
+        width: 80px;
+    }
+
+    .career .role {
+        flex-direction: column;
+    }
+
+    .career .role .cg,
+    .career .role .con {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .story .content h2,
+    .benifits .bcontent h2,
+    .team h2,
+    .career .ccontent h2 {
+        font-size: 30px;
+    }
+
+    .story .content p,
+    .benifits .bcontent p,
+    .career .ccontent p {
+        font-size: 14px;
+    }
+
+    .team-member h3 {
+        font-size: 12px;
+    }
 }
