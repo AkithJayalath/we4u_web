@@ -1,4 +1,3 @@
-<script src="<?php echo URLROOT; ?>/js/navbar.js"></script>
 </body>
 <footer>
   <div class="footer-container">
@@ -26,10 +25,10 @@
       <div class="footer-links">
         <h3>About</h3>
         <ul>
-          <li><a href="#story">Our Story</a></li>
-          <li><a href="#ben">Benefits</a></li>
-          <li><a href="#team">Team</a></li>
-          <li><a href="#car">Careers</a></li>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Benefits</a></li>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Careers</a></li>
         </ul>
       </div>
     </div>
@@ -40,7 +39,5 @@
     </div>
   </div>
 </footer>
-
-
 
 </html>
