@@ -18,7 +18,7 @@
     align-items: center;
     background: #fff;
     padding: 10px 20px;
-    margin: 20px;/* Adds space on all sides */
+    margin: 20px;
     margin-left: 50px;
     margin-right: 50px;
     border-radius: 30px;
@@ -30,7 +30,7 @@
 }
 
 .navbar.hide {
-    transform: translateY(-110%);
+    transform: translateY(-120%);
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -59,8 +59,9 @@
     display: flex;
     align-items: center;
     list-style: none;
-    margin-left: 20px;
     gap: 30px;
+    margin-right: 150px;
+
 }
 
 .nav-links li {
@@ -90,7 +91,7 @@
 }
 
 .nav-links li a:hover {
-    color: #007bff; /* Change text color on hover */
+    color: #007bff; 
 }
 
 .nav-links li a:hover:before {
@@ -134,7 +135,7 @@
     background-color: #0056b3;
 }
 
-/* Additional hover effects */
+/* Additional hover effects for nav links */
 .nav-links li.center a:before {
     left: 50%;
     transform: translateX(-50%);
@@ -163,168 +164,101 @@
     transform-origin: left;
 }
 
+/* Profile section */
 
-/* profile pic */
-.navbar .profile{
+    /* profile pic */
+    .navbar .profile{
+        vertical-align: middle;
+        display: flex;
+        flex-direction: row;
     
-    display: flex;
-    flex-direction: row;
-    margin-left: 100px;
-
-}
-
-.navbar .profile .pic img{
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
-    margin-top: 7px;
-}
-
-.navbar .profile .user-name{
-    font-size: 15px;
-    font-weight: 600;
-    padding: 15px 20px;
-    margin-top: 10px;
-    color:#5e5d5d;
-}
-
-
-
-
-
-
-
-
-/* Media query for tablets and smaller devices */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 10px 15px;
-        margin: 5px;
-        border-radius: 20px;
     }
 
-    .logo a {
-        font-size: 20px;
+    .navbar .profile .pic img{
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        margin-top: 7px;
     }
 
-    .nav-links {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .nav-links li {
-        margin: 8px 0;
-    }
-
-    .nav-links li a {
-        font-size: 18px;
-    }
-
-    .signin-btn {
-        padding: 6px 12px;
-        font-size: 16px;
-    }
-
-    .contact-number {
+    /* User name */
+    .navbar .profile .user-name{
         font-size: 15px;
-        margin-right: 10px;
+        font-weight: 600;
+        padding: 15px 20px;
+        margin-top: 8px;
+        color:#5e5d5d;
     }
 
-    .profile .user-name {
-        font-size: 14px;
-        padding: 10px 15px;
-    }
-}
 
-/* Media query for very small devices (e.g., phones) */
-@media (max-width: 480px) {
-    .nav-links {
-        font-size: 14px;
-    }
-
-    .nav-links li a {
-        font-size: 16px;
-    }
-
-    .signin-btn {
-        font-size: 14px;
-    }
-
-    .profile .pic img {
-        height: 30px;
-        width: 30px;
-    }
-}
-
-
-/* Toggle Menu Button Styles */
+/* Toggle Menue */
 .menu-toggle {
-    display: none; /* Default: Hidden on larger screens */
+    display: none;
+    font-size: 28px;
     cursor: pointer;
-    gap: 5px;
-    flex-direction: column;
-}
-
-.menu-toggle span {
-    display: block;
-    width: 30px;
-    height: 3px;
-    background-color: #333;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-/* Animation for Toggle Button */
-.menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translateY(10px);
-}
-
-.menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translateY(-10px);
-}
-
-/* Responsive Navigation Links */
-.nav-links-container {
-    display: none; /* Hidden by default on smaller screens */
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    right: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    z-index: 1000;
-    width: 250px;
-    transition: all 0.3s ease-in-out;
-}
-
-.nav-links-container.active {
-    display: flex; /* Show when active */
-}
-
-/* Adjust Links Inside Toggle Menu */
-.nav-links li {
-    margin: 15px 0;
-    text-align: center;
-}
-
-.nav-links li a {
-    font-size: 18px;
     color: #333;
 }
 
-/* Hide Contact and Sign-in Section on Small Screens */
-@media (max-width: 768px) {
-    .contact-signin {
+.menu-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* Responsive Styles to adjust the navbar for small screens */
+@media screen and (max-width: 1700px) {
+    .menu-content {
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px; 
+        left: 0;
+        right: 0;
+        background: #fff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 999;
+        align-items: center;
+    }
+
+    .menu-content.show {
+        display: flex;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;  
+        gap: 10px;
+        width: 100%; 
+        align-items: center; 
+        padding: 0;
+        margin: 0px;
+    }
+    .nav-links li {
+        list-style: none;
+        width: 100%; 
+        text-align: center; 
+    }
+     .nav-links li a {
+        display: block; 
+        padding: 10px;
+        text-align: center;
+        width: 100%;
     }
 
     .menu-toggle {
-        display: flex; /* Show the toggle button on smaller screens */
+        display: block;
+    }
+
+    .contact-signin,
+    .profile {
+        margin: 10px 0;
     }
 }
+
+
+
+

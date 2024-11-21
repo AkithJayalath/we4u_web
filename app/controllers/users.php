@@ -462,6 +462,17 @@ public function deleteUser() {
 
 
 
+// careseeker profiles for user
+
+
+// create profile
+public function createProfile(){
+  $data=[];
+  $this->view('careseeker/v_create', $data);
+}
+
+
+
 
 
 
