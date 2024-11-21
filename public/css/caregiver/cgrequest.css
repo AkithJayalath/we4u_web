@@ -17,10 +17,7 @@
     overflow: hidden;
 }
 
-/*body .sidebar-collapsed .container {
-    width: 100%; 
-    max-width: none; 
-}*/
+
 
 .header{
     display: flex;

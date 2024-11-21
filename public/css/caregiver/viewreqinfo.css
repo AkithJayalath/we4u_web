@@ -1,0 +1,142 @@
+/*body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0; 
+}*/
+
+.container{
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 1050px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: 90vh;
+    overflow: hidden;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    margin-bottom: 28px;
+    background-color: #F7F6FA;
+}
+
+.header h2{
+    font-size: 28px;
+    color: #013CC6;
+    margin-left: 20px;
+    
+}
+
+.header p{
+    font-size: 16px;
+    color: black;
+    margin-right: 80px;
+   font-weight: 500;
+}
+
+.header .sts-pending{
+    margin-right: 65px;
+    padding: 5px 15px;
+    font-size: 12px;
+    color: #1877f2;
+    background-color: #e5f1ff;
+    border-radius: 8px;
+
+}
+
+.pro-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.request-info{
+    background-color: #F7F6FA;
+    border-radius: 25px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    grid-auto-rows: 150px;
+    gap: 20px;
+}
+
+.request-info lable{
+    font-size: 14px;
+    color: #0B63F8;
+    font-weight: 500;
+}
+
+.request-info p{
+    font-size: 14px;
+    color: #000;
+    font-weight: 400;
+}
+
+.content-box{
+    border-radius: 8px;
+    width: 300px;
+    height: 60px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 10px;
+}
+
+.btn-update{
+    background-color: #0B63F8;
+    color: #fff;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 55px;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-update:hover{
+    background-color: #08DCC1;
+}
+
+.btn-container{
+    display: flex;
+    align-items: center;
+    margin: auto;
+    gap: 20px;
+    margin-bottom: 80px;
+}
+
+.btn-container button{
+    padding: 10px 15px;
+    margin-right: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-accept{
+    background-color: #0B63F8;
+}
+
+.btn-accept:hover{
+    background-color: #0953D6;
+}
+
+.btn-reject{
+    background-color: #EE1D52;
+}
+
+.btn-reject:hover{
+    background-color: #C31945;
+}
