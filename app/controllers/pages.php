@@ -8,7 +8,7 @@ class pages extends controller{
 
     public function index(){
        $data = [];
-       $this->view('careseeker/v_index',$data);
+       $this->view('careseeker/v_createProfile',$data);
     }
 
     public function home(){
