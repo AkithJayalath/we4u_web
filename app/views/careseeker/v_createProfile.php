@@ -42,7 +42,7 @@
             </div>
 
             <!-- Create Profile button -->
-            <button class="create-profile-btn">Create Profile</button>
+            <button class="create-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/createProfile'">Create Profile</button>
         </div>
     </div>
 </page-body-container>

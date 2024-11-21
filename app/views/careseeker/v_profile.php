@@ -19,11 +19,11 @@
         </header>
 
         <div class="profile-section">
-            <div class="profile-pic">
+            <div class="profile-pic-b">
             <img src="<?= isset($data['profileData'][0]->profile_picture) && $data['profileData'][0]->profile_picture 
                         ? URLROOT . '/images/profile_imgs/' . $data['profileData'][0]->profile_picture 
                         : URLROOT . '/images/def_profile_pic.jpg'; ?>" 
-                        alt="Profile Picture" class="profile-pic" id="profile_image_placeholder">
+                        alt="Profile Picture" class="profile-pic-b" id="profile_image_placeholder">
 
 
             </div>
