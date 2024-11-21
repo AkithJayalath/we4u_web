@@ -3,8 +3,6 @@
 <!--Top navbar  -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
 
-  <div class="page-body-container">
-    <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
     <div class="top-container">
     <div class="main-container">
     <div class="form-container">
@@ -34,7 +32,6 @@
 
   </div>
 </div>
-  </div>
 
 
 <?php require APPROOT.'/views/includes/footer.php'?>
