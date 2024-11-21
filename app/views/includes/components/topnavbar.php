@@ -7,7 +7,7 @@
     </div>
     <ul class="nav-links">
         <li><a href="#">Caregivers</a></li>
-        <li><a href="#">Consultants</a></li>
+        <li><a href="<?php echo URLROOT; ?>/pages/consultantv">Consultants</a></li>
         <li><a href="#">Blogs</a></li>
         <li class="separator">|</li>
         <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>

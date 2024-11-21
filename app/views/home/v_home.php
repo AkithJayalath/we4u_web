@@ -83,7 +83,7 @@
       <h3>Become a Consultant</h3>
       <p>Flexible home visits</p>
       <p>A carer will visit for a few hours on your chosen days, at a pre-agreed time.</p>
-      <button>Register</button>
+      <button onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantreg'">Register</button>
       
     </div>
   </div>

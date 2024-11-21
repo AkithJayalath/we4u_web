@@ -22,6 +22,9 @@ class pages extends controller{
     public function about() {
         require_once APPROOT . '/views/v_about.php';
     }
+    public function consultantv() {
+        require_once APPROOT . '/views/v_consultant.php';
+    }
 }
 
 

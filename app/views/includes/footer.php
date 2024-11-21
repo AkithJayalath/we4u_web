@@ -1,3 +1,12 @@
+<?php 
+    $required_styles = [
+        'components/footer_styles',
+        
+        
+    ];
+    echo loadCSS($required_styles);
+?>
+
 <script src="<?php echo URLROOT; ?>/js/navbar.js"></script>
 </body>
 <footer>
