@@ -32,8 +32,13 @@ function handleScroll() {
 }
 
 // Toggle mobile menu visibility
-mobileMenu.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    contactSignin.classList.toggle('active');
-    mobileMenu.classList.toggle('open'); // Optional: Add class to style toggle button
+// Toggle the dropdown menu on small screens
+const menuToggle = document.getElementById('mobile-menu');
+const menuContent = document.querySelector('.menu-content');
+
+menuToggle.addEventListener('click', () => {
+    menuContent.classList.toggle('show');
 });
+
+
+
