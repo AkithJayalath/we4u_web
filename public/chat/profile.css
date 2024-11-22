@@ -1,0 +1,174 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Header Styles */
+.header {
+    background-color: #013CC6;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Profile Container */
+.profile-container {
+    width: 90%;
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Profile Picture */
+.profile-container img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* Consultant Info */
+.profile-container h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.profile-container p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Section Container */
+.section {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Headers */
+.section h3 {
+    font-size: 22px;
+    color: #013CC6;
+    margin-bottom: 15px;
+}
+
+/* Bio Section */
+.bio-section p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Book Slot Button */
+.book-slot {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.book-slot-btn {
+    background-color: #013CC6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.book-slot-btn:hover {
+    background-color: #08DCC1;
+}
+
+/* Rate Me Section */
+.rate-me {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.stars {
+    font-size: 30px;
+    color: #ccc;
+}
+
+.stars .star {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.stars .star.selected {
+    color: gold;
+}
+
+/* Feedback Section */
+.feedback-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 2px dashed #013CC6; /* Dashed border */
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.send-feedback-btn {
+    background-color: #013CC6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-feedback-btn:hover {
+    background-color: #08DCC1;
+}
+
+/* Chat Message */
+.chat-message {
+    margin-top: 20px;
+}
+
+.comment,
+.reply {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.comment {
+    text-align: left;
+}
+
+.reply {
+    text-align: right;
+    background-color: #cce5ff;
+}
+
+/* Professional Note */
+.note {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 16px;
+    color: #555;
+}
+
+.note p {
+    font-style: italic;
+    color: #777;
+}
