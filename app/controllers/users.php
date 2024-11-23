@@ -471,6 +471,11 @@ public function createProfile(){
   $this->view('careseeker/v_create', $data);
 }
 
+public function viewElderProfile(){
+  $data=[];
+  $this->view('careseeker/v_viewElderProfile', $data);
+}
+
 
 
 

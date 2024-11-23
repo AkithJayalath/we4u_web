@@ -25,7 +25,7 @@
                     <h4>Jerome Bell</h4>
                     <p>Grand Mother</p>
                 </div>
-                <button class="view-profile-btn">View Profile</button>
+                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/viewElderProfile'">View Profile</button>
                 <button class="delete-profile-btn">Delete</button>
             </div>
 
@@ -37,7 +37,7 @@
                     <h4>Jerome Bell</h4>
                     <p>Grand Father</p>
                 </div>
-                <button class="view-profile-btn">View Profile</button>
+                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/viewElderProfile'">View Profile</button>
                 <button class="delete-profile-btn">Delete</button>
             </div>
 
