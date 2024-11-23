@@ -14,14 +14,53 @@
 
 
 /* root colors */
-:root{
-    --base-clr: #ffffff;
-    --line-clr: #42434a;
-    --hover-clr: #225333;
-    --text-clr: #222222;
-    --accent-clr: #3952cc;
-    --secondary-text-clr: #bobb3c1;
-  }
+:root {
+    /* Base Colors */
+    --color-base: #DBFEFA;           /* Main base color - soft, calming teal for a healthcare setting */
+    --color-background-primary: #F9F9F9;  /* Light neutral background for main content */
+    --color-background-secondary: #F7F6FA; /* Slightly different background for variation and depth */
+
+    /* Text Colors */
+    --color-text-primary: #000000;   /* Primary text color - deep black for main content readability */
+    --color-text-secondary: #666666; /* Secondary text color - softer gray for less critical text */
+    --color-text-accent: #384F6F;    /* Accent text color - muted blue-gray for additional contrast */
+
+    /* Link Colors */
+    --color-link: #5182FF;           /* Clean, professional link color */
+    --color-link-hover: #3A6AD6;     /* Darker blue on hover for interaction feedback */
+
+    /* Button Colors */
+    --color-btn-cancel: #D43B3B;     /* Red for cancel/delete actions */
+    --color-btn-cancel-hover: #B22828; /* Darker red for hover state */
+
+    --color-btn-update: #08DCC1;     /* Teal for update/edit/create actions */
+    --color-btn-update-hover: #06B09C; /* Slightly darker teal for hover */
+
+    --color-btn-primary: #0B63F8;    /* Blue for primary actions like submit/save */
+    --color-btn-primary-hover: #0950C4; /* Darker blue for hover state */
+
+    --color-btn-signup: #4089FF;     /* Bright blue for signup/signin */
+    --color-btn-signup-hover: #2670E2; /* Slightly darker blue for hover */
+
+    --color-btn-upload: #0F5D88;     /* Deep blue for upload actions */
+    --color-btn-upload-hover: #0C4A6E; /* Darker blue for hover */
+
+    /* Status Colors */
+    --color-status-accepted: #4CAF50; /* Light green for accepted status */
+    --color-status-rejected: #FF5252; /* Light red for rejected status */
+    --color-status-pending: #2196F3; /* Light blue for pending status */
+
+    /* Error and Important Colors */
+    --color-error: #EE1D52;          /* Bright red for errors or critical notifications */
+    --color-error-hover: #C41641;    /* Darker red for hover state */
+
+    /* Additional Recommended Caregiving Colors */
+    --color-trust-blue: #3BA5B7;     /* Soft, trustworthy blue - suggests care and professionalism */
+    --color-calm-green: #2E8B57;     /* Muted green - represents health, growth, and wellbeing */
+    --color-warm-gray: #8C8C8C;      /* Neutral warm gray for subtle backgrounds or icons */
+
+    --white: #ffffff;
+}
 
 page-body-container{
     min-height: 100vh;
@@ -39,6 +78,7 @@ page-body-container{
         grid-template-columns: 1fr;
     }
 }
+
 
 
 /* Body */
