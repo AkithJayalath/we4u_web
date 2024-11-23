@@ -17,8 +17,10 @@
     <div class="m-c-r-container">
       <div class="m-c-r-search-section">
         <input type="text" placeholder="Search" />
-
+        <button>Search</button>
       </div>
+
+
 
       <div class="m-c-r-table-container">
         <h2>Request Information</h2>
@@ -42,34 +44,19 @@
             <div class="m-c-r-table-cell">
               <form action="<?php echo URLROOT; ?>/moderator/viewrequests" method="POST">
                   <input type="hidden" name="request_id" value="<?php echo $request->request_id; ?>">
-                  <button type="submit" class="m-c-r-view-req-action-btn">View Details</button>
+                  <button type="submit" class="m-c-r-view-req-action-btn"> Details</button>
               </form>
               </div>
             </div>
       
           <?php endforeach; ?>
 
-          <div class="m-c-r-table-row">
-              <div class="m-c-r-table-cell"><a href="#"><?php echo $request->request_id; ?></a></div>
-              <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->careseeker_id; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->status; ?></div>
-              <div class="m-c-r-table-cell">
-                <form action="<?php echo URLROOT; ?>/moderator/careseekerrequests" method="POST">
-                  <input type="hidden" name="request_id" value="1" />
- <button class="m-c-r-view-req-action-btn">Accept</button>
-                </form>
-              </div>
-            </div>
-
-        
-            <!-- Your existing table rows here -->
           </div>
         </div>
       </div>
 
 
     </div>
-    </page-body-container>
+</page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>
