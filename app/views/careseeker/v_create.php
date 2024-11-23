@@ -41,8 +41,14 @@
                 <!-- Personal Details Section -->
                 <div class="form-column">
                     <h2>Personal Details</h2>
-                    <label for="elderlyName">Full Name:</label>
-                    <input type="text" id="elderlyName" name="elderlyName" required>
+                    <label for="F_elderlyName">First Name:</label>
+                    <input type="text" id="F_elderlyName" name="F_elderlyName" required>
+
+                    <label for="M_elderlyName">Middle Name:</label>
+                    <input type="text" id="M_elderlyName" name="M_elderlyName" >
+
+                    <label for="L_elderlyName">Last Name:</label>
+                    <input type="text" id="L_elderlyName" name="L_elderlyName" required>
 
                     <label for="relationship">Relationship to the careseeker:</label>
                     <input type="text" id="elderlyName" name="elderlyName" required>
@@ -90,6 +96,9 @@
                     
                     <label for="familyDiseases">Family Diseases:</label>
                     <textarea id="familyDiseases" name="familyDiseases" rows="3" placeholder="List hereditary diseases, if any..."></textarea>
+
+                    <label for="currentMedications">Current Medications:</label>
+                    <textarea id="currentMedications" name="currentMedications" rows="3" placeholder="medication - disease, if any..."></textarea>
                     
                 </div>
 
