@@ -1,0 +1,492 @@
+/* Contains everthing */
+.view-consultant-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 10px;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Personal infor section */
+.consultant-personal-info-section {
+    display: flex;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    padding: 20px;
+    gap: 20px;
+  }
+  /* Personal info left section */
+  .consultant-personal-info-left {
+    display: flex;
+    flex: 2;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+  }
+  .consultant-personal-info-left-right {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-bottom: 50px;
+  }
+
+  .consultant-personal-info-left-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    
+  }
+  
+  .consultant-personal-info-pic {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+  }
+
+  .consultant-personal-info-tag {
+    display: inline-block;
+    margin-top: 10px; 
+    padding: 5px 10px;
+    background-color: #e8f5e9; 
+    color: #43a047;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    width: 30%;
+  }
+  
+  .consultant-personal-info-details{
+
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+  }
+  .consultant-personal-info-details h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #000000;
+  }
+  
+  .consultant-personal-info-details p {
+    margin: 5px 0;
+    color: #444343;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.consultant-rating .rating-stars {
+    display: flex;
+    gap: 5px;
+    color: #FFD700; /* Gold color for stars */
+}
+
+.rating-stars i {
+    font-size: 1.2rem;
+}
+  
+
+  /* Personal info right section */
+  .consultant-personal-info-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px; /* Space between the buttons */
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.consultant-send-button {
+    background-color: var(--color-btn-update);
+}
+
+.consultant-chat-button {
+    background-color: var(--color-btn-upload);
+}
+
+.consultant-send-button, .consultant-chat-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icon and text */
+    width: 80%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
+
+.consultant-send-button i, .consultant-chat-button i {
+    font-size: 1.2rem; /* Icon size */
+}
+
+.consultant-send-button:hover {
+    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+}
+
+.consultant-chat-button:hover {
+    background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+}
+
+  
+  .consultant-personal-info-stat {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .consultant-personal-info-stat p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .consultant-personal-info-stat h3 {
+    margin: 5px 0;
+    font-size: 1.2rem;
+    color: #333;
+  }
+
+  .consultant-personal-info-stat:hover{
+    transform: scale(1.01); /* Slight zoom */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+  }
+
+     /* Personal info right section-->left side */
+  
+  .consultant-personal-info-right-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    padding-bottom: 50px;
+  }
+  
+  .consultant-personal-info-diagnosis {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .consultant-personal-info-edit-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .consultant-personal-info-edit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  
+/* Other info section */
+.consultant-other-info-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: var(--color-background-secondary);
+    padding: 20px;
+    border-radius: 20px;
+    justify-content: space-between;
+}
+
+
+    /* Other concerns section */
+.consultant-other-concern-section {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 100%; /* Full-width section */
+    margin: 0; /* Ensure alignment with other sections */
+}
+
+
+    /* Health concerns section */
+.consultant-health-concern-section {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 48%; /* Half-width section for two-column layout */
+}
+
+.consultant-other-concern-section-header,
+.consultant-health-concern-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px 20px;
+    border-bottom: 2px solid #d3d2d2;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.consultant-other-concern-section-content {
+    display: flex;
+    flex-direction: column; /* Single-column layout */
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    flex: 1;
+}
+
+.consultant-health-concern-section-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.consultant-health-concern-item,
+.consultant-other-concern-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px; /* Space between icon and text */
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1 1 calc(50% - 20px); /* Two-column layout for health-concern-section */
+}
+
+.consultant-other-concern-item {
+    flex: 1 1 100%; /* Single-column layout for other-concern-section */
+}
+
+.consultant-health-concern-item:hover,
+.consultant-other-concern-item:hover {
+    transform: scale(1.01); /* Slight zoom */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.consultant-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.consultant-health-concern-item h4,
+.consultant-other-concern-item h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555555;
+}
+
+.consultant-health-concern-item p,
+.consultant-other-concern-item p {
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #777777;
+}
+
+.consultant-header-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+}
+
+.consultant-header-icon {
+    font-size: 3rem;
+    color: #024b99; /* Same color as the icons for consistency */
+}
+
+
+
+/* Rating section */
+.rating-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.rating-reviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.rating-summary {
+  flex: 1;
+  min-width: 200px;
+}
+
+.rating-summary h2 {
+  font-size: 3rem;
+  margin: 0;
+  color: #333;
+}
+
+.rating-summary .stars {
+  font-size: 1.5rem;
+  color: gold;
+  margin: 5px 0;
+}
+
+.rating-summary p {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.rating-breakdown {
+  flex: 2;
+  min-width: 300px;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rating-bar span {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #555;
+}
+
+.bar {
+  background-color: #e0e0e0;
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar .filled {
+  background-color: #4caf50;
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+
+
+/* Reviews */
+.reviews-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.review-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.review-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+  overflow: hidden;
+}
+
+.review-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-content {
+  flex: 1;
+}
+
+.review-header {
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.review-username {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.review-text {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #888;
+}
