@@ -12,6 +12,12 @@ class careseeker extends controller{
       }
 
 
+      public function requestCaregiver(){
+        $data=[];
+        $this->view('careseeker/v_requestCaregiver', $data);
+      }
+
+
 }
 
 
