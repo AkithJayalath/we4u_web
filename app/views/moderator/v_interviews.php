@@ -1,54 +1,50 @@
 <?php 
     $required_styles = [
         'moderator/interviews',
-        'moderator/careseekerrequests',
         // 'components/sidebar',
         
     ];
     echo loadCSS($required_styles);
 ?>
 
-
 <?php require APPROOT.'/views/includes/header.php'; ?>
-<div>
+
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-</div>
+
 
 <page-body-container>
   <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
-
-  <div class="m-c-r-container">
-      <div class="m-c-r-search-section">
-        <input type="text" placeholder="Search" />
+    <div class="m-i-container">
+      <div class="m-i-search-section">
+        <input type="text" placeholder="Search By UserName Or ID" />
         <button>Search</button>
       </div>
 
-
-
-      <div class="m-c-r-table-container">
-        <h2>Request Information</h2>
-        <div class="m-c-r-table">
-          <div class="m-c-r-table-header">
-            <div class="m-c-r-table-cell">Request ID</div>
-            <div class="m-c-r-table-cell">Date</div>
-            <div class="m-c-r-table-cell">Service Provider</div>
-            <div class="m-c-r-table-cell">Status</div>
-            <div class="m-c-r-table-cell">Action</div>
+      <div class="m-i-table-container">
+        <h2>Interview Details</h2>
+        <div class="m-i-table">
+          <div class="m-i-table-header">
+            <div class="m-i-table-cell">Interview ID</div>
+            <div class="m-i-table-cell">Status</div>
+            <div class="m-i-table-cell">Date</div>
+            <div class="m-i-table-cell">Time</div>
+            <div class="m-i-table-cell">User Id</div>
+            <div class="m-i-table-cell">Action</div>
           </div>
-          <div class="m-c-r-table-body">
+          <div class="m-i-table-body">
 
-          <?php foreach($data['requests'] as $request) : ?>
+          <?php foreach($data['interviews'] as $interview) : ?>
 
-            <div class="m-c-r-table-row">
-              <div class="m-c-r-table-cell"><a href="#"><?php echo $request->request_id; ?></a></div>
-              <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->user_id; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->status; ?></div>
-            <div class="m-c-r-table-cell">
-              <form action="<?php echo URLROOT; ?>/moderator/viewrequests" method="POST">
-                  <input type="hidden" name="request_id" value="<?php echo $request->request_id; ?>">
-                  <button type="submit" class="m-c-r-view-req-action-btn"> Details</button>
-              </form>
+            <div class="m-i-table-row">
+              <div class="m-i-table-cell"><?php echo $interview->interview_id; ?></div>
+
+              <div class="m-i-table-cell status-<?php echo ($interview->status); ?>"><?php echo $interview->status; ?></div>
+
+              <div class="m-i-table-cell"><?php echo date_format(date_create($interview->request_date), 'j M Y'); ?></div>
+              <div class="m-i-table-cell"><?php echo date_format(date_create($interview->interview_time), 'h:i A'); ?></div>
+              <div class="m-i-table-cell"><?php echo $interview->provider_id; ?></div>
+              <div class="m-i-table-cell">
+              <button class="m-i-view-req-action-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/interview/<?php echo $interview->request_id; ?>'">Details</button>
               </div>
             </div>
       
@@ -58,9 +54,7 @@
         </div>
       </div>
 
-
-  </div>
-
-  </page-body-container>
+    </div>
+</page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>

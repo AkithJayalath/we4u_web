@@ -1,0 +1,78 @@
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+.add-user-form input[type="file"] {
+  padding: 8px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.form-buttons button {
+  flex: 1;
+}
+
+.ad-users-btn-export {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: var(--color-btn-cancel);
+  color: var(--white);
+  transition: background-color 0.3s ease;
+}
+
+.ad-users-btn-export:hover {
+  background-color: var(--color-btn-cancel-hover);
+}
+
+.ad-users-btn-add {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: var(--color-btn-primary);
+  color: var(--white);
+  transition: background-color 0.3s ease;
+}
+
+.ad-users-btn-add:hover {
+  background-color: var(--color-btn-primary-hover);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ad-users-stat-card {
+      margin: 0 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-buttons {
+      flex-direction: column;
+      gap: 15px;
+  }
+  
+  .form-buttons button {
+      width: 100%;
+  }
+
+  .ad-users-btn-export,
+  .ad-users-btn-add {
+      width: 100%;
+      padding: 14px 24px;
+  }
+}

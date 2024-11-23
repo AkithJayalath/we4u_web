@@ -23,6 +23,7 @@
                 <p>Application ID: <?php echo $data['request']->request_id; ?></p>
                 <p>Applicant: <?php echo $data['request']->username; ?></p>
                 <p>Email: <?php echo $data['request']->email; ?></p>
+                <p>Type: <?php echo $data['request']->request_type; ?></p>
             </div>
         </div>
         
