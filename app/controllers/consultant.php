@@ -184,6 +184,10 @@
       $this->view('consultant/c_land');
   }
 
+  public function consultantchat(){
+    $this->view('consultant/chat');
+}
+
 
     
   }
