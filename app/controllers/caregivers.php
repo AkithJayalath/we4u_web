@@ -171,9 +171,22 @@
 }
     }
 
+    public function rateandreview(){
+      $this->view('caregiver/v_rate&review');
+  
+      
+    }
 
-
-
+    public function caregivingHistory(){
+      $this->view('caregiver/v_cghistory');
+  
+      
+    }
+  
     
-  }
-    ?>
+
+}
+  
+
+  
+?>

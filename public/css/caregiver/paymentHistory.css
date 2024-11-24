@@ -115,6 +115,11 @@ table {
     text-align: center;
   }
 
+  tr .p-id{
+    color: #0B63F8;
+    
+  }
+
   tbody td .user-info {
     display: flex;
     align-items: center;
