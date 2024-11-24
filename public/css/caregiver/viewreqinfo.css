@@ -89,6 +89,60 @@
     padding: 10px;
 }
 
+details summary {
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    padding: 8px 30px 8px 10px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+
+details summary:hover {
+    background-color: #f0f8ff;
+}
+
+details[open] summary {
+    background-color: #e6f7ff;
+    border-color: #007bff;
+}
+
+.dropdown i {
+    position: absolute;
+    right: 10px;
+    font-size: 18px;
+    color: #007bff;
+    transition: transform 0.3s ease;
+}
+
+details[open] .fa-circle-chevron-down {
+    transform: rotate(180deg);
+}
+
+
+details[open] ul {
+    max-height: 80px; /* Set max height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+    padding-left: 20px;
+    margin-top: 10px;
+    list-style-type: decimal; /* Numbers instead of bullets */
+    color: #555;
+    font-size: 15px;
+}
+
+details ul li {
+    margin-bottom: 8px;
+}
+
+
 .btn-update{
     background-color: #0B63F8;
     color: #fff;
@@ -105,6 +159,62 @@
 .btn-update:hover{
     background-color: #08DCC1;
 }
+
+.collapsible-btn {
+    background-color: #ffffff;
+    
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+
+.collapsible-btn:hover {
+    background-color: #f0f8ff;
+}
+
+.collapsible-btn i {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+    color: #007bff;
+}
+
+.collapsible-btn.active i {
+    transform: rotate(180deg); /* Rotate the icon when active */
+}
+
+/* Style for the content that will be shown/hidden */
+.col-content {
+    padding: 10px;
+    display: none;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.notes {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Expand content smoothly when the collapsible is active */
+.collapsible-btn.active + .col-content {
+    display: block;
+    max-height: 80px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+
 
 .btn-container{
     display: flex;
@@ -140,3 +250,152 @@
 .btn-reject:hover{
     background-color: #C31945;
 }
+
+.modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content{
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    height: 300px;
+    margin: 20vh auto;
+    padding: 2rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.modal-content i{
+    color: #EE1D52;
+    font-size: 80px;
+    margin-bottom: 1rem;
+}
+
+.modal-content h2 {
+    color: #013CC6;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.modal-content p {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.modal-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 80px;
+}
+
+.modal-buttons button{
+    padding: 10px 15px;
+    
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+.modal-buttons .modal-confirm-btn{
+    background-color: #0B63F8;
+}
+.modal-buttons .modal-confirm-btn:hover{
+    background-color: #0953D6;
+}
+.modal-buttons .modal-cancel-btn{
+    background-color: #EE1D52;
+}
+.modal-buttons .modal-cancel-btn:hover{
+    background-color: #C31945;
+}
+
+
+.r-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.r-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    height: 450px;
+    margin: 20vh auto;
+    padding: 2rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 30px;
+    margin-right: 20px;
+}
+
+.modal-img{
+    width: 150px;
+    margin-right: 10px;
+}
+
+.modal-header h2{
+    font-size: 32px;
+    font-weight: 700;
+    color: #EE1D52; 
+    margin-bottom: 30px;
+}
+
+.r-modal-content p{
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #090909;
+    border-radius: 15px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    width: 450px;
+    height:100px
+}
+
+.modal-buttons .btn-submit{
+    background-color: #0B63F8;
+}
+.modal-buttons .btn-submit:hover{
+    background-color: #0953D6;
+}
+.modal-buttons .btn-cancel{
+    background-color: #EE1D52;
+}
+.modal-buttons .btn-cancel:hover{
+    background-color: #C31945;
+}
+
