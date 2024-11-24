@@ -1,0 +1,246 @@
+.request-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 15px;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.request-info-heading p{
+    padding-left: 20;
+    font-weight: 500;
+    font-size:x-large;
+    color: var(--color-text-secondary);
+}
+
+.request-info-header {
+    display: flex;
+    flex:0.7;
+    background-color:var( --color-background-secondary);
+    border-radius: 20px;
+
+  }
+
+
+
+  .request-info-header-left {
+    display: flex;
+    flex: 1;
+    background-color:var(--white);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    gap: 20px;
+    padding-left: 20px;
+   
+  }
+  .request-info-header-left-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background-color: var(--white);
+   
+  }
+
+  .request-info-header-left-left {
+    flex: 0.5;
+    display: flex;
+    position: relative;
+    background-color: var(--white);
+    align-items:center;
+    
+  }
+  
+  .info-circle {
+    width: 150px; /* Adjust size of circles */
+    height: 150px;
+    border-radius: 50%; /* Creates the circular shape */
+    overflow: hidden; /* Ensures the image stays within the circle */
+    position: relative;
+    border: 10px solid white;
+  }
+  
+  .info-circle img {
+    width: 100%; /* Makes the image fit inside the circle */
+    height: 100%;
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+  }
+  
+  .image1 {
+    z-index: 2; /* Ensures this image appears on top */
+    margin-right: -40px; /* Adjust for overlap */
+    
+  }
+  
+  .image2 {
+    z-index: 1; /* Places this image behind the first */
+  }
+
+  .request-info-personal-info-tag {
+    display: inline-block;
+    margin-top: 10px; 
+    padding: 5px 10px; 
+    background-color: #dddddd; 
+    color: #6b6b6b;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px; 
+    max-width: 15%;
+    width: auto; 
+    box-sizing: border-box; 
+    white-space: nowrap; 
+}
+
+  
+  
+
+
+  
+
+  /* Personal info right section */
+  .request-info-header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px; /* Space between the buttons */
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+
+
+
+
+
+
+    /* Other concerns section */
+.request-info-other-concern-section {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+   background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 100%; /* Full-width section */
+    margin: 0; /* Ensure alignment with other sections */
+}
+
+.request-info-buttons{
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color:var(--white);
+    justify-content:center;
+    align-items:center;
+    gap: 20px;
+    margin: 0;
+
+}
+
+
+.request-send-button {
+    background-color: var(--color-btn-update);
+}
+
+.request-cancel-button {
+    background-color: var(--color-btn-upload);
+}
+
+.request-send-button, .request-cancel-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icon and text */
+    width: 80%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
+
+
+.request-send-button:hover {
+    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+}
+
+.request-cancel-button:hover {
+    background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+}
+
+
+
+/* Ensure the parent container fills its space */
+.request-infos-section {
+    display: flex;
+    justify-content: space-between; /* Space between the two columns */
+    align-items: stretch;
+    gap: 20px; /* Space between the columns */
+    padding: 20px;
+    background-color: #ffffff; /* Optional: Slight background for the section */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for the section */
+    box-sizing: border-box;
+}
+
+/* Each column */
+.request-info-column {
+    flex: 1; /* Columns take equal space */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+ /* Light shadow for columns */
+}
+
+/* Individual cells within columns */
+.request-info-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for rows */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow for rows */
+}
+
+/* Labels and values styling */
+.request-info-row label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555555;
+    margin-bottom: 5px;
+}
+
+.request-info-row p {
+    font-size: 1rem;
+    color: #333333;
+    margin: 0;
+    font-weight: 500; /* Slightly bolder text for readability */
+}

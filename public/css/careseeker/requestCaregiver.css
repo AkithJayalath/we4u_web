@@ -1,0 +1,375 @@
+.request-caregiver {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 15px;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.request-heading p{
+    padding-left: 20;
+    font-weight: 500;
+    font-size:x-large;
+    color: var(--color-text-secondary);
+}
+
+.request-header {
+    display: flex;
+    background-color:var(--color-background-secondary);
+    border-radius: 20px;
+    gap: 15px;
+
+  }
+
+
+
+  .request-header-left {
+    display: flex;
+    flex: 2;
+    background-color:var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+  }
+  .request-header-left-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-bottom: 50px;
+   
+  }
+
+  .request-header-left-left {
+    flex: 0.5;
+    display: flex;
+    position: relative;
+    
+    align-items: center;
+    
+  }
+  
+  .circle {
+    width: 150px; /* Adjust size of circles */
+    height: 150px;
+    border-radius: 50%; /* Creates the circular shape */
+    overflow: hidden; /* Ensures the image stays within the circle */
+    position: relative;
+    border: 10px solid white;
+  }
+  
+  .circle img {
+    width: 100%; /* Makes the image fit inside the circle */
+    height: 100%;
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+  }
+  
+  .image1 {
+    z-index: 2; /* Ensures this image appears on top */
+    margin-right: -40px; /* Adjust for overlap */
+    
+  }
+  
+  .image2 {
+    z-index: 1; /* Places this image behind the first */
+  }
+
+  .request-personal-info-tag {
+    display: inline-block;
+    margin-top: 10px; 
+    padding: 5px 10px;
+    background-color: #e8f5e9; 
+    color: #43a047;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    width: 30%;
+  }
+  
+  .request-personal-info-details{
+
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+  }
+  .request-personal-info-details h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #000000;
+  }
+  
+  .request-personal-info-details p {
+    margin: 5px 0;
+    color: #444343;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.consultant-rating .rating-stars {
+    display: flex;
+    gap: 5px;
+    color: #FFD700; /* Gold color for stars */
+}
+
+.rating-stars i {
+    font-size: 1.2rem;
+}
+  
+
+  /* Personal info right section */
+  .request-header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px; /* Space between the buttons */
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.request-send-button {
+    background-color: var(--color-btn-update);
+}
+
+.request-cancel-button {
+    background-color: var(--color-btn-cancel);
+}
+
+.request-send-button, .request-cancel-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icon and text */
+    width: 80%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
+
+.request-send-button i, .request-chat-button i {
+    font-size: 1.2rem; /* Icon size */
+}
+
+.request-send-button:hover {
+    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+}
+
+.request-cancel-button:hover {
+    background-color: var(--color-btn-cancel-hover); /* Darker shade on hover */
+}
+
+
+
+
+.request-info-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: var(--color-background-secondary);
+    
+    border-radius: 20px;
+    justify-content: space-between;
+    background-color: #000000;
+}
+
+
+    /* Other concerns section */
+.request-other-concern-section {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 100%; /* Full-width section */
+    margin: 0; /* Ensure alignment with other sections */
+}
+
+
+
+
+.request-other-concern-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px 20px;
+    border-bottom: 2px solid #d3d2d2;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.request-other-concern-section-content {
+    display: flex;
+    flex-direction: column; /* Single-column layout */
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    flex: 1;
+}
+.request-other-concern-section-content p {
+    margin: 5px 0;
+    color: #5e5d5d;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+.request-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+
+.request-other-concern-item h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555555;
+}
+
+
+.request-other-concern-item p {
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #777777;
+}
+
+.request-header-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+}
+
+.request-header-icon {
+    font-size: 3rem;
+    color: #024b99; /* Same color as the icons for consistency */
+}
+
+
+
+
+
+
+
+
+.request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1 1 calc(50% - 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: none;
+    height: 100px;
+}
+
+.date-range {
+    display: flex;
+    gap: 10px;
+}
+
+.radio-options {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.radio-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.send-request {
+    background-color: #43a047;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-request {
+    background-color: #e53935;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-request:hover {
+    background-color: #388e3c;
+}
+
+.cancel-request:hover {
+    background-color: #b71c1c;
+}
+
