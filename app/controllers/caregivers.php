@@ -171,9 +171,18 @@
 }
     }
 
-
-
+    public function rateandreview(){
+      $this->view('caregiver/v_rate&review');
+  
+      
+    }
 
     
-  }
-    ?>
+  
+    
+
+}
+  
+
+  
+?>
