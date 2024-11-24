@@ -62,6 +62,23 @@
     --white: #ffffff;
 
 
+    /* Table Colors */
+    --color-table-header: var(--color-background-secondary);
+    --color-table-row-hover: var(--color-background-primary);
+
+    /* reject form colors  */
+    --color-form-border: #e0e0e0;
+    --color-form-background: #f8f9fa;
+
+    
+        /* Add these new essential variables */
+        --color-header-title: #1a237e;
+        --color-application-id: #546e7a;
+        --color-info-label: #6b7280;
+        --color-info-value: #1f2937;
+    
+
+
     /* tags colors */
     --tag-status-accepted: #28a745;
     --tag-status-rejected:rgb(248, 26, 26);
@@ -72,6 +89,7 @@
     --tag-status-rejected-background:#fcdbdf; 
     --tag-status-completed-background: #d1e7ff; 
     --tag-status-pending-background: #e2e2e2; 
+
 
 }
 
@@ -88,8 +106,17 @@ page-body-container{
 }
 @media(max-width: 768px){
     page-body-container{
-        grid-template-columns: 1fr;
+        display: block;
+        position: relative;
+        z-index: 1;
     }
+}
+
+container{
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 

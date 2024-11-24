@@ -13,12 +13,15 @@
 
 
 <page-body-container>
+  <!-- "m-c-r-" indentifies the moderator-careseeker-requests  -->
   <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
     <div class="m-c-r-container">
       <div class="m-c-r-search-section">
-        <input type="text" placeholder="Search" />
-
+        <input type="text" placeholder="Search By UserName Or ID" />
+        <button>Search</button>
       </div>
+
+
 
       <div class="m-c-r-table-container">
         <h2>Request Information</h2>
@@ -26,50 +29,37 @@
           <div class="m-c-r-table-header">
             <div class="m-c-r-table-cell">Request ID</div>
             <div class="m-c-r-table-cell">Date</div>
-            <div class="m-c-r-table-cell">Service Provider</div>
+            <div class="m-c-r-table-cell">User ID</div>
             <div class="m-c-r-table-cell">Status</div>
             <div class="m-c-r-table-cell">Action</div>
           </div>
           <div class="m-c-r-table-body">
 
           <?php foreach($data['requests'] as $request) : ?>
-
             <div class="m-c-r-table-row">
-              <div class="m-c-r-table-cell"><a href="#"><?php echo $request->request_id; ?></a></div>
-              <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div>
+              <div class="m-c-r-table-cell"><?php echo $request->request_id; ?></a></div>
+              <!-- <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div> -->
+              <div class="m-c-r-table-cell"><?php echo date_format(date_create($request->request_date), 'j M Y'); ?></div>
               <div class="m-c-r-table-cell"><?php echo $request->user_id; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->status; ?></div>
+              <div class="m-c-r-table-cell status-<?php echo strtolower($request->status); ?>"><?php echo $request->status; ?></div>
             <div class="m-c-r-table-cell">
               <form action="<?php echo URLROOT; ?>/moderator/viewrequests" method="POST">
                   <input type="hidden" name="request_id" value="<?php echo $request->request_id; ?>">
-                  <button type="submit" class="m-c-r-view-req-action-btn">View Details</button>
+                  <input type="hidden" name="user_id" value="<?php echo $request->user_id; ?>">
+                  <input type="hidden" name="request_type" value="<?php echo $request->request_type; ?>">
+                  <button type="submit" class="m-c-r-view-req-action-btn"> Details</button>
               </form>
               </div>
             </div>
       
           <?php endforeach; ?>
 
-          <div class="m-c-r-table-row">
-              <div class="m-c-r-table-cell"><a href="#"><?php echo $request->request_id; ?></a></div>
-              <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->careseeker_id; ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->status; ?></div>
-              <div class="m-c-r-table-cell">
-                <form action="<?php echo URLROOT; ?>/moderator/careseekerrequests" method="POST">
-                  <input type="hidden" name="request_id" value="1" />
- <button class="m-c-r-view-req-action-btn">Accept</button>
-                </form>
-              </div>
-            </div>
-
-        
-            <!-- Your existing table rows here -->
           </div>
         </div>
       </div>
 
 
     </div>
-    </page-body-container>
+</page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>

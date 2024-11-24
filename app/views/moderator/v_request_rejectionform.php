@@ -23,11 +23,14 @@
                 <p>Application ID: <?php echo $data['request']->request_id; ?></p>
                 <p>Applicant: <?php echo $data['request']->username; ?></p>
                 <p>Email: <?php echo $data['request']->email; ?></p>
+                <p>Type: <?php echo $data['request']->request_type; ?></p>
             </div>
         </div>
         
         <form method="POST" action="<?php echo URLROOT; ?>/moderator/rejectRequest" onsubmit="showSuccessModal(); return false;">
             <input type="hidden" name="request_id" value="<?php echo $data['request']->request_id; ?>">
+            <input type="hidden" name="user_id" value="<?php echo $data['request']->user_id; ?>">
+            <input type="hidden" name="role" value="<?php echo $data['request']->role; ?>">
             <div class="form-group">
                 <label>Rejection Reason</label>
                 <textarea name="comment" required></textarea>

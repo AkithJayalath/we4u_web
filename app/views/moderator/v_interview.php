@@ -7,9 +7,6 @@
 <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
 
   <div class="m-container">
-
-
-
     <form action="<?php echo URLROOT; ?>/moderator/submitInterview" method="POST">
       <div class="m-i-main-container">
         <div class="m-i-profile-section">
@@ -25,6 +22,33 @@
 
         <h2 class="m-i-request-id">Request Id: #<?php echo $data['request']->request_id ?? '1234'; ?></h2>
         <input type="hidden" name="request_id" value="<?php echo $data['request']->request_id ?? ''; ?>">
+
+        
+    <?php if($data['interview']): ?>
+      <?php
+          $interview_datetime = strtotime($data['interview']->request_date . ' ' . $data['interview']->interview_time);
+          $current_time = time();
+          $time_diff = $interview_datetime - $current_time;
+          $days_left = floor($time_diff / (60 * 60 * 24));
+          $hours_left = floor(($time_diff % (60 * 60 * 24)) / (60 * 60));
+                  
+          $is_overdue = $time_diff < 0;
+          $interview_status = $data['interview']->status ?? 'pending';
+        ?>
+              
+      
+        <div class="m-i-countdown <?php echo $is_overdue ? 'overdue' : 'upcoming'; ?>">
+            <?php if($interview_status === 'completed'): ?>
+                Interview Completed
+              <?php else: ?>
+                  <?php if($is_overdue): ?>
+                    Interview overdue by <?php echo abs($days_left); ?> days and <?php echo abs($hours_left); ?> hours
+                    <?php else: ?>
+                        Time remaining: <?php echo $days_left; ?> days and <?php echo $hours_left; ?> hours
+                    <?php endif; ?>
+                  <?php endif; ?>
+          </div>
+    <?php endif; ?>
 
         <div class="m-i-form-grid">
           <div class="m-i-form-left">
@@ -42,6 +66,11 @@
                        value="<?php echo ($data['interview'] && $data['interview']->interview_time) ? $data['interview']->interview_time : ''; ?>" 
                        required />
               </div>
+
+              <?php if(!empty($data['time-err-message'])): ?>
+              <span class="error-message" style="color: red; font-size: 14px;"><?php echo $data['time-err-message']; ?></span>
+              <?php endif; ?>
+
 
               <div class="name_detail">
                 <span>Service</span>
@@ -62,6 +91,9 @@
                        value="<?php echo ($data['interview'] && $data['interview']->meeting_link) ? $data['interview']->meeting_link : ''; ?>" 
                        placeholder="Enter meeting link" 
                        required />
+                       <?php if(!empty($data['link-err-message'])): ?>
+                        <span class="error-message" style="color: red; font-size: 14px;"><?php echo $data['link-err-message']; ?></span>
+                        <?php endif; ?>
               </div>
             </div>
           </div>          
@@ -82,12 +114,21 @@
                 <input type="email" name="provider_email" value="<?php echo $data['request']->email ?? 'provider@email.com'; ?>" readonly />
               </div>
             </div>
-          <div class="m-i-button-group">
-              <button type="submit" class="m-i-submit-btn">
-                  <?php echo ($data['interview']) ? 'Update Interview' : 'Add Interview'; ?>
-              </button>
-              <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/requests'">Cancel</button>
-          </div>
+
+            <div class="m-i-button-group">
+                    <button type="submit" class="m-i-submit-btn" <?php echo (($data['interview'] && $data['interview']->status == 'Done') || $data['request']->status != 'Pending' ) ? 'disabled' : ''; ?>>
+                        <?php echo ($data['interview']) ? 'Update Interview' : 'Add Interview'; ?>
+                    </button>
+
+                    <?php if($data['interview']): ?>
+                        <button type="button" class="m-i-delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/deleteInterview/<?php echo $data['request']->request_id; ?>'">
+                            Delete Interview
+                        </button>
+                    <?php endif; ?>
+
+                    <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/requests'">Cancel</button>
+              </div>
+
         </div>
       </div>
       </div>
