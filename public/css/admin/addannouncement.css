@@ -1,0 +1,145 @@
+.a-a-a-main-content {
+  width: 100%;
+  padding: 24px;
+}
+
+.a-a-a-stat-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px;
+  background: var(--white);
+  border-radius: 8px;
+}
+
+.a-a-a-stat-card h2 {
+  color: var(--color-header-title);
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.a-a-a-form {
+  width: 100%;
+}
+
+.a-a-a-form-group {
+  margin-bottom: 24px;
+}
+
+.a-a-a-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.a-a-a-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-form-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.a-a-a-input:focus {
+  outline: none;
+  border-color: var(--color-btn-primary);
+}
+
+textarea.a-a-a-input {
+  resize: vertical;
+  min-height: 200px;
+  line-height: 1.6;
+}
+
+.a-a-a-form-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.a-a-a-btn-cancel,
+.a-a-a-btn-save {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.a-a-a-btn-cancel {
+  background: var(--color-btn-cancel);
+  color: var(--white);
+}
+
+.a-a-a-btn-save {
+  background: var(--color-btn-primary);
+  color: var(--white);
+}
+
+.a-a-a-btn-save:hover {
+  background: var(--color-btn-primary-hover);
+}
+
+.a-a-a-btn-cancel:hover {
+  background: var(--color-btn-cancel-hover);
+}
+
+@media (max-width: 768px) {
+  .a-a-a-main-content {
+    padding: 16px 0;
+    width: 100vw;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .a-a-a-stat-card {
+    padding: 20px;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    max-width: none;
+  }
+
+  .a-a-a-form {
+    width: 100%;
+  }
+
+  .a-a-a-form-group {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .a-a-a-input {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .a-a-a-form-buttons {
+    width: 80%;
+    margin: 20px auto;
+  }
+
+  .a-a-a-btn-cancel,
+  .a-a-a-btn-save {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .a-a-a-form-buttons {
+    width: 70%;
+  }
+
+  .a-a-a-btn-cancel,
+  .a-a-a-btn-save {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}

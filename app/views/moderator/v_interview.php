@@ -7,10 +7,6 @@
 <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
 
   <div class="m-container">
-
-
-
-
     <form action="<?php echo URLROOT; ?>/moderator/submitInterview" method="POST">
       <div class="m-i-main-container">
         <div class="m-i-profile-section">
@@ -118,13 +114,21 @@
                 <input type="email" name="provider_email" value="<?php echo $data['request']->email ?? 'provider@email.com'; ?>" readonly />
               </div>
             </div>
-          <div class="m-i-button-group">
-          <button type="submit" class="m-i-submit-btn" <?php echo ($data['interview'] && $data['interview']->status == 'Done') ? 'disabled' : ''; ?>>
-            <?php echo ($data['interview']) ? 'Update Interview' : 'Add Interview'; ?>
-          </button>
 
-              <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/requests'">Cancel</button>
-          </div>
+            <div class="m-i-button-group">
+                    <button type="submit" class="m-i-submit-btn" <?php echo (($data['interview'] && $data['interview']->status == 'Done') || $data['request']->status != 'Pending' ) ? 'disabled' : ''; ?>>
+                        <?php echo ($data['interview']) ? 'Update Interview' : 'Add Interview'; ?>
+                    </button>
+
+                    <?php if($data['interview']): ?>
+                        <button type="button" class="m-i-delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/deleteInterview/<?php echo $data['request']->request_id; ?>'">
+                            Delete Interview
+                        </button>
+                    <?php endif; ?>
+
+                    <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/requests'">Cancel</button>
+              </div>
+
         </div>
       </div>
       </div>

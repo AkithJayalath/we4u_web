@@ -476,6 +476,15 @@ public function viewElderProfile(){
   $this->view('careseeker/v_viewElderProfile', $data);
 }
 
+public function blog(){
+  $data=[];
+  $this->view('users/v_blog', $data);
+}
+
+public function viewblog(){
+  $data=[];
+  $this->view('users/v_view_blog', $data);
+}
 
 
 

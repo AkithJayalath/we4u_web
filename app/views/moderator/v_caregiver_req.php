@@ -181,11 +181,10 @@
             <button class="m-v-r-interview-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/interview/<?php echo $data['request']->request_id; ?>'">
             <i class="fas fa-calendar-alt"></i> Schedule Interview
             </button>
-
-            <button class="m-v-r-approve-btn" onclick="approveApplication(<?php echo $data['request']->request_id; ?>)">
-                <i class="fas fa-check"></i> Approve
-            </button>
-        </div>
+              <button class="m-v-r-approve-btn" onclick="approveApplication(<?php echo $data['request']->request_id; ?>)">
+                  <i class="fas fa-check"></i> Approve
+              </button>
+          </div>
     </div>
 
     <!-- rejection model popup -->
@@ -200,7 +199,20 @@
         </div>
     </div>
 
+    <!-- approval modal popup -->
+    <div id="approveModal" class="m-v-r-modal">
+        <div class="m-v-r-modal-content">
+            <h2>Confirm Approval</h2>
+            <p>Are you sure you want to approve this application?</p>
+            <div class="m-v-r-modal-buttons">
+                <button class="m-v-r-modal-btn m-v-r-confirm-btn" onclick="proceedToApproveForm()">Yes, Proceed</button>
+                <button class="m-v-r-modal-btn m-v-r-cancel-btn" onclick="closeApproveModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+
     function rejectApplication(requestId) {
         document.getElementById('rejectModal').style.display = 'block';
     }
@@ -213,7 +225,25 @@
         const requestId = document.querySelector('.m-v-r-application-id').textContent.split(':')[1].trim();
         window.location.href = '<?php echo URLROOT; ?>/moderator/rejectform/' + requestId;
     }
+
+    function approveApplication(requestId) {
+        document.getElementById('approveModal').style.display = 'block';
+    }
+
+    function closeApproveModal() {
+        document.getElementById('approveModal').style.display = 'none';
+    }
+
+    function proceedToApproveForm() {
+        const requestId = document.querySelector('.m-v-r-application-id').textContent.split(':')[1].trim();
+        window.location.href = '<?php echo URLROOT; ?>/moderator/approve/' + requestId;
+    }
+
+
+
+
     </script>
+
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>

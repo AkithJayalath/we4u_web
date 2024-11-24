@@ -27,6 +27,54 @@ class admin extends controller{
     $this->view('admin/v_users', $data);
   }
 
+  public function blog(){
+    $data = [
+      'title' => 'Blog'
+    ];
+    $this->view('admin/v_blog', $data);
+  }
+
+  public function viewblog(){
+    $data = [
+      'title' => 'View Blog'
+    ];
+    $this->view('admin/v_view_blog', $data);
+  }
+
+  public function editblog(){
+    $data = [
+      'title' => 'Add Blog'
+    ];
+    $this->view('admin/v_edit_blog', $data);
+  }
+
+  public function addblog(){
+    $data = [
+      'title' => 'Add Blog'
+    ];
+    $this->view('admin/v_add_blog', $data);
+  }
+
+  public function viewannouncement(){
+    $data = [
+      'title' => 'View Announcement'
+    ];
+    $this->view('admin/v_viewannouncements', $data);
+  }
+
+  public function editannouncement(){
+    $data = [
+      'title' => 'Edit Announcement'
+    ];
+    $this->view('admin/v_editannouncement', $data);
+  }
+
+  public function addannouncement(){
+    $data = [
+      'title' => 'Add Announcement'
+    ];
+    $this->view('admin/v_addannouncement', $data);
+  }
 
 
 

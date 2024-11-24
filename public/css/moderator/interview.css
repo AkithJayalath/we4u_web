@@ -185,3 +185,20 @@
   color: #e53e3e;
   border: 1px solid #e53e3e;
 }
+
+.m-i-delete-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: #dc3545;
+    color: var(--white);
+}
+
+.m-i-delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}

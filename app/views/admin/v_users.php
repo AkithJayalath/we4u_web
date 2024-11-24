@@ -25,7 +25,7 @@
                           <div class="ad-users-stat-label">Total Users</div>
                       </div>
                       <div class="ad-users-stat-icon ad-users-blue">
-                          <i data-lucide="users"></i>
+                          
                       </div>
                   </div>
                   <div class="ad-users-stat-growth ad-users-positive">(+29%)</div>

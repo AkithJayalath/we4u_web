@@ -5,12 +5,13 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--color-text-primary);
   font-weight: 500;
 }
 
 .add-user-form input[type="file"] {
   padding: 8px;
+  background-color: var(--color-background-primary);
 }
 
 .form-buttons {
@@ -29,13 +30,13 @@
   border-radius: 4px;
   font-weight: 500;
   cursor: pointer;
-  background-color: var(--color-btn-cancel);
+  background-color: var(--color-trust-blue);
   color: var(--white);
   transition: background-color 0.3s ease;
 }
 
 .ad-users-btn-export:hover {
-  background-color: var(--color-btn-cancel-hover);
+  background-color: var(--color-btn-upload-hover);
 }
 
 .ad-users-btn-add {
@@ -44,19 +45,19 @@
   border-radius: 4px;
   font-weight: 500;
   cursor: pointer;
-  background-color: var(--color-btn-primary);
+  background-color: var(--color-btn-update);
   color: var(--white);
   transition: background-color 0.3s ease;
 }
 
 .ad-users-btn-add:hover {
-  background-color: var(--color-btn-primary-hover);
+  background-color: var(--color-btn-update-hover);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .ad-users-stat-card {
       margin: 0 15px !important;
+      background-color: var(--color-background-secondary);
   }
 }
 

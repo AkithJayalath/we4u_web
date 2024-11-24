@@ -16,19 +16,22 @@
 
       $this->view('moderator/v_careseekerrequests', $data);
     }
-
-    public function acceptedcareseekers(){
-      $data = [];
-      
-      $this->view('moderator/v_acceptedcareseekers', $data);
+    
+    public function acceptedcareseekers() {
+        $requests = $this->moderatorModel->get_accepted_requests();
+        $data = [
+            'requests' => $requests
+        ];
+        $this->view('moderator/v_acceptedcareseekers', $data);
     }
 
-    public function rejectedcareseekers(){
-      $data = [];
-
-      $this->view('moderator/v_rejectedcareseekers', $data);
+    public function rejectedcareseekers() {
+        $requests = $this->moderatorModel->get_rejected_requests();
+        $data = [
+            'requests' => $requests
+        ];
+        $this->view('moderator/v_rejectedcareseekers', $data);
     }
-
     // rejection form getting details about the request
     public function rejectform($request_id) {
       $request = $this->moderatorModel->get_requests_by_id($request_id);
@@ -137,7 +140,8 @@
                         'meeting_link' => $_POST['meeting_link'],
                         'provider_id' => $_POST['provider_id'],
                         'provider_name' => $_POST['provider_name'],
-                        'provider_email' => $_POST['provider_email']
+                        'provider_email' => $_POST['provider_email'],
+                        'status' => 'Pending'
                     ],
                     'time-err-message' => $errors['time-err-message'] ?? '',
                     'link-err-message' => $errors['link-err-message'] ?? ''
@@ -188,7 +192,7 @@
               $data = [
                   'request_id' => $_POST['request_id'],
                   'user_id' => $_POST['user_id'],
-                  'type' => $_POST['request_type'],
+                  'role' => $_POST['role'],
                   'comment' => $_POST['comment'],
                   'status' => 'Declined',
                   'interview_status' => 'Done',
@@ -204,6 +208,42 @@
                 redirect('moderator/rejectform/' . $data['request_id']);
               }
           }
+      }
+
+      public function approve($request_id) {
+        $request = $this->moderatorModel->get_requests_by_id($request_id);
+        $data = [
+            'request_id' => $request_id,
+            'status' => 'Approved',
+            'is_approved' => 'approved',
+            'comment' => 'Application approved by moderator',
+            'role' => $request->role,
+            'user_id' => $request->user_id
+        ];
+        
+        if($this->moderatorModel->updateRequestStatus($data)) {
+            redirect('moderator/requests');
+        }
+    }
+    
+
+      public function deleteInterview($request_id) {
+        if($this->moderatorModel->deleteInterview($request_id)) {
+            $_SESSION['success_message'] = 'Interview deleted successfully';
+            redirect('moderator/careseekerrequests');
+        } else {
+            $_SESSION['error_message'] = 'Failed to delete interview';
+            redirect('moderator/interview/' . $request_id);
+        }
+      }
+
+      // testing 
+      public function update($caregiver_id){
+        $this->moderatorModel->updateCaregiverRequestStatus($caregiver_id);
+        $data = [
+          'caregiver_id' => $caregiver_id
+        ];
+        $this->view('moderator/v_update_caregiver', $data);
       }
 
       public function viewrequests(){
@@ -239,5 +279,7 @@
       }
 }
 ?>
+
+
 
 

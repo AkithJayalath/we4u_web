@@ -92,9 +92,17 @@ page-body-container{
 }
 @media(max-width: 768px){
     page-body-container{
-        grid-template-columns: 1fr;
-        padding-top: 50px;
+        display: block;
+        position: relative;
+        z-index: 1;
     }
+}
+
+container{
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 

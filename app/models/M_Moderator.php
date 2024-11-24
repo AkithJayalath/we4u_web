@@ -13,52 +13,67 @@
             return $results;
         }
 
-
-        // testing for the interview 
-
-        // public function careseekerrequests($data){
-
-        // }
-
-        // function to update the request status
-        public function updateRequestStatus($data) {
-            // First check if interview exists for this request
-            $this->db->query('SELECT * FROM interviews WHERE request_id = :request_id');
-            $this->db->bind(':request_id', $data['request_id']);
-            $interview = $this->db->single();
-            
-            // Update approval request status
-            $this->db->query('UPDATE approvalrequest SET 
-                              status = :status,
-                              comments = :comment
-                              WHERE request_id = :request_id');
-        
-            $this->db->bind(':request_id', $data['request_id']);
-            $this->db->bind(':status', $data['status']);
-            $this->db->bind(':comment', $data['comment']);
-            return $this->db->execute();
-
-            // Update caregiver/consultant based on type from $data
-            if ($data['type'] === 'Caregiver') {
-                $this->db->query('UPDATE caregiver SET is_approved = :is_approved WHERE caregiver_id = :caregiver_id');
-                $this->db->bind(':is_approved', $data['is_approved']);
-                $this->db->bind(':caregiver_id', $data['user_id']);
-                $this->db->execute();
-            } else if ($data['type'] === 'Consultant') {
-                $this->db->query('UPDATE consultant SET is_approved = :is_approved WHERE consultant_id = :user_id');
-                $this->db->bind(':is_approved', $data['is_approved']);
-                $this->db->bind(':consultant_id', $data['user_id']);
-                $this->db->execute();
-            }
-            
-            // If interview exists, update its status to Done
-            if ($interview) {
-                $this->db->query('UPDATE interviews SET status = "Done" WHERE request_id = :request_id');
-                $this->db->bind(':request_id', $data['request_id']);
-                $this->db->execute();
-            }
-        
+        public function get_accepted_requests() {
+            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Approved" ORDER BY request_date DESC');
+            return $this->db->resultSet();
         }
+        
+        public function get_rejected_requests() {
+            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Declined" ORDER BY request_date DESC');
+            return $this->db->resultSet();
+        }
+
+          public function updateRequestStatus($data) {
+              // First check if interview exists for this request
+            //   $this->db->query('SELECT * FROM interviews WHERE request_id = :request_id');
+            //   $this->db->bind(':request_id', $data['request_id']);
+            //   $interview = $this->db->single();
+
+              //check interview exists
+              $interview = $this->checkInterviewExists($data['request_id']);
+            
+              // Update approval request status
+              $this->db->query('UPDATE approvalrequest SET 
+                                status = :status,
+                                comments = :comment
+                                WHERE request_id = :request_id');
+
+              $this->db->bind(':request_id', $data['request_id']);
+              $this->db->bind(':status', $data['status']);
+              $this->db->bind(':comment', $data['comment']);
+              $this->db->execute();
+
+              // Update caregiver/consultant based on type from $data
+              if ($data['role'] === 'Caregiver') {
+                  $this->db->query('UPDATE caregiver SET is_approved = :is_approved WHERE caregiver_id = :user_id');
+                  $this->db->bind(':is_approved', $data['is_approved']);
+                  $this->db->bind(':user_id', $data['user_id']);
+                  $this->db->execute();
+              } else if ($data['type'] === 'Consultant') {
+                  $this->db->query('UPDATE consultant SET is_approved = :is_approved WHERE consultant_id = :user_id');
+                  $this->db->bind(':is_approved', $data['is_approved']);
+                  $this->db->bind(':consultant_id', $data['user_id']);
+                  $this->db->execute();
+              }
+            
+              // If interview exists, update its status to Done
+              if ($interview) {
+                  $this->db->query('UPDATE interviews SET status = "Done" WHERE request_id = :request_id');
+                  $this->db->bind(':request_id', $data['request_id']);
+                  return $this->db->execute();
+              }
+
+              return true;
+          }
+
+          // UPDATE CAREgiver requests manually for testing
+          public function updateCaregiverRequestStatus($caregiver_id) {
+              $this->db->query('UPDATE caregiver SET is_approved = :is_approved WHERE caregiver_id = :caregiver_id');
+              $this->db->bind(':is_approved', 'rejected');
+              $this->db->bind(':caregiver_id', $caregiver_id);
+              return true;
+            }
+
 
         // get caregiver full details
         public function get_caregiver($user_id){
@@ -152,6 +167,12 @@
     
             return $this->db->execute();
         }
+
+        public function deleteInterview($request_id) {
+            $this->db->query('DELETE FROM interviews WHERE request_id = :request_id');
+            $this->db->bind(':request_id', $request_id);
+            return $this->db->execute();
+        }
         
         
     }
@@ -159,3 +180,7 @@
 
 
 ?>
+
+
+
+

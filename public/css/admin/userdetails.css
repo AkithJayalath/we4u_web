@@ -1,4 +1,3 @@
-
 :root {
   --primary-color: #1a73e8;
   --success-bg: #e6f4ea;
@@ -13,55 +12,37 @@
   --yellow-bg: #FFFBEB;
 }
 
-
-.ad-users-main-content {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.ad-users-search-bar-container {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.ad-users-search-bar {
-  width: 100%;
-  padding: 15px 15px 15px 45px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.ad-users-stats-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.ad-users-stat-card {
-  background: white;
-  padding: 20px;
-}
-
+/* Main Layout */
 .ad-users-wrapper {
+  width: 100%;
+  min-height: 100vh;
   background-color: var(--color-background-primary);
-  border-radius: 8px;
   padding: 20px;
-  margin: 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .ad-users-main-content {
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   background-color: var(--color-background-secondary);
+}
+
+/* Stats Cards */
+.ad-users-stats-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .ad-users-stat-card {
   background: var(--white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
 }
 
 .ad-users-stat-main {
@@ -75,7 +56,7 @@
   color: var(--color-text-primary);
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 }
 
 .ad-users-stat-value {
@@ -102,27 +83,23 @@
 .ad-users-stat-icon i {
   width: 24px;
   height: 24px;
-  color: inherit;
+  color: white;
 }
 
 .ad-users-stat-icon.ad-users-blue {
-  background: var(--color-trust-blue);
-  color: var(--white);
+  background: var(--color-btn-primary);
 }
 
 .ad-users-stat-icon.ad-users-red {
-  background: var(--color-error);
-  color: var(--white);
+  background: var(--color-btn-cancel);
 }
 
 .ad-users-stat-icon.ad-users-green {
-  background: var(--color-status-accepted);
-  color: var(--white);
+  background: var(--color-calm-green);
 }
 
 .ad-users-stat-icon.ad-users-yellow {
-  background: var(--color-calm-green);
-  color: var(--white);
+  background: var(--color-status-pending);
 }
 
 .ad-users-stat-growth {
@@ -130,80 +107,69 @@
   font-weight: 500;
 }
 
-.ad-users-table-container {
-  background: var(--white);
-  border-radius: 8px;
-}
-
-.ad-users-status.ad-users-active {
-  background: var(--color-status-accepted);
-  color: var(--white);
-}
-
-.ad-users-status.ad-users-deactivated {
-  background: var(--color-status-rejected);
-  color: var(--white);
-}
-
 .ad-users-stat-growth.ad-users-positive {
-  color: var(--success-color);
+  color: var(--color-status-accepted);
 }
 
 .ad-users-stat-growth.ad-users-negative {
-  color: var(--danger-color);
+  color: var(--color-status-rejected);
 }
 
+/* Filters Section */
 .ad-users-filters {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  flex-wrap: wrap;
   gap: 15px;
-}
-
-.ad-users-filter-select {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  min-width: 200px;
+  width: 100%;
 }
 
 .ad-users-table-controls {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   align-items: center;
+  flex-wrap: wrap;
 }
 
+.ad-users-filter-select,
 .ad-users-entries-select {
   padding: 10px;
-  border: 1px solid var(--border-color);
   border-radius: 6px;
+  min-width: 120px;
+  background-color: var(--white);
 }
 
 .ad-users-search-wrapper {
   position: relative;
+  min-width: 200px;
 }
 
 .ad-users-search-icon {
   position: absolute;
-  left: 15px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   width: 20px;
   height: 20px;
+  pointer-events: none;
 }
 
 .ad-users-user-search {
+  width: 100%;
   padding: 10px 10px 10px 35px;
-  border: 1px solid var(--border-color);
   border-radius: 6px;
-  min-width: 200px;
+  font-size: 14px;
 }
 
-.ad-users-btn-export, .ad-users-btn-add {
+.ad-users-action-group {
+  display: flex;
+  gap: 10px;
+}
+
+.ad-users-btn-export,
+.ad-users-btn-add {
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
@@ -212,6 +178,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: background-color 0.2s;
 }
 
 .ad-users-btn-icon {
@@ -220,26 +187,29 @@
 }
 
 .ad-users-btn-export {
-  background: #f1f3f4;
-  color: #333;
+  background: var(--color-trust-blue);
+  color: var(--white);
 }
 
 .ad-users-btn-add {
-  background: var(--primary-color);
-  color: white;
+  background: var(--color-btn-primary);
+  color: var(--white);
 }
 
+/* Table Styles */
 .ad-users-table-container {
-  background: white;
+  width: 100%;
+  background: var(--white);
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ad-users-users-table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 800px;
+  border-collapse: collapse;
 }
 
 .ad-users-users-table th,
@@ -247,11 +217,13 @@
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  white-space: nowrap;
 }
 
 .ad-users-users-table th {
+  background-color: var(--color-background-secondary);
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .ad-users-user-cell {
@@ -274,10 +246,11 @@
 
 .ad-users-user-name {
   font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .ad-users-user-email {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
@@ -285,48 +258,68 @@
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
+  display: inline-block;
 }
 
 .ad-users-status.ad-users-active {
-  background: var(--success-bg);
-  color: var(--success-color);
+  background: var(--color-calm-green);
+  color: var(--white);
 }
 
 .ad-users-status.ad-users-deactivated {
-  background: var(--danger-bg);
-  color: var(--danger-color);
+  background: var(--color-btn-cancel);
+  color: var(--white);
 }
 
+/* Pagination */
 .ad-users-pagination {
   display: flex;
   justify-content: center;
   gap: 5px;
   padding: 20px;
+  flex-wrap: wrap;
 }
 
 .ad-users-page-btn {
   padding: 8px 12px;
   border: 1px solid var(--border-color);
-  background: white;
+  background: var(--white);
   border-radius: 4px;
   cursor: pointer;
+  min-width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
-.ad-users-page-btn i {
-  width: 16px;
-  height: 16px;
+.ad-users-page-btn:hover {
+  background: var(--color-background-secondary);
 }
 
 .ad-users-page-btn.ad-users-active {
-  background: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
+  background: var(--color-btn-primary);
+  color: var(--white);
+  border-color: var(--color-btn-primary);
 }
 
-@media (max-width: 768px) {
+/* Responsive Breakpoints */
+@media screen and (max-width: 1200px) {
+  .ad-users-stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .ad-users-wrapper {
+    padding: 10px;
+  }
+  
+  .ad-users-stats-container {
+    grid-template-columns: 1fr;
+  }
+  
   .ad-users-filters {
     flex-direction: column;
     align-items: stretch;
@@ -334,28 +327,49 @@
   
   .ad-users-table-controls {
     flex-direction: column;
+    width: 100%;
   }
   
-  .ad-users-btn-export, .ad-users-btn-add {
+  .ad-users-filter-select,
+  .ad-users-entries-select,
+  .ad-users-search-wrapper,
+  .ad-users-user-search {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .ad-users-action-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .ad-users-btn-export,
+  .ad-users-btn-add {
     width: 100%;
     justify-content: center;
   }
 }
 
-@media (max-width: 480px) {
-  body {
-    padding: 10px;
+@media screen and (max-width: 480px) {
+  .ad-users-wrapper {
+    padding: 5px;
   }
   
-  .ad-users-search-bar {
-    padding: 10px 10px 10px 35px;
+  .ad-users-stat-card {
+    padding: 15px;
   }
   
-  .ad-users-stats-container {
-    grid-template-columns: 1fr;
+  .ad-users-stat-value {
+    font-size: 20px;
   }
   
   .ad-users-pagination {
-    flex-wrap: wrap;
+    padding: 15px 10px;
+  }
+  
+  .ad-users-page-btn {
+    min-width: 35px;
+    height: 35px;
+    padding: 6px 10px;
   }
 }
