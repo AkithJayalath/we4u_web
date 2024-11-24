@@ -1,8 +1,9 @@
 <?php require APPROOT.'/views/includes/header.php';?>
+<?php require APPROOT.'/views/includes/components/topnavbar.php';?>
 
 
 
-<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/cgrequest.css"> 
+<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/cgrequest.css"> 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 <page-body-container>
@@ -29,7 +30,9 @@
                     
                 <div class="req-action">
                     <span class="sts-pending">Pending</span>
-                    <button class="view-btn">View</button>
+                    <button class="view-btn" onclick="navigateToDetails()">View</button>
+
+
                 </div>
             </div>
 
@@ -86,6 +89,8 @@
             </div>
 
         </div>
+        
+
         <a href="#" class="view-more">View More</a>
     </div>
 
@@ -93,6 +98,12 @@
 
 
 <?php require APPROOT.'/views/includes/footer.php';?>
+
+<script>
+function navigateToDetails() {
+    window.location.href = '<?php echo URLROOT; ?>/cgrequest/viewreqinfo';
+}
+</script>
 
 
 
