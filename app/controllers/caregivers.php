@@ -177,11 +177,7 @@
       
     }
 
-    public function caregivingHistory(){
-      $this->view('caregiver/v_cghistory');
-  
-      
-    }
+    
   
     
 
