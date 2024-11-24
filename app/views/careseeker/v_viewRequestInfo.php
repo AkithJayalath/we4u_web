@@ -28,7 +28,7 @@ echo loadCSS($required_styles);
 
                         <div class="request-info-personal-info-details">
                             <h2>Request ID #154</h2>
-                            <span class="request-info-personal-info-tag">Pending</span>
+                            <span class="tag pending">Pending</span>
                         </div>
                     </div>
                 </div>

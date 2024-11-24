@@ -91,7 +91,6 @@
         </div>
         
 
-        <a href="#" class="view-more">View More</a>
     </div>
 
 </page-body-container>
