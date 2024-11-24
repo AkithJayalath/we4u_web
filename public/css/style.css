@@ -92,14 +92,15 @@ body {
 
 /* Add this div class to container the content of each page */
 .top-container {
+    
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 100px;
-    padding-bottom: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     width: 100%;
-    max-width: 1200px;
-    margin: auto;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 
