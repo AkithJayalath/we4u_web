@@ -20,11 +20,9 @@ class cgrequest extends controller{
         
         $this->view('caregiver/v_norequest');
      }
- 
+
+     
 
    
 }
-
-
-
 ?>
