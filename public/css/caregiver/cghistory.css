@@ -1,0 +1,273 @@
+.container {
+    margin: auto;
+    padding: 15px;
+    width: 95%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: 80vh;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #F7F6FA;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header h2 {
+    font-size: clamp(20px, 4vw, 28px); /* Responsive font size */
+    color: #013CC6;
+    margin: 0;
+}
+
+.sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort label {
+    font-size: 12px;
+    color: #555;
+    margin: auto;
+}
+
+.sort select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.sort select:focus {
+    outline: none;
+    border-color: #0B63F8;
+    box-shadow: 0 0 0 2px rgba(11, 99, 248, 0.2);
+}
+
+.sort-by default {
+    
+    color: #555;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+/* History Entry Card */
+.history-entry {
+    display: flex;
+    justify-content: space-between;
+    background-color: #F7F6FA;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    gap: 10px;
+    flex-wrap: wrap;
+
+}
+
+.service-info {
+    flex: 1;
+    min-width: 200px;
+    margin-left: 20px;
+}
+
+.service-info p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.8;
+}
+
+.service-info .s-id {
+    font-weight: bold;
+    color: #0B63F8;
+    font-size: 20px;
+}
+
+.id {
+    color: #666;
+    font-size: 13px;
+    background-color: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.verified {
+    color: green;
+    font-weight: bold;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.status.completed {
+    
+    padding: 5px 15px;
+    font-size: 12px;
+    background-color: #DFF6DD;
+    color: #28A745;
+    border-radius: 8px;
+}
+
+.status.ongoing {
+    
+    padding: 5px 15px;
+    font-size: 12px;
+    background-color: #E9ECEF;
+    color: #6C757D;
+    border-radius: 8px;
+}
+
+.payment-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 200px;
+    margin-right: 20px;
+}
+
+.payment-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.profile-pic {
+    width: 50px; /* Slightly smaller on mobile */
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 30px;
+}
+
+
+.view-profile-btn {
+    background-color: #08DCC1;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 40px;
+    transition: background-color 0.2s;
+}
+
+.view-profile-btn:hover {
+    background-color: #06CBAF;
+}
+
+/* Link Styles */
+.reviews-link {
+    color: #5182FF
+    ;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.reviews-link:hover {
+    text-decoration: underline;
+}
+
+
+* Custom scrollbar for better mobile experience */
+.history-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 8px;
+    border: 2px solid #f1f1f1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .header {
+        padding: 12px 15px;
+    }
+
+    .history-entry {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .payment-info {
+        align-items: flex-start;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        width: 100%;
+    }
+
+    .sort {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sort {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .service-info p {
+        font-size: 13px;
+    }
+
+    .status {
+        display: block;
+        margin: 5px 0;
+        text-align: center;
+    }
+
+    .view-profile-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+

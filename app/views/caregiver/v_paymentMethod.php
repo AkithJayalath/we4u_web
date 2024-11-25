@@ -108,6 +108,19 @@
         </div>
 
         
+    </div> 
+
+    <!--popoup-->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h2>ARE YOU SURE?</h2>
+            <p>You are going to delete informations about payment method!</p>
+            <div class="modal-buttons">
+                <button class="modal-confirm-btn" onclick="showConfirmation()">Yes,Delete</button>
+                <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
     </div>
     
 
@@ -137,7 +150,7 @@
     }
 
     // Function to delete all data
-    function deleteAll() {
+   /* function deleteAll() {
         if (confirm('Are you sure you want to delete all data?')) {
             // Clear all text and input fields
             const textElements = document.querySelectorAll('#paymentForm p');
@@ -149,11 +162,48 @@
             alert('All data has been deleted!');
             // Optional: Add backend call here to remove data from the database
         }
-    }
+    }*/
 
     function navigateToDetails() {
         window.location.href = '<?php echo URLROOT; ?>/cgpayments/paymentHistory';
     }
+
+    // Function to delete all data and trigger the modal
+function deleteAll() {
+    const modal = document.getElementById("deleteModal");
+    modal.style.display = "block"; // Show the modal
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+
+    // Handle "Yes, Delete" button click
+    const confirmButton = document.querySelector(".modal-confirm-btn");
+    confirmButton.onclick = function () {
+        // Clear all text and input fields
+        const textElements = document.querySelectorAll(".content-box p");
+        const inputElements = document.querySelectorAll(".content-box select");
+
+        textElements.forEach(element => (element.innerText = ""));
+        inputElements.forEach(element => (element.value = "no"));
+
+        closeModal(); // Close the modal
+        alert("All data has been deleted!");
+    };
+}
+
+// Function to close the modal
+function closeModal() {
+    const modal = document.getElementById("deleteModal");
+    modal.style.display = "none"; // Hide the modal
+    document.body.style.overflow = "auto"; // Enable scrolling
+}
+
+// Close the modal if the user clicks outside of it
+window.addEventListener("click", function (event) {
+    const modal = document.getElementById("deleteModal");
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
 </script>
 
 
