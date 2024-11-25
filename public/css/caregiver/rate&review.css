@@ -125,6 +125,10 @@
     border: 2px solid #f1f1f1;
 }
 
+.review::-webkit-scrollbar-thumb:hover {
+    background-color: #7d7b7b; /* Darker color when hovering */
+  }
+
 /* Media Queries for different screen sizes */
 @media screen and (max-width: 768px) {
     .container {
