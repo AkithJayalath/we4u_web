@@ -1,201 +1,60 @@
 <?php 
     $required_styles = [
-        'moderator/viewrequest',
+        'moderator/interviews',
         // 'components/sidebar',
         
     ];
     echo loadCSS($required_styles);
 ?>
 
-
 <?php require APPROOT.'/views/includes/header.php'; ?>
-<div>
+
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-</div>
+
 
 <page-body-container>
   <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
-
-  <div class="m-container">
-  <div class="search-section">
-    <input type="text" placeholder="Search" />
-    <div>
-      <img src="notification-icon.png" class="notification-icon" />
-      <img src="profile-pic.png" class="profile-pic" />
-    </div>
-  </div>
-
-  <div class="table-container">
-    <h2>Interview Details</h2>
-    <div class="table">
-      <div class="table-header">
-        <div class="table-cell">Interview ID</div>
-        <div class="table-cell">Date</div>
-        <div class="table-cell">Time Slot</div>
-        <div class="table-cell">User</div>
-        <div class="table-cell">Action</div>
+    <div class="m-i-container">
+      <div class="m-i-search-section">
+        <input type="text" placeholder="Search By UserName Or ID" />
+        <button>Search</button>
       </div>
-      <div class="table-body">
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
+
+      <div class="m-i-table-container">
+        <h2>Interview Details</h2>
+        <div class="m-i-table">
+          <div class="m-i-table-header">
+            <div class="m-i-table-cell">Interview ID</div>
+            <div class="m-i-table-cell">Status</div>
+            <div class="m-i-table-cell">Date</div>
+            <div class="m-i-table-cell">Time</div>
+            <div class="m-i-table-cell">User Id</div>
+            <div class="m-i-table-cell">Action</div>
+          </div>
+          <div class="m-i-table-body">
+
+          <?php foreach($data['interviews'] as $interview) : ?>
+
+            <div class="m-i-table-row">
+              <div class="m-i-table-cell"><?php echo $interview->interview_id; ?></div>
+
+              <div class="m-i-table-cell status-<?php echo ($interview->status); ?>"><?php echo $interview->status; ?></div>
+
+              <div class="m-i-table-cell"><?php echo date_format(date_create($interview->request_date), 'j M Y'); ?></div>
+              <div class="m-i-table-cell"><?php echo date_format(date_create($interview->interview_time), 'h:i A'); ?></div>
+              <div class="m-i-table-cell"><?php echo $interview->provider_id; ?></div>
+              <div class="m-i-table-cell">
+              <button class="m-i-view-req-action-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/interview/<?php echo $interview->request_id; ?>'">Details</button>
+              </div>
+            </div>
+      
+          <?php endforeach; ?>
+
           </div>
         </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <div class="table-row">
-          <div class="table-cell"><a href="#">#AHA6A8</a></div>
-          <div class="table-cell">23/09/2022</div>
-          <div class="table-cell">Jacob Marcus</div>
-          <div class="table-cell">accepted</div>
-          <div class="table-cell">
-            <button class="view-req-action-btn">Accept</button>
-          </div>
-        </div>
-        <!-- Your existing table rows here -->
       </div>
+
     </div>
-  </div>
-
-
-</div>
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>

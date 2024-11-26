@@ -2,19 +2,19 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2.5rem;
-  background: white;
+  background: var(--white);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .reject-header {
   margin-bottom: 2rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--color-form-border);
   padding-bottom: 1rem;
 }
 
 .reject-header h2 {
-  color: #e74c3c;
+  color: var(--color-btn-cancel);
   font-size: 1.8rem;
   margin-bottom: 1rem;
 }
@@ -23,7 +23,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  background: #f8f9fa;
+  background: var(--color-form-background);
   padding: 1rem;
   border-radius: 8px;
 }
@@ -36,14 +36,14 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text-accent);
 }
 
 .form-group textarea {
   width: 100%;
   min-height: 150px;
   padding: 1rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--color-form-border);
   border-radius: 8px;
   resize: vertical;
 }
@@ -56,8 +56,8 @@
 }
 
 .submit-btn {
-  background: #e74c3c;
-  color: white;
+  background: var(--color-btn-cancel);
+  color: var(--white);
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 6px;
@@ -66,8 +66,8 @@
 }
 
 .cancel-btn {
-  background: #95a5a6;
-  color: white;
+  background: var(--color-warm-gray);
+  color: var(--white);
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 6px;
@@ -76,11 +76,11 @@
 }
 
 .submit-btn:hover {
-  background: #c0392b;
+  background: var(--color-btn-cancel-hover);
 }
 
 .cancel-btn:hover {
-  background: #7f8c8d;
+  background: var(--color-text-secondary);
 }
 
 @media (max-width: 768px) {
@@ -91,7 +91,6 @@
 }
 
 /* reject model message  */
-
 .reject-modal {
   display: none;
   position: fixed;
@@ -105,7 +104,7 @@
 }
 
 .reject-modal-content {
-  background: white;
+  background: var(--white);
   width: 90%;
   max-width: 500px;
   margin: 20vh auto;
@@ -116,13 +115,13 @@
 }
 
 .reject-modal-content h2 {
-  color: #38a169;
+  color: var(--color-status-accepted);
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .reject-modal-content p {
-  color: #2d3748;
+  color: var(--color-text-accent);
   margin-bottom: 1.5rem;
 }
 
@@ -140,13 +139,13 @@
 }
 
 .reject-ok-btn {
-  background: #38a169;
-  color: white;
+  background: var(--color-status-accepted);
+  color: var(--white);
   border: none;
 }
 
 .reject-ok-btn:hover {
-  background: #2f855a;
+  background: var(--color-calm-green);
 }
 
 @media (max-width: 768px) {
@@ -156,5 +155,3 @@
       padding: 1.5rem;
   }
 }
-
-

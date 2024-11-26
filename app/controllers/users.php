@@ -222,7 +222,13 @@
     $_SESSION ['user_name']=$user->username;
     $_SESSION['user_role'] = $user->role;
 
-    redirect('pages/index');
+    if($_SESSION['user_role'] =='Careseeker'){
+      redirect('careseeker/showElderProfiles');
+    }else{
+      redirect('pages/index');
+    }
+
+   
     
   }
 
@@ -466,16 +472,16 @@ public function deleteUser() {
 
 
 // create profile
-public function createProfile(){
+
+public function blog(){
   $data=[];
-  $this->view('careseeker/v_create', $data);
+  $this->view('users/v_blog', $data);
 }
 
-public function viewElderProfile(){
+public function viewblog(){
   $data=[];
-  $this->view('careseeker/v_viewElderProfile', $data);
+  $this->view('users/v_view_blog', $data);
 }
-
 
 
 

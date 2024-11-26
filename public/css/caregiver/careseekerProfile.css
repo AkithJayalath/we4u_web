@@ -11,7 +11,7 @@
     background-color: var(--color-background-secondary);
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -48,7 +48,7 @@
     margin-top: 5px; 
     padding: 5px 10px;
     background-color: #e8eaf5; 
-    color: #007bff;
+    color: #007bff; 
     border-radius: 15px;
     font-size: 0.9rem;
     font-weight: bold;
@@ -299,13 +299,23 @@
 }
 
 .health-concern-item p,
-.other-concern-item p,.caregiving-history-item p,.reviews-item p {
+.other-concern-item p,.caregiving-history-item p {
     margin: 5px 0 0 0;
     font-size: 0.9rem;
-    color: #777777;
+    color: #666;
 }
 
+.reviews-item p{
+  margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #888;
+}
 
+.reviews-item .date{
+  font-size: 0.8rem;
+  color: #666;
+    margin-top: 5px;
+}
 
 .header-with-icon {
     display: flex;

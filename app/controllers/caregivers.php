@@ -213,6 +213,11 @@
       $this->view('caregiver/v_careseekerProfile');
    }
 
+   public function viewmyProfile(){
+       
+    $this->view('caregiver/v_caregiverProfile');
+ }
+
   
     
 

@@ -23,7 +23,7 @@
                             alt="Profile Picture" class="profile-pic" id="profile_image_placeholder">
 
                     <div class="upload-overlay">
-                        <span>Upload your photo</span>
+                        <span>Upload  photo</span>
                     </div>
                     <input type="file" id="profileImageUpload" name="profile_picture" accept="image/*" style="display: none;" onchange="previewImage(event)">
                 </div>

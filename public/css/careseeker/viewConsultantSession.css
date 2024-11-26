@@ -1,0 +1,303 @@
+.session-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 15px;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    height: 100vh;
+}
+
+
+
+
+.session-info-heading p{
+    padding-left: 20;
+    font-weight: 500;
+    font-size:x-large;
+    color: var(--color-text-secondary);
+}
+
+.session-info-header {
+    display: flex;
+    flex: 0 0 200px; /* Fixed height (200px). Adjust as needed */
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+}
+.session-info-personal-info-profile{
+    display: flex;
+   justify-content: space-between;
+}
+
+.session-info-personal-info-details{
+    border-radius: 20px;
+    padding: 10px;
+    background-color: var( --color-background-secondary);
+}
+
+
+  .session-info-header-left {
+    display: flex;
+    flex: 1;
+    background-color:var(--white);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    gap: 20px;
+    padding-left: 20px;
+   
+  }
+  .session-info-header-left-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background-color: var(--white);
+    margin-left: 20px;
+    gap: 10px;
+  }
+
+  .session-info-header-left-left {
+    flex: 0.5;
+    display: flex;
+    position: relative;
+    background-color: var(--white);
+    align-items:center;
+    
+  }
+  
+  .session-info-circle {
+    width: 150px; /* Adjust size of circles */
+    height: 150px;
+    border-radius: 50%; /* Creates the circular shape */
+    overflow: hidden; /* Ensures the image stays within the circle */
+    position: relative;
+    border: 10px solid white;
+  }
+  
+  .session-info-circle img {
+    width: 100%; /* Makes the image fit inside the circle */
+    height: 100%;
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+  }
+  
+  .image1 {
+    z-index: 2; /* Ensures this image appears on top */
+    margin-right: -40px; /* Adjust for overlap */
+    
+  }
+  
+  .image2 {
+    z-index: 1; /* Places this image behind the first */
+  }
+
+  
+
+  
+  
+
+
+  
+
+  /* Personal info right section */
+  .session-info-header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px; /* Space between the buttons */
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+
+
+
+
+
+
+    /* Other concerns section */
+.session-info-other-concern-section {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+   background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 100%; /* Full-width section */
+    margin: 0; /* Ensure alignment with other sections */
+}
+
+.session-info-buttons{
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color:var(--white);
+    justify-content:center;
+    align-items:center;
+    gap: 20px;
+    margin: 0;
+
+}
+
+
+.session-send-button {
+    background-color: var(--color-btn-update);
+}
+
+
+.session-send-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icon and text */
+    width: 80%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
+
+
+.session-send-button:hover {
+    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+}
+
+.session-cancel-button:hover {
+    background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+}
+
+
+
+/* Ensure the parent container fills its space */
+.session-infos-section {
+    flex: 1; /* Takes the remaining available space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between the elements inside */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    overflow-y: auto; /* Add scroll if content overflows */
+}
+
+
+
+.consultant-rating .rating-stars {
+    display: flex;
+    gap: 5px;
+    color: #FFD700; /* Gold color for stars */
+}
+
+.rating-stars i {
+    font-size: 1.2rem;
+}
+
+
+/* files section */
+
+
+.document-category {
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 20px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.document-category h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+}
+
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+.document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.document-actions a {
+    text-decoration: none;
+    color: #ffffff;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.document-item:hover{
+    background-color:#ececec ;
+}
+
+.document-category:hover {
+    transform: scale(1.01); /* Slightly increase size (5% zoom) */
+    box-shadow: 0 4px 8px rgba(110, 110, 110, 0.2); /* Stronger shadow on hover */
+}
+
+.view-btn {
+    background-color:rgb(170, 169, 169);
+}
+
+.download-btn {
+    background-color:rgb(76, 161, 201);
+}
+
+.document-actions .download-btn,.document-actions .view-btn {
+   
+    color: #ffffff; /* Ensure text color is set explicitly */
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 20px;
+    text-decoration: none; /* Reset any global underline */
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color:rgb(63, 131, 163) ;
+}
+
+.view-btn:hover {
+    background-color: rgb(114, 114, 114);
+}
+
+

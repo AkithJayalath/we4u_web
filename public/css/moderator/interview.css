@@ -1,7 +1,7 @@
 .m-i-main-container {
   max-width: 1200px;
   margin: 2rem auto;
-  background: #ffffff;
+  background: var(--white);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 32px;
@@ -100,23 +100,32 @@
 }
 
 .m-i-submit-btn {
-  background: #38a169;
-  color: white;
+  background: var(--color-btn-update);
+  color: var(--white);
 }
 
 .m-i-submit-btn:hover {
-  background: #2f855a;
+  background: var(--color-btn-update-hover);
   transform: translateY(-1px);
 }
 
 .m-i-cancel-btn {
-  background: #e53e3e;
-  color: white;
+  background: var(--color-btn-cancel);
+  color: var(--white);
 }
 
 .m-i-cancel-btn:hover {
-  background: #c53030;
+  background: var(--color-btn-cancel-hover);
   transform: translateY(-1px);
+}
+
+
+.m-i-submit-btn[disabled] {
+  pointer-events: none;
+  background: var(--color-warm-gray);
+  color: var(--color-text-secondary);
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 1024px) {
@@ -145,6 +154,7 @@
   }
 }
 
+
 @media (max-width: 480px) {
   .m-i-button-group {
     flex-direction: column;
@@ -154,4 +164,41 @@
   .m-i-cancel-btn {
     width: 100%;
   }
+}
+
+.m-i-countdown {
+  padding: 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.m-i-countdown.upcoming {
+  background-color: #e6fffa;
+  color: #38a169;
+  border: 1px solid #38a169;
+}
+
+.m-i-countdown.overdue {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+}
+
+.m-i-delete-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: #dc3545;
+    color: var(--white);
+}
+
+.m-i-delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
 }

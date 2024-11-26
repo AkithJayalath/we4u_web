@@ -4,7 +4,7 @@
 
 <link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/careseekerProfile.css"> 
 
-
+ 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
     <!-- Container -->
@@ -178,7 +178,7 @@
                         <div>
                             <h4>Jerom Bell</h4>
                             <p>He is very kind person</p>
-                            
+                            <div class="date">13.02.2023</div>
                         </div>
                         
                     </div>
@@ -187,7 +187,7 @@
                         <div>
                             <h4>Nethmi Vithanage</h4>
                             <p>He didn't pay my full payment</p>
-                            
+                            <div class="date">13.02.2023</div>
                         </div>
                     </div>
                     

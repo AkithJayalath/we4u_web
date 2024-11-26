@@ -60,6 +60,37 @@
     --color-warm-gray: #8C8C8C;      /* Neutral warm gray for subtle backgrounds or icons */
 
     --white: #ffffff;
+
+
+    /* Table Colors */
+    --color-table-header: var(--color-background-secondary);
+    --color-table-row-hover: var(--color-background-primary);
+
+    /* reject form colors  */
+    --color-form-border: #e0e0e0;
+    --color-form-background: #f8f9fa;
+
+    
+        /* Add these new essential variables */
+    --color-header-title: #1a237e;
+    --color-application-id: #546e7a;
+    --color-info-label: #6b7280;
+    --color-info-value: #1f2937;
+    
+
+
+    /* tags colors */
+    --tag-status-accepted: #28a745;
+    --tag-status-rejected:rgb(248, 26, 26);
+    --tag-status-completed:#007bff;
+    --tag-status-pending: #3c3e3f;
+
+    --tag-status-accepted-background:#e5f7e9;
+    --tag-status-rejected-background:#fcdbdf; 
+    --tag-status-completed-background: #d1e7ff; 
+    --tag-status-pending-background: #e2e2e2; 
+
+
 }
 
 page-body-container{
@@ -71,12 +102,22 @@ page-body-container{
     grid-template-columns: auto 1fr;
     /* margin-top: 80px; */
     padding-top: 100px;
-    
+    overflow: visible;
+    margin-bottom: 10px;
 }
-@media(max-width: 768px){
+/* @media(max-width: 768px){
     page-body-container{
-        grid-template-columns: 1fr;
+        display: block;
+        position: relative;
+        z-index: 1;
     }
+} */
+
+container{
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 
@@ -101,9 +142,9 @@ body {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
+
+
 }
-
-
 
 .sign-up-btn {
     padding: 12px 24px;
@@ -113,5 +154,47 @@ body {
     font-weight: bold;
     text-decoration: none;
 }
+
+
+
+
+
+/* tags */
+.tag {
+    display: inline-flex; /* Use flex for easy centering */
+    justify-content: center; /* Horizontally center text */
+    align-items: center; /* Vertically center text */
+    padding: 0.2em 0.5em;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    font-weight: 500;
+    margin: 0.2em;
+
+    /* Define a fixed size for uniformity */
+    width: 100px; /* Adjust this value as needed */
+    height: 30px; /* Adjust this value as needed */
+    box-sizing: border-box; /* Ensure padding is included in dimensions */
+}
+
+.tag.accepted {
+    color: var(--tag-status-accepted);
+    background-color: var(--tag-status-accepted-background); /* Green */
+}
+
+.tag.rejected {
+    color: var(--tag-status-rejected);
+    background-color: var(--tag-status-rejected-background); /* Red */
+}
+
+.tag.pending {
+    background-color: var(--tag-status-pending-background); /* Yellow */
+    color: var(--tag-status-pending); /* Dark text for better contrast */
+}
+
+.tag.completed {
+    color: var(--tag-status-completed);
+    background-color: var(--tag-status-completed-background); /* Blue */
+}
+
 
 
