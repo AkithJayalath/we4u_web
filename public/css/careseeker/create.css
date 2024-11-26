@@ -162,3 +162,15 @@ textarea {
 .profile-cancel-btn:hover {
     background: #a04545;
 }
+
+
+.profile-image-validation {
+    opacity: 0.5; /* Low opacity by default */
+    transition: 0.2s all;
+}
+
+.profile-image-validation.active {
+    opacity: 1; /* Full opacity when active */
+    font-weight: 600;
+    color: #28a745;
+}

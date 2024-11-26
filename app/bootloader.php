@@ -5,7 +5,7 @@
     require_once 'helpers/imageUpload_Helper.php';
     require_once 'helpers/fileUpload_Helper.php';
     require_once 'helpers/cssLoader_Helper.php';
-    
+    require_once 'helpers/calculate_BMI.php';
 
     // This is the initial file that will be executed.
     // Other files to be executed will be redirected from here.
