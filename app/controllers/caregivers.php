@@ -208,6 +208,11 @@
        $this->view('caregiver/v_norequest');
     }
 
+    public function viewCareseeker(){
+       
+      $this->view('caregiver/v_careseekerProfile');
+   }
+
   
     
 

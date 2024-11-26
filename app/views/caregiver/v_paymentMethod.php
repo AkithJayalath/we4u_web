@@ -165,7 +165,7 @@
     }*/
 
     function navigateToDetails() {
-        window.location.href = '<?php echo URLROOT; ?>/cgpayments/paymentHistory';
+        window.location.href = '<?php echo URLROOT; ?>/caregivers/paymentHistory';
     }
 
     // Function to delete all data and trigger the modal

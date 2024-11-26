@@ -9,7 +9,7 @@ echo loadCSS($required_styles);
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
 
 <page-body-container>
-    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
     <!-- Container -->
     <div class="view-caregiver-profile">
         <!-- Personal info section -->
