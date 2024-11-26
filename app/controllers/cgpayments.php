@@ -12,6 +12,10 @@ class cgpayments extends controller{
     }
 
     
+    public function paymentHistory(){
+        $data = [];
+        $this->view('caregiver/v_paymentHistory',$data);
+     }
 
    
 }

@@ -1,4 +1,4 @@
-.request-info {
+.session-info {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -12,26 +12,39 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
     margin-bottom: 20px;
+    box-sizing: border-box;
+    height: 100vh;
 }
 
-.request-info-heading p{
+
+
+
+.session-info-heading p{
     padding-left: 20;
     font-weight: 500;
     font-size:x-large;
     color: var(--color-text-secondary);
 }
 
-.request-info-header {
+.session-info-header {
     display: flex;
-    flex:0.7;
-    background-color:var( --color-background-secondary);
+    flex: 0 0 200px; /* Fixed height (200px). Adjust as needed */
+    background-color: var(--color-background-secondary);
     border-radius: 20px;
+}
+.session-info-personal-info-profile{
+    display: flex;
+   justify-content: space-between;
+}
 
-  }
+.session-info-personal-info-details{
+    border-radius: 20px;
+    padding: 10px;
+    background-color: var( --color-background-secondary);
+}
 
 
-
-  .request-info-header-left {
+  .session-info-header-left {
     display: flex;
     flex: 1;
     background-color:var(--white);
@@ -42,7 +55,7 @@
     padding-left: 20px;
    
   }
-  .request-info-header-left-right {
+  .session-info-header-left-right {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -50,9 +63,10 @@
     position: relative;
     background-color: var(--white);
     margin-left: 20px;
+    gap: 10px;
   }
 
-  .request-info-header-left-left {
+  .session-info-header-left-left {
     flex: 0.5;
     display: flex;
     position: relative;
@@ -61,7 +75,7 @@
     
   }
   
-  .info-circle {
+  .session-info-circle {
     width: 150px; /* Adjust size of circles */
     height: 150px;
     border-radius: 50%; /* Creates the circular shape */
@@ -70,7 +84,7 @@
     border: 10px solid white;
   }
   
-  .info-circle img {
+  .session-info-circle img {
     width: 100%; /* Makes the image fit inside the circle */
     height: 100%;
     object-fit: cover; /* Ensures the image scales properly within the circle */
@@ -86,22 +100,7 @@
     z-index: 1; /* Places this image behind the first */
   }
 
-  .request-info-personal-info-tag {
-    display: inline-block;
-    margin-top: 10px; 
-    padding: 5px 10px; 
-    background-color: #dddddd; 
-    color: #6b6b6b;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-    min-width: 80px; 
-    max-width: 15%;
-    width: auto; 
-    box-sizing: border-box; 
-    white-space: nowrap; 
-}
+  
 
   
   
@@ -110,7 +109,7 @@
   
 
   /* Personal info right section */
-  .request-info-header-right {
+  .session-info-header-right {
     flex: 1;
     display: flex;
     flex-direction: column; /* Align items vertically */
@@ -130,7 +129,7 @@
 
 
     /* Other concerns section */
-.request-info-other-concern-section {
+.session-info-other-concern-section {
     display: flex;
     flex: 2;
     flex-direction: column;
@@ -142,7 +141,7 @@
     margin: 0; /* Ensure alignment with other sections */
 }
 
-.request-info-buttons{
+.session-info-buttons{
     display: flex;
     flex:1;
     flex-direction: column;
@@ -156,15 +155,12 @@
 }
 
 
-.request-send-button {
+.session-send-button {
     background-color: var(--color-btn-update);
 }
 
-.request-cancel-button {
-    background-color: var(--color-btn-upload);
-}
 
-.request-send-button, .request-cancel-button {
+.session-send-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -185,62 +181,123 @@
 }
 
 
-.request-send-button:hover {
+.session-send-button:hover {
     background-color: var( --color-btn-update-hover); /* Darker shade on hover */
 }
 
-.request-cancel-button:hover {
+.session-cancel-button:hover {
     background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
 }
 
 
 
 /* Ensure the parent container fills its space */
-.request-infos-section {
-    display: flex;
-    justify-content: space-between; /* Space between the two columns */
-    align-items: stretch;
-    gap: 20px; /* Space between the columns */
-    padding: 20px;
-    background-color: #ffffff; /* Optional: Slight background for the section */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for the section */
-    box-sizing: border-box;
-}
-
-/* Each column */
-.request-info-column {
-    flex: 1; /* Columns take equal space */
+.session-infos-section {
+    flex: 1; /* Takes the remaining available space */
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* Space between the elements inside */
+    padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
- /* Light shadow for columns */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    overflow-y: auto; /* Add scroll if content overflows */
 }
 
-/* Individual cells within columns */
-.request-info-row {
+
+
+.consultant-rating .rating-stars {
+    display: flex;
+    gap: 5px;
+    color: #FFD700; /* Gold color for stars */
+}
+
+.rating-stars i {
+    font-size: 1.2rem;
+}
+
+
+/* files section */
+
+
+.document-category {
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 20px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.document-category h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+}
+
+.document-list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
-    background-color: #f9f9f9; /* Light background for rows */
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow for rows */
+    gap: 10px;
+
 }
 
-/* Labels and values styling */
-.request-info-row label {
+.document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.document-actions a {
+    text-decoration: none;
+    color: #ffffff;
+    padding: 8px 15px;
     font-size: 0.9rem;
     font-weight: bold;
-    color: #555555;
-    margin-bottom: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-.request-info-row p {
-    font-size: 1rem;
-    color: #333333;
-    margin: 0;
-    font-weight: 500; /* Slightly bolder text for readability */
+.document-item:hover{
+    background-color:#ececec ;
 }
+
+.document-category:hover {
+    transform: scale(1.01); /* Slightly increase size (5% zoom) */
+    box-shadow: 0 4px 8px rgba(110, 110, 110, 0.2); /* Stronger shadow on hover */
+}
+
+.view-btn {
+    background-color:rgb(170, 169, 169);
+}
+
+.download-btn {
+    background-color:rgb(76, 161, 201);
+}
+
+.document-actions .download-btn,.document-actions .view-btn {
+   
+    color: #ffffff; /* Ensure text color is set explicitly */
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 20px;
+    text-decoration: none; /* Reset any global underline */
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color:rgb(63, 131, 163) ;
+}
+
+.view-btn:hover {
+    background-color: rgb(114, 114, 114);
+}
+
+

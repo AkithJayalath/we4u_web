@@ -27,6 +27,27 @@ class careseeker extends controller{
         $this->view('careseeker/v_viewRequestInfo', $data);
       }
 
+      public function viewRequests(){
+        $data=[];
+        $this->view('careseeker/v_viewRequests', $data);
+      }
+
+      public function viewPayments(){
+        $data=[];
+        $this->view('careseeker/v_viewPayments', $data);
+      }
+
+      public function viewConsultants(){
+        $data=[];
+        $this->view('careseeker/v_viewConsultants', $data);
+      }
+
+      public function viewConsultantSession(){
+        $data=[];
+        $this->view('careseeker/v_viewConsultantSession', $data);
+      }
+
+
 
 }
 

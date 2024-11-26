@@ -1,0 +1,163 @@
+.container {
+    margin: auto;
+    padding: 10px;
+    width: 95%; /* Changed from 100% to give some margin on mobile */
+    max-width: 1050px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: 80vh;
+    overflow: hidden;
+}
+
+/* Header responsive styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: auto; /* Changed from fixed height */
+    min-height: 65px;
+    padding: 10px 15px;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #F7F6FA;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+}
+
+.header h2 {
+    font-size: clamp(20px, 4vw, 28px); /* Responsive font size */
+    color: #013CC6;
+    margin: 0;
+}
+
+.header i {
+    margin-right: 15px; /* Reduced from 100px */
+}
+
+/* Review container responsive styles */
+.review {
+    max-height: calc(85vh - 100px); /* Adjusted for better mobile view */
+    overflow-y: auto;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+}
+
+/* Review card responsive styles */
+.review-card {
+    padding: 15px;
+    border-radius: 15px;
+    min-height: auto; /* Remove fixed height */
+    background-color: #F7F6FA;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* User details responsive styles */
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+    position: relative;
+}
+
+.user-details img {
+    width: 40px; /* Slightly smaller on mobile */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details h3 {
+    font-size: clamp(14px, 3vw, 16px);
+    margin: 0;
+    color: #333;
+}
+
+/* Review date responsive styles */
+.review-date {
+    font-size: 12px;
+    color: #777;
+    margin-left: auto; /* Changed from fixed percentage */
+}
+
+/* Review content responsive styles */
+.review-cont {
+    font-size: clamp(13px, 2.5vw, 14px);
+    line-height: 1.5;
+    margin: 10px 0;
+    word-wrap: break-word; /* Ensures text wraps properly */
+}
+
+/* Rating responsive styles */
+.rating {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rating i {
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: #ffc107;
+}
+
+/* Custom scrollbar for better mobile experience */
+.review::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.review::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 8px;
+    border: 2px solid #f1f1f1;
+}
+
+/* Media Queries for different screen sizes */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .review {
+        gap: 12px;
+        padding: 8px;
+    }
+
+    .review-card {
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .user-details {
+        gap: 8px;
+    }
+    
+    .review-date {
+        width: 100%;
+        text-align: right;
+        margin-top: 5px;
+    }
+    
+    .header {
+        padding: 8px 12px;
+    }
+    
+    .rating {
+        padding: 4px 6px;
+    }
+}
