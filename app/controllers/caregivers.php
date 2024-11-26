@@ -177,7 +177,37 @@
       
     }
 
-    
+    public function caregivingHistory(){
+      $this->view('caregiver/v_cghistory');
+  
+      
+    }
+
+    public function paymentMethod(){
+      $data = [];
+      $this->view('caregiver/v_paymentMethod',$data);
+   }
+
+   public function paymentHistory(){
+       $data = [];
+       $this->view('caregiver/v_paymentHistory',$data);
+    }
+
+    public function request(){
+      $data = [];
+      $this->view('caregiver/v_request',$data);
+   }
+
+   public function viewreqinfo(){
+       
+       $this->view('caregiver/v_reqinfo');
+    }
+
+   public function norequest(){
+       
+       $this->view('caregiver/v_norequest');
+    }
+
   
     
 

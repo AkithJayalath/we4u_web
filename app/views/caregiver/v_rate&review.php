@@ -145,3 +145,4 @@
     </div>
 
 </page-body-container>
+<?php require APPROOT.'/views/includes/footer.php';?>

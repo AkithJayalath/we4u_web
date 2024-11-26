@@ -141,7 +141,7 @@
      }
  } else {
      // Load view with errors
-     $this->view('consultant/consultantreg', $data);
+     $this->view('consultant/c_reg', $data);
  }
 } else {
  // Initialize data for GET request (form load)
@@ -169,7 +169,7 @@
  ];
 
  // Load registration form view
- $this->view('consulatnt/c_reg', $data);
+ $this->view('consultant/c_reg', $data);
 }
     }
 
