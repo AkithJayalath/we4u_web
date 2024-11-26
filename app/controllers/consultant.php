@@ -169,6 +169,7 @@
 
  // Load registration form view
  $this->view('consultant/c_reg', $data);
+<<<<<<< HEAD
   }
       }
 
@@ -182,6 +183,9 @@
     }
     public function consultantland(){
         $this->view('consultant/c_land');
+=======
+}
+>>>>>>> 6500a3683b23ab9e10073466203bf04cfacbf6bb
     }
 
     public function consultantchat(){

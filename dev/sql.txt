@@ -159,6 +159,36 @@ CREATE TABLE interviews (
     FOREIGN KEY (request_id) REFERENCES approvalrequest(request_id) ON DELETE CASCADE
 );
 
+-- ElderProfile table for storing elder profiles of the careseeker
+CREATE TABLE ElderProfile (
+    elder_id INT PRIMARY KEY AUTO_INCREMENT,
+    careseeker_id INT NOT NULL, -- Reference to the Careseeker
+    first_name VARCHAR(100),
+    middle_name VARCHAR(100),
+    last_name VARCHAR(100),
+    relationship_to_careseeker VARCHAR(50),
+    age INT,
+    gender ENUM('Male', 'Female', 'Other'),
+    weight DECIMAL(5, 2),
+    height DECIMAL(5, 2),
+    blood_pressure VARCHAR(20),
+    emergency_contact VARCHAR(20),
+    chronic_disease TEXT,
+    current_health_issues TEXT,
+    allergies TEXT,
+    surgical_history TEXT,
+    family_diseases TEXT,
+    current_medications TEXT,
+    special_needs TEXT,
+    dietary_restrictions TEXT,
+    health_barriers TEXT, -- New column for health barriers
+    profile_picture VARCHAR(255), -- Path or URL of the profile picture
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (careseeker_id) REFERENCES Careseeker(careseeker_id) ON DELETE CASCADE
+);
+
+
 
 
 -- create a view to get profile info
