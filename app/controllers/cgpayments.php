@@ -11,6 +11,8 @@ class cgpayments extends controller{
        $this->view('caregiver/v_paymentMethod',$data);
     }
 
+    
+
    
 }
 
