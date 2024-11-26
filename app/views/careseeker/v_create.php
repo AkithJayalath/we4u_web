@@ -90,6 +90,9 @@
 
                         <label for="allergies">Allergies:</label>
                         <textarea id="allergies" name="allergies" rows="3" placeholder="List allergies, if any..."></textarea>
+
+                        <label for="health_barriers">Health Barriers:</label>
+                        <textarea id="health_barriers" name="health_barriers" rows="3" placeholder="List health barriers, if any..."></textarea>
                     </div>
 
                     <!-- Health & Medical Details Section -->
@@ -121,7 +124,7 @@
                     <!-- Submit and Cancel Buttons -->
                     <div class="form-actions">
                         <button type="submit" class="profile-create-btn">Create Profile</button>
-                        <button type="button" class="profile-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/pages/index'">Cancel</button>
+                        <button type="button" class="profile-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/showElderProfiles'">Cancel</button>
                     </div>
                 </form>
             </div>
