@@ -64,7 +64,7 @@
         <option value="therapist" <?php echo ($data['type_of_consultant'] == 'therapist') ? 'selected' : ''; ?>>Therapist</option>
         <option value="psycho" <?php echo ($data['type_of_consultant'] == 'psycho') ? 'selected' : ''; ?>>psychiatrist</option>
       </select>
-      <span class="form-invalid"><?php echo $data['type_of_caregiver_err']; ?></span>
+      <span class="form-invalid"><?php echo $data['type_of_consultant_err']; ?></span>
 
       <!--user-password-->
       <div class="form-input-title">Password</div>
@@ -82,7 +82,7 @@
         <li><input type="text" name="qualifications" placeholder="Enter your medical registration No.etc" value="<?php echo $data['qualifications'];?>"></li>
       </ul>
        
-      <span class="form-invalid"><?php echo $data['']; ?></span>
+      <span class="form-invalid"><?php echo $data['qualifications_err']; ?></span>
       
 
       <!-- Specifications -->
