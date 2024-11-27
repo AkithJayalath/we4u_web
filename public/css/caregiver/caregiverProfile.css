@@ -153,7 +153,7 @@
 
 
 
-.caregiver-chat-button {
+.caregiver-chat-button,.caregiver-payment-button {
     background-color: var(--color-btn-upload);
 }
 
@@ -177,11 +177,33 @@
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
 }
 
+.caregiver-payment-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 400px;
+    margin-top: 10px;
+    gap: 10px; /* Space between the icon and text */
+    width: 60%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
 
 
-.caregiver-chat-button:hover {
+.caregiver-chat-button:hover ,.caregiver-payment-button:hover {
     background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
 }
+
 
 .caregiver-edit-button {
     display: flex;

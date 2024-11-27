@@ -107,7 +107,11 @@
                             <h4>Payment details</h4>
                             <p>Rs.2000 per visit</p>
                             <p>+ Rs.400 per session</p>
+                            
                         </div>
+                        <button class="caregiver-payment-button">
+                                <i class="fas fa-credit-card"></i> Payment Method
+                            </button>
                     </div>
                 </div>
             </div>
