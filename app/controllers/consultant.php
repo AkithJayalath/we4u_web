@@ -118,11 +118,23 @@
               }
             }
 
+            // Handle documents upload using `uploadMultipleFiles` helper
+ $uploadDir = '/documents/approvalDocuments/';
+ $uploadResult = uploadMultipleFiles($data['documents'], $uploadDir);
+
+ // Store uploaded file names and check for any errors
+ $uploadedFiles = $uploadResult['uploadedFiles'];
+ if (empty($uploadedFiles)) {
+     $data['documents_err'] = 'Please add the documents';
+ } elseif (!empty($uploadResult['errors'])) {
+     $data['documents_err'] = implode(', ', $uploadResult['errors']);
+ }
+
  // Proceed if no errors
  if (empty($data['username_err']) && empty($data['email_err']) && empty($data['password_err']) && 
      empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['dob_err']) && 
      empty($data['national_id_err']) && empty($data['contact_info_err']) && empty($data['address_err']) && 
-     empty($data['type_of_consultant_err'])) {
+     empty($data['type_of_consultant_err']) && empty($data['documents_err'])) {
 
      // Hash the password
      $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -152,6 +164,7 @@
      'type_of_consultant' => '',
      'specifications' => '',
      'qualifications' => '',
+     'documents' => '',
      // Add all error fields
      'username_err' => '',
      'email_err' => '',
@@ -165,6 +178,7 @@
      'type_of_consultant_err' => '',
      'specifications_err' => '',
      'qualifications_err' => '',
+      'documents_err' => '',
  ];
 
  // Load registration form view
