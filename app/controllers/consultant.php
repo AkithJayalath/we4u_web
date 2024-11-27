@@ -182,9 +182,9 @@
  ];
 
  // Load registration form view
- $this->view('consultant/c_reg', $data);
-  }
-      }
+ $this->view('consulatnt/c_reg', $data);
+}
+    }
 
 
     public function consultantview(){
