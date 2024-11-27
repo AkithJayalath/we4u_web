@@ -7,6 +7,13 @@
     echo loadCSS($required_styles);
 ?>
 
+
+
+<link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
 <?php require APPROOT.'/views/includes/header.php'; ?>
 <div>
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
@@ -16,322 +23,67 @@
 <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
 
 
-<main class="ad-users-main-content">
-      <!-- <div class="ad-users-search-bar-container">
-        <i data-lucide="search" class="ad-users-search-icon"></i>
-        <input type="search" class="ad-users-search-bar" placeholder="Search" />
-      </div> -->
 
-      <div class="ad-users-stats-container">
-        <div class="ad-users-stat-card">
-          <div class="ad-users-stat-main">
-            <div class="ad-users-stat-details">
-              <h3>Session</h3>
-              <div class="ad-users-stat-value">21,459</div>
-              <div class="ad-users-stat-label">Total Users</div>
-            </div>
-            <div class="ad-users-stat-icon ad-users-blue">
-              <i data-lucide="users"></i>
-            </div>
-          </div>
-          <div class="ad-users-stat-growth ad-users-positive">(+29%)</div>
-        </div>
 
-        <div class="ad-users-stat-card">
-          <div class="ad-users-stat-main">
-            <div class="ad-users-stat-details">
-              <h3>All Users</h3>
-              <div class="ad-users-stat-value">4,567</div>
-              <div class="ad-users-stat-label">Last week analytics</div>
-            </div>
-            <div class="ad-users-stat-icon ad-users-red">
-              <i data-lucide="user-plus"></i>
-            </div>
-          </div>
-          <div class="ad-users-stat-growth ad-users-positive">(+18%)</div>
-        </div>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Dashboard Overview</h1>
+    <button class="export-btn">Export Report</button>
+  </header>
 
-        <div class="ad-users-stat-card">
-          <div class="ad-users-stat-main">
-            <div class="ad-users-stat-details">
-              <h3>Active Users</h3>
-              <div class="ad-users-stat-value">19,860</div>
-              <div class="ad-users-stat-label">Last week analytics</div>
-            </div>
-            <div class="ad-users-stat-icon ad-users-green">
-              <i data-lucide="user-check"></i>
-            </div>
-          </div>
-          <div class="ad-users-stat-growth ad-users-negative">(-14%)</div>
-        </div>
-
-        <div class="ad-users-stat-card">
-          <div class="ad-users-stat-main">
-            <div class="ad-users-stat-details">
-              <h3>Pending Users</h3>
-              <div class="ad-users-stat-value">237</div>
-              <div class="ad-users-stat-label">Last week analytics</div>
-            </div>
-            <div class="ad-users-stat-icon ad-users-yellow">
-              <i data-lucide="user-cog"></i>
-            </div>
-          </div>
-          <div class="ad-users-stat-growth ad-users-positive">(+42%)</div>
-        </div>
+  <div class="dashboard-metrics">
+    <div class="metric">
+      <h3 class="metric-title">Jobs Completed</h3>
+      <div class="metric-value">2,000</div>
+      <div class="metric-change">+15%</div>
+    </div>
+    <div class="metric">
+      <h3 class="metric-title">Total Visitors</h3>
+      <div class="metric-value">22,435</div>
+      <div class="metric-change" style="color: red;">-3.5%</div>
+    </div>
+    <div class="metric">
+      <h3 class="metric-title">User Registrations</h3>
+      <div class="metric-value">2,400</div>
+      <div class="metric-change">+15%</div>
+    </div>
+    <div class="metric">
+      <h3 class="metric-title">Complaints</h3>
+      <div class="metric-value">8</div>
+      <div class="metric-change" style="color: red;">+10%</div>
+    </div>
+  </div>
+  <div class="dashboard-charts">
+      <div class="chart-container">
+          <h2>User Registrations</h2>
+          <canvas id="userRegistrationsChart"></canvas>
       </div>
-
-      <div class="ad-users-filters">
-        <select class="ad-users-filter-select">
-          <option value="">Select Role</option>
-          <option value="admin">Admin</option>
-          <option value="moderator">Moderator</option>
-          <option value="user">Careseeker</option>
-          <option value="caregiver">Caregiver</option>
-          <option value="consultant">Consultant</option>
-        </select>
-        <div class="ad-users-table-controls">
-          <select class="ad-users-entries-select">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-          <div class="ad-users-search-wrapper">
-            <i data-lucide="search" class="ad-users-search-icon"></i>
-            <input
-              type="search"
-              class="ad-users-user-search"
-              placeholder="Search User"
-            />
-          </div>
-          <button class="ad-users-btn-export">
-            <i data-lucide="download" class="ad-users-btn-icon"></i>
-            Export
-          </button>
-          <button class="ad-users-btn-add">
-            <i data-lucide="plus" class="ad-users-btn-icon"></i>
-            Add New User
-          </button>
-        </div>
+      <div class="chart-container">
+          <h2>Caregiver Activity</h2>
+          <canvas id="caregiverActivityChart"></canvas>
       </div>
-
-      <div class="ad-users-table-container">
-        <table class="ad-users-users-table">
-          <thead>
-            <tr>
-              <th>USER</th>
-              <th>ROLE</th>
-              <th>USERID</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                  <div class="ad-users-user-email">jordan.stevenson</div>
-                </div>
-              </td>
-              <td>Admin</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="ad-users-user-cell">
-                <img
-                  src="/api/placeholder/40/40"
-                  alt="User"
-                  class="ad-users-user-avatar"
-                />
-                <div class="ad-users-user-info">
-                  <div class="ad-users-user-name">Richard Payne</div>
-                  <div class="ad-users-user-email">richard247</div>
-                </div>
-              </td>
-              <td>Moderator</td>
-              <td>#AHGA68</td>
-              <td>
-                <span class="ad-users-status ad-users-active">Active</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="ad-users-pagination">
-          <button class="ad-users-page-btn">
-            <i data-lucide="chevrons-left"></i>
-          </button>
-          <button class="ad-users-page-btn">
-            <i data-lucide="chevron-left"></i>
-          </button>
-          <button class="ad-users-page-btn">1</button>
-          <button class="ad-users-page-btn">2</button>
-          <button class="ad-users-page-btn ad-users-active">3</button>
-          <button class="ad-users-page-btn">4</button>
-          <button class="ad-users-page-btn">5</button>
-          <button class="ad-users-page-btn">
-            <i data-lucide="chevron-right"></i>
-          </button>
-          <button class="ad-users-page-btn">
-            <i data-lucide="chevrons-right"></i>
-          </button>
-        </div>
+      <div class="chart-container">
+          <h2>Active Jobs Overview</h2>
+          <canvas id="activeJobsChart"></canvas>
       </div>
-</main>
+      <div class="chart-container">
+          <h2>User Engagement Metrics</h2>
+          <canvas id="userEngagementChart"></canvas>
+      </div>
+  </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
-    <script>
-      lucide.createIcons();
-    </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
 
 </page-body-container>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Link the dashboard.js file -->
+  <script src="<?php echo URLROOT; ?>/js/admin_dashboard.js"></script>
+
+
+<?php require APPROOT.'/views/includes/footer.php'; ?>

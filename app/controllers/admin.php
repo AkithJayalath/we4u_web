@@ -10,8 +10,9 @@ class admin extends controller{
       if($_SESSION['user_role'] != 'Admin'){
         redirect('pages/error');
       }
-    }
     $this->adminModel = $this->model('M_Admin');
+
+    }
   }
 
   public function index(){
@@ -20,6 +21,21 @@ class admin extends controller{
     ];
     $this->view('admin/v_admin_dashboard', $data);
   }
+
+  public function jobsCompleted() {
+    $data = [
+        'title' => 'Jobs Completed Dashboard',
+        'jobs_stats' => [
+            'weekly' => 150,
+            'monthly' => 620,
+            'yearly' => 7500,
+            'total' => 21459
+        ]
+    ];
+    
+    $this->view('admin/v_jobs_completed', $data);
+}
+
 
   public function adduser(){
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -140,27 +156,111 @@ class admin extends controller{
     $this->view('admin/v_add_blog', $data);
   }
 
-  public function viewannouncement(){
+  public function viewannouncement() {
+    $announcements = $this->adminModel->getAnnouncements();
     $data = [
-      'title' => 'View Announcement'
+        'title' => 'View Announcement',
+        'announcements' => $announcements
     ];
     $this->view('admin/v_viewannouncements', $data);
   }
 
-  public function editannouncement(){
-    $data = [
-      'title' => 'Edit Announcement'
-    ];
-    $this->view('admin/v_editannouncement', $data);
-  }
-    
-  public function addannouncement(){
-      $data = [
-        'title' => 'Add Announcement'
-      ];
-      $this->view('admin/v_addannouncement', $data);
-    }
+public function editannouncement($announcement_id) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $data = [
+            'announcement_id' => $announcement_id,
+            'title' => trim($_POST['title']),
+            'content' => trim($_POST['content']),
+            'status' => trim($_POST['status']),
+            'title_err' => '',
+            'content_err' => '',
+            'status_err' => ''
+        ];
 
+        // Validation
+        if (empty($data['title'])) {
+            $data['title_err'] = 'Please enter announcement title';
+        }
+        if (empty($data['content'])) {
+            $data['content_err'] = 'Please enter announcement content';
+        }
+        if (empty($data['status'])) {
+            $data['status_err'] = 'Please select a status';
+        }
+
+        if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
+            if ($this->adminModel->updateAnnouncement($data)) {
+                redirect('admin/viewannouncement');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            $data['announcement'] = $this->adminModel->getAnnouncementById($announcement_id);
+            $this->view('admin/v_editannouncement', $data);
+        }
+    } else {
+        $announcement = $this->adminModel->getAnnouncementById($announcement_id);
+        $data = [
+            'announcement' => $announcement,
+            'title_err' => '',
+            'content_err' => '',
+            'status_err' => ''
+        ];
+        $this->view('admin/v_editannouncement', $data);
+    }
+}
+
+public function deleteannouncement($announcement_id) {
+  if ($this->adminModel->deleteAnnouncement($announcement_id)) {
+      redirect('admin/viewannouncement');
+  } else {
+      die('Something went wrong');
+  }
+}
+
+      public function addannouncement() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'title' => trim($_POST['title']),
+                'content' => trim($_POST['content']),
+                'status' => trim($_POST['status']),
+                'title_err' => '',
+                'content_err' => '',
+                'status_err' => ''
+            ];
+
+            // Validation
+            if (empty($data['title'])) {
+                $data['title_err'] = 'Please enter announcement title';
+            }
+            if (empty($data['content'])) {
+                $data['content_err'] = 'Please enter announcement content';
+            }
+            if (empty($data['status'])) {
+                $data['status_err'] = 'Please select a status';
+            }
+
+            if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
+                if ($this->adminModel->addAnnouncement($data)) {
+                    redirect('admin/viewannouncement');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                $this->view('admin/v_addannouncement', $data);
+            }
+        } else {
+            $data = [
+                'title' => '',
+                'content' => '',
+                'status' => '',
+                'title_err' => '',
+                'content_err' => '',
+                'status_err' => ''
+            ];
+            $this->view('admin/v_addannouncement', $data);
+        }
+      }
   
   } // Only one closing brace needed here for the class
 
