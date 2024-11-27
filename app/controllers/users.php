@@ -483,6 +483,16 @@ public function viewblog(){
   $this->view('users/v_view_blog', $data);
 }
 
+public function viewCaregivers(){
+  $data=[];
+  $this->view('users/v_viewCaregivers', $data);
+}
+
+public function viewConsultants(){
+  $data=[];
+  $this->view('users/v_viewConsultants', $data);
+}
+
 
 
 
