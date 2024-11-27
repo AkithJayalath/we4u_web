@@ -182,7 +182,7 @@
     function showConfirmation() {
         closeModal();
         alert("Request Accepted Successfully!"); // Show confirmation message
-        window.location.href = "<?php echo URLROOT; ?>/cgrequest/request"; 
+        window.location.href = "<?php echo URLROOT; ?>/caregivers/request"; 
     }
 
     // Close the modal if the user clicks outside the modal content
@@ -207,7 +207,7 @@
 
     // Function to close the Reject Modal
     function closeRejectModal() {
-        window.location.href = "<?php echo URLROOT; ?>/cgrequest/request"; 
+        window.location.href = "<?php echo URLROOT; ?>/caregivers/request"; 
     }
 
     // Add event listener for the Cancel button
@@ -221,7 +221,7 @@
         if (reason) {
             alert(`Request Rejected. Reason: ${reason}`);
             closeRejectModal();
-            window.location.href = "<?php echo URLROOT; ?>/cgrequest/request"; 
+            window.location.href = "<?php echo URLROOT; ?>/caregivers/request"; 
         } else {
             alert(`Please provide a reason before submitting!`); 
             

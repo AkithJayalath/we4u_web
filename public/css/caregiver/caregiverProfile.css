@@ -117,15 +117,47 @@
     padding: 20px;
 }
 
-.caregiver-send-button {
-    background-color: var(--color-btn-update);
+.caregiver-personal-info-right-top {
+    display: flex;
+    flex-direction: column; /* Stack badges vertically */
+    align-items: center; /* Align items to the left */
+    gap: 10px; /* Add space between rows */
+    background-color: #f9f9f9; /* Background for the container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
+
+.personal-info-badge {
+    display: inline-block;
+    background-color: #e5f1ff; /* Badge background color */
+    color: #1877f2; /* Text color */
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px; /* Padding inside the badge */
+    border-radius: 20px; /* Rounded edges */
+    text-align: center;
+    width: fit-content; /* Adjust width to fit the content */
+    text-transform: uppercase; /* Make the text uppercase */
+}
+
+.personal-info-badge:hover{
+    transform: scale(1.01); /* Slight zoom */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+
+
+
+
+
 
 .caregiver-chat-button {
     background-color: var(--color-btn-upload);
 }
 
-.caregiver-send-button, .caregiver-chat-button {
+.caregiver-chat-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,17 +177,39 @@
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
 }
 
-.caregiver-send-button i, .caregiver-chat-button i {
-    font-size: 1.2rem; /* Icon size */
-}
 
-.caregiver-send-button:hover {
-    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
-}
 
 .caregiver-chat-button:hover {
     background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
 }
+
+.caregiver-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Space between the icon and text */
+    width: 60%; /* Buttons take 80% of the container's width */
+    max-width: 300px; /* Ensures consistent button width */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    height: 50px; /* Set a fixed height for consistency */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+    background-color: #0B63F8
+}
+
+
+
+.caregiver-edit-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
 
   
   .caregiver-personal-info-stat {
@@ -248,6 +302,12 @@
     overflow: hidden;
     flex: 1 1 100%; /* Full-width section */
     margin: 0; /* Ensure alignment with other sections */
+}
+
+.icon {
+    font-size: 2rem;
+    color: #007bff;
+    flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 
