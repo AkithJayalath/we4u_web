@@ -19,7 +19,7 @@
       <div class="a-v-a-table-container">
         <h2>Announcement Information</h2>
         <div class="a-v-a-add-button">
-        <button class="a-v-a-btn-add" onclick="window.location.href='<?php echo URLROOT; ?>/admin/addannouncement'">
+        <button class="a-v-a-btn-add" onclick="window.location.href='<?php echo URLROOT; ?>/operator/addannouncement'">
           <i class="fas fa-plus"></i> Add Announcement
       </button>
         </div>
@@ -37,7 +37,7 @@
                     <div class="a-v-a-table-cell"><?php echo date('d M Y', strtotime($announcement->updated_at)); ?></div>
                     <div class="a-v-a-table-cell status-<?php echo strtolower($announcement->status); ?>"><?php echo $announcement->status; ?></div>
                     <div class="a-v-a-table-cell">
-                        <button class="a-v-a-view-action-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/editannouncement/<?php echo $announcement->announcement_id; ?>'">Details</button>
+                        <button class="a-v-a-view-action-btn" onclick="window.location.href='<?php echo URLROOT; ?>/operator/editannouncement/<?php echo $announcement->announcement_id; ?>'">Details</button>
                     </div>
                 </div>
             <?php endforeach; ?>

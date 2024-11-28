@@ -94,6 +94,11 @@
             $result = $this->db->single();
             return $result;
         }
+
+        public function get_pending_requests() {
+            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Pending" ORDER BY request_date DESC');
+            return $this->db->resultSet();
+        }
         
 
         public function get_requests_by_id($request_id){
@@ -180,6 +185,8 @@
 
 
 ?>
+
+
 
 
 

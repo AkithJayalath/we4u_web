@@ -8,7 +8,7 @@ class admin extends controller{
       redirect('users/login');
     }else{
       if($_SESSION['user_role'] != 'Admin'){
-        redirect('pages/error');
+        redirect('pages/permissonerror');
       }
     $this->adminModel = $this->model('M_Admin');
 
@@ -36,6 +36,27 @@ class admin extends controller{
     $this->view('admin/v_jobs_completed', $data);
 }
 
+public function viewCompletedJob($job_id) {
+    // Get job details from model
+    $data = [
+        'title' => 'View Completed Job',
+        'job_id' => $job_id,
+        'service_type' => 'Nursing Care',
+        'provider_name' => 'John Smith',
+        'provider_id' => '1234',
+        'careseeker_name' => 'Mary Johnson',
+        'careseeker_id' => '5678',
+        'start_date' => '2023-11-01',
+        'end_date' => '2023-11-30',
+        'duration' => '30 days',
+        'location' => 'Colombo, Sri Lanka',
+        'payment_status' => 'Paid',
+        'provider_comment' => 'Excellent cooperation from the careseeker. All requirements were clear and the environment was very supportive.',
+        'careseeker_comment' => 'Very professional service. The caregiver was punctual and provided excellent care.'
+    ];
+
+    $this->view('admin/v_view_completed_job', $data);
+}
 
   public function adduser(){
     if($_SERVER['REQUEST_METHOD'] == 'POST'){

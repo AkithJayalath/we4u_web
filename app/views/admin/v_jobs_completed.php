@@ -70,7 +70,21 @@
                         <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
                         <span>John Doe</span>
                     </td>
-                    <td>Nursing Care</td>
+                    <td>CareGiving</td>
+                    <td>Sarah Smith</td>
+                    <td>2023-11-15</td>
+                    <td>
+                    <a href="<?php echo URLROOT; ?>/admin/viewCompletedJob/1">
+                        <button class="action-btn view-btn">View Details</button>
+                    </a>    
+                    </td>
+                </tr>
+                <tr>
+                    <td class="provider-cell">
+                        <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
+                        <span>John Doe</span>
+                    </td>
+                    <td>Consulting</td>
                     <td>Sarah Smith</td>
                     <td>2023-11-15</td>
                     <td>
@@ -82,7 +96,7 @@
                         <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
                         <span>John Doe</span>
                     </td>
-                    <td>Nursing Care</td>
+                    <td>CareGiving</td>
                     <td>Sarah Smith</td>
                     <td>2023-11-15</td>
                     <td>
@@ -94,7 +108,7 @@
                         <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
                         <span>John Doe</span>
                     </td>
-                    <td>Nursing Care</td>
+                    <td>Consulting</td>
                     <td>Sarah Smith</td>
                     <td>2023-11-15</td>
                     <td>
@@ -106,7 +120,7 @@
                         <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
                         <span>John Doe</span>
                     </td>
-                    <td>Nursing Care</td>
+                    <td>CareGiving</td>
                     <td>Sarah Smith</td>
                     <td>2023-11-15</td>
                     <td>
@@ -118,19 +132,7 @@
                         <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
                         <span>John Doe</span>
                     </td>
-                    <td>Nursing Care</td>
-                    <td>Sarah Smith</td>
-                    <td>2023-11-15</td>
-                    <td>
-                        <button class="action-btn view-btn">View Details</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="provider-cell">
-                        <img src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png" alt="Provider" />
-                        <span>John Doe</span>
-                    </td>
-                    <td>Nursing Care</td>
+                    <td>Consulting</td>
                     <td>Sarah Smith</td>
                     <td>2023-11-15</td>
                     <td>

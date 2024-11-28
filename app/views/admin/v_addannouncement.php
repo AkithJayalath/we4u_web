@@ -14,7 +14,7 @@
   <main class="a-a-a-main-content">
       <div class="a-a-a-stat-card">
         <h2>Add New Announcement</h2>
-        <form class="a-a-a-form" action="<?php echo URLROOT; ?>/admin/addannouncement" method="POST">
+        <form class="a-a-a-form" action="<?php echo URLROOT; ?>/operator/addannouncement" method="POST">
           <div class="a-a-a-form-group">
             <label for="title">Announcement Title</label>
             <input
@@ -56,7 +56,7 @@
           </div>
 
           <div class="a-a-a-form-buttons">
-            <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/admin/viewannouncement'">Cancel</button>
+            <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/operator/viewannouncement'">Cancel</button>
             <!-- <button type="submit" class="a-a-a-btn-save">Create Announcement</button> -->
             <button type="button" class="a-a-a-btn-save">Create Announcement</button>
 

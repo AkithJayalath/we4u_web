@@ -24,6 +24,15 @@
 
       $this->view('moderator/v_careseekerrequests', $data);
     }
+
+    public function pendingrequests() {
+      $requests = $this->moderatorModel->get_pending_requests();
+      $data = [
+          'requests' => $requests
+      ];
+      $this->view('moderator/v_pendingrequests', $data);
+  }
+  
     
     public function acceptedcareseekers() {
         $requests = $this->moderatorModel->get_accepted_requests();
@@ -112,87 +121,179 @@
       // }
         
 
+    // public function submitInterview() {
+    //     if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         // data for Validation
+    //         $validationData = [
+    //             'request_date' => $_POST['request_date'],
+    //             'interview_time' => $_POST['interview_time'],
+    //             'meeting_link' => $_POST['meeting_link']
+    //         ];
+
+    //         $errors = [];
+
+    //         // Validate date and time
+    //         $currentDateTime = new DateTime('now');
+    //         $selectedDateTime = new DateTime($validationData['request_date'] . ' ' . $validationData['interview_time']);
+
+    //         if ($selectedDateTime <= $currentDateTime) {
+    //             $errors['time-err-message'] = 'Interview cannot be scheduled in the past';
+    //         }
+
+    //         // Validate meeting link
+    //         if (!filter_var($validationData['meeting_link'], FILTER_VALIDATE_URL)) {
+    //             $errors['link-err-message'] = 'Please enter a valid meeting link';
+    //         }
+
+    //         if (!empty($errors)) {
+    //             // If there are errors, we carete the viewData to view the data with errors
+    //             $request = $this->moderatorModel->get_requests_by_id($_POST['request_id']);
+    //             $viewData = [
+    //                 'request' => $request,
+    //                 'interview' => (object)[
+    //                     'request_date' => $_POST['request_date'],
+    //                     'interview_time' => $_POST['interview_time'],
+    //                     'platform' => $_POST['platform'],
+    //                     'meeting_link' => $_POST['meeting_link'],
+    //                     'provider_id' => $_POST['provider_id'],
+    //                     'provider_name' => $_POST['provider_name'],
+    //                     'provider_email' => $_POST['provider_email'],
+    //                     'status' => 'Pending'
+    //                 ],
+    //                 'time-err-message' => $errors['time-err-message'] ?? '',
+    //                 'link-err-message' => $errors['link-err-message'] ?? ''
+    //             ];
+    //             $this->view('moderator/v_interview', $viewData);
+    //             return;
+    //         }
+
+    //         // If no errors, prepare data
+    //         $data = [
+    //             'request_id' => $_POST['request_id'],
+    //             'request_date' => $_POST['request_date'],
+    //             'interview_time' => $_POST['interview_time'],
+    //             'platform' => $_POST['platform'],
+    //             'service' => $_POST['service'],
+    //             'meeting_link' => $_POST['meeting_link'],
+    //             'provider_id' => $_POST['provider_id'],
+    //             'provider_name' => $_POST['provider_name'],
+    //             'provider_email' => $_POST['provider_email']
+    //         ];
+
+    //         // Check if interview exists or not and update/create accordingly
+    //         $interview = $this->moderatorModel->checkInterviewExists($data['request_id']);
+    //         if($interview) {
+    //             if($this->moderatorModel->updateInterview($data)) {
+    //                 redirect('moderator/careseekerrequests');
+    //             }
+    //         } else {
+    //             if($this->moderatorModel->scheduleInterview($data)) {
+    //                 redirect('moderator/careseekerrequests');
+    //             }
+    //         }
+    //     }
+    // }
+
     public function submitInterview() {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // data for Validation
-            $validationData = [
-                'request_date' => $_POST['request_date'],
-                'interview_time' => $_POST['interview_time'],
-                'meeting_link' => $_POST['meeting_link']
-            ];
-
-            $errors = [];
-
-            // Validate date and time
-            $currentDateTime = new DateTime('now');
-            $selectedDateTime = new DateTime($validationData['request_date'] . ' ' . $validationData['interview_time']);
-
-            if ($selectedDateTime <= $currentDateTime) {
-                $errors['time-err-message'] = 'Interview cannot be scheduled in the past';
-            }
-
-            // Validate meeting link
-            if (!filter_var($validationData['meeting_link'], FILTER_VALIDATE_URL)) {
-                $errors['link-err-message'] = 'Please enter a valid meeting link';
-            }
-
-            if (!empty($errors)) {
-                // If there are errors, we carete the viewData to view the data with errors
-                $request = $this->moderatorModel->get_requests_by_id($_POST['request_id']);
-                $viewData = [
-                    'request' => $request,
-                    'interview' => (object)[
-                        'request_date' => $_POST['request_date'],
-                        'interview_time' => $_POST['interview_time'],
-                        'platform' => $_POST['platform'],
-                        'meeting_link' => $_POST['meeting_link'],
-                        'provider_id' => $_POST['provider_id'],
-                        'provider_name' => $_POST['provider_name'],
-                        'provider_email' => $_POST['provider_email'],
-                        'status' => 'Pending'
-                    ],
-                    'time-err-message' => $errors['time-err-message'] ?? '',
-                    'link-err-message' => $errors['link-err-message'] ?? ''
-                ];
-                $this->view('moderator/v_interview', $viewData);
-                return;
-            }
-
-            // If no errors, prepare data
-            $data = [
-                'request_id' => $_POST['request_id'],
-                'request_date' => $_POST['request_date'],
-                'interview_time' => $_POST['interview_time'],
-                'platform' => $_POST['platform'],
-                'service' => $_POST['service'],
-                'meeting_link' => $_POST['meeting_link'],
-                'provider_id' => $_POST['provider_id'],
-                'provider_name' => $_POST['provider_name'],
-                'provider_email' => $_POST['provider_email']
-            ];
-
-            // Check if interview exists or not and update/create accordingly
-            $interview = $this->moderatorModel->checkInterviewExists($data['request_id']);
-            if($interview) {
-                if($this->moderatorModel->updateInterview($data)) {
-                    redirect('moderator/careseekerrequests');
-                }
-            } else {
-                if($this->moderatorModel->scheduleInterview($data)) {
-                    redirect('moderator/careseekerrequests');
-                }
-            }
-        }
-    }
-    
-    
-
-
-      public function announcementdetails(){
-        $data = [];
-
-        $this->view('moderator/v_announcements', $data);
+      if($_SERVER['REQUEST_METHOD'] == 'POST') {
+          // Initial validation for required fields
+          if(empty($_POST['request_date']) || empty($_POST['interview_time'])) {
+              // Get request details for re-displaying the form
+              $request = $this->moderatorModel->get_requests_by_id($_POST['request_id']);
+              $viewData = [
+                  'request' => $request,
+                  'interview' => (object)[
+                      'request_date' => $_POST['request_date'] ?? '',
+                      'interview_time' => $_POST['interview_time'] ?? '',
+                      'platform' => $_POST['platform'] ?? '',
+                      'meeting_link' => $_POST['meeting_link'] ?? '',
+                      'provider_id' => $_POST['provider_id'] ?? '',
+                      'provider_name' => $_POST['provider_name'] ?? '',
+                      'provider_email' => $_POST['provider_email'] ?? '',
+                      'status' => 'Pending'
+                  ],
+                  'time-err-message' => 'Please select both date and time for the interview',
+                  'link-err-message' => ''
+              ];
+              $this->view('moderator/v_interview', $viewData);
+              return;
+          }
+  
+          // Validation data for date/time and link
+          $validationData = [
+              'request_date' => $_POST['request_date'],
+              'interview_time' => $_POST['interview_time'],
+              'meeting_link' => $_POST['meeting_link']
+          ];
+  
+          $errors = [];
+  
+          // Validate date and time
+          $currentDateTime = new DateTime('now');
+          $selectedDateTime = new DateTime($validationData['request_date'] . ' ' . $validationData['interview_time']);
+  
+          if ($selectedDateTime <= $currentDateTime) {
+              $errors['time-err-message'] = 'Interview cannot be scheduled in the past';
+          }
+  
+          // Validate meeting link
+          if (!filter_var($validationData['meeting_link'], FILTER_VALIDATE_URL)) {
+              $errors['link-err-message'] = 'Please enter a valid meeting link';
+          }
+  
+          if (!empty($errors)) {
+              $request = $this->moderatorModel->get_requests_by_id($_POST['request_id']);
+              $viewData = [
+                  'request' => $request,
+                  'interview' => (object)[
+                      'request_date' => $_POST['request_date'],
+                      'interview_time' => $_POST['interview_time'],
+                      'platform' => $_POST['platform'],
+                      'meeting_link' => $_POST['meeting_link'],
+                      'provider_id' => $_POST['provider_id'],
+                      'provider_name' => $_POST['provider_name'],
+                      'provider_email' => $_POST['provider_email'],
+                      'status' => 'Pending'
+                  ],
+                  'time-err-message' => $errors['time-err-message'] ?? '',
+                  'link-err-message' => $errors['link-err-message'] ?? ''
+              ];
+              $this->view('moderator/v_interview', $viewData);
+              return;
+          }
+  
+          // If validation passes, prepare data for database
+          $data = [
+              'request_id' => $_POST['request_id'],
+              'request_date' => $_POST['request_date'],
+              'interview_time' => $_POST['interview_time'],
+              'platform' => $_POST['platform'],
+              'service' => $_POST['service'],
+              'meeting_link' => $_POST['meeting_link'],
+              'provider_id' => $_POST['provider_id'],
+              'provider_name' => $_POST['provider_name'],
+              'provider_email' => $_POST['provider_email']
+          ];
+  
+          // Check if interview exists and update/create accordingly
+          $interview = $this->moderatorModel->checkInterviewExists($data['request_id']);
+          if($interview) {
+              if($this->moderatorModel->updateInterview($data)) {
+                  redirect('moderator/careseekerrequests');
+              }
+          } else {
+              if($this->moderatorModel->scheduleInterview($data)) {
+                  redirect('moderator/careseekerrequests');
+              }
+          }
       }
+  }
+  
+    
+    
+
+
+
 
        // reject the request -->
       public function rejectRequest() {
@@ -230,7 +331,7 @@
         ];
         
         if($this->moderatorModel->updateRequestStatus($data)) {
-            redirect('moderator/requests');
+            redirect('moderator/careseekerrequests');
         }
     }
     

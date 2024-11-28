@@ -16,7 +16,7 @@
         <h2>Edit Announcement</h2>
         
         <?php if(isset($data['announcement']) && $data['announcement']): ?>
-          <form class="a-e-a-form" method="POST" action="<?php echo URLROOT; ?>/admin/editannouncement/<?php echo $data['announcement']->announcement_id; ?>">
+          <form class="a-e-a-form" method="POST" action="<?php echo URLROOT; ?>/operator/editannouncement/<?php echo $data['announcement']->announcement_id; ?>">
             <div class="a-e-a-form-group">
                 <label for="title">Announcement Title</label>
                 <input
@@ -55,8 +55,8 @@
                 <span class="invalid-feedback"><?php echo $data['status_err']; ?></span>
             </div>
             <div class="a-e-a-form-buttons">
-                  <button type="button" class="a-e-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/admin/viewannouncement'">Cancel</button>
-                  <button type="button" class="a-e-a-btn-delete" data-delete-url="<?php echo URLROOT; ?>/admin/deleteannouncement/<?php echo $data['announcement']->announcement_id; ?>">Delete</button>
+                  <button type="button" class="a-e-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/operator/viewannouncement'">Cancel</button>
+                  <button type="button" class="a-e-a-btn-delete" data-delete-url="<?php echo URLROOT; ?>/operator/deleteannouncement/<?php echo $data['announcement']->announcement_id; ?>">Delete</button>
                   <button type="submit" class="a-e-a-btn-save">Save Changes</button>
               </div>
             </form>
