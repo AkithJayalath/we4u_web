@@ -15,7 +15,7 @@
 
         </div>
         <div class="hero-right">
-            <img src="<?php echo URLROOT; ?>/images/login.png" alt="Elderly Care">
+            <img src="\we4u\public\images\about.jpg" alt="Elderly Care">
         </div>
     </section>
 

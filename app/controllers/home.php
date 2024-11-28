@@ -8,7 +8,7 @@ class home extends controller{
     }
 
     public function index(){
-        $this->view('home/v_home');
+        $this->view('home/v_home1');
     }
 
     public function index1(){
