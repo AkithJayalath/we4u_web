@@ -15,7 +15,7 @@ echo loadCSS($required_styles);
     <!-- Container -->
     <div class="view-requests-m-c-r-container">
       <div class="view-requests-m-c-r-table-container">
-        <h2>Requests</h2>
+        <h2>Patient Sessions</h2>
         <div class="view-requests-m-c-r-filter-section">
             <label for="filter-date">Date:</label>
             <select id="filter-date" class="filter-select">
@@ -37,7 +37,7 @@ echo loadCSS($required_styles);
 
         <div class="view-requests-m-c-r-table">
           <div class="view-requests-m-c-r-table-header">
-            <div class="view-requests-m-c-r-table-cell">Request ID</div>
+            <div class="view-requests-m-c-r-table-cell">Session ID</div>
             <div class="view-requests-m-c-r-table-cell">Date</div>
             <div class="view-requests-m-c-r-table-cell">Care Seeker</div>
             <div class="view-requests-m-c-r-table-cell">Action</div>
@@ -48,7 +48,13 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
               <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
+
               </div>
             </div>
 
@@ -57,7 +63,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
               <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
               </div>
             </div>
 
@@ -66,7 +77,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/05/2020</div>
               <div class="view-requests-m-c-r-table-cell">Dr.Supun Jayawardhana</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
               </div>
             </div>
 
@@ -75,7 +91,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/02/2022</div>
               <div class="view-requests-m-c-r-table-cell">Kalum Silva</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
               </div>
             </div>
 
@@ -84,7 +105,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/09/2023</div>
               <div class="view-requests-m-c-r-table-cell">Dilon Soysa</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
               </div>
             </div>
 
@@ -93,7 +119,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">03/04/2019</div>
               <div class="view-requests-m-c-r-table-cell">Kasun Rathnayake</div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View Session</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantsession'">
+                View Session
+              </button>
               </div>
             </div>
           </div>

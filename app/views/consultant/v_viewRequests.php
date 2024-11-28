@@ -15,7 +15,7 @@ echo loadCSS($required_styles);
     <!-- Container -->
     <div class="view-requests-m-c-r-container">
       <div class="view-requests-m-c-r-table-container">
-        <h2>Requests</h2>
+        <h2>Consultant Sessions</h2>
         <div class="view-requests-m-c-r-filter-section">
             <label for="filter-date">Date:</label>
             <select id="filter-date" class="filter-select">
