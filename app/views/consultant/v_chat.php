@@ -24,42 +24,6 @@ echo loadCSS($required_styles);
                             <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Sun Wukong">
                             <span>Sun Wukong</span>
                         </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Randila">
-                            <span>Randila</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -79,7 +43,7 @@ echo loadCSS($required_styles);
 
                     <!-- Message Input -->
                     <div class="message-input">
-                        <button class="attachment-btn">📎</button>
+                        <!-- <button class="".>📎</button> -->
                         <form method="POST" action="">
                             <textarea name="message" placeholder="Type your message..." required></textarea>
                             <button type="submit">Send</button>
