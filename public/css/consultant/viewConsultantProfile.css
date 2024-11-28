@@ -1,9 +1,9 @@
 /* Contains everthing */
-.view-caregiver-profile {
+.view-consultant-profile {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 20px; 
+    padding: 20px;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
@@ -16,7 +16,7 @@
 }
 
 /* Personal infor section */
-.caregiver-personal-info-section {
+.consultant-personal-info-section {
     display: flex;
     background-color: #f8f9fa;
     border-radius: 20px;
@@ -24,7 +24,7 @@
     gap: 20px;
   }
   /* Personal info left section */
-  .caregiver-personal-info-left {
+  .consultant-personal-info-left {
     display: flex;
     flex: 2;
     background-color: #ffffff;
@@ -33,7 +33,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     gap: 20px;
   }
-  .caregiver-personal-info-left-right {
+  .consultant-personal-info-left-right {
     flex: 2;
     display: flex;
     flex-direction: column;
@@ -42,7 +42,7 @@
     padding-bottom: 50px;
   }
 
-  .caregiver-personal-info-left-left {
+  .consultant-personal-info-left-left {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -51,7 +51,7 @@
     
   }
   
-  .caregiver-personal-info-pic {
+  .consultant-personal-info-pic {
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -59,7 +59,7 @@
     border: 2px solid #ffffff;
   }
 
-  .caregiver-personal-info-tag {
+  .consultant-personal-info-tag {
     display: inline-block;
     margin-top: 10px; 
     padding: 5px 10px;
@@ -72,19 +72,19 @@
     width: 30%;
   }
   
-  .caregiver-personal-info-details{
+  .consultant-personal-info-details{
 
     display: flex;
     flex-direction: column;
     justify-content:flex-end;
   }
-  .caregiver-personal-info-details h2 {
+  .consultant-personal-info-details h2 {
     margin: 0;
     font-size: 1.5rem;
     color: #000000;
   }
   
-  .caregiver-personal-info-details p {
+  .consultant-personal-info-details p {
     margin: 5px 0;
     color: #444343;
     display: flex;
@@ -104,7 +104,7 @@
   
 
   /* Personal info right section */
-  .caregiver-personal-info-right {
+  .consultant-personal-info-right {
     flex: 1;
     display: flex;
     flex-direction: column; /* Align items vertically */
@@ -117,15 +117,19 @@
     padding: 20px;
 }
 
-.caregiver-send-button {
+.consultant-send-button {
+    background-color: var(--color-btn-cancel);
+}
+
+.consultant-chat-button {
     background-color: var(--color-btn-update);
 }
 
-.caregiver-chat-button {
-    background-color: var(--color-btn-upload);
+.consultant-rate-button {
+    background-color: var(--color-btn-rate);
 }
 
-.caregiver-send-button, .caregiver-chat-button {
+.consultant-send-button, .consultant-chat-button, .consultant-rate-button{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,20 +149,23 @@
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
 }
 
-.caregiver-send-button i, .caregiver-chat-button i {
+.consultant-send-button i, .consultant-chat-button i {
     font-size: 1.2rem; /* Icon size */
 }
 
-.caregiver-send-button:hover {
-    background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+.consultant-send-button:hover {
+    background-color: var( --color-btn-cancel-hover); /* Darker shade on hover */
 }
 
-.caregiver-chat-button:hover {
-    background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+.consultant-chat-button:hover {
+    background-color: var(--color-btn-update-hover); /* Darker shade on hover */
 }
 
+.consultant-rate-button:hover {
+    background-color: var(--color-btn-rate-hover); /* Darker shade on hover */
+}
   
-  .caregiver-personal-info-stat {
+  .consultant-personal-info-stat {
     background-color: #f5f5f5;
     padding: 15px;
     border-radius: 10px;
@@ -169,26 +176,26 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
-  .caregiver-personal-info-stat p {
+  .consultant-personal-info-stat p {
     margin: 0;
     font-size: 0.9rem;
     color: #555;
   }
   
-  .caregiver-personal-info-stat h3 {
+  .consultant-personal-info-stat h3 {
     margin: 5px 0;
     font-size: 1.2rem;
     color: #333;
   }
 
-  .caregiver-personal-info-stat:hover{
+  .consultant-personal-info-stat:hover{
     transform: scale(1.01); /* Slight zoom */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
   }
 
      /* Personal info right section-->left side */
   
-  .caregiver-personal-info-right-right {
+  .consultant-personal-info-right-right {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -197,7 +204,7 @@
     padding-bottom: 50px;
   }
   
-  .caregiver-personal-info-diagnosis {
+  .consultant-personal-info-diagnosis {
     padding: 15px;
     background-color: #f5f5f5;
     border-radius: 10px;
@@ -205,7 +212,7 @@
     font-size: 0.9rem;
     color: #555;
   }
-  .caregiver-personal-info-edit-btn {
+  .consultant-personal-info-edit-btn {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -221,13 +228,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .caregiver-personal-info-edit-btn:hover {
+  .consultant-personal-info-edit-btn:hover {
     background-color: #0056b3;
   }
   
   
 /* Other info section */
-.caregiver-other-info-section {
+.consultant-other-info-section {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -239,7 +246,7 @@
 
 
     /* Other concerns section */
-.caregiver-other-concern-section {
+.consultant-other-concern-section {
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -251,9 +258,8 @@
 }
 
 
-
     /* Health concerns section */
-.caregiver-health-concern-section {
+.consultant-health-concern-section {
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -263,8 +269,8 @@
     flex: 1 1 48%; /* Half-width section for two-column layout */
 }
 
-.caregiver-other-concern-section-header,
-.caregiver-health-concern-section-header {
+.consultant-other-concern-section-header,
+.consultant-health-concern-section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -275,7 +281,7 @@
     font-size: 1.2rem;
 }
 
-.caregiver-other-concern-section-content {
+.consultant-other-concern-section-content {
     display: flex;
     flex-direction: column; /* Single-column layout */
     gap: 20px;
@@ -283,15 +289,8 @@
     padding: 20px;
     flex: 1;
 }
-.caregiver-other-concern-section-content p {
-    margin: 5px 0;
-    color: #5e5d5d;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
-.caregiver-health-concern-section-content {
+.consultant-health-concern-section-content {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -299,8 +298,8 @@
     background-color: #ffffff;
 }
 
-.caregiver-health-concern-item,
-.caregiver-other-concern-item {
+.consultant-health-concern-item,
+.consultant-other-concern-item {
     display: flex;
     align-items: flex-start;
     gap: 15px; /* Space between icon and text */
@@ -312,44 +311,44 @@
     flex: 1 1 calc(50% - 20px); /* Two-column layout for health-concern-section */
 }
 
-.caregiver-other-concern-item {
+.consultant-other-concern-item {
     flex: 1 1 100%; /* Single-column layout for other-concern-section */
 }
 
-.caregiver-health-concern-item:hover,
-.caregiver-other-concern-item:hover {
+.consultant-health-concern-item:hover,
+.consultant-other-concern-item:hover {
     transform: scale(1.01); /* Slight zoom */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
-.caregiver-icon {
+.consultant-icon {
     font-size: 1.5rem;
     color: #007bff;
     flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
-.caregiver-health-concern-item h4,
-.caregiver-other-concern-item h4 {
+.consultant-health-concern-item h4,
+.consultant-other-concern-item h4 {
     margin: 0;
     font-size: 1rem;
     font-weight: bold;
     color: #555555;
 }
 
-.caregiver-health-concern-item p,
-.caregiver-other-concern-item p {
+.consultant-health-concern-item p,
+.consultant-other-concern-item p {
     margin: 5px 0 0 0;
     font-size: 0.9rem;
     color: #777777;
 }
 
-.caregiver-header-with-icon {
+.consultant-header-with-icon {
     display: flex;
     align-items: center;
     gap: 10px; /* Space between icon and text */
 }
 
-.caregiver-header-icon {
+.consultant-header-icon {
     font-size: 3rem;
     color: #024b99; /* Same color as the icons for consistency */
 }

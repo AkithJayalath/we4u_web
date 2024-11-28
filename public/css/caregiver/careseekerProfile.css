@@ -1,9 +1,9 @@
 /* Contains everthing */
-.view-caregiver-profile {
+.view-elder-profile {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 20px; 
+    padding: 20px;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
@@ -16,7 +16,7 @@
 }
 
 /* Personal infor section */
-.caregiver-personal-info-section {
+.personal-info-section {
     display: flex;
     background-color: #f8f9fa;
     border-radius: 20px;
@@ -24,7 +24,55 @@
     gap: 20px;
   }
   /* Personal info left section */
-  .caregiver-personal-info-left {
+  .personal-info-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  
+  .personal-info-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+  }
+
+  .personal-info-tag {
+    display: inline-block;
+    margin-top: 5px; 
+    padding: 5px 10px;
+    background-color: #e8eaf5; 
+    color: #007bff; 
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    
+  }
+  
+  .personal-info-details h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #013CC6;
+  }
+  
+  .personal-info-details p {
+    margin: 5px 0;
+    color: #444343;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+
+  /* Personal info right section */
+  .personal-info-right {
     display: flex;
     flex: 2;
     background-color: #ffffff;
@@ -33,106 +81,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     gap: 20px;
   }
-  .caregiver-personal-info-left-right {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    padding-bottom: 50px;
-  }
 
-  .caregiver-personal-info-left-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    
-  }
-  
-  .caregiver-personal-info-pic {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ffffff;
-  }
-
-  .caregiver-personal-info-tag {
-    display: inline-block;
-    margin-top: 10px; 
-    padding: 5px 10px;
-    background-color: #e8f5e9; 
-    color: #43a047;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-    width: 30%;
-  }
-  
-  .caregiver-personal-info-details{
-
-    display: flex;
-    flex-direction: column;
-    justify-content:flex-end;
-  }
-  .caregiver-personal-info-details h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #000000;
-  }
-  
-  .caregiver-personal-info-details p {
-    margin: 5px 0;
-    color: #444343;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.consultant-rating .rating-stars {
-    display: flex;
-    gap: 5px;
-    color: #FFD700; /* Gold color for stars */
-}
-
-.rating-stars i {
-    font-size: 1.2rem;
-}
-  
-
-  /* Personal info right section */
-  .caregiver-personal-info-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column; /* Align items vertically */
-    justify-content: center; /* Center items vertically */
-    align-items: center; /* Center items horizontally */
-    border-radius: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    gap: 10px; /* Space between the buttons */
-    background-color: #ffffff;
-    padding: 20px;
-}
-
-.caregiver-send-button {
-    background-color: var(--color-btn-update);
-}
-
-.caregiver-chat-button {
-    background-color: var(--color-btn-upload);
-}
-
-.caregiver-send-button, .caregiver-chat-button {
+  .caregiver-chat-button {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px; /* Space between the icon and text */
-    width: 80%; /* Buttons take 80% of the container's width */
+    width: 60%; /* Buttons take 80% of the container's width */
     max-width: 300px; /* Ensures consistent button width */
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-size: 1rem;
     font-weight: bold;
     color: #ffffff;
@@ -143,9 +100,15 @@
     text-decoration: none;
     height: 50px; /* Set a fixed height for consistency */
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+    margin-top: 40px;
+    margin-left: 60px;
 }
 
-.caregiver-send-button i, .caregiver-chat-button i {
+.caregiver-chat-button {
+    background-color: var(--color-btn-upload);
+}
+
+  .caregiver-send-button i, .caregiver-chat-button i {
     font-size: 1.2rem; /* Icon size */
 }
 
@@ -157,8 +120,15 @@
     background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
 }
 
+    /* Personal info right section-->left side */
+  .personal-info-right-left {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
   
-  .caregiver-personal-info-stat {
+  .personal-info-stat {
     background-color: #f5f5f5;
     padding: 15px;
     border-radius: 10px;
@@ -169,26 +139,26 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
-  .caregiver-personal-info-stat p {
+  .personal-info-stat p {
     margin: 0;
     font-size: 0.9rem;
     color: #555;
   }
   
-  .caregiver-personal-info-stat h3 {
+  .personal-info-stat h3 {
     margin: 5px 0;
     font-size: 1.2rem;
     color: #333;
   }
 
-  .caregiver-personal-info-stat:hover{
+  .personal-info-stat:hover{
     transform: scale(1.01); /* Slight zoom */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
   }
 
      /* Personal info right section-->left side */
   
-  .caregiver-personal-info-right-right {
+  .personal-info-right-right {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -197,7 +167,7 @@
     padding-bottom: 50px;
   }
   
-  .caregiver-personal-info-diagnosis {
+  .personal-info-diagnosis {
     padding: 15px;
     background-color: #f5f5f5;
     border-radius: 10px;
@@ -205,7 +175,7 @@
     font-size: 0.9rem;
     color: #555;
   }
-  .caregiver-personal-info-edit-btn {
+  .personal-info-edit-btn {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -221,13 +191,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .caregiver-personal-info-edit-btn:hover {
+  .personal-info-edit-btn:hover {
     background-color: #0056b3;
   }
   
   
 /* Other info section */
-.caregiver-other-info-section {
+.other-info-section {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -239,7 +209,7 @@
 
 
     /* Other concerns section */
-.caregiver-other-concern-section {
+.other-concern-section,.caregiving-history-section,.reviews-section {
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -251,9 +221,8 @@
 }
 
 
-
     /* Health concerns section */
-.caregiver-health-concern-section {
+.health-concern-section {
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -263,8 +232,8 @@
     flex: 1 1 48%; /* Half-width section for two-column layout */
 }
 
-.caregiver-other-concern-section-header,
-.caregiver-health-concern-section-header {
+.other-concern-section-header,
+.health-concern-section-header ,.caregiving-history-section-header,.reviews-section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -275,7 +244,7 @@
     font-size: 1.2rem;
 }
 
-.caregiver-other-concern-section-content {
+.other-concern-section-content,.caregiving-history-section-content ,.reviews-section-content {
     display: flex;
     flex-direction: column; /* Single-column layout */
     gap: 20px;
@@ -283,15 +252,8 @@
     padding: 20px;
     flex: 1;
 }
-.caregiver-other-concern-section-content p {
-    margin: 5px 0;
-    color: #5e5d5d;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
-.caregiver-health-concern-section-content {
+.health-concern-section-content {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -299,8 +261,8 @@
     background-color: #ffffff;
 }
 
-.caregiver-health-concern-item,
-.caregiver-other-concern-item {
+.health-concern-item,
+.other-concern-item,.caregiving-history-item,.reviews-item {
     display: flex;
     align-items: flex-start;
     gap: 15px; /* Space between icon and text */
@@ -312,189 +274,60 @@
     flex: 1 1 calc(50% - 20px); /* Two-column layout for health-concern-section */
 }
 
-.caregiver-other-concern-item {
+.other-concern-item {
     flex: 1 1 100%; /* Single-column layout for other-concern-section */
 }
 
-.caregiver-health-concern-item:hover,
-.caregiver-other-concern-item:hover {
+.health-concern-item:hover,
+.other-concern-item:hover,.caregiving-history-item:hover,.reviews-item:hover {
     transform: scale(1.01); /* Slight zoom */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
 }
 
-.caregiver-icon {
+.icon {
     font-size: 1.5rem;
     color: #007bff;
     flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
-.caregiver-health-concern-item h4,
-.caregiver-other-concern-item h4 {
+.health-concern-item h4,
+.other-concern-item h4, .caregiving-history-item h4,.reviews-item h4 {
     margin: 0;
     font-size: 1rem;
     font-weight: bold;
     color: #555555;
 }
 
-.caregiver-health-concern-item p,
-.caregiver-other-concern-item p {
+.health-concern-item p,
+.other-concern-item p,.caregiving-history-item p {
     margin: 5px 0 0 0;
     font-size: 0.9rem;
-    color: #777777;
+    color: #666;
 }
 
-.caregiver-header-with-icon {
+.reviews-item p{
+  margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.reviews-item .date{
+  font-size: 0.8rem;
+  color: #666;
+    margin-top: 5px;
+}
+
+.header-with-icon {
     display: flex;
     align-items: center;
     gap: 10px; /* Space between icon and text */
 }
 
-.caregiver-header-icon {
+.header-icon {
     font-size: 3rem;
     color: #024b99; /* Same color as the icons for consistency */
 }
 
 
 
-/* Rating section */
-.rating-section-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-}
 
-.rating-reviews {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.rating-summary {
-  flex: 1;
-  min-width: 200px;
-}
-
-.rating-summary h2 {
-  font-size: 3rem;
-  margin: 0;
-  color: #333;
-}
-
-.rating-summary .stars {
-  font-size: 1.5rem;
-  color: gold;
-  margin: 5px 0;
-}
-
-.rating-summary p {
-  font-size: 0.9rem;
-  color: #888;
-}
-
-.rating-breakdown {
-  flex: 2;
-  min-width: 300px;
-}
-
-.rating-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.rating-bar span {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #555;
-}
-
-.bar {
-  background-color: #e0e0e0;
-  flex: 1;
-  height: 10px;
-  border-radius: 5px;
-  overflow: hidden;
-  position: relative;
-}
-
-.bar .filled {
-  background-color: #4caf50;
-  height: 100%;
-  border-radius: 5px;
-  transition: width 0.3s ease;
-}
-
-
-
-/* Reviews */
-.reviews-section-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.review-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
-}
-
-.review-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.review-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #ccc;
-  overflow: hidden;
-}
-
-.review-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.review-content {
-  flex: 1;
-}
-
-.review-header {
-  font-weight: bold;
-  color: #333;
-  margin: 0;
-}
-
-.review-username {
-  color: #555;
-  font-size: 0.9rem;
-}
-
-.review-text {
-  font-size: 0.95rem;
-  color: #555;
-  margin: 5px 0;
-}
-
-.review-date {
-  font-size: 0.8rem;
-  color: #888;
-}

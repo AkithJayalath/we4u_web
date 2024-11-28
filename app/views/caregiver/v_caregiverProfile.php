@@ -1,12 +1,9 @@
-<?php
-$required_styles = [
-    'careseeker/viewCaregiverProfile',
-];
-echo loadCSS($required_styles);
-?>
 
 <?php require APPROOT . '/views/includes/header.php'; ?>
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
+
+<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/caregiverProfile.css"> 
+
 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
@@ -37,12 +34,15 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="caregiver-personal-info-right">
-                <button class="caregiver-chat-button">
-                    <i class="fas fa-comments"></i> Chat
+                <div class="caregiver-personal-info-right-top">
+                    <div class="personal-info-badge">I am a Caregiver</div>
+                    <div class="personal-info-badge">Work Type Long-term</div>
+                    <div class="personal-info-badge">Work Type Short-term</div>
+                </div>
+                <button class="caregiver-edit-button">
+                    <i class="fas fa-edit"></i> Edit Profile
                 </button>
-                <button class="caregiver-send-button">
-                    <i class="fas fa-paper-plane"></i> Send Request
-                </button>
+                
             </div>
 
         </div>
@@ -107,7 +107,11 @@ echo loadCSS($required_styles);
                             <h4>Payment details</h4>
                             <p>Rs.2000 per visit</p>
                             <p>+ Rs.400 per session</p>
+                            
                         </div>
+                        <button class="caregiver-payment-button">
+                                <i class="fas fa-credit-card"></i> Payment Method
+                            </button>
                     </div>
                 </div>
             </div>
@@ -118,9 +122,11 @@ echo loadCSS($required_styles);
                         <h3>Availability</h3>
                     </div>
                 </div>
-                <div class="caregiver-other-concern-section-content">
-                   
-                    </div>
+                    <div class="caregiver-other-concern-section-content">
+                    <button class="caregiver-chat-button">
+                    <i class="fas fa-calendar"></i> View My Calendar
+                </button>
+                        </div>
                 </div>
                 
             </div>

@@ -169,6 +169,6 @@
 
 <script>
 function navigateToDetails() {
-    window.location.href = '<?php echo URLROOT; ?>/cgpayments/paymentMethod';
+    window.location.href = '<?php echo URLROOT; ?>/caregivers/paymentMethod';
 }
 </script>
