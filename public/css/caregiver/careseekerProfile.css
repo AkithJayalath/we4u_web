@@ -21,7 +21,7 @@
     background-color: #f8f9fa;
     border-radius: 20px;
     padding: 20px;
-    gap: 20px;
+    gap: 20px; 
   }
   /* Personal info left section */
   .personal-info-left {
@@ -82,7 +82,7 @@
     gap: 20px;
   }
 
-  .caregiver-chat-button {
+  .caregiver-chat-button,.caregiver-review-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -100,7 +100,7 @@
     text-decoration: none;
     height: 50px; /* Set a fixed height for consistency */
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
-    margin-top: 40px;
+    margin-top: 10px;
     margin-left: 60px;
 }
 
@@ -108,11 +108,14 @@
     background-color: var(--color-btn-upload);
 }
 
-  .caregiver-send-button i, .caregiver-chat-button i {
+  .caregiver-review-button i, .caregiver-chat-button i {
     font-size: 1.2rem; /* Icon size */
 }
+  .caregiver-review-button {
+    background-color: var(--color-btn-update);
+}
 
-.caregiver-send-button:hover {
+.caregiver-review-button:hover {
     background-color: var( --color-btn-update-hover); /* Darker shade on hover */
 }
 
@@ -327,6 +330,102 @@
     font-size: 3rem;
     color: #024b99; /* Same color as the icons for consistency */
 }
+
+.r-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.r-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  height: 450px;
+  margin: 20vh auto;
+  padding: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 30px;
+  margin-right: 20px;
+}
+
+.modal-img{
+  width: 150px;
+  margin-right: 10px;
+}
+
+.modal-header h2{
+  font-size: 32px;
+  font-weight: 700;
+  color: #013CC6; 
+  margin-bottom: 30px;
+}
+
+.r-modal-content p{
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #090909;
+  border-radius: 15px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  width: 450px;
+  height:100px
+}
+
+.modal-buttons .btn-submit{
+  background-color: #0B63F8;
+}
+.modal-buttons .btn-submit:hover{
+  background-color: #0953D6;
+}
+.modal-buttons .btn-cancel{
+  background-color: #EE1D52;
+}
+.modal-buttons .btn-cancel:hover{
+  background-color: #C31945;
+}
+
+.modal-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 80px;
+}
+
+.modal-buttons button{
+  padding: 10px 15px;
+  
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+
 
 
 

@@ -100,7 +100,7 @@
 
 <script>
 function navigateToDetails() {
-    window.location.href = '<?php echo URLROOT; ?>/cgrequest/viewreqinfo';
+    window.location.href = '<?php echo URLROOT; ?>/caregivers/viewreqinfo';
 }
 </script>
 

@@ -183,11 +183,185 @@
       
     }
 
-    public function paymentMethod(){
-      $data = [];
-      $this->view('caregiver/v_paymentMethod',$data);
-   }
+    public function addPaymentMethod() {
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+          // Sanitize and validate inputs
+          $data = [
+              'email' => $_SESSION['user_email'],
+              'mobile_number' => trim($_POST['mobile_number']),
+              'account_holder_name' => trim($_POST['account_holder_name']),
+              'bank_name' => trim($_POST['bank_name']),
+              'branch_name' => trim($_POST['branch_name']),
+              'account_number' => trim($_POST['account_number']),
+              'payment_type_st' => trim($_POST['payment_type_st']),
+              'payment_type_lt' => trim($_POST['payment_type_lt']),
+              'advance_amount' => trim($_POST['advance_amount']),
+              'mobile_number_err' => '',
+              'account_holder_name_err' => '',
+              'bank_name_err' => '',
+              'branch_name_err' => '',
+              'account_number_err' => ''
+          ];
+  
+          // Validate mobile number
+          if(empty($data['mobile_number'])) {
+              $data['mobile_number_err'] = 'Please enter mobile number';
+          } elseif(!preg_match('/^[0-9]{10}$/', $data['mobile_number'])) {
+              $data['mobile_number_err'] = 'Invalid mobile number format';
+          }
+  
+          // Validate account holder name
+          if(empty($data['account_holder_name'])) {
+              $data['account_holder_name_err'] = 'Please enter account holder name';
+          }
+  
+          // Validate bank name
+          if(empty($data['bank_name'])) {
+              $data['bank_name_err'] = 'Please enter bank name';
+          }
+  
+          // Validate branch name
+          if(empty($data['branch_name'])) {
+              $data['branch_name_err'] = 'Please enter branch name';
+          }
+  
+          // Validate account number
+          if(empty($data['account_number'])) {
+              $data['account_number_err'] = 'Please enter account number';
+          } elseif(!preg_match('/^[0-9]{9,18}$/', $data['account_number'])) {
+              $data['account_number_err'] = 'Invalid account number format';
+          }
+  
+          // Check for any errors
+          if(empty($data['mobile_number_err']) && 
+            empty($data['account_holder_name_err']) && 
+            empty($data['bank_name_err']) && 
+            empty($data['branch_name_err']) && 
+            empty($data['account_number_err'])) {
+              
+              if ($this->caregiversModel->addPaymentMethod($data)) {
+                  redirect('caregivers/PaymentMethod');
+              }
+          } else {
+              // Load view with errors
+              $this->view('caregiver/v_addPaymentMethod', $data);
+          }
+      } else {
+          // Display the add payment method form
+          $this->view('caregiver/v_addPaymentMethod');
+      }
+}
 
+// public function updatePaymentMethod() {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         $data = [
+    //             'email' => $_SESSION['user_email'],
+    //             'mobile_number' => trim($_POST['mobile_number']),
+    //             'account_holder_name' => trim($_POST['account_holder_name']),
+    //             'bank_name' => trim($_POST['bank_name']),
+    //             'branch_name' => trim($_POST['branch_name']),
+    //             'account_number' => trim($_POST['account_number']),
+    //             'payment_type_st' => trim($_POST['payment_type_st']),
+    //             'payment_type_lt' => trim($_POST['payment_type_lt']),
+    //             'advance_amount' => trim($_POST['advance_amount'])
+    //         ];
+
+    //         if ($this->caregiversModel->updatePaymentMethod($data)) {
+    //             redirect('caregivers/paymentMethod');
+    //         }
+    //     }
+    // }
+
+    public function paymentMethod() {
+      $email = $_SESSION['user_email'];
+      $paymentMethod = $this->caregiversModel->getPaymentMethod($email);
+      
+      $data = [
+          'paymentMethod' => $paymentMethod,
+          'email' => $email
+      ];
+      
+      $this->view('caregiver/v_paymentMethod', $data);
+  }
+
+    public function updatePaymentMethod() {
+      $existingPaymentMethod = $this->caregiversModel->getPaymentMethod($_SESSION['user_email']);
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+          // Sanitize and validate inputs
+          $data = [
+              'email' => $_SESSION['user_email'],
+              'mobile_number' => trim($_POST['mobile_number']),
+              'account_holder_name' => trim($_POST['account_holder_name']),
+              'bank_name' => trim($_POST['bank_name']),
+              'branch_name' => trim($_POST['branch_name']),
+              'account_number' => trim($_POST['account_number']),
+              'payment_type_st' => trim($_POST['payment_type_st']),
+              'payment_type_lt' => trim($_POST['payment_type_lt']),
+              'advance_amount' => trim($_POST['advance_amount']),
+              'mobile_number_err' => '',
+              'account_holder_name_err' => '',
+              'bank_name_err' => '',
+              'branch_name_err' => '',
+              'account_number_err' => '',
+              'paymentMethod' => $existingPaymentMethod
+          ];
+  
+          // Validate mobile number
+          if(empty($data['mobile_number'])) {
+              $data['mobile_number_err'] = 'Please enter mobile number';
+          } elseif(!preg_match('/^[0-9]{10}$/', $data['mobile_number'])) {
+              $data['mobile_number_err'] = 'Invalid mobile number format';
+          }
+  
+          // Validate account holder name
+          if(empty($data['account_holder_name'])) {
+              $data['account_holder_name_err'] = 'Please enter account holder name';
+          }
+  
+          // Validate bank name
+          if(empty($data['bank_name'])) {
+              $data['bank_name_err'] = 'Please enter bank name';
+          }
+  
+          // Validate branch name
+          if(empty($data['branch_name'])) {
+              $data['branch_name_err'] = 'Please enter branch name';
+          }
+  
+          // Validate account number
+          if(empty($data['account_number'])) {
+              $data['account_number_err'] = 'Please enter account number';
+          } elseif(!preg_match('/^[0-9]{9,18}$/', $data['account_number'])) {
+              $data['account_number_err'] = 'Invalid account number format';
+          }
+  
+          // Check for any errors
+          if(empty($data['mobile_number_err']) && 
+             empty($data['account_holder_name_err']) && 
+             empty($data['bank_name_err']) && 
+             empty($data['branch_name_err']) && 
+             empty($data['account_number_err'])) {
+              
+              if ($this->caregiversModel->updatePaymentMethod($data)) {
+                  redirect('caregivers/paymentMethod');
+              }
+          } else {
+              // Load view with errors
+              $this->view('caregiver/v_paymentMethod', $data);
+          }
+      }
+    }
+  
+
+    public function deletePaymentMethod() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $email = $_SESSION['user_email'];
+            if ($this->caregiversModel->deletePaymentMethod($email)) {
+                redirect('caregivers/paymentMethod');
+            }
+        }
+    }
+    
    public function paymentHistory(){
        $data = [];
        $this->view('caregiver/v_paymentHistory',$data);

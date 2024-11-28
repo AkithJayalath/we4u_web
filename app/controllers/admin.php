@@ -12,8 +12,9 @@ class admin extends controller{
       }
     $this->adminModel = $this->model('M_Admin');
 
-    }
   }
+
+
 
   public function index(){
     $data = [
@@ -138,8 +139,8 @@ public function viewCompletedJob($job_id) {
         
         $this->view('admin/v_add_user', $data);
     }
-}
 
+  }
 
 
   public function user_detailes(){
@@ -231,6 +232,9 @@ public function editannouncement($announcement_id) {
     }
 }
 
+
+   
+
 public function deleteannouncement($announcement_id) {
   if ($this->adminModel->deleteAnnouncement($announcement_id)) {
       redirect('admin/viewannouncement');
@@ -282,7 +286,8 @@ public function deleteannouncement($announcement_id) {
             $this->view('admin/v_addannouncement', $data);
         }
       }
+
   
-  } // Only one closing brace needed here for the class
+}// Only one closing brace needed here for the class
 
 ?>

@@ -59,7 +59,10 @@
                     </div>
                     <button class="caregiver-chat-button">
                     <i class="fas fa-comments"></i> Chat
-                </button>
+                    </button>
+                    <button class="caregiver-review-button" onClick="openRejectModal()">
+                        <i class="fas fa-comment"></i> Review 
+                    </button>
                 </div>
             </div>
         </div>
@@ -199,5 +202,50 @@
 
     </div>
 
+    <div id="rejecttModal" class="r-modal">
+        <div class="r-modal-content">
+            <div class="modal-header">
+                <img src="/we4u/public/images/Online Review-rafiki.png" class="modal-img"/>
+                <h2>Leave a Review</h2>
+            </div>
+            <p>Your Review</p>
+            <textarea id="rejectReason" placeholder="Write a review for this careseeker" rows="4" cols="50"></textarea>
+
+            <div class="modal-buttons">
+                <button class="btn-submit" onclick="submitRejection()">Submit</button>
+                <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
 </page-body-container>
 <?php require APPROOT . '/views/includes/footer.php' ?>
+
+<script>
+    // Function to handle the Submit button
+function submitRejection() {
+    const review = document.getElementById('rejectReason').value.trim();
+
+    if (review === '') {
+        // Alert if the textarea is empty
+        alert('Please write a review before submitting.');
+    } else {
+        // Show a success message if a review is provided
+        alert(`Thank you for your review: "${review}"`);
+        closeRejectModal(); // Close the modal after submission
+    }
+}
+
+// Function to handle the Cancel button
+function closeRejectModal() {
+    const modal = document.getElementById('rejecttModal');
+    modal.style.display = 'none'; // Hide the modal
+}
+
+// Function to open the modal (you can call this when you want to display the modal)
+function openRejectModal() {
+    const modal = document.getElementById('rejecttModal');
+    modal.style.display = 'block'; // Show the modal
+}
+
+</script>
