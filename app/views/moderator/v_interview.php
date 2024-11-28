@@ -54,34 +54,38 @@
 
         
     <?php if($data['interview']): ?>
-        <?php
-            date_default_timezone_set('Asia/Colombo'); // Set to Sri Lanka timezone
+    <?php
+        date_default_timezone_set('Asia/Colombo');
         
+        // Add validation checks
+        if (!empty($data['interview']->request_date) && !empty($data['interview']->interview_time)) {
             $interview_datetime = DateTime::createFromFormat('Y-m-d H:i:s', 
                 $data['interview']->request_date . ' ' . $data['interview']->interview_time);
             $current_time = new DateTime();
+            
+            if ($interview_datetime) {
+                $interval = $interview_datetime->diff($current_time);
+                $days_left = $interval->days;
+                $hours_left = $interval->h;
+                $is_overdue = $interview_datetime < $current_time;
+            }
+        }
         
-            $interval = $interview_datetime->diff($current_time);
-            $days_left = $interval->days;
-            $hours_left = $interval->h;
-                
-            $is_overdue = $interview_datetime < $current_time;
-            $interview_status = $data['interview']->status ?? 'pending';
-        ?>
-              
-      
-        <div class="m-i-countdown <?php echo $is_overdue ? 'overdue' : 'upcoming'; ?>">
-            <?php if($interview_status === 'completed'): ?>
-                Interview Completed
-              <?php else: ?>
-                  <?php if($is_overdue): ?>
-                    Interview overdue by <?php echo abs($days_left); ?> days and <?php echo abs($hours_left); ?> hours
-                    <?php else: ?>
-                        Time remaining: <?php echo $days_left; ?> days and <?php echo $hours_left; ?> hours
-                    <?php endif; ?>
-                  <?php endif; ?>
-          </div>
-    <?php endif; ?>
+        $interview_status = $data['interview']->status ?? 'pending';
+    ?>
+
+    <div class="m-i-countdown <?php echo isset($is_overdue) && $is_overdue ? 'overdue' : 'upcoming'; ?>">
+        <?php if($interview_status === 'completed'): ?>
+            Interview Completed
+        <?php elseif(isset($days_left) && isset($hours_left)): ?>
+            <?php if($is_overdue): ?>
+                Interview overdue by <?php echo abs($days_left); ?> days and <?php echo abs($hours_left); ?> hours
+            <?php else: ?>
+                Time remaining: <?php echo $days_left; ?> days and <?php echo $hours_left; ?> hours
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
 
         <div class="m-i-form-grid">
           <div class="m-i-form-left">
@@ -159,7 +163,7 @@
                         </button>
                     <?php endif; ?>
 
-                    <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/requests'">Cancel</button>
+                    <button type="button" class="m-i-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/moderator/careseekerrequests'">Cancel</button>
               </div>
 
         </div>

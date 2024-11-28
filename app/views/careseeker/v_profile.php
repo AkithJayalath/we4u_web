@@ -2,8 +2,10 @@
 <body>
 <!--Top navbar  -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-<div class="top-container">
-    <div class="container">
+<page-body-container>
+<?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+<div class="user-careseeker-top-container">
+    <div class="user-careseeker-container">
    
         <div class="gradient-bar"> <a href="<?php echo URLROOT; ?>/users/editProfile" class="edit-button">Edit</a></div> <!-- Gradient bar behind the profile section -->
         
@@ -76,4 +78,5 @@
 
     </div>
 </div>
+</page-body-container>
 <?php require APPROOT.'/views/includes/footer.php' ?>

@@ -2,7 +2,7 @@
 
     <!-- Logo -->
     <div class="logo">
-        <a href="<?php echo URLROOT ?>/">WE<span>4</span>U</a>
+        <a href="<?php echo URLROOT ?>/home/">WE<span>4</span>U</a>
     </div>
 
     <!-- Toogle menue -->
@@ -20,19 +20,19 @@
                 $homeLink = '';
                 switch ($_SESSION['user_role']) {
                     case 'Admin':
-                        $homeLink = URLROOT . '/admin/dashboard';
+                        $homeLink = URLROOT . '/admin/';
                         break;
                     case 'Caregiver':
-                        $homeLink = URLROOT . '/caregivers/dashboard';
+                        $homeLink = URLROOT . '/caregivers';
                         break;
                     case 'Consultant':
                         $homeLink = URLROOT . '/consultants/dashboard';
                         break;
                     case 'Careseeker':
-                        $homeLink = URLROOT . '/careseeker/showElderProfiles';
+                        $homeLink = URLROOT . '/careseeker/';
                         break;
                     default:
-                        $homeLink = URLROOT . '/users/viewCaregivers'; // Default fallback
+                        $homeLink = URLROOT . '/users/'; // Default fallback
                         break;
                 }
                 ?>

@@ -340,6 +340,7 @@
         if($this->moderatorModel->deleteInterview($request_id)) {
             $_SESSION['success_message'] = 'Interview deleted successfully';
             redirect('moderator/careseekerrequests');
+
         } else {
             $_SESSION['error_message'] = 'Failed to delete interview';
             redirect('moderator/interview/' . $request_id);

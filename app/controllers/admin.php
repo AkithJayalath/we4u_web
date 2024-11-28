@@ -15,6 +15,10 @@ class admin extends controller{
   }
 
 
+  }
+
+  
+
 
   public function index(){
     $data = [
@@ -287,6 +291,7 @@ public function deleteannouncement($announcement_id) {
         }
       }
 
+   
   
 }// Only one closing brace needed here for the class
 

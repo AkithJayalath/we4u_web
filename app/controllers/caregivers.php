@@ -2,8 +2,12 @@
   class caregivers extends controller{
 
     private $caregiversModel;
-    public function __construct(){
+    public function __construct(){ 
       $this->caregiversModel = $this->model('M_Caregivers');
+    }
+
+    public function index(){
+      $this->request();
     }
 
     public function register(){
