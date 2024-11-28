@@ -39,7 +39,7 @@ echo loadCSS($required_styles);
                 <button class="consultant-chat-button">
                     <i class="fas fa-comments"></i> Chat
                 </button>
-                <button class="consultant-send-button">
+                <button class="consultant-send-button" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/requestConsultant';">
                     <i class="fas fa-paper-plane"></i> Send Request
                 </button>
             </div>

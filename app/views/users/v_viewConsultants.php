@@ -62,7 +62,7 @@ $caregiversToShow = array_slice($caregivers, 0, $initialDisplay);
 // Sample data - You would typically fetch this from the database
 $caregivers = [
     [
-        'name' => 'Dr.Amal Peiris',
+        'name' => 'Dr.Amal Perera',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -184,7 +184,7 @@ foreach ($caregivers as $caregiver) {
             </div>
         </div>
         <div class="caregivers-read-more">
-            <a href="#">View</a>
+            <a href="<?php echo URLROOT; ?>/careseeker/viewConsultantProfile">View</a>
         </div>
     </div>
     <?php
