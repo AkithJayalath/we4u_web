@@ -124,16 +124,123 @@
                       <tr>
                           <td class="ad-users-user-cell">
                               <img
-                                  src="/api/placeholder/40/40"
+                                  src="<?php echo URLROOT; ?>/public/images/CC.png"
                                   alt="User"
                                   class="ad-users-user-avatar"
                               />
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name">Jordan Stevenson</div>
-                                  <div class="ad-users-user-email">jordan.stevenson</div>
                               </div>
                           </td>
                           <td>Admin</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/moderator-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>Moderator</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>Careseeker</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>Careseeker</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/consultant-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>Consultant</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>CareGiver</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                          </td>
+                          <td>Careseeker</td>
                           <td>#AHGA68</td>
                           <td>
                               <span class="ad-users-status ad-users-active">Active</span>
@@ -147,7 +254,9 @@
                       <i data-lucide="chevrons-left"></i>
                   </button>
                   <button class="ad-users-page-btn">
-                      <i data-lucide="chevron-left"></i>
+                  <i data-lucide="chevron-left" style="color: #FF0000;"></i>
+
+
                   </button>
                   <button class="ad-users-page-btn">1</button>
                   <button class="ad-users-page-btn">2</button>

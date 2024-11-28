@@ -8,7 +8,6 @@
 @import url('components/topnavbar_styles.css');
 @import url('components/form_styles.css');
 @import url('moderator/careseekerrequests.css'); 
- @import url('moderator/interview.css'); 
  @import url('components/userProfile_styles.css');
  @import url('components/homepage_styles.css');
 
@@ -32,6 +31,10 @@
     /* Button Colors */
     --color-btn-cancel: #D43B3B;     /* Red for cancel/delete actions */
     --color-btn-cancel-hover: #B22828; /* Darker red for hover state */
+
+    /* Button Colors */
+    --color-btn-rate: #eff493;     /* Red for cancel/delete actions */
+    --color-btn-rate-hover: #f5fd08; /* Darker red for hover state */
 
     --color-btn-update: #08DCC1;     /* Teal for update/edit/create actions */
     --color-btn-update-hover: #06B09C; /* Slightly darker teal for hover */

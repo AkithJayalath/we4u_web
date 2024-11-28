@@ -215,8 +215,7 @@ public function editElderProfile()
         if (!$elderProfile) {
             redirect('careseeker/showElderProfiles');
         }
-        var_dump($elderID);
-
+       
         // Prefill the form with elder profile data
         $data = [
             'elder_id' => $elderID,
@@ -250,7 +249,7 @@ public function editElderProfile()
             'relationship_to_careseeker_err' => '',
             'profile_picture_err' => '',
         ];
-        var_dump($data['elder_id']);
+       
 
         // Load the view with pre-filled data
         $this->view('careseeker/v_editElderProfile', $data);
@@ -299,7 +298,7 @@ public function editElderProfile()
             'profile_picture_err' => '',
         ];
 
-        var_dump($data['elder_id']);
+
 
         // Validation
         if (empty($data['first_name'])) {

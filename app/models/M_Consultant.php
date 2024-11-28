@@ -44,8 +44,8 @@ class M_Consultant {
             $newUserId = $this->db->lastInsertId();
 
             // Insert into the Consultant table
-            $this->db->query('INSERT INTO consultant (consultant_id, national_id, address, contact_info, consultant_type) 
-                              VALUES (:consultant_id, :national_id, :address, :contact_info, :consultant_type)');
+            $this->db->query('INSERT INTO consultant (consultant_id, national_id, address, contact_info, consultant_type, expertice, qualifications) 
+                              VALUES (:consultant_id, :national_id, :address, :contact_info, :consultant_type, :expertice, :qualifications)');
             $this->db->bind(':c_id', $newUserId);
             $this->db->bind(':national_id', $data['national_id']);
             $this->db->bind(':address', $data['address']);
