@@ -20,6 +20,8 @@ echo loadCSS($required_styles);
                 <div class="contactss">
                     <h3>Contacts</h3>
                     <ul>
+
+                      
                         
                         <li>
                             <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Randila">
@@ -46,7 +48,7 @@ echo loadCSS($required_styles);
 
                     <!-- Message Input -->
                     <div class="message-input">
-                        <button class="attachment-btn">📎</button>
+                        <!-- <button class="".>📎</button> -->
                         <form method="POST" action="">
                             <textarea name="message" placeholder="Type your message..." required></textarea>
                             <button type="submit">Send</button>

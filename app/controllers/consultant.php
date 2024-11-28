@@ -147,7 +147,7 @@
      }
  } else {
      // Load view with errors
-     $this->view('consultant/c_reg', $data);
+     $this->view('consultant/consultantprofile', $data);
  }
   } else {
  // Initialize data for GET request (form load)
@@ -182,7 +182,7 @@
  ];
 
  // Load registration form view
- $this->view('consulatnt/c_reg', $data);
+ $this->view('consulatnt/consultantprofile', $data);
 }
     }
 
@@ -211,15 +211,15 @@
     $this->view('consultant/v_consultantprofile');
   }
 
-  public function viewconsultant(){
-    $this->view('consultant/v_viewConsultants');
+  public function viewpatients(){
+    $this->view('consultant/v_viewPatients');
   }
 
   public function consultantsession(){
     $this->view('consultant/v_consultantSession');
   }
 
-  public function editelderprofile(){
+  public function viewelderprofile(){
     $this->view('consultant/v_editElderProfile');
   }
 
@@ -238,8 +238,12 @@
   public function rateandreview(){
     $this->view('consultant/v_rate&review');
   }
-  public function consultantlist(){
-    $this->view('consultant/v_consultantList');
+  public function patientlist(){
+    $this->view('consultant/v_patientList');
+  }
+
+  public function viewpaymentinfo(){
+    $this->view('consultant/v_viewPaymentInfo');
   }
 
 }
