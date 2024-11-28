@@ -1,6 +1,6 @@
 <?php
 $required_styles = [
-    'careseeker/viewConsultantSession',
+    'consultant/viewConsultantSession',
 ];
 echo loadCSS($required_styles);
 ?>
@@ -42,11 +42,14 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
                 <div class="session-info-buttons">
-                <button class="session-send-button">
+                <button onclick="window.location.href='<?php echo URLROOT; ?>/consultant/consultantchat'" class="session-send-button">
                     <i class="fas fa-comments"></i> Chat
                 </button>
-                            <button onclick="window.location.href='<?php echo URLROOT; ?>/consultant/editElderProfile'" class="session-send-button">
+                            <button onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewElderProfile'" class="session-send-button">
                                 View Elder Profile
+                            </button>
+                            <button onclick="window.location.href='<?php echo URLROOT; ?>'" class="session-upload-button">
+                                Upload matreials
                             </button>
                         </div>
 
@@ -65,14 +68,14 @@ echo loadCSS($required_styles);
                 <p>Blood Test Report.pdf</p>
                 <div class="document-actions">
                     <a href="/path/to/lab-report-1.pdf" target="_blank" class="view-btn">View</a>
-                    <a href="/path/to/lab-report-1.pdf" download class="download-btn">Upload</a>
+                    <!-- <a href="/path/to/lab-report-1.pdf" download class="download-btn">Upload</a> -->
                 </div>
             </div>
             <div class="document-item">
                 <p>Urine Analysis.pdf</p>
                 <div class="document-actions">
                     <a href="/path/to/lab-report-2.pdf" target="_blank" class="view-btn">View</a>
-                    <a href="/path/to/lab-report-2.pdf" download class="download-btn">Upload</a>
+                    <!-- <a href="/path/to/lab-report-2.pdf" download class="download-btn">Upload</a> -->
                 </div>
             </div>
         </div>
@@ -86,7 +89,7 @@ echo loadCSS($required_styles);
                 <p>Medication Schedule.pdf</p>
                 <div class="document-actions">
                     <a href="/path/to/instruction-1.pdf" target="_blank" class="view-btn">View</a>
-                    <a href="/path/to/instruction-1.pdf" download class="download-btn">Upload</a>
+                    <!-- <a href="/path/to/instruction-1.pdf" download class="download-btn">Upload</a> -->
                 </div>
             </div>
         </div>
@@ -100,7 +103,7 @@ echo loadCSS($required_styles);
                 <p>Pain Relief Prescription.pdf</p>
                 <div class="document-actions">
                     <a href="/path/to/prescription-1.pdf" target="_blank" class="view-btn">View</a>
-                    <a href="/path/to/prescription-1.pdf" download class="download-btn">Upload</a>
+                    <!-- <a href="/path/to/prescription-1.pdf" download class="download-btn">Upload</a> -->
                 </div>
             </div>
         </div>
