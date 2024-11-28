@@ -50,7 +50,7 @@ class operatorProfile extends controller{
                 'date_of_birth' => trim($_POST['date_of_birth']),
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
-                'address' => trim($_POST['address']),
+                // 'address' => trim($_POST['address']),
                 'contact_info' => trim($_POST['contact_info']),
                 'gender' => trim($_POST['gender']),
                 
@@ -61,7 +61,7 @@ class operatorProfile extends controller{
                 'dob_err' => '',
                 'password_err' => '',
                 'confirm_password_err' => '',
-                'address_err' => '',
+                // 'address_err' => '',
                 'contact_info_err' => '',
                 'gender_err' => ''
             ];
@@ -134,9 +134,9 @@ class operatorProfile extends controller{
             }
 
             // Validate address
-            if (empty($data['address'])) {
-                $data['address_err'] = 'Please enter your address';
-            }
+            // if (empty($data['address'])) {
+            //     $data['address_err'] = 'Please enter your address';
+            // }
 
             // Validate contact info
             if (empty($data['contact_info'])) {
@@ -175,8 +175,8 @@ class operatorProfile extends controller{
                 'profile_picture' => $profileData[0]->profile_picture,
                 'profile_picture_name' => '',
                 'date_of_birth' => $profileData[0]->date_of_birth,
-                'address' => $profileData[0]->address,
-                'contact_info' => $profileData[0]->contact_info,
+                // 'address' => $profileData[0]->address,
+                // 'contact_info' => $profileData[0]->contact_info,
                 'gender' => $profileData[0]->gender,
                 'username_err' => '',
                 'email_err' => '',
@@ -184,8 +184,8 @@ class operatorProfile extends controller{
                 'dob_err' => '',
                 'password_err' => '',
                 'confirm_password_err' => '',
-                'address_err' => '',
-                'contact_info_err' => '',
+                // 'address_err' => '',
+                // 'contact_info_err' => '',
                 'gender_err' => ''
             ];
 

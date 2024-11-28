@@ -3,37 +3,70 @@
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
 </div>
 
+<?php 
+    $required_styles = [
+        'moderator/interview',
+    ];
+    echo loadCSS($required_styles);
+?>
+
 <page-body-container>
 <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
 
   <div class="m-container">
     <form action="<?php echo URLROOT; ?>/moderator/submitInterview" method="POST">
       <div class="m-i-main-container">
-        <div class="m-i-profile-section">
+        <!-- <div class="m-i-profile-section">
           <div class="m-i-profile-image-container">
-            <img class="m-i-profile-image" src="/we4u/public/images/image1.jpg" />
+            <img class="m-i-profile-image" src="<?= isset($data['request']->profile_picture) && $data['request']->profile_picture 
+            ? URLROOT . '/images/profile_imgs/' . $data['request']->profile_picture 
+           : URLROOT . '/images/def_profile_pic.jpg'; ?>" />
+
           </div>
           <div class="m-i-profile-info">
             <span><?php echo $data['request']->username ?? 'Name'; ?></span>
             <br />
             <span><?php echo $data['request']->email ?? 'Email'; ?></span>
           </div>
-        </div>
+        </div> -->
+
+        
+        <div class="m-i-profile-section">
+    <div class="m-i-profile-image-container">
+        <img class="m-i-profile-image" src="<?= isset($data['request']->profile_picture) && $data['request']->profile_picture 
+            ? URLROOT . '/images/profile_imgs/' . $data['request']->profile_picture 
+            : URLROOT . '/images/def_profile_pic.jpg'; ?>" />
+    </div>
+    <div class="m-i-profile-info">
+        <span class="name"><?php echo $data['request']->username ?? 'Name'; ?></span>
+        <span class="email">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            <?php echo $data['request']->email ?? 'Email'; ?>
+        </span>
+    </div>
+</div>
+
 
         <h2 class="m-i-request-id">Request Id: #<?php echo $data['request']->request_id ?? '1234'; ?></h2>
         <input type="hidden" name="request_id" value="<?php echo $data['request']->request_id ?? ''; ?>">
 
         
     <?php if($data['interview']): ?>
-      <?php
-          $interview_datetime = strtotime($data['interview']->request_date . ' ' . $data['interview']->interview_time);
-          $current_time = time();
-          $time_diff = $interview_datetime - $current_time;
-          $days_left = floor($time_diff / (60 * 60 * 24));
-          $hours_left = floor(($time_diff % (60 * 60 * 24)) / (60 * 60));
-                  
-          $is_overdue = $time_diff < 0;
-          $interview_status = $data['interview']->status ?? 'pending';
+        <?php
+            date_default_timezone_set('Asia/Colombo'); // Set to Sri Lanka timezone
+        
+            $interview_datetime = DateTime::createFromFormat('Y-m-d H:i:s', 
+                $data['interview']->request_date . ' ' . $data['interview']->interview_time);
+            $current_time = new DateTime();
+        
+            $interval = $interview_datetime->diff($current_time);
+            $days_left = $interval->days;
+            $hours_left = $interval->h;
+                
+            $is_overdue = $interview_datetime < $current_time;
+            $interview_status = $data['interview']->status ?? 'pending';
         ?>
               
       
@@ -138,3 +171,29 @@
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>
+
+<script>
+    // Confirmation for Submit/Update Interview
+    document.querySelector('.m-i-submit-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to ' + (this.textContent.trim() === 'Add Interview' ? 'schedule' : 'update') + ' this interview?')) {
+            this.closest('form').submit();
+        }
+    });
+
+    // Confirmation for Delete Interview
+    document.querySelector('.m-i-delete-btn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete this interview? This action cannot be undone.')) {
+            window.location.href = this.getAttribute('onclick').split("'")[1];
+        }
+    });
+
+    // Confirmation for Cancel
+    document.querySelector('.m-i-cancel-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+            window.location.href = this.getAttribute('onclick').split("'")[1];
+        }
+    });
+</script>

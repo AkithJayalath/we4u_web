@@ -9,10 +9,15 @@
 <body>
 <!--Top navbar  -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
+
+<page-body-container>
+<?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
+
+
 <div class="top-container">
     <div class="container">
    
-        <div class="gradient-bar"> <a href="<?php echo URLROOT; ?>/users/editProfile" class="edit-button">Edit</a></div> <!-- Gradient bar behind the profile section -->
+        <div class="gradient-bar"> <a href="<?php echo URLROOT; ?>/operatorProfile/editProfile" class="edit-button">Edit</a></div> <!-- Gradient bar behind the profile section -->
         
         <header>
             <h2>Welcome,<?php echo $data['profileData'][0]->username; ?></h2>
@@ -65,16 +70,16 @@
 
             <div class="form-right">
                 <label>Address</label>
-                <input type="text" value="<?php echo $data['profileData'][0]->address; ?>" readonly>
+                <input type="text" value="none" readonly>
 
                 <label>Contact No</label>
-                <input type="text"value="<?php echo $data['profileData'][0]->contact_info; ?>" readonly>
+                <input type="text"value="none" readonly>
 
                 <label>Gender</label>
                 <input type="text" value="<?php echo $data['profileData'][0]->gender; ?>" readonly>
 
                 <label>Rating</label>
-                <input type="text" value="<?php echo $data['profileData'][0]->rating; ?>" readonly>
+                <input type="text" value="none" readonly>
             </div>
             
         </form>
@@ -83,4 +88,6 @@
 
     </div>
 </div>
+</page-body-container>
+
 <?php require APPROOT.'/views/includes/footer.php' ?>

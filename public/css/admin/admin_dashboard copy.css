@@ -1,0 +1,70 @@
+.dashboard-container {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-header {
+  background-color: #f5f5f5;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+
+.export-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  padding: 20px;
+}
+
+.metric {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.metric-title {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.metric-change {
+  font-size: 14px;
+}
+
+.dashboard-charts {
+  padding: 20px;
+}
+
+.chart-container {
+  height: 400px;
+  margin-top: 40px;
+}
+
+.chart-container h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
