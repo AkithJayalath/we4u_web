@@ -120,7 +120,7 @@
         }
 
         public function get_inteviews(){
-            $this->db->query('SELECT *FROM interviews ORDER BY request_date DESC, interview_time DESC');
+            $this->db->query('SELECT *FROM interviews ORDER BY request_date ASC, interview_time ASC');
             $results = $this->db->resultSet();
             return $results;
         }

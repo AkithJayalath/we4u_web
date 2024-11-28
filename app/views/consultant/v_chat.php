@@ -17,49 +17,16 @@ echo loadCSS($required_styles);
             
             <div class="chat-container">
                 <!-- Contacts Section -->
-                <div class="contacts">
+                <div class="contactss">
                     <h3>Contacts</h3>
                     <ul>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Sun Wukong">
-                            <span>Sun Wukong</span>
-                        </li>
+                        
                         <li>
                             <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Randila">
                             <span>Randila</span>
                         </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
-                        <li>
-                            <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Dr. Wootan Yu">
-                            <span>Dr. Wootan Yu</span>
-                        </li>
+                        
+                        
                     </ul>
                 </div>
 
