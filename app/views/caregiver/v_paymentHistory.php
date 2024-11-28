@@ -9,7 +9,6 @@
     <div class="container">
         <div class="header">
                 <h2>Payment History<h2>
-                <i class="fa-solid fa-bell"></i>
         </div>
 
         <div class="btn-Method">
@@ -120,7 +119,7 @@
                             <span>Jordan Stevenson</span>
                             </div>
                         </td>
-                        <td class="status failed">Failed</td>
+                        <td class="status pending">Pending</td>
                     </tr>
 
                     <tr>

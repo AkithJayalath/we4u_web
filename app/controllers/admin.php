@@ -3,7 +3,7 @@ class admin extends controller{
 
   private $adminModel;
 
-  public function __construct(){
+  /*public function __construct(){
     if(!$_SESSION['user_id']) {
       redirect('users/login');
     }else{
@@ -12,7 +12,7 @@ class admin extends controller{
       }
     }
     $this->adminModel = $this->model('M_Admin');
-  }
+  }*/
 
   public function index(){
     $data = [
@@ -101,8 +101,8 @@ class admin extends controller{
         
         $this->view('admin/v_add_user', $data);
     }
-}
 
+  }
 
 
   public function user_detailes(){
@@ -161,7 +161,8 @@ class admin extends controller{
       $this->view('admin/v_addannouncement', $data);
     }
 
+   
   
-  } // Only one closing brace needed here for the class
+}// Only one closing brace needed here for the class
 
 ?>

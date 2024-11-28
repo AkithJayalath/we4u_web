@@ -83,10 +83,68 @@ class M_Caregivers {
 
                     return true; // Success
                 }
+                
             }
         }
 
         return false; // Return false if any step fails
     }
+
+      // Get payment method by email
+public function getPaymentMethod($email) {
+    $this->db->query('SELECT * FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+    return $this->db->single();
+}
+
+// Add new payment method
+public function addPaymentMethod($data) {
+    $this->db->query('INSERT INTO payment_method (email, mobile_number, account_holder_name, 
+                      bank_name, branch_name, account_number, payment_type_st, payment_type_lt, 
+                      advance_amount, created_at) 
+                      VALUES (:email, :mobile, :holder, :bank, :branch, :account, :st_type, 
+                      :lt_type, :advance, NOW())');
+
+    $this->db->bind(':email', $data['email']);
+    $this->db->bind(':mobile', $data['mobile_number']);
+    $this->db->bind(':holder', $data['account_holder_name']);
+    $this->db->bind(':bank', $data['bank_name']);
+    $this->db->bind(':branch', $data['branch_name']);
+    $this->db->bind(':account', $data['account_number']);
+    $this->db->bind(':st_type', $data['payment_type_st']);
+    $this->db->bind(':lt_type', $data['payment_type_lt']);
+    $this->db->bind(':advance', $data['advance_amount']);
+
+    return $this->db->execute();
+}
+
+// Update payment method
+public function updatePaymentMethod($data) {
+    $this->db->query('UPDATE payment_method SET mobile_number = :mobile, 
+                      account_holder_name = :holder, bank_name = :bank, 
+                      branch_name = :branch, account_number = :account, 
+                      payment_type_st = :st_type, payment_type_lt = :lt_type, 
+                      advance_amount = :advance, updated_at = NOW() 
+                      WHERE email = :email');
+
+    $this->db->bind(':email', $data['email']);
+    $this->db->bind(':mobile', $data['mobile_number']);
+    $this->db->bind(':holder', $data['account_holder_name']);
+    $this->db->bind(':bank', $data['bank_name']);
+    $this->db->bind(':branch', $data['branch_name']);
+    $this->db->bind(':account', $data['account_number']);
+    $this->db->bind(':st_type', $data['payment_type_st']);
+    $this->db->bind(':lt_type', $data['payment_type_lt']);
+    $this->db->bind(':advance', $data['advance_amount']);
+
+    return $this->db->execute();
+}
+
+// Delete payment method
+public function deletePaymentMethod($email) {
+    $this->db->query('DELETE FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+    return $this->db->execute();
+}
 }
 ?>
