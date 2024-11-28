@@ -31,7 +31,7 @@ function addReviewsForConsultant(reviews) {
       name: "Jess Santiago",
       username: "username",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjZXxlbnwwfHwwfHx8MA%3D%3D", 
-      text: "A really good consultant",
+      text: "A really good person",
       date: "22.03.2021",
     },
     {

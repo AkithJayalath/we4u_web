@@ -89,6 +89,18 @@ body.login {
     visibility: hidden;
   }
   
+  .form-footer {
+    margin-top: 10px;
+    text-align: center;
+}
+.form-footer a {
+    color: #007BFF; /* Adjust color as needed */
+    text-decoration: none;
+}
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
 
   
   /* Submit button styling */

@@ -12,16 +12,12 @@
 <footer>
   <div class="footer-container">
     <div class="footer-left">
-      <h2>WE4U</h2>
-      <p>Copyright © 2020. Logolpsum. All rights reserved.</p>
+    <div class="logo">
+        <a href="<?php echo URLROOT ?>/home/">WE<span>4</span>U</a>
     </div>
-    <div class="footer-middle">
-      <h3>Subscribe to our newsletter</h3>
-      <form>
-        <input type="email" placeholder="Email address" required>
-        <button type="submit">></button>
-      </form>
+      <p>Copyright © 2024. WE4U. All rights reserved.</p>
     </div>
+    
     <div class="footer-right">
       <div class="footer-links">
         <h3>Services</h3>

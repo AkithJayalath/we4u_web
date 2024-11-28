@@ -72,7 +72,7 @@ class M_Careseekers{
         $this->db->bind(':current_medications', $data['current_medications']);
         $this->db->bind(':special_needs', $data['special_needs']);
         $this->db->bind(':dietary_restrictions', $data['dietary_restrictions']);
-        $this->db->bind(':profile_pic', $data['profile_pic']);
+        $this->db->bind(':profile_pic', $data['profile_picture_name']);
 
         // Execute the query
         if ($this->db->execute()) {

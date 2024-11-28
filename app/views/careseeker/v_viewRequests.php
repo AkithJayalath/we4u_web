@@ -65,7 +65,7 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">Consultation</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag pending">Pending</span></div>
             <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View request</button>
+                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/viewRequestInfo'">View request</button>
               </div>
             </div>
 
