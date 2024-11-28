@@ -36,7 +36,7 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="consultant-personal-info-right">
-                <button class="consultant-rate-button"> 
+                <button class="consultant-rate-button" window.location.href="consultant/rateandreview"> 
                     <!-- chat=edit yellow  -->
                      Ratings and Reviews
                 </button>
