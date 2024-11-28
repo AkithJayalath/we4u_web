@@ -62,7 +62,7 @@ $caregiversToShow = array_slice($caregivers, 0, $initialDisplay);
 // Sample data - You would typically fetch this from the database
 $caregivers = [
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -73,7 +73,7 @@ $caregivers = [
     ],
 
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -84,7 +84,7 @@ $caregivers = [
     ],
 
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -95,7 +95,7 @@ $caregivers = [
     ],
 
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -106,7 +106,7 @@ $caregivers = [
     ],
 
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -117,7 +117,7 @@ $caregivers = [
     ],
 
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -127,7 +127,7 @@ $caregivers = [
         'gender' => 'Male',
     ],
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',
@@ -137,7 +137,7 @@ $caregivers = [
         'gender' => 'Male',
     ],
     [
-        'name' => 'Amal Peiris',
+        'name' => 'Dr.Amal Peiris',
         'region' => 'Colombo',
         'type' => 'Short Term',
         'speciality' => 'Dementia Care',

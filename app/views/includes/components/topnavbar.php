@@ -14,9 +14,9 @@
     <div class="menu-content">
         <!-- Navlinks -->
         <ul class="nav-links">
-            <li><a href="#">Caregivers</a></li>
-            <li><a href="<?php echo URLROOT; ?>/pages/consultantv">Consultants</a></li>
-            <li><a href="#">Blogs</a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/viewCaregivers">Caregivers</a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/viewConsultants">Consultants</a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/blog">Blogs</a></li>
             <li class="separator">|</li>
             <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>
             <li><a href="#">Help and Advice</a></li>

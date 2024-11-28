@@ -37,7 +37,7 @@
           <button class="a-b-delete-btn">Delete</button>
         </div> -->
         <div class="a-b-read-more">
-          <a href="#">View</a>
+          <a href="<?php echo URLROOT; ?>/users/viewblog">View</a>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
           <button class="a-b-delete-btn">Delete</button>
         </div> -->
         <div class="a-b-read-more">
-          <a href="#">View</a>
+        <a href="<?php echo URLROOT; ?>/users/viewblog">View</a>
         </div>
       </div>
 
@@ -75,7 +75,7 @@
           <button class="a-b-delete-btn">Delete</button>
         </div> -->
         <div class="a-b-read-more">
-          <a href="#">View</a>
+        <a href="<?php echo URLROOT; ?>/users/viewblog">View</a>
         </div>
       </div>
 
@@ -94,7 +94,7 @@
           <button class="a-b-delete-btn">Delete</button>
         </div> -->
         <div class="a-b-read-more">
-          <a href="#">View</a>
+        <a href="<?php echo URLROOT; ?>/users/viewblog">View</a>
         </div>
       </div>
     </div>
