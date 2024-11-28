@@ -234,7 +234,7 @@
               redirect('consultant/');
               break;
           case 'Caregiver':
-              redirect('caregiver/');
+              redirect('caregivers/');
               break;
           case 'Moderator':
               redirect('moderator/');
