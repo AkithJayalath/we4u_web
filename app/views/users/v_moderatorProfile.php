@@ -38,7 +38,7 @@
 
             <div class="caregiver-personal-info-right">
             <button class="caregiver-chat-button" >
-                    <i class="fas fa-user-plus"></i> View Accepted Users
+                    <i class="fas fa-user-plus"></i> Deactivate User
                 </button>
                 <button class="caregiver-delete-button" onClick="openRejectModal()">
                     <i class="fas fa-user-minus"></i> Delete User

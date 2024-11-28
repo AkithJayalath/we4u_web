@@ -25,7 +25,7 @@
 
     public function viewmoderator() {
       // check if the user is admin 
-      if($_SESSION['user_role'] !== 'admin') {
+      if($_SESSION['user_role'] !== 'Admin') {
         // PERMISSION DENIED
         redirect('');
       }
