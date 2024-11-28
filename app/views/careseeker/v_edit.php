@@ -2,7 +2,9 @@
 <body>
 <!-- Top navbar -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-<div class="top-container">
+<page-body-container>
+<?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+<div class="user-careseeker-top-container">
     <div class="container-edit">
    
        
@@ -80,5 +82,6 @@
         </form>
     </div>
 </div>
+</page-body-container>
 <script src="<?php echo URLROOT; ?>/js/profilePicUpload.js"></script>
 <?php require APPROOT.'/views/includes/footer.php' ?>

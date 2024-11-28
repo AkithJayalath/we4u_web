@@ -2,6 +2,13 @@
 <body>
 <!-- Top navbar -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
+
+
+<page-body-container>
+<?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
+
+
+
 <div class="top-container">
     <div class="container-edit">
    
@@ -62,12 +69,11 @@
 
             <div class="form-right">
                 <label>Address</label>
-                <input type="text" name="address" value="<?php echo $data['address']; ?>">
-                <span class="form-invalid"><?php echo $data['address_err']; ?></span>
+                <input type="text" name="address" value="none"></span>
 
                 <label>Contact No</label>
-                <input type="text" name="contact_info" value="<?php echo $data['contact_info']; ?>">
-                <span class="form-invalid"><?php echo $data['contact_info_err']; ?></span>
+                <input type="text" name="contact_info" value="none">
+                <!-- <span class="form-invalid"><?php echo $data['contact_info_err']; ?></span> -->
 
                 <label>Gender</label>
                 <input type="text" name="gender" value="<?php echo $data['gender']; ?>">
@@ -80,5 +86,8 @@
         </form>
     </div>
 </div>
+</page-body-container>
+
+
 <script src="<?php echo URLROOT; ?>/js/profilePicUpload.js"></script>
 <?php require APPROOT.'/views/includes/footer.php' ?>

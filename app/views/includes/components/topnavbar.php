@@ -14,24 +14,48 @@
     <div class="menu-content">
         <!-- Navlinks -->
         <ul class="nav-links">
-            <li><a href="#">Caregivers</a></li>
-            <li><a href="<?php echo URLROOT; ?>/pages/consultantv">Consultants</a></li>
-            <li><a href="#">Blogs</a></li>
+            <?php if (isset($_SESSION['user_id'])) : ?>
+                <?php
+
+                $homeLink = '';
+                switch ($_SESSION['user_role']) {
+                    case 'Admin':
+                        $homeLink = URLROOT . '/admin/dashboard';
+                        break;
+                    case 'Caregiver':
+                        $homeLink = URLROOT . '/caregivers/dashboard';
+                        break;
+                    case 'Consultant':
+                        $homeLink = URLROOT . '/consultants/dashboard';
+                        break;
+                    case 'Careseeker':
+                        $homeLink = URLROOT . '/careseeker/showElderProfiles';
+                        break;
+                    default:
+                        $homeLink = URLROOT . '/users/viewCaregivers'; // Default fallback
+                        break;
+                }
+                ?>
+                <li><a href="<?php echo $homeLink; ?>">Home</a></li>
+            <?php endif; ?>
+            <li><a href="<?php echo URLROOT; ?>/users/viewCaregivers">Caregivers</a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/viewConsultants">Consultants</a></li>
+            <li><a href="<?php echo URLROOT; ?>/users/blog">Blogs</a></li>
             <li class="separator">|</li>
             <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>
             <li><a href="#">Help and Advice</a></li>
         </ul>
         <!-- Profile section -->
-        <?php if(isset($_SESSION['user_id'])) : ?>
+        <?php if (isset($_SESSION['user_id'])) : ?>
             <div class="profile">
                 <div class="user-name">
                     <?php echo $_SESSION['user_name']; ?>
                 </div>
                 <div class="pic">
-                    <img src="<?= isset($_SESSION['user_profile_picture']) && $_SESSION['user_profile_picture'] 
-                                ? URLROOT . '/images/profile_imgs/' . $_SESSION['user_profile_picture'] 
-                                : URLROOT . '/images/def_profile_pic.jpg'; ?>" 
-                                alt="">
+                    <img src="<?= isset($_SESSION['user_profile_picture']) && $_SESSION['user_profile_picture']
+                                    ? URLROOT . '/images/profile_imgs/' . $_SESSION['user_profile_picture']
+                                    : URLROOT . '/images/def_profile_pic.jpg'; ?>"
+                        alt="">
                 </div>
             </div>
         <?php endif; ?>
