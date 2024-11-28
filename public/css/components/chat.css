@@ -15,7 +15,7 @@ body {
 }
 
 /* Contacts Section */
-.contacts {
+.contactss {
     width: 25%;
     background-color: #013CC6;
     color: white;
@@ -24,18 +24,18 @@ body {
     overflow-y:hidden;
 }
 
-.contacts h3 {
+.contactss h3 {
     margin-bottom: 20px;
     font-size: 24px;
     text-align: center;
 }
 
-.contacts ul {
+.contactss ul {
     list-style: none;
     padding: 0;
 }
 
-.contacts ul li {
+.contactss ul li {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -46,11 +46,11 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.contacts ul li:hover {
+.contactss ul li:hover {
     background-color: #08DCC1;
 }
 
-.contacts ul li img {
+.contactss ul li img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -58,7 +58,7 @@ body {
     object-fit: cover;
 }
 
-.contacts ul li span {
+.contactss ul li span {
     font-size: 16px;
 }
 

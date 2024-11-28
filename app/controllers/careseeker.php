@@ -14,6 +14,10 @@ class careseeker extends controller{
       
     }
 
+    public function index(){
+        $this->showElderProfiles();
+    }
+
 
     public function createProfile(){
       $careseeker_id = $_SESSION['user_id'] ?? '';

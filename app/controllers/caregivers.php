@@ -6,6 +6,10 @@
       $this->caregiversModel = $this->model('M_Caregivers');
     }
 
+    public function index(){
+      $this->request();
+    }
+
     public function register(){
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
           // Now the form is submitting

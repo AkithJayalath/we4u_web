@@ -20,19 +20,19 @@
                 $homeLink = '';
                 switch ($_SESSION['user_role']) {
                     case 'Admin':
-                        $homeLink = URLROOT . '/admin/dashboard';
+                        $homeLink = URLROOT . '/admin';
                         break;
                     case 'Caregiver':
-                        $homeLink = URLROOT . '/caregivers/dashboard';
+                        $homeLink = URLROOT . '/caregivers';
                         break;
                     case 'Consultant':
                         $homeLink = URLROOT . '/consultants/dashboard';
                         break;
                     case 'Careseeker':
-                        $homeLink = URLROOT . '/careseeker/showElderProfiles';
+                        $homeLink = URLROOT . '/careseeker/';
                         break;
                     default:
-                        $homeLink = URLROOT . '/users/viewCaregivers'; // Default fallback
+                        $homeLink = URLROOT . '/users/'; // Default fallback
                         break;
                 }
                 ?>
