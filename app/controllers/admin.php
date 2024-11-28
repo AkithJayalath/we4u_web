@@ -14,7 +14,7 @@ class admin extends controller{
 
   }
 
-
+  }
 
   public function index(){
     $data = [

@@ -200,7 +200,7 @@
     
 
     public function consultantchat(){
-      $this->view('consultant/chat');
+      $this->view('consultant/v_chat');
   }
 
   public function consultanthistory(){

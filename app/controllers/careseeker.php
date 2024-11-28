@@ -3,7 +3,15 @@
 class careseeker extends controller{
   private $careseekersModel;
     public function __construct(){
-      $this->careseekersModel = $this->model('M_Careseekers');
+        if(!$_SESSION['user_id']){
+            redirect('users/login');
+        }else{
+            if($_SESSION['user_role']!= 'Careseeker'){
+                redirect('pages/permissonerror');
+            }
+            $this->careseekersModel = $this->model('M_Careseekers');
+        }
+      
     }
 
 

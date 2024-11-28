@@ -7,7 +7,7 @@
   <div class="form-container">
     <div class="form_header">
       <center><h1>Register</h1></center>
-      <p>Please Fill the form below to Register</p>
+      <p>Please Fill the form below to Register as a consultant</p>
     </div>
 
     <form action="<?php echo URLROOT; ?>/consultants/register" method="POST" enctype="multipart/form-data">
