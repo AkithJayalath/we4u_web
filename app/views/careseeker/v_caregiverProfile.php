@@ -23,8 +23,8 @@ echo loadCSS($required_styles);
 
                         <div class="caregiver-personal-info-details">
                             <span class="caregiver-personal-info-tag">Verfied</span>
-                            <h2>Pawan Wickramarathne</h2>
-                            <span class="caregiver-email">pawanwick@gmail.com</span>
+                            <h2>Pawan Silva</h2>
+                            <span class="caregiver-email">pawansilva@gmail.com</span>
                             <p class="consultant-rating">
                                 <span class="rating-stars" id="rating-stars"></span>
                             </p>
@@ -40,7 +40,7 @@ echo loadCSS($required_styles);
                 <button class="caregiver-chat-button">
                     <i class="fas fa-comments"></i> Chat
                 </button>
-                <button class="caregiver-send-button">
+                <button class="caregiver-send-button"  onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/requestCaregiver';">
                     <i class="fas fa-paper-plane"></i> Send Request
                 </button>
             </div>
