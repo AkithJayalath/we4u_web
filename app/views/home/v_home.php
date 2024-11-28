@@ -61,7 +61,7 @@
   <p>While we provide the tools, the agreement for how care takes place will sit with you and your self-employed carer. This keeps care personal, allowing you to work together to protect a loved one's routine and way of life.</p>
   <p><strong>All carer profiles include:</strong> An introductory video 📹, background checks and references 🔍, reviews from families ⭐</p>
   
-  <div class="service-cards">
+  <div class="service-cards"> 
     <div class="service-card">
       <img src="<?php echo URLROOT;?>/images/login.png" alt="Full-time live-in care">
       <h3>Become a CareSeeker</h3>
