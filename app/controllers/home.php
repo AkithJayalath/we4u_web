@@ -12,7 +12,7 @@ class home extends controller{
     }
 
     public function index1(){
-        $this->view('home/v_home1');
+        $this->view('home/v_home');
     }
 }
 

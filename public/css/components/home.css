@@ -39,8 +39,9 @@ body {
 .hero img{
     width: 700px;
     height: 400px;
-    margin-top: 50px;
+    margin-top: 180px;
    align-items: flex-end;
+   border-radius: 20px;
 }
 
 .hero-left{

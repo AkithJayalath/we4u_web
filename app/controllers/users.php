@@ -222,10 +222,27 @@
     $_SESSION ['user_name']=$user->username;
     $_SESSION['user_role'] = $user->role;
 
-    if($_SESSION['user_role'] =='Careseeker'){
-      redirect('careseeker/showElderProfiles');
-    }else{
-      redirect('pages/index');
+    if (isset($_SESSION['user_role'])) {
+      switch ($_SESSION['user_role']) {
+          case 'Careseeker':
+              redirect('careseeker/');
+              break;
+          case 'Admin':
+              redirect('admin/');
+              break;
+          case 'Consultant':
+              redirect('consultant/');
+              break;
+          case 'Caregiver':
+              redirect('caregiver/');
+              break;
+          case 'Moderator':
+              redirect('moderator/');
+              break;
+          default:
+              redirect('home/');
+              break;
+      }
     }
 
    
