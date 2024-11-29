@@ -127,7 +127,7 @@
     }
 
     function navigateTocreg() {
-    window.location.href = '<?php echo URLROOT; ?>/consultant/register';
+    window.location.href = '<?php echo URLROOT; ?>/consultants/register';
     }
 
     function navigateTocsreg() {
