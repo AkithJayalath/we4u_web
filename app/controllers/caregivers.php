@@ -59,22 +59,27 @@
             }
           }
 
-          // validate national ID
-          if(empty($data['national_id'])){
+
+
+
+
+          //validate national_id
+          if (empty($data['national_id'])) {
             $data['national_id_err'] = 'Please enter your NIC number';
-          } else {
-            // Old NIC format (9 digits + V/X)
-            $oldNICPattern = "/^[0-9]{9}[VvXx]$/";
-            
-            // New NIC format (12 digits)
-            $newNICPattern = "/^[0-9]{12}$/";
-            
-            if(!(preg_match($oldNICPattern, $data['national_id']) || preg_match($newNICPattern, $data['national_id']))) {
-                $data['national_id_err'] = 'Invalid NIC format. Please enter a valid Sri Lankan NIC number';
+        } else {
+            // NIC validation
+            $nic = $data['national_id'];
+        
+            // Check for pre-2016 NIC format (9 digits + V or X)
+            $patternPre2016 = '/^\d{9}[VXvx]$/';
+        
+            // Check for post-2016 NIC format (12 digits)
+            $patternPost2016 = '/^\d{12}$/';
+        
+            if (!preg_match($patternPre2016, $nic) && !preg_match($patternPost2016, $nic)) {
+                $data['national_id_err'] = 'Invalid NIC number format';
             }
-          }
-
-
+        }
 
           // validate gender
           if(empty($data['gender'])){
