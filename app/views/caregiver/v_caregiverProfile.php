@@ -109,9 +109,10 @@
                             <p>+ Rs.400 per session</p>
                             
                         </div>
-                        <button class="caregiver-payment-button">
-                                <i class="fas fa-credit-card"></i> Payment Method
-                            </button>
+                        <a href="<?php echo URLROOT; ?>/Caregivers/paymentMethod" class="caregiver-payment-button">
+                        <i class="fas fa-credit-card"></i> Payment Method
+                        </a>
+
                     </div>
                 </div>
             </div>

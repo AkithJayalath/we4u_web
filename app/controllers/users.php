@@ -52,7 +52,16 @@
           $data['dob_err'] = 'Please add a date of birth';
       } elseif (!$this->usersModel->validateDate($data['dob'])) { 
           $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
-      }
+      }else {
+        // Calculate age from DOB
+        $dob = new DateTime($data['dob']);
+        $today = new DateTime();
+        $age = $today->diff($dob)->y;
+        
+        if($age < 18) {
+            $data['dob_err'] = 'You must be at least 18 years old to register';
+        }
+    }
 
         // validate password
         if(empty($data['password'])){
@@ -273,6 +282,23 @@
   // view careseeker profile
   public function viewCareseekerProfile(){
     if($this->isLoggedIn()){
+      $userId= $_SESSION['user_id'];
+      $profileData=$this->usersModel->getCareseekerProfile($userId);
+      $data =[
+        'profileData'=>$profileData
+      ];
+      if($profileData){
+        $this->view('careseeker/v_profile',$data);
+      }else{
+        echo "profile not found.";
+      }
+    }else{
+      redirect('users/login');
+    }
+  }
+
+  public function viewProfile(){
+    if($this->isLoggedIn() && $_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){
       $userId= $_SESSION['user_id'];
       $profileData=$this->usersModel->getCareseekerProfile($userId);
       $data =[

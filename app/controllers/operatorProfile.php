@@ -5,30 +5,29 @@ class operatorProfile extends controller{
   public function __construct(){
     $this->operatorrModel = $this->model('M_operatorProfile');
   }
-
   public function index(){
     if($_SESSION['user_id'] ){
-      if($_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){
-        $userId= $_SESSION['user_id'];
-        $profileData=$this->operatorrModel->getOperatorProfile($userId);
-        $data =[
-          'profileData'=>$profileData
-        ];
-        if($profileData){
-          $this->view('users/v_view_operator_profile',$data);
-        }else{
-          echo "profile not found.";
+        if($_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){
+            $userId = $_SESSION['user_id'];
+            $profileData = $this->operatorrModel->getOperatorProfile($userId);
+            
+            $profileImage = !empty($profileData[0]->profile_picture) ? 
+                URLROOT . '/images/profile_imgs/' . $profileData[0]->profile_picture : 
+                URLROOT . '/images/profile_imgs/default-profile.jpg';
+
+            $data = [
+                'profileData' => $profileData,
+                'profileImage' => $profileImage
+            ];
+
+            $this->view('users/v_view_operator_profile', $data);
+        } else {
+            redirect('pages/error');
         }
-
-      }else{
-        redirect('pages/error');
-      }
-
-    }else{
-      redirect('users/login');
+    } else {
+        redirect('users/login');
     }
   }
-
   public function editProfile() {
     if ($_SESSION['user_id']) {
       if($_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){

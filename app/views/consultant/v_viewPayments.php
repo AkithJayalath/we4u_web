@@ -47,7 +47,7 @@ echo loadCSS($required_styles);
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12354</div>
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
+              <div class="view-requests-m-c-r-table-cell">Amal Perera</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
               <button 
@@ -62,7 +62,7 @@ echo loadCSS($required_styles);
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12354</div>
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
+              <div class="view-requests-m-c-r-table-cell">Kalum Siriwardana</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
               <button 
@@ -77,7 +77,7 @@ echo loadCSS($required_styles);
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12454</div>
               <div class="view-requests-m-c-r-table-cell">03/05/2020</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Supun Jayawardhana</div>
+              <div class="view-requests-m-c-r-table-cell">Nadun Jayawardhana</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
               <button 
@@ -92,7 +92,7 @@ echo loadCSS($required_styles);
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#32334</div>
               <div class="view-requests-m-c-r-table-cell">03/02/2022</div>
-              <div class="view-requests-m-c-r-table-cell">Kalum Silva</div>
+              <div class="view-requests-m-c-r-table-cell">Senesh Silva</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
               <button 

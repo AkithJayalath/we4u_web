@@ -65,7 +65,16 @@
             $data['dob_err'] = 'Please add a date of birth';
         } elseif (!$this->consultantsModel->validateDate($data['dob'])) { 
             $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
-        }
+        }else {
+          // Calculate age from DOB
+          $dob = new DateTime($data['dob']);
+          $today = new DateTime();
+          $age = $today->diff($dob)->y;
+          
+          if($age < 18) {
+              $data['dob_err'] = 'You must be at least 18 years old to register';
+          }
+      }
 
         // Validate address
         

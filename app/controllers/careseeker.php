@@ -5,7 +5,8 @@ class careseeker extends controller{
     public function __construct(){
         if(!$_SESSION['user_id']){
             redirect('users/login');
-        }else{
+        }
+        else{
             if($_SESSION['user_role']!= 'Careseeker'){
                 redirect('pages/permissonerror');
             }
