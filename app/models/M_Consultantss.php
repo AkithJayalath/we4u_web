@@ -44,13 +44,14 @@ class M_Consultantss {
             $newUserId = $this->db->lastInsertId();
 
             // Insert into the Caregiver table
-            $this->db->query('INSERT INTO consultant (consultant_id,contact_info,slmc_reg_no, expertise) 
-                              VALUES (:caregiver_id,  :contact_info,:slmc_reg_no, :expertise)');
+            $this->db->query('INSERT INTO consultant (consultant_id,contact_info,slmc_reg_no, expertise,nic_no) 
+                              VALUES (:caregiver_id,  :contact_info,:slmc_reg_no, :expertise,:nic_no)');
             $this->db->bind(':caregiver_id', $newUserId);
            
             $this->db->bind(':contact_info', $data['contact_info']);
             $this->db->bind(':slmc_reg_no', $data['slmc_no']);
             $this->db->bind(':expertise', $data['specialization']);
+            $this->db->bind(':nic_no', $data['nic_no']);
 
             // Execute the caregiver-specific insertion
             if ($this->db->execute()) {
