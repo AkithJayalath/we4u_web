@@ -97,6 +97,9 @@ class careseeker extends controller{
             } else {
                 $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
             }
+        }else{
+            $data['profile_picture_name'] = null;
+
         }
         
   
@@ -137,7 +140,8 @@ class careseeker extends controller{
               'current_medications' => '',
               'special_needs' => '',
               'dietary_restrictions' => '',
-              'profile_pic' => '',
+              'profile_picture' => '',
+              'profile_picture_name'=>'',
   
               'first_name_err' => '',
               'last_name_err' => '',
