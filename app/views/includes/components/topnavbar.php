@@ -25,6 +25,9 @@
                     case 'Caregiver':
                         $homeLink = URLROOT . '/caregivers';
                         break;
+                    case 'Moderator':
+                        $homeLink = URLROOT . '/moderator/';
+                        break;
                     case 'Consultant':
                         $homeLink = URLROOT . '/consultants/dashboard';
                         break;

@@ -6,6 +6,10 @@ class about extends controller{
         $this->view('v_about');
     }
 
+    public function index(){
+        $this->aboutus();
+    }
+
     
 }
 

@@ -123,32 +123,18 @@
                   <tbody>
                       <tr>
                           <td class="ad-users-user-cell">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/CC.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                          </td>
-                          <td>Admin</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
+                                <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <img
                                   src="<?php echo URLROOT; ?>/public/images/moderator-logo.png"
                                   alt="User"
                                   class="ad-users-user-avatar"
                               />
+                              </a>
+                              <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name">Jordan Stevenson</div>
                               </div>
+                            </a>
                           </td>
                           <td>Moderator</td>
                           <td>#AHGA68</td>
@@ -159,16 +145,20 @@
 
                       <tr>
                           <td class="ad-users-user-cell">
+                          <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <img
-                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
+                                  src="<?php echo URLROOT; ?>/public/images/moderator-logo.png"
                                   alt="User"
                                   class="ad-users-user-avatar"
                               />
+                              </a>
+                              <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name">Jordan Stevenson</div>
                               </div>
+                            </a>
                           </td>
-                          <td>Careseeker</td>
+                          <td>Moderator</td>
                           <td>#AHGA68</td>
                           <td>
                               <span class="ad-users-status ad-users-active">Active</span>
@@ -177,14 +167,40 @@
 
                       <tr>
                           <td class="ad-users-user-cell">
+                          <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <img
                                   src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
                                   alt="User"
                                   class="ad-users-user-avatar"
                               />
+                            </a>    
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name">Jordan Stevenson</div>
                               </div>
+                                </a>
+                          </td>
+                          <td>Caregiver</td>
+                          <td>#AHGA68</td>
+                          <td>
+                              <span class="ad-users-status ad-users-active">Active</span>
+                          </td>
+                      </tr>
+
+                      <tr>
+                          <td class="ad-users-user-cell">
+                          <a href="<?php echo URLROOT; ?>/operator/viewcaregiver">
+                              <img
+                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
+                                  alt="User"
+                                  class="ad-users-user-avatar"
+                              />
+
+                            </a>
+                            <a href="<?php echo URLROOT; ?>/operator/viewcaregiver">
+                              <div class="ad-users-user-info">
+                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                              </div>
+                            </a>
                           </td>
                           <td>Careseeker</td>
                           <td>#AHGA68</td>
