@@ -49,10 +49,10 @@
                   $this->db->bind(':is_approved', $data['is_approved']);
                   $this->db->bind(':user_id', $data['user_id']);
                   $this->db->execute();
-              } else if ($data['type'] === 'Consultant') {
+              } else if ($data['role'] === 'Consultant') {
                   $this->db->query('UPDATE consultant SET is_approved = :is_approved WHERE consultant_id = :user_id');
                   $this->db->bind(':is_approved', $data['is_approved']);
-                  $this->db->bind(':consultant_id', $data['user_id']);
+                  $this->db->bind(':user_id', $data['user_id']);
                   $this->db->execute();
               }
             
@@ -84,8 +84,11 @@
         }
 
         // get consultant details 
-        public function get_consultant(){
-
+        public function get_consultant($user_id){
+            $this->db->query('SELECT * FROM approvalrequest INNER JOIN consultant ON approvalrequest.user_id = consultant.consultant_id WHERE approvalrequest.user_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $result = $this->db->single();
+            return $result;
         }
 
         public function get_users_by_id($user_id){

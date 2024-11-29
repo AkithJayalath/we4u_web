@@ -58,6 +58,11 @@
               $data['email_err'] = 'Email is already taken';
             }
           }
+
+
+
+
+
           //validate national_id
           if (empty($data['national_id'])) {
             $data['national_id_err'] = 'Please enter your NIC number';
@@ -75,6 +80,7 @@
                 $data['national_id_err'] = 'Invalid NIC number format';
             }
         }
+
           // validate gender
           if(empty($data['gender'])){
             $data['gender_err'] = 'Please add gender';
@@ -85,7 +91,16 @@
             $data['dob_err'] = 'Please add a date of birth';
         } elseif (!$this->caregiversModel->validateDate($data['dob'])) { 
             $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
-        }
+        }else {
+          // Calculate age from DOB
+          $dob = new DateTime($data['dob']);
+          $today = new DateTime();
+          $age = $today->diff($dob)->y;
+          
+          if($age < 18) {
+              $data['dob_err'] = 'You must be at least 18 years old to register';
+          }
+      }
 
         // Validate address
         if (empty($data['address'])) {
@@ -393,6 +408,10 @@
       $this->view('caregiver/v_request',$data);
    }
 
+   public function viewpayments(){
+    $this->view('consultant/v_viewPayments');
+  }
+
    public function viewreqinfo(){
        
        $this->view('caregiver/v_reqinfo');
@@ -412,9 +431,6 @@
        
     $this->view('caregiver/v_caregiverProfile');
  }
-
-  
-    
 
 }
   

@@ -25,7 +25,7 @@
                     <h4>Jerome Bell</h4>
                    <span class="tag accepted">Patient</span>
                 </div>
-                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/editelderprofile'">View Profile</button>
+                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewelderprofile'">View Profile</button>
                 
             </div>
 
@@ -37,7 +37,7 @@
                     <h4>Jerome Bell</h4>
                     <span class="tag completed">Patient</span>
                 </div>
-                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/editelderprofile'">View Profile</button>
+                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewelderprofile'">View Profile</button>
             </div>
 
             <!-- Profile card 3 -->
@@ -47,7 +47,7 @@
                     <h4>Sun Wukong</h4>
                     <span class="tag completed">Patient</span>
                 </div>
-                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/editelderprofile'">View Profile</button>
+                <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewelderprofile'">View Profile</button>
             </div>
         </div>
     </div>
