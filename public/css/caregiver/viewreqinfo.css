@@ -324,7 +324,7 @@ details ul li {
 }
 
 
-.r-modal {
+/* .r-modal {
     display: none;
     position: fixed;
     top: 0;
@@ -397,5 +397,5 @@ textarea {
 }
 .modal-buttons .btn-cancel:hover{
     background-color: #C31945;
-}
+} */
 

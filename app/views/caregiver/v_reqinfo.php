@@ -142,7 +142,7 @@
         </div>
     </div> -->
 
-    <div id="rejecttModal" class="r-modal">
+    <!-- <div id="rejecttModal" class="r-modal">
         <div class="r-modal-content">
             <div class="modal-header">
                 <img src="/we4u/public/images/Reminders-pana.png" class="modal-img"/>
@@ -156,7 +156,7 @@
                 <button class="btn-cancel" onclick="closeRejectModal()">Reject</button>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
@@ -165,38 +165,7 @@
 
 <script>
  
-    // Get the modal, accept button, and cancel button
-    const modal = document.getElementById("acceptModal");
-    const acceptButton = document.getElementById("btn-accept");
-
-    // Open the modal and blur the background
-    acceptButton.addEventListener("click", function () {
-        modal.style.display = "block"; // Show the modal
-        document.body.style.overflow = "hidden"; // Prevent scrolling
-    });
-
-    // Function to close the modal
-    function closeModal() {
-        modal.style.display = "none"; // Hide the modal
-        document.body.style.overflow = "auto"; // Re-enable scrolling
-    }
-
-    // Function for the "Yes, Sure" button
-    function showConfirmation() {
-        closeModal();
-        alert("Request Accepted Successfully!"); // Show confirmation message
-        window.location.href = "<?php echo URLROOT; ?>/caregivers/request"; 
-    }
-
-    // Close the modal if the user clicks outside the modal content
-    window.addEventListener("click", function (event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-
-
-        // Get the reject modal and its buttons
+    // Get the reject modal and its buttons
     const rejectModal = document.getElementById("rejecttModal");
     const rejectButton = document.querySelector(".btn-reject"); // Reject button that opens the modal
     const cancelRejectButton = document.querySelector(".btn-cancel"); // Cancel button in the modal

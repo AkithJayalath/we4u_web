@@ -1,3 +1,4 @@
+// These functions are for Accept
 // Get the modal, accept button, and cancel button
 const modal = document.getElementById("acceptModal");
 const acceptButton = document.getElementById("btn-accept");
@@ -27,3 +28,5 @@ window.addEventListener("click", function (event) {
     closeModal();
   }
 });
+
+// These are for Reject
