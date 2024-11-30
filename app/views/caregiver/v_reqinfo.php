@@ -126,8 +126,11 @@
         
     </div>
 
+    <?php require APPROOT.'/views/includes/popups/popup.php'; ?>
+
+
     <!--popoup-->
-    <div id="acceptModal" class="modal">
+    <!-- <div id="acceptModal" class="modal">
         <div class="modal-content">
             <i class="fa-solid fa-circle-exclamation"></i>
             <h2>ARE YOU SURE?</h2>
@@ -137,7 +140,7 @@
                 <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div id="rejecttModal" class="r-modal">
         <div class="r-modal-content">
