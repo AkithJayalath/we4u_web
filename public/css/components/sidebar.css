@@ -13,7 +13,7 @@
 :root{
   --base-clr: #151A2D;  /* Dark background like new sidebar */
   --line-clr: #42434a;
-  --hover-clr: #8480ed;  /* White hover state */
+  --hover-clr: #80aced;  /* White hover state */
   --text-clr: #e8eaed;  /* Light text color */
   --accent-clr: #ffffff;
   --secondary-text-clr: #bobb3c1;

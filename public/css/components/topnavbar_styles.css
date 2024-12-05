@@ -119,6 +119,12 @@
     height: 17px;
     margin-right: 5px;
 }
+.notification{
+    
+    margin-right: 15px;
+    font-size: clamp(30px, 2.5vw, 25px);
+    color: #3cb0f8;
+}
 
 
 .signin-btn {
