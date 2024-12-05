@@ -9,7 +9,7 @@
     <div class="container">
         <div class="header">
                 <h2>Ratings and Reviews<h2>
-                <i class="fa-solid fa-bell"></i>
+               
         </div>
 
         <div class="review">
