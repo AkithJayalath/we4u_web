@@ -70,5 +70,38 @@ class M_Consultant {
 
         return false; // Return false if any step fails
     }
+    public function addReview($data) {
+        // Insert into the User table
+        $this->db->query('INSERT INTO review (review_id, reviewer_id, reviewed_user_id,review_role, rating, review_text, review_date, updated_date) 
+                          VALUES (:review_id, :reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_DATE(), CURRENT_DATE())');
+        $this->db->bind(':review_id', $data['review_id']);
+        $this->db->bind(':reviewer_id', $data['reviewer_id']);
+        $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
+        $this->db->bind(':review_role', $data['review_role']);
+        $this->db->bind(':rating', $data['rating']);
+        $this->db->bind(':review_text', $data['review_text']);
+        // Execute the query and check if the insertion was successful
+         return($this->db->execute());}
+
+    public function getReviewsByConsultantId($consultantId) {
+        $this->db->query('SELECT * FROM review WHERE reviewed_user_id = :consultantId');
+        $this->db->bind(':consultantId', $consultantId);
+        return $this->db->resultSet();
+    }
+
+    public function updateReview($data) {
+        // Update the review in the database
+        $this->db->query('UPDATE review SET rating = :rating, review_text = :review_text WHERE review_id = :review_id');
+        $this->db->bind(':rating', $data['rating']);
+        $this->db->bind(':review_text', $data['review_text']);
+        $this->db->bind(':review_id', $data['review_id']);
+        
+        return $this->db->execute();
+    }
+
+
+
+
+
 }
 ?>

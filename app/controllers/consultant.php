@@ -83,6 +83,13 @@
     $this->view('consultant/v_patientList');
   }
 
+  public function submitreview()
+  {
+    $email = $_SESSION['user_email'];
+    
+    $this->view('consultant/v_submitreview');
+  }
+
   // public function viewpaymentinfo(){
   //   $this->view('consultant/v_viewPaymentInfo');
   // }
