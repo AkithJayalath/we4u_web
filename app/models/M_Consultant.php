@@ -81,17 +81,37 @@ class M_Consultant {
         $this->db->bind(':rating', $data['rating']);
         $this->db->bind(':review_text', $data['review_text']);
         // Execute the query and check if the insertion was successful
-         return($this->db->execute());}
+        return($this->db->execute());}
+
+        public function getRateAndReviews() {
+            // SQL query to connect to the 'review' table
+            $this->db->query('SELECT r.*, u.username
+                              FROM review r
+                              JOIN user u ON r.reviewer_id = u.user_id
+                              WHERE r.reviewed_user_id = :consultant_id
+                              ORDER BY r.review_date DESC');
+            
+            // Bind the consultant's ID from the session
+            $this->db->bind(':consultant_id', $_SESSION['user_id']);
+            
+            // Return all matching records
+            return $this->db->resultSet();
+        }        
 
     public function getReviewsByConsultantId($consultantId) {
-        $this->db->query('SELECT * FROM review WHERE reviewed_user_id = :consultantId');
+        $this->db->query('SELECT * FROM review WHERE reviewed_user_id = :consultant_Id');
         $this->db->bind(':consultantId', $consultantId);
         return $this->db->resultSet();
     }
 
     public function updateReview($data) {
         // Update the review in the database
-        $this->db->query('UPDATE review SET rating = :rating, review_text = :review_text WHERE review_id = :review_id');
+        $this->db->query('UPDATE review SET 
+        rating = :rating, 
+        review_text = :review_text,
+        update_date = CURRENT_DATE()
+        WHERE review_id = :review_id');
+
         $this->db->bind(':rating', $data['rating']);
         $this->db->bind(':review_text', $data['review_text']);
         $this->db->bind(':review_id', $data['review_id']);
@@ -99,9 +119,12 @@ class M_Consultant {
         return $this->db->execute();
     }
 
-
-
-
+    public function deleteReview($reviewId) {
+        // Delete the review from the database
+        $this->db->query('DELETE FROM review WHERE review_id = :review_id');
+        $this->db->bind(':review_id', $reviewId);
+        return $this->db->execute();
+    }
 
 }
 ?>

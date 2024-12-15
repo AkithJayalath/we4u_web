@@ -1,29 +1,35 @@
-.container {
-    margin: auto;
+.a-a-a-main-content {
     padding: 20px;
+    width: 100%;
+}
+
+.a-a-a-stat-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: auto;
     width: 95%;
     max-width: 800px;
-    background-color: #fff;
-    border-radius: 10px;
     min-height: 80vh;
 }
 
-.review-form {
-    padding: 30px;
-    background-color: #F7F6FA;
-    border-radius: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.review-form h2 {
+.a-a-a-stat-card h2 {
     color: #013CC6;
     text-align: center;
     margin-bottom: 30px;
 }
 
+.a-a-a-form {
+    background-color: #F7F6FA;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .star-rating {
     text-align: center;
-    margin: 30px 0;
+    margin: 20px 0;
 }
 
 .star-rating i {
@@ -38,11 +44,11 @@
     color: #ffc107;
 }
 
-.review-input {
+.a-a-a-form-group {
     margin: 20px 0;
 }
 
-.review-input textarea {
+.a-a-a-input {
     width: 100%;
     height: 200px;
     padding: 15px;
@@ -52,13 +58,17 @@
     font-size: 16px;
 }
 
-.submit-btn {
-    display: block;
+.a-a-a-form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.a-a-a-btn-save,
+.a-a-a-btn-cancel {
     width: 200px;
-    margin: 30px auto 0;
     padding: 12px;
-    background-color: #013CC6;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -66,6 +76,20 @@
     transition: background-color 0.3s;
 }
 
-.submit-btn:hover {
+.a-a-a-btn-save {
+    background-color: #013CC6;
+    color: white;
+}
+
+.a-a-a-btn-save:hover {
     background-color: #0132a3;
+}
+
+.a-a-a-btn-cancel {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.a-a-a-btn-cancel:hover {
+    background-color: #e0e0e0;
 }
