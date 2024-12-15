@@ -76,19 +76,112 @@
     $this->view('consultant/v_viewPayments');
   }
 
-  public function rateandreview(){
-    $this->view('consultant/v_rate&review');
+  public function viewrateandreview(){
+    $rateandreview = $this->consultantModel->getRateAndReviews();
+    $data = [
+      'title' => 'View Rate and Review',
+        'rateandreview' => $rateandreview
+    ];
+    $this->view('consultant/v_rate&review', $data);
   }
   public function patientlist(){
     $this->view('consultant/v_patientList');
   }
 
-  public function submitreview()
+  public function addreview()
   {
-    $email = $_SESSION['user_email'];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize and validate inputs
+        $data = [
+            'rating' => trim($_POST['rating']),
+            'review' => trim($_POST['review']),
+            'rating_err' => '',
+            'review_err' => ''
+        ];
     
-    $this->view('consultant/v_submitreview');
+        // Validate rating
+        if(empty($data['rating'])) {
+            $data['rating_err'] = 'Please enter a rating';
+        }
+    
+        // Validate review
+        if(empty($data['review'])) {
+            $data['review_err'] = 'Please enter a review';
+        }
+    
+        // If validation passes
+        if(empty($data['rating_err']) && empty($data['review_err'])) {
+            if($this->consultantModel->addReview($data)) {
+                redirect('consultant/rateandreview');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            $this->view('consultant/v_addreview', $data);
+        }
+    } 
+    else {
+        $data = [
+            'rating' => '',
+            'review' => '',
+            'rating_err' => '',
+            'review_err' => ''
+        ];
+        $this->view('consultant/v_addreview', $data);
+    }
   }
+    public function editreview($review_id) {
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+          // Process form
+          $data = [
+              'review_id' => $review_id,
+              'rating' => trim($_POST['rating']),
+              'review_text' => trim($_POST['review']),
+              'rating_err' => '',
+              'review_err' => ''
+          ];
+
+          // Validate rating
+          if (empty($data['rating'])) {
+              $data['rating_err'] = 'Please select a rating';
+          }
+
+          // Validate review
+          if (empty($data['review_text'])) {
+              $data['review_err'] = 'Please enter your review';
+          }
+
+          // Make sure no errors
+          if (empty($data['rating_err']) && empty($data['review_err'])) {
+              if ($this->consultantModel->updateReview($data)) {
+                  redirect('consultant/rateandreview');
+              }
+          } else {
+              // Load view with errors
+              $this->view('consultant/v_editreview', $data);
+          }
+      } else {
+          // Get existing review
+          $review = $this->consultantModel->getReviewById($review_id);
+        
+          $data = [
+              'review_id' => $review_id,
+              'rating' => $review->rating,
+              'review_text' => $review->review_text,
+              'rating_err' => '',
+              'review_err' => ''
+          ];
+
+          $this->view('consultant/v_editreview', $data);
+      }
+  }
+public function deletereview($review_id) {
+    if ($this->consultantModel->deleteReview($review_id)) {
+        redirect('consultant/rateandreview');
+    } else {
+        die('Something went wrong');
+    }
+}
 
   // public function viewpaymentinfo(){
   //   $this->view('consultant/v_viewPaymentInfo');
