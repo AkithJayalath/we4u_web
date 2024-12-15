@@ -3,12 +3,16 @@
 
 <link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/rate&review.css"> 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
 
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php';?>
     <div class="container">
         <div class="header">
                 <h2>Ratings and Reviews<h2>
+                    <button class="btn">Rate</button>
                 <i class="fa-solid fa-bell"></i>
         </div>
 
@@ -140,6 +144,7 @@
                     </div>
                     
                 </div>
+
             
         </div>
     </div>
