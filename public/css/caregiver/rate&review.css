@@ -129,6 +129,51 @@
     background-color: #7d7b7b; /* Darker color when hovering */
   }
 
+/* Add styles for the Rate button */
+.btn {
+    background-color: #013CC6;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #0132a3;
+}
+
+/* Add styles for edit/delete buttons */
+.review-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.edit-btn, .delete-btn {
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.edit-btn:hover {
+    color: #013CC6;
+}
+
+.delete-btn:hover {
+    color: #dc3545;
+}
+
+/* Style for active stars */
+.rating i.active {
+    color: #ffc107;
+}
+
+.rating i:not(.active) {
+    color: #ddd;
+}
+
 /* Media Queries for different screen sizes */
 @media screen and (max-width: 768px) {
     .container {

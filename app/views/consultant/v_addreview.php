@@ -14,7 +14,7 @@
     <main class="a-a-a-main-content">
         <div class="a-a-a-stat-card">
             <h2>Submit Your Review</h2>
-            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/consultant/addreview" method="POST">
+            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/consultant/addreview" method="POST" id="review-form">
                 <div class="a-a-a-form-group">
                     <label for="rating">Rating</label>
                     <div class="star-rating">
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="a-a-a-form-buttons">
-                    <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/rateandreview'">Cancel</button>
+                    <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewrateandreview'">Cancel</button>
                     <button type="button" class="a-a-a-btn-save">Submit Review</button>
                 </div>
             </form>
@@ -53,6 +53,17 @@
 <script src="<?php echo URLROOT; ?>/js/rateAndReviews.js"></script>
 
 <script>
+    // Set initial rating
+    document.addEventListener('DOMContentLoaded', function() {
+        const rating = <?php echo $data['rating']; ?>;
+        const stars = document.querySelectorAll('.star-rating i');
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('active');
+            }
+        });
+    });
+
     document.querySelector('.a-a-a-btn-save').addEventListener('click', function(e) {
         e.preventDefault();
         let rating = document.getElementById('rating').value;
@@ -68,10 +79,8 @@
             return;
         }
 
-        if (confirm('Are you sure you want to submit this review?')) {
+        if (confirm('Are you sure you want to update this review?')) {
             document.querySelector('.a-a-a-form').submit();
         }
     });
 </script>
-
-<?php require APPROOT.'/views/includes/footer.php'; ?>
