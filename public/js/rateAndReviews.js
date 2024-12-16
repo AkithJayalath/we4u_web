@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all required elements
     const starContainer = document.querySelector('.star-rating');
     const stars = document.querySelectorAll('.star-rating i');
-    const submitBtn = document.querySelector('.submit-btn');
-    const reviewTextarea = document.querySelector('textarea');
-    let selectedRating = 0;
+    const ratingInput = document.getElementById('rating');
+    const reviewForm = document.querySelector('.a-a-a-form');
+    const reviewTextarea = document.getElementById('review');
+    let selectedRating = parseInt(ratingInput.value) || 0;
+
+    // Initialize stars based on existing rating
+    updateStars(selectedRating);
 
     // Handle star hover effects
     stars.forEach((star, index) => {
@@ -22,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     stars.forEach((star, index) => {
         star.addEventListener('click', () => {
             selectedRating = index + 1;
+            ratingInput.value = selectedRating;
             updateStars(selectedRating);
         });
     });
@@ -29,12 +33,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update star colors
     function updateStars(count) {
         stars.forEach((star, index) => {
-            star.style.color = index < count ? '#ffc107' : '#ddd';
+            if (index < count) {
+                star.classList.add('active');
+                star.style.color = '#ffc107';
+            } else {
+                star.classList.remove('active');
+                star.style.color = '#ddd';
+            }
         });
     }
 
-    // Handle review submission
-    submitBtn.addEventListener('click', () => {
+    // Handle form submission
+    reviewForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         if (selectedRating === 0) {
             alert('Please select a rating');
             return;
@@ -45,18 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const reviewData = {
-            rating: selectedRating,
-            review: reviewTextarea.value.trim()
-        };
-
-        // Log the submission data
-        alert('Review submitted! \nRating: ' + reviewData.rating + ' stars\nReview: ' + reviewData.review);
-
-
-        // Reset form after submission
-        selectedRating = 0;
-        reviewTextarea.value = '';
-        updateStars(0);
+        if (confirm('Are you sure you want to submit this review?')) {
+            reviewForm.submit();
+        }
     });
 });
