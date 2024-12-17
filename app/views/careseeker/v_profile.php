@@ -55,7 +55,7 @@
                 <input type="date" value="<?php echo $data['profileData'][0]->date_of_birth; ?>" readonly>
 
                 <label>Password</label>
-                <input type="password" placeholder="****************">
+                <input type="password" placeholder="****************" readonly>
             </div>
 
             <div class="form-right">
@@ -73,8 +73,7 @@
             </div>
             
         </form>
-        <div class="save-cancel"><a href="<?php echo URLROOT; ?>/users/deleteUser" class="cancel-button">Delete User</a>
-            </div>
+        
 
     </div>
 </div>

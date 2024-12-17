@@ -28,6 +28,9 @@
       <input type="submit" value="Login" class="reg-form-btn">
 
     </form>
+    <div class="form-footer">
+      <p>Not Registered? <a href="<?php echo URLROOT; ?>/home/">Register</a></p>
+    </div>
   </div>
 
   </div>

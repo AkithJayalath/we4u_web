@@ -45,7 +45,7 @@ echo loadCSS($required_styles);
                 <button class="request-send-button">
                     <i class="fas fa-paper-plane"></i> Send Request
                 </button>
-                <button class="request-cancel-button">
+                <button class="request-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/viewCaregiverProfile';">
                     Cancel
                 </button>
             </div>

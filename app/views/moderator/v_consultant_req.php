@@ -49,24 +49,24 @@
                     </div>
                     <div class="m-v-r-info-item">
                         <span class="m-v-r-label">NIC</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->national_id; ?></span>
+                        <span class="m-v-r-value"><?php echo $data['consultant']->nic_no; ?></span>
                     </div>
                     <div class="m-v-r-info-item">
-                        <span class="m-v-r-label">Address</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->address; ?></span>
+                        <span class="m-v-r-label">Expertise in Field</span>
+                        <span class="m-v-r-value"><?php echo $data['consultant']->expertise; ?></span>
                     </div>
                     <div class="m-v-r-info-item">
-                        <span class="m-v-r-label">Care Giving Type</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->caregiver_type; ?></span>
+                        <span class="m-v-r-label">SLMC Registration Number</span>
+                        <span class="m-v-r-value"><?php echo $data['consultant']->slmc_reg_no; ?></span>
                     </div>
-                    <div class="m-v-r-info-item">
+                    <!-- <div class="m-v-r-info-item">
                         <span class="m-v-r-label">Years Of Experiance</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->years_of_experience; ?></span>
-                    </div>
-                    <div class="m-v-r-info-item">
+                        <span class="m-v-r-value"><?php echo $data['consultant']->nic_no; ?></span>
+                    </div> -->
+                    <!-- <div class="m-v-r-info-item">
                         <span class="m-v-r-label">Special Skills</span>
                         <span class="m-v-r-value"><?php echo $data['caregiver']->skills; ?></span>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>
@@ -200,7 +200,32 @@
         </div>
     </div>
 
+    <!-- approval modal popup -->
+<div id="approveModal" class="m-v-r-modal">
+    <div class="m-v-r-modal-content">
+        <h2>Confirm Approval</h2>
+        <p>Are you sure you want to approve this application?</p>
+        <div class="m-v-r-modal-buttons">
+            <button class="m-v-r-modal-btn m-v-r-confirm-btn" onclick="proceedToApproveForm()">Yes, Proceed</button>
+            <button class="m-v-r-modal-btn m-v-r-cancel-btn" onclick="closeApproveModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
     <script>
+    function approveApplication(requestId) {
+        document.getElementById('approveModal').style.display = 'block';
+    }
+
+    function closeApproveModal() {
+        document.getElementById('approveModal').style.display = 'none';
+    }
+
+    function proceedToApproveForm() {
+        const requestId = document.querySelector('.m-v-r-application-id').textContent.split(':')[1].trim();
+        window.location.href = '<?php echo URLROOT; ?>/moderator/approve/' + requestId;
+    }
+
     function rejectApplication(requestId) {
         document.getElementById('rejectModal').style.display = 'block';
     }
@@ -217,5 +242,7 @@
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'?>
+
+
 
 

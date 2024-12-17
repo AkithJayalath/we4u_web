@@ -36,7 +36,7 @@ echo loadCSS($required_styles);
             <button class="request-send-button">
                    Make Payment
                 </button>
-                <button class="request-cancel-button">
+                <button class="request-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/viewRequests'">
                     Cancel
                 </button>
             </div>

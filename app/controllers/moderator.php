@@ -3,15 +3,20 @@
     private $moderatorModel;
 
     public function __construct(){
-      // if(!$_SESSION['user_id']) {
-      //   redirect('users/login');
-      // }else{
-      //   if($_SESSION['user_role'] != 'Moderator'){
-      //     redirect('pages/permissonerror');
-      //   }
-      // }
+      if(!$_SESSION['user_id']) {
+        redirect('users/login');
+      }else{
+        if($_SESSION['user_role'] != 'Moderator'){
+          redirect('pages/permissonerror');
+        }
+      }
       
       $this->moderatorModel = $this->model('M_Moderator');
+    }
+
+
+    public function index(){
+      $this->careseekerrequests();
     }
 
 
@@ -340,6 +345,7 @@
         if($this->moderatorModel->deleteInterview($request_id)) {
             $_SESSION['success_message'] = 'Interview deleted successfully';
             redirect('moderator/careseekerrequests');
+
         } else {
             $_SESSION['error_message'] = 'Failed to delete interview';
             redirect('moderator/interview/' . $request_id);

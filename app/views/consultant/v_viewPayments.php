@@ -47,40 +47,60 @@ echo loadCSS($required_styles);
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12354</div>
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
+              <div class="view-requests-m-c-r-table-cell">Amal Perera</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
 
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12354</div>
               <div class="view-requests-m-c-r-table-cell">03/04/2024</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Amal Perera</div>
+              <div class="view-requests-m-c-r-table-cell">Kalum Siriwardana</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
 
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#12454</div>
               <div class="view-requests-m-c-r-table-cell">03/05/2020</div>
-              <div class="view-requests-m-c-r-table-cell">Dr.Supun Jayawardhana</div>
-              <div class="view-requests-m-c-r-table-cell"><span class="tag rejected">Failed</span></div>
+              <div class="view-requests-m-c-r-table-cell">Nadun Jayawardhana</div>
+              <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
 
             <div class="view-requests-m-c-r-table-row">
               <div class="view-requests-m-c-r-table-cell">#32334</div>
               <div class="view-requests-m-c-r-table-cell">03/02/2022</div>
-              <div class="view-requests-m-c-r-table-cell">Kalum Silva</div>
+              <div class="view-requests-m-c-r-table-cell">Senesh Silva</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
 
@@ -88,9 +108,14 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">#5684</div>
               <div class="view-requests-m-c-r-table-cell">03/09/2023</div>
               <div class="view-requests-m-c-r-table-cell">Dilon Soysa</div>
-              <div class="view-requests-m-c-r-table-cell"><span class="tag rejected">Failed</span></div>
+              <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
 
@@ -100,7 +125,12 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">Kasun Rathnayake</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
               <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+              <button 
+                type="submit" 
+                class="view-requests-m-c-r-view-req-action-btn"
+                onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewpaymentinfo'">
+                View Payment
+              </button>
               </div>
             </div>
           </div>

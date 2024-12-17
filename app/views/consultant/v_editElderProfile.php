@@ -59,9 +59,9 @@ echo loadCSS($required_styles);
                     <div class="personal-info-diagnosis">
                         <p><strong>Health Barriers:</strong> Fear of medication, Fear of insulin</p>
                     </div>
-                    <button class="personal-info-edit-btn">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
+                        <!-- <button class="personal-info-edit-btn">
+                        <i class="fas fa-edit"></i> 
+                    </button> -->
                 </div>
             </div>
         </div>

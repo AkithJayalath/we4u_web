@@ -40,7 +40,7 @@
                         <p><strong>Total Payment:</strong> Rs.10,000</p>
                         <p><strong>Paid Amount:</strong> Rs.0</p>
                         
-                        <button class="view-profile-btn">View Profile</button>
+                        <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Caregivers/viewCareseeker'">View Profile</button>
                     </div>
                     
                 </div>

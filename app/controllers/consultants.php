@@ -16,7 +16,7 @@
           $data = [
             'username' => trim($_POST['username']),
             'email' => trim($_POST['email']),
-            
+            'nic_no' =>trim($_POST['nic_no']),
             'gender' => trim($_POST['gender']),
             'dob' => trim($_POST['dob']),
             'contact_info' => trim($_POST['contact_info']),
@@ -28,7 +28,7 @@
   
             'username_err' => '',
             'email_err' => '',
-            
+            'nic_no_err'=>'',
             'gender_err' => '',
             'dob_err' =>'',
             'contact_info_err' => '',
@@ -55,6 +55,24 @@
               $data['email_err'] = 'Email is already taken';
             }
           }
+
+          //validate nic
+          if (empty($data['nic_no'])) {
+            $data['nic_no_err'] = 'Please enter your NIC number';
+        } else {
+            // NIC validation
+            $nic = $data['nic_no'];
+        
+            // Check for pre-2016 NIC format (9 digits + V or X)
+            $patternPre2016 = '/^\d{9}[VXvx]$/';
+        
+            // Check for post-2016 NIC format (12 digits)
+            $patternPost2016 = '/^\d{12}$/';
+        
+            if (!preg_match($patternPre2016, $nic) && !preg_match($patternPost2016, $nic)) {
+                $data['nic_no_err'] = 'Invalid NIC number format';
+            }
+        }
           // validate gender
           if(empty($data['gender'])){
             $data['gender_err'] = 'Please add gender';
@@ -65,7 +83,16 @@
             $data['dob_err'] = 'Please add a date of birth';
         } elseif (!$this->consultantsModel->validateDate($data['dob'])) { 
             $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
-        }
+        }else {
+          // Calculate age from DOB
+          $dob = new DateTime($data['dob']);
+          $today = new DateTime();
+          $age = $today->diff($dob)->y;
+          
+          if($age < 18) {
+              $data['dob_err'] = 'You must be at least 18 years old to register';
+          }
+      }
 
         // Validate address
         
@@ -126,7 +153,7 @@
  }
 
  // Proceed if no errors
- if (empty($data['username_err']) && empty($data['email_err']) && empty($data['password_err']) && 
+ if (empty($data['username_err']) && empty($data['email_err']) &&  empty($data['nic_no_err']) && empty($data['password_err']) && 
      empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['dob_err']) && 
      empty($data['contact_info_err']) &&  empty($data['slmc_no_err'])  && 
      empty($data['specialization_err']) && empty($data['documents_err'])) {
@@ -149,6 +176,7 @@
  $data = [
      'username' => '',
      'email' => '',
+     'nic_no'=>'',
      
      'gender' => '',
      'dob' => '',
@@ -160,6 +188,7 @@
      'confirm_password' => '',
      'username_err' => '',
      'email_err' => '',
+     'nic_no_err' =>'',
      'gender_err' => '',
      'dob_err' => '',
      'address_err' => '',
@@ -176,6 +205,7 @@
 }
     }
 
+  
   }
 
 ?>

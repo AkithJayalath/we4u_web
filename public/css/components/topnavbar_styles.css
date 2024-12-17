@@ -60,7 +60,7 @@
     align-items: center;
     list-style: none;
     gap: 30px;
-    margin-right: 150px;
+    margin-right: 300px;
 
 }
 
@@ -111,6 +111,7 @@
     align-items: center;
     font-size: 17px;
     margin-right: 15px;
+    white-space: nowrap; /* Prevents wrapping */
 }
 
 .phone-icon {
@@ -118,6 +119,13 @@
     height: 17px;
     margin-right: 5px;
 }
+.notification{
+    
+    margin-right: 15px;
+    font-size: clamp(30px, 2.5vw, 25px);
+    color: #3cb0f8;
+}
+
 
 .signin-btn {
     background-color: #0051ff;

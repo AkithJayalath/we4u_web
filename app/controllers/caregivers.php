@@ -6,6 +6,10 @@
       $this->caregiversModel = $this->model('M_Caregivers');
     }
 
+    public function index(){
+      $this->request();
+    }
+
     public function register(){
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
           // Now the form is submitting
@@ -54,6 +58,29 @@
               $data['email_err'] = 'Email is already taken';
             }
           }
+
+
+
+
+
+          //validate national_id
+          if (empty($data['national_id'])) {
+            $data['national_id_err'] = 'Please enter your NIC number';
+        } else {
+            // NIC validation
+            $nic = $data['national_id'];
+        
+            // Check for pre-2016 NIC format (9 digits + V or X)
+            $patternPre2016 = '/^\d{9}[VXvx]$/';
+        
+            // Check for post-2016 NIC format (12 digits)
+            $patternPost2016 = '/^\d{12}$/';
+        
+            if (!preg_match($patternPre2016, $nic) && !preg_match($patternPost2016, $nic)) {
+                $data['national_id_err'] = 'Invalid NIC number format';
+            }
+        }
+
           // validate gender
           if(empty($data['gender'])){
             $data['gender_err'] = 'Please add gender';
@@ -64,7 +91,16 @@
             $data['dob_err'] = 'Please add a date of birth';
         } elseif (!$this->caregiversModel->validateDate($data['dob'])) { 
             $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
-        }
+        }else {
+          // Calculate age from DOB
+          $dob = new DateTime($data['dob']);
+          $today = new DateTime();
+          $age = $today->diff($dob)->y;
+          
+          if($age < 18) {
+              $data['dob_err'] = 'You must be at least 18 years old to register';
+          }
+      }
 
         // Validate address
         if (empty($data['address'])) {
@@ -372,6 +408,10 @@
       $this->view('caregiver/v_request',$data);
    }
 
+   public function viewpayments(){
+    $this->view('consultant/v_viewPayments');
+  }
+
    public function viewreqinfo(){
        
        $this->view('caregiver/v_reqinfo');
@@ -391,9 +431,6 @@
        
     $this->view('caregiver/v_caregiverProfile');
  }
-
-  
-    
 
 }
   

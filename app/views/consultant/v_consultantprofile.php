@@ -36,10 +36,9 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="consultant-personal-info-right">
-                <button class="consultant-rate-button"> 
-                    <!-- chat=edit yellow  -->
-                     Ratings and Reviews
-                </button>
+            <button class="consultant-rate-button" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/rateandreview'">
+                Ratings and Reviews
+            </button>
                 <button class="consultant-send-button">
                     <!-- send=delete red -->
                      Delete Profile

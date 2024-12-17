@@ -5,13 +5,18 @@ class careseeker extends controller{
     public function __construct(){
         if(!$_SESSION['user_id']){
             redirect('users/login');
-        }else{
+        }
+        else{
             if($_SESSION['user_role']!= 'Careseeker'){
                 redirect('pages/permissonerror');
             }
             $this->careseekersModel = $this->model('M_Careseekers');
         }
       
+    }
+
+    public function index(){
+        $this->showElderProfiles();
     }
 
 
@@ -92,6 +97,9 @@ class careseeker extends controller{
             } else {
                 $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
             }
+        }else{
+            $data['profile_picture_name'] = null;
+
         }
         
   
@@ -132,7 +140,8 @@ class careseeker extends controller{
               'current_medications' => '',
               'special_needs' => '',
               'dietary_restrictions' => '',
-              'profile_pic' => '',
+              'profile_picture' => '',
+              'profile_picture_name'=>'',
   
               'first_name_err' => '',
               'last_name_err' => '',
