@@ -1,7 +1,7 @@
 <?php 
 class M_Caregivers {
     private $db;
-
+ 
     public function __construct() {
         $this->db = new Database();
     }
