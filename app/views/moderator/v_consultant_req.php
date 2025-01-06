@@ -49,7 +49,7 @@
                     </div>
                     <div class="m-v-r-info-item">
                         <span class="m-v-r-label">NIC</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->national_id; ?></span>
+                        <span class="m-v-r-value"><?php echo $data['consultant']->nic_no; ?></span>
                     </div>
                     <div class="m-v-r-info-item">
                         <span class="m-v-r-label">Expertise in Field</span>
@@ -59,14 +59,14 @@
                         <span class="m-v-r-label">SLMC Registration Number</span>
                         <span class="m-v-r-value"><?php echo $data['consultant']->slmc_reg_no; ?></span>
                     </div>
-                    <div class="m-v-r-info-item">
+                    <!-- <div class="m-v-r-info-item">
                         <span class="m-v-r-label">Years Of Experiance</span>
-                        <span class="m-v-r-value"><?php echo $data['caregiver']->years_of_experience; ?></span>
-                    </div>
-                    <div class="m-v-r-info-item">
+                        <span class="m-v-r-value"><?php echo $data['consultant']->nic_no; ?></span>
+                    </div> -->
+                    <!-- <div class="m-v-r-info-item">
                         <span class="m-v-r-label">Special Skills</span>
                         <span class="m-v-r-value"><?php echo $data['caregiver']->skills; ?></span>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>

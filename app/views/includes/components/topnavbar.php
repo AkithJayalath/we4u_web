@@ -1,3 +1,4 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <nav class="navbar">
 
     <!-- Logo -->
@@ -66,9 +67,12 @@
         <!-- SignIn/logout section -->
         <div class="contact-signin">
             <?php if (isset($_SESSION['user_id'])): ?>
+                <i class="fa-solid fa-bell notification" onclick="window.location.href='<?php echo URLROOT; ?>/notifications'"></i>
                 <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/logout'">Logout</button>
+                
             <?php else: ?>
                 <span class="contact-number">
+                
                     <img src="/we4u/public/images/phone_icon.png" alt="Phone" class="phone-icon"> 011 057 4115
                 </span>
                 <button class="signin-btn" onclick="window.location.href='<?php echo URLROOT; ?>/users/login'">Sign In</button>
