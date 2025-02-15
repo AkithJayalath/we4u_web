@@ -208,10 +208,47 @@
     }
 
     public function rateandreview(){
-      $this->view('caregiver/v_rate&review');
+      $email = $_SESSION['user_email'];
+      $reviews= $this->caregiversModel->getReviews($email);
+
+      $data = [
+        'reviews' => $reviews
+      ];
+
+      $this->view('caregiver/v_rate&review', $data);
   
       
     }
+
+    public function submitReview(){
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $data=[
+          'reviewer_id' => $_SESSION['user_id'],
+          'reviewed_user_id' => $_POST['reviewed_user_id'],
+          
+          'review_text' => trim($_POST['review_text']),
+          'review_text_err' => ''
+        ];
+
+        if(empty($data['review_text'])){
+          $data['review_text_err'] = 'Please leave a review';
+        }
+
+        if(empty($data['review_text_error'])){
+          if($this->caregiversModel->submitReview($data)){
+            echo json_encode(['success' => 'Review submitted successfully']);
+            return;
+          }
+        }
+        echo json_encode(['error' => 'Failed to submit review']);
+    }
+  }
+
+
+    
 
     public function caregivingHistory(){ 
       $this->view('caregiver/v_cghistory');

@@ -6,7 +6,7 @@
 
       public function __construct() {
           $this->consultantModel = $this->model('M_Consultant');
-          $this->caregiversModel = $this->model('M_Caregivers');
+          $this->caregiversModel = $this->model('M_Caregivers'); 
       }
 
       // Add the required index method
