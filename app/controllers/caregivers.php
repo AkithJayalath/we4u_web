@@ -207,6 +207,14 @@
 }
     }
 
+    public function isLoggedIn(){
+      if(isset($_SESSION['user_id'])){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
     public function rateandreview(){
       $email = $_SESSION['user_email'];
       $reviews= $this->caregiversModel->getReviews($email);
@@ -219,6 +227,8 @@
   
       
     }
+
+    
 
     public function submitReview(){
       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -465,12 +475,27 @@
    }
 
    public function viewmyProfile(){
-       
-    $this->view('caregiver/v_caregiverProfile');
- }
+      $email = $_SESSION['user_email'];
+      $profile = $this->caregiversModel->showCaregiverProfile($email);
+      $rating = $this->caregiversModel->getAvgRating($email);
+      $reviews = $this->caregiversModel->getReviews($email);
 
+      //calculate age
+      $dob = new DateTime($profile->date_of_birth);
+      $today = new DateTime();
+      $age = $today->diff($dob)->y;
+
+      $data = [
+          'profile' => $profile,
+          'age' => $age,
+          'rating' => $rating,
+          'reviews' => $reviews
+
+      ];
+
+    $this->view('caregiver/v_caregiverProfile',$data);
 }
   
 
-  
+} 
 ?>

@@ -17,7 +17,7 @@
             <?php foreach ($data['reviews'] as $review) : ?>
                 <div class="review-card">
                     <div class="user-details">
-                        <img src="<?php echo URLROOT; ?>/public/images/<?php echo !empty($review->profile_picture) ? $review->profile_picture : 'def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
+                        <img src="<?php echo !empty($review->profile_picture) ? URLROOT . '/images/profile_imgs/'. $review->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                         <h3 class="name"><?php echo $review->username; ?></h3>
                         <div class="review-date">
                             <span><?php echo date('d M Y', strtotime($review->review_date)); ?></span>

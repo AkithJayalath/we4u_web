@@ -20,7 +20,7 @@ echo loadCSS($required_styles);
                         : URLROOT . '/images/def_profile_pic.jpg'; ?>"  alt="Profile" class="personal-info-pic" />
 
                     <div class="personal-info-details">
-                        <span class="personal-info-tag"><?php echo $data['elderData']->relationship_to_careseeker ?></span>
+                        <span class="personal-info-tag"><?php echo $data['elderData']->relationship_to_careseeker ?></span> 
                         <h2><?php echo $data['elderData']->first_name ?></h2>
                         <p>
                             <i class="fas fa-mars"></i> <?php echo $data['elderData']->gender ?>

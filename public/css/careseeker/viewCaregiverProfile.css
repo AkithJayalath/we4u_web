@@ -17,7 +17,7 @@
 
 /* Personal infor section */
 .caregiver-personal-info-section {
-    display: flex;
+    display: flex; 
     background-color: #f8f9fa;
     border-radius: 20px;
     padding: 20px;
