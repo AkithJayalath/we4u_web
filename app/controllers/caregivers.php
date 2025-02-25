@@ -2,9 +2,18 @@
   class caregivers extends controller{
 
     private $caregiversModel;
-    public function __construct(){ 
-      $this->caregiversModel = $this->model('M_Caregivers');
-    }
+    public function __construct(){
+      if(!$_SESSION['user_id']){
+          redirect('users/login');
+      }
+      else{
+          if($_SESSION['user_role']!= 'Caregiver'){
+              redirect('pages/permissonerror');
+          }
+          $this->caregiversModel = $this->model('M_Caregivers'); 
+      }
+    
+  }
 
     public function index(){
       $this->request();
@@ -494,8 +503,119 @@
       ];
 
     $this->view('caregiver/v_caregiverProfile',$data);
-}
-  
+  }
 
-} 
+    public function editmyProfile() {
+      if (!$this->isLoggedIn()) {
+        redirect('users/login');
+      }
+
+    
+      if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        //Handle profile picture
+        $profile= $this->caregiversModel->showCaregiverProfile($_SESSION['user_email']);
+        $profilePicture = $_FILES['profile_picture'] ?? null;
+        $currentProfilePicture = $data['profile']->profile_picture ?? null;
+        $selctedskilss = isset($_POST['skills']) ? implode(',' , $_POST['skills']) : '';
+
+        $data = [
+          'user_id' => $_SESSION['user_id'],
+          'email' => $_SESSION['user_email'],
+          'profile' => $profile,
+          'username' => trim($_POST['username']),
+          'address' => trim($_POST['address']),
+          'contact_info' => trim($_POST['contact_info']),
+          'caregiver_type' => trim($_POST['caregiver_type']),
+          'specialty' => trim($_POST['specialty']),
+          'skills' => $selctedskilss,
+          'qualification' => trim($_POST['qualification']),
+          'available_region' => trim($_POST['available_region']),
+          'payment_details' => trim($_POST['payment_details']),
+          'bio' => trim($_POST['bio']),
+          'profile_picture' => $_FILES['profile_picture'],
+          'profile_picture_name' => time().'_'.$_FILES['profile_picture']['name'],
+          'username_err' => '',
+          'address_err' => '',
+          'contact_info_err' => '',
+          'profile_picture_err' => ''
+
+        ];
+
+        // Validate username
+        if(empty($data['username'])){
+          $data['username_err'] = 'Please enter username';
+        }
+        // Validate address
+        if(empty($data['address'])){
+          $data['address_err'] = 'Please enter address';
+        }
+        // Validate contact info
+        if(empty($data['contact_info'])){
+          $data['contact_info_err'] = 'Please enter contact info';
+        }elseif(!preg_match('/^[0-9]{10}$/', $data['contact_info'])) {
+          $data['contact_info_err'] = 'Contact number should be a 10-digit number';
+        }
+        // Handle profile picture upload if new one provided
+        if ($profilePicture && $profilePicture['error'] === 0) {
+          $validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+          
+          if (in_array($profilePicture['type'], $validImageTypes)) {
+              $newFileName = uniqid() . '_' . $profilePicture['name'];
+              if (uploadImage($profilePicture['tmp_name'], $newFileName, '/images/profile_imgs/')) {
+                  $data['profile_picture'] = $newFileName;
+              } else {
+                  $data['profile_picture_err'] = 'Failed to upload profile picture';
+              }
+          } else {
+              $data['profile_picture_err'] = 'Please upload a valid image file (JPEG, PNG, GIF)';
+          }
+      }
+
+        // Check for any errors
+        if(empty($data['username_err']) && empty($data['address_err']) && empty($data['contact_info_err']) && empty($data['profile_picture_err'])){
+          // Update profile
+          if($this->caregiversModel->updateCaregiverProfile($data)){
+            redirect('caregivers/viewmyProfile');
+          }
+          
+
+        }else{
+          // Load view with errors
+          $this->view('caregiver/v_editCaregiverProfile',$data);
+        }
+      }  
+      else{
+        // Get existing caregiver profile
+        $email = $_SESSION['user_email'];
+        $profile = $this->caregiversModel->showCaregiverProfile($email);
+        $data = [
+          'profile' => $profile,
+          'email' => $_SESSION['user_email'],
+          'username' => $profile->username ?? '' ,
+          'address' => $profile->address ?? '',
+          'contact_info' => $profile->contact_info ?? '',
+          'caregiver_type' => $profile->caregiver_type  ?? '',
+          'specialty' => $profile->specialty ?? '',
+          'skills' => $profile->skills ?? '',
+          'qualification' => $profile->qualification ?? '',
+          'available_region' => $profile->available_region ?? '',
+          'payment_details' => $profile->payment_details ?? '',
+          'bio' => $profile->bio ?? '',
+          'profile_picture' => $profile->profile_picture ?? '',
+          'username_err' => '',
+          'address_err' => '',
+          'contact_info_err' => ''
+          
+          
+        ];
+
+        // Load view
+        $this->view('caregiver/v_editCaregiverProfile', $data);
+      }
+     
+    }
+}
 ?>

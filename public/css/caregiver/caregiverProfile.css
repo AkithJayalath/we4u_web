@@ -51,7 +51,7 @@
     
   }
   
-  .caregiver-personal-info-pic {
+  .pro-img {
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -78,6 +78,7 @@
     flex-direction: column;
     gap: 8px;
     justify-content:flex-end;
+    margin-left: 50px;
   }
   .caregiver-personal-info-details h2 {
     margin: 0;

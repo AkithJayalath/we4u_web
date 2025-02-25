@@ -10,7 +10,7 @@ class careseeker extends controller{
             if($_SESSION['user_role']!= 'Careseeker'){
                 redirect('pages/permissonerror');
             }
-            $this->careseekersModel = $this->model('M_Careseekers');
+            $this->careseekersModel = $this->model('M_Careseekers'); 
         }
       
     }

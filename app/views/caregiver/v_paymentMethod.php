@@ -8,7 +8,7 @@
     <?php require APPROOT.'/views/includes/components/sidebar.php';?>
     <div class="container">
         <div class="header">
-            <h2>Payment Method</h2>
+            <h2>Payment Method</h2> 
         </div>
 
         <div class="btn-history">
@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card"> 
                         <label><span class="required">*</span>Account Number</label>
                         <div class="content-box">
                             <input type="text" id="account_number" name="account_number" value="<?php echo isset($data['paymentMethod']->account_number) ? $data['paymentMethod']->account_number : ''; ?>"
