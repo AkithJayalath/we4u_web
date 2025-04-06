@@ -200,6 +200,33 @@ class M_Careseekers{
         return false;
     }
     
+
+
+}
+
+public function sendCareRequest($data) {
+    $this->db->query('INSERT INTO caregiver_requests 
+    (careseeker_id, elder_id, caregiver_id, duration_type, from_date, to_date, frequency, selected_days, specific_date, time_slots, expected_services, additional_notes, status) 
+    VALUES 
+    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :from_date, :to_date, :frequency, :selected_days, :specific_date, :time_slots, :expected_services, :additional_notes, :status)');
+
+    // Bind values
+    $this->db->bind(':careseeker_id', $data['careseeker_id']);
+    $this->db->bind(':elder_id', $data['elder_id']);
+    $this->db->bind(':caregiver_id', $data['caregiver_id']);
+    $this->db->bind(':duration_type', $data['duration_type']);
+    $this->db->bind(':from_date', $data['from_date']);
+    $this->db->bind(':to_date', $data['to_date']);
+    $this->db->bind(':frequency', $data['frequency']);
+    $this->db->bind(':selected_days', $data['selected_days']);
+    $this->db->bind(':specific_date', $data['specific_date']);
+    $this->db->bind(':time_slots', $data['time_slots']);
+    $this->db->bind(':expected_services', $data['expected_services']);
+    $this->db->bind(':additional_notes', $data['additional_notes']);
+    $this->db->bind(':status', $data['status']);
+
+    // Execute and return result
+    return $this->db->execute();
 }
 }
 
