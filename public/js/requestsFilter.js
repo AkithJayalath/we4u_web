@@ -19,7 +19,7 @@ document.getElementById('apply-filters-btn').addEventListener('click', function 
 
         // Filter by status
         if (statusFilter !== 'all' && status !== statusFilter) {
-            matches = false;
+            matches = false; 
         }
 
         // Filter by service

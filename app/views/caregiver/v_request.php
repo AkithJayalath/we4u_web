@@ -1,6 +1,6 @@
 <?php require APPROOT.'/views/includes/header.php';?>
 <?php require APPROOT.'/views/includes/components/topnavbar.php';?>
-
+ 
 
 
 <link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/cgrequest.css"> 
@@ -15,8 +15,25 @@
         
         <div class="header">
             <h2>Requests<h2>
-            <div class="search">
-                <input type="text" placeholder="Search"/>
+            <div class="view-request-filter-section">
+                <label for="filter-date">Date:</label>
+                <select id="filter-date" class="filter-select">
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                </select>
+
+                <label for="filter-status">Status:</label>
+                <select id="filter-status" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="completed">Completed</option>
+                </select>
+
+                <button class="view-request-action-btn" id="apply-filters-btn">
+                    Apply
+                </button>
             </div>
         </div>
 
@@ -102,6 +119,10 @@
 function navigateToDetails() {
     window.location.href = '<?php echo URLROOT; ?>/caregivers/viewreqinfo';
 }
+
+
+
+
 </script>
 
 

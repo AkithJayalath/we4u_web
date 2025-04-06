@@ -116,7 +116,7 @@
     </div>
 
     <!-- Add Confirmation Modal -->
-    <?php if(!isset($data['paymentMethod']) || !$data['paymentMethod']): ?>
+    <?php if(!isset($data['paymentMethod']) || !$data['paymentMethod']): ?> 
     <div id="addModal" class="modal">
         <div class="modal-content">
             <i class="fa-solid fa-circle-exclamation"></i>

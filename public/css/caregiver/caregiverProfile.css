@@ -18,7 +18,7 @@
 /* Personal infor section */
 .caregiver-personal-info-section {
     display: flex;
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; 
     border-radius: 20px;
     padding: 20px;
     gap: 20px;
@@ -51,7 +51,7 @@
     
   }
   
-  .caregiver-personal-info-pic {
+  .pro-img {
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -76,7 +76,9 @@
 
     display: flex;
     flex-direction: column;
+    gap: 8px;
     justify-content:flex-end;
+    margin-left: 50px;
   }
   .caregiver-personal-info-details h2 {
     margin: 0;
@@ -95,7 +97,15 @@
 .consultant-rating .rating-stars {
     display: flex;
     gap: 5px;
-    color: #FFD700; /* Gold color for stars */
+    
+}
+
+.consultant-rating i.active {
+  color: #ffc107;
+}
+
+.consultant-rating i:not(.active) {
+  color: #ddd;
 }
 
 .rating-stars i {

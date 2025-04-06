@@ -1,48 +1,38 @@
 function addReviewsForConsultant(reviews) {
-    const container = document.querySelector(".reviews-section-content");
+  const container = document.querySelector(".reviews-section-content");
   
-    // Generate HTML for all reviews
-    const reviewsHTML = reviews
-      .map(
-        (review) => `
-          <div class="review-item">
-            <div class="review-avatar">
-              <img src="${review.avatar}" alt="${review.username}'s avatar" />
-            </div>
-            <div class="review-content">
-              <div class="review-header">
-                ${review.name} <span class="review-username">@${review.username}</span>
-              </div>
-              <p class="review-text">${review.text}</p>
-              <div class="review-date">${review.date}</div>
-            </div>
-          </div>
-        `
-      )
-      .join("");
-  
-    // Inject the reviews into the container
-    container.innerHTML = reviewsHTML;
+  if (!reviews || reviews.length === 0) {
+      container.innerHTML = '<p>No reviews yet</p>';
+      return;
   }
-  
-  // Example reviews data (to be fetched from a database)
-  const reviewsData = [
-    {
-      name: "Jess Santiago",
-      username: "username",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjZXxlbnwwfHwwfHx8MA%3D%3D", 
-      text: "A really good person",
-      date: "22.03.2021",
-    },
-    {
-      name: "Cali Huffman",
-      username: "username",
-      avatar: "https://media.istockphoto.com/id/1335941248/photo/shot-of-a-handsome-young-man-standing-against-a-grey-background.jpg?s=612x612&w=0&k=20&c=JSBpwVFm8vz23PZ44Rjn728NwmMtBa_DYL7qxrEWr38=", 
-      text: "Easy to talk to and friendly",
-      date: "22.03.2021",
-    },
-  ];
-  
-  // Add reviews dynamically
-  addReviewsForConsultant(reviewsData);
-  
+
+  // Get latest 2 reviews
+  const latestReviews = reviews.slice(0, 2);
+
+  const reviewsHTML = latestReviews.map(review => `
+      <div class="review-item">
+          <div class="review-avatar">
+                <img src="${review.profile_picture ? URLROOT + '/images/profile_imgs/' + review.profile_picture : URLROOT + '/images/def_profile_pic.jpg'}" 
+                   alt="Profile Image" class="pro-img"/>
+          </div>
+          <div class="review-content">
+              <div class="review-header">
+                  <h3 class="name">${review.username}</h3>
+              </div>
+              <p class="review-text">${review.review_text}</p>
+              <div class="review-date">${formatDate(review.review_date)}</div>
+          </div>
+      </div>
+  `).join('');
+
+  container.innerHTML = reviewsHTML;
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+  });
+}

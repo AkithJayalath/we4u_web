@@ -2,7 +2,7 @@
     $required_styles = [
         'careseeker/create',
     ];
-    echo loadCSS($required_styles);
+    echo loadCSS($required_styles); 
 ?>
 
 <?php require APPROOT.'/views/includes/header.php'; ?>
@@ -140,4 +140,4 @@ $elder_id = $data['elder_id'];
 </page-body-container>
 
 <script src="<?php echo URLROOT; ?>/js/profilePicUpload.js"></script>
-<?php require APPROOT.'/views/includes/footer.php'; ?>
+<?php require APPROOT.'/views/includes/footer.php'; ?> 

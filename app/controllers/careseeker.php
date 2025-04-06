@@ -10,7 +10,7 @@ class careseeker extends controller{
             if($_SESSION['user_role']!= 'Careseeker'){
                 redirect('pages/permissonerror');
             }
-            $this->careseekersModel = $this->model('M_Careseekers');
+            $this->careseekersModel = $this->model('M_Careseekers'); 
         }
       
     }
@@ -166,8 +166,12 @@ class careseeker extends controller{
         'elders' => $elders
     ];
 
+<<<<<<< HEAD
     $this->view('careseeker/v_createProfile', $data);
    
+=======
+    $this->view('careseeker/v_createProfile', $data); 
+>>>>>>> 8bc8ae8ee10155bd362a6ec7e2037bd2ca31a8a7
 }
 
 public function requestCaregiver() {
@@ -467,7 +471,7 @@ public function editElderProfile()
       public function requestConsultant(){
         $data=[];
         $this->view('careseeker/v_requestConsultant', $data);
-      }
+      } 
 
       public function viewRequestInfo(){
         $data=[];
