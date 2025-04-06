@@ -1,7 +1,7 @@
 <?php 
 class M_Caregivers {
     private $db;
-
+ 
     public function __construct() {
         $this->db = new Database();
     }
@@ -146,5 +146,34 @@ public function deletePaymentMethod($email) {
     $this->db->bind(':email', $email);
     return $this->db->execute();
 }
+
+public function submitReview($data) 
+{
+    $this->db->query('INSERT INTO review (review_id, reviewer_id, reviewed_user_id, review_role, review_text, review_date)
+    VALUES (:review_id, :reviewer_id, :reviewed_user_id, :review_role, :review_text, NOW())'); 
+    
+    $this->db->bind(':review_id', $data['review_id']);
+    $this->db->bind(':reviewer_id', $data['reviewer_id']);
+    $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
+    $this->db->bind(':review_role', 'caregiver');
+    $this->db->bind(':review_text', $data['review_text']);
+
+    return $this->db->execute();
+
+}
+
+public function getReviews($email){
+    $this->db->query('SELECT r.*,u.username,u.profile_picture,r.rating,r.review_date
+    FROM review r
+    JOIN user u ON r.reviewer_id = u.user_id
+    JOIN user c ON r.reviewed_user_id = c.user_id
+    WHERE c.email = :email
+    AND r.review_role = "caregiver"
+    ORDER BY r.review_date DESC');
+
+    $this->db->bind(':email',$email);
+    return $this->db->resultSet();
+}
 }
 ?>
+

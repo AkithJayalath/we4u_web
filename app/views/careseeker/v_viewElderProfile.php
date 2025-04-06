@@ -48,7 +48,7 @@ echo loadCSS($required_styles);
                     </div>
                     <div class="personal-info-stat">
                         <p>Blood Pressure</p>
-                        <h3><?php echo $data['elderData']->blood_pressure ?></h3>
+                        <h3><?php echo $data['elderData']->blood_pressure ?></h3> 
                     </div>
                 </div>
 

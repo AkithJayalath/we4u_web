@@ -405,7 +405,7 @@ public function editElderProfile()
       public function requestConsultant(){
         $data=[];
         $this->view('careseeker/v_requestConsultant', $data);
-      }
+      } 
 
       public function viewRequestInfo(){
         $data=[];
