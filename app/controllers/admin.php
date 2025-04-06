@@ -147,9 +147,10 @@ public function viewCompletedJob($job_id) {
   }
 
 
-  public function user_detailes(){
+  public function user_detailes($page = 1){
+    $users = $this->adminModel->getAllUsers();
     $data = [
-      'title' => 'User Detailes'
+      'users' => $users
     ];
     $this->view('admin/v_users', $data);
   }
