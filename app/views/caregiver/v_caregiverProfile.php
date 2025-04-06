@@ -8,7 +8,7 @@
 
 
 <page-body-container>
-    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
+    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>  
     <!-- Container -->
     <div class="view-caregiver-profile">
         <!-- Personal info section -->
@@ -48,9 +48,10 @@
                         <div class="personal-info-badge">Work Type Short-term</div>
                     <?php endif; ?>
                 </div>
-                <button class="caregiver-edit-button">
-                    <i class="fas fa-edit"></i> Edit Profile
-                </button>
+              
+                <button class="caregiver-edit-button" onClick="navigateToDetails()"><i class="fas fa-edit"></i> Edit Profile</button>     
+               
+                
                 
             </div>
 
@@ -114,14 +115,19 @@
                         <i class="fas fa-hands-helping icon"></i>
                         <div>
                             <h4>Special Skills</h4>
+                            
                             <?php 
+                            function formatSkillName($skill) {
+                                return ucwords(str_replace('_', ' ', $skill));
+                            }
+
                             $skills = explode(',', $data['profile']->skills);
                             foreach($skills as $skills) : ?>
-                                <p><?php echo trim($skills); ?></p>
+                                <p><?php echo trim(formatSkillName($skills)); ?></p>
                             <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="caregiver-health-concern-item">
+                    <div class="caregiver-health-concern-item">                        
                         <i class="fas fa-dollar-sign icon"></i>
                         <div>
                             <h4>Payment details</h4>
@@ -190,6 +196,13 @@
     const URLROOT = '<?php echo URLROOT; ?>';
     const reviewsData = <?php echo json_encode($data['reviews']); ?>;
     addReviewsForConsultant(reviewsData);
+</script>
+
+<script>
+    function navigateToDetails() {
+        window.location.href = '<?php echo URLROOT; ?>/caregivers/editmyProfile';
+    }
+
 </script>
 
 

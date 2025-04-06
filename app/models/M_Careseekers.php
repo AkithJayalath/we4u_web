@@ -3,7 +3,7 @@ class M_Careseekers{
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $this->db = new Database(); 
     }
 
     public function createElderProfile($data) {

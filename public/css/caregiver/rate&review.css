@@ -101,7 +101,7 @@
     align-items: center;
     gap: 2px;
     margin-top: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .rating i {

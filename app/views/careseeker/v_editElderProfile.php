@@ -2,7 +2,7 @@
     $required_styles = [
         'careseeker/create',
     ];
-    echo loadCSS($required_styles);
+    echo loadCSS($required_styles); 
 ?>
 
 <?php require APPROOT.'/views/includes/header.php'; ?>
