@@ -166,7 +166,7 @@ class careseeker extends controller{
         'elders' => $elders
     ];
 
-    $this->view('careseeker/v_createProfile', $data);
+    $this->view('careseeker/v_createProfile', $data); 
 }
 
 

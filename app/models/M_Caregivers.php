@@ -168,12 +168,34 @@ public function getReviews($email){
     JOIN user u ON r.reviewer_id = u.user_id
     JOIN user c ON r.reviewed_user_id = c.user_id
     WHERE c.email = :email
-    AND r.review_role = "caregiver"
+    AND r.review_role = "Caregiver"
     ORDER BY r.review_date DESC');
 
     $this->db->bind(':email',$email);
     return $this->db->resultSet();
 }
+
+public function getAvgRating($email){
+    $this->db->query('SELECT AVG(r.rating) AS avg_rating
+                      FROM review r
+                      JOIN user u ON r.reviewed_user_id = u.user_id
+                      WHERE u.email = :email AND r.review_role = "Caregiver"');
+
+    $this->db->bind(':email',$email);
+    $result = $this->db->single();
+    return round($result->avg_rating ?? 0, 1);
+}
+
+public function showCaregiverProfile($email){
+    $this->db->query('SELECT u.*,c.*
+    FROM user u
+    JOIN caregiver c ON u.user_id = c.caregiver_id
+    WHERE u.email = :email');
+
+    $this->db->bind(':email',$email);
+    return $this->db->single();
+}
+
 }
 ?>
 
