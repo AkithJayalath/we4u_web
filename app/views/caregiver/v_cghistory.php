@@ -35,12 +35,16 @@
                         
                     </div>
                     <div class="payment-info">
+                    
                         <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
                         <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
                         <p><strong>Total Payment:</strong> Rs.10,000</p>
                         <p><strong>Paid Amount:</strong> Rs.0</p>
                         
-                        <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Caregivers/viewCareseeker'">View Profile</button>
+                        <div class="btn-class">
+                            <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Caregivers/viewCareseeker'">View Profile</button>
+                            <button class="review-careseeker-btn" onClick="openRejectModal()">Add Review</button>
+                        </div>
                     </div>
                     
                 </div>
@@ -134,7 +138,56 @@
                 </div>
     </div>
 </div>
+
+<div id="rejecttModal" class="r-modal">
+        <div class="r-modal-content">
+            <div class="modal-header">
+                <img src="/we4u/public/images/Online Review-rafiki.png" class="modal-img"/>
+                <h2>Leave a Review</h2>
+            </div>
+            
+            
+            <form id="reviewForm">
+                <input type="hidden" name="reviewed_user_id" id="reviewed_user_id" >
+                <p>Your Review</p>
+                <textarea id="rejectReason" placeholder="Write a review for this careseeker" rows="4" cols="50"></textarea>
+
+                <div class="modal-buttons">
+                    <button class="btn-submit" onclick="submitRejection()">Submit</button>
+                    <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php';?>
+<script>
+    // Function to handle the Submit button
+function submitRejection() {
+    const review = document.getElementById('rejectReason').value.trim();
+
+    if (review === '') {
+        // Alert if the textarea is empty
+        alert('Please write a review before submitting.');
+    } else {
+        // Show a success message if a review is provided
+        alert(`Thank you for your review: "${review}"`);
+        closeRejectModal(); // Close the modal after submission
+    }
+}
+
+// Function to handle the Cancel button
+function closeRejectModal() {
+    const modal = document.getElementById('rejecttModal');
+    modal.style.display = 'none'; // Hide the modal
+}
+
+// Function to open the modal (you can call this when you want to display the modal)
+function openRejectModal() {
+    const modal = document.getElementById('rejecttModal');
+    modal.style.display = 'block'; // Show the modal
+}
+
+</script>

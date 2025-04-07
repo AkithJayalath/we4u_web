@@ -10,7 +10,7 @@ class careseeker extends controller{
             if($_SESSION['user_role']!= 'Careseeker'){
                 redirect('pages/permissonerror');
             }
-            $this->careseekersModel = $this->model('M_Careseekers');
+            $this->careseekersModel = $this->model('M_Careseekers'); 
         }
       
     }
@@ -166,8 +166,78 @@ class careseeker extends controller{
         'elders' => $elders
     ];
 
+<<<<<<< HEAD
     $this->view('careseeker/v_createProfile', $data);
+   
+=======
+    $this->view('careseeker/v_createProfile', $data); 
+>>>>>>> 8bc8ae8ee10155bd362a6ec7e2037bd2ca31a8a7
 }
+
+public function requestCaregiver() {
+    $careseeker_id = $_SESSION['user_id'] ?? ''; 
+    $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+    $data = [
+        'elders' => $elders
+    ];
+    
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        // Extract data from the form
+        $elder_id = trim($_POST['elder_profile']);
+        $caregiver_id = trim($_POST['caregiver_id']);
+        $duration_type = trim($_POST['duration-type']);
+        $from_date = isset($_POST['from_date']) ? trim($_POST['from_date']) : null;
+        $to_date = isset($_POST['to_date']) ? trim($_POST['to_date']) : null;
+        $frequency = isset($_POST['frequency']) ? trim($_POST['frequency']) : null;
+        $selected_days = isset($_POST['selected_days']) ? json_encode($_POST['selected_days']) : null;
+        $specific_date = isset($_POST['specific_date']) ? trim($_POST['specific_date']) : null;
+        $time_slots = isset($_POST['timeslot']) ? json_encode($_POST['timeslot']) : null;
+        $expected_services = isset($_POST['expected_services']) ? trim($_POST['expected_services']) : '';
+        $additional_notes = isset($_POST['additional_notes']) ? trim($_POST['additional_notes']) : '';
+        $careseeker_id = $_SESSION['user_id']; // Get logged-in user's ID
+        
+        // Validate required fields
+        if (empty($elder_id) || empty($caregiver_id) || empty($duration_type) || empty($time_slots)) {
+            $data['error'] = 'Please fill in all required fields.';
+            $this->view('careseeker/v_requestCaregiver', $data);
+            return;
+        }
+        
+
+        // Prepare data for model insertion
+        $requestData = [
+            'careseeker_id' => $careseeker_id,
+            'elder_id' => $elder_id,
+            'caregiver_id' => $caregiver_id,
+            'duration_type' => $duration_type,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'frequency' => $frequency,
+            'selected_days' => $selected_days,
+            'specific_date' => $specific_date,
+            'time_slots' => $time_slots,
+            'expected_services' => $expected_services,
+            'additional_notes' => $additional_notes,
+            'status' => 'pending'
+        ];
+
+        // Insert into the database
+        if ($this->careseekersModel->sendCareRequest($requestData)) {
+            redirect('careseeker/v_viewRequests');
+        } else {
+            redirect('careseeker/v_requestCaregiver');
+        }
+    } else {
+        // Load the form page
+        $this->view('careseeker/v_requestCaregiver',$data);
+    }
+}
+
+
+
 
 
 public function deleteElderProfile($elderId) {
@@ -397,15 +467,11 @@ public function editElderProfile()
       }
 
 
-      public function requestCaregiver(){
-        $data=[];
-        $this->view('careseeker/v_requestCaregiver', $data);
-      }
 
       public function requestConsultant(){
         $data=[];
         $this->view('careseeker/v_requestConsultant', $data);
-      }
+      } 
 
       public function viewRequestInfo(){
         $data=[];
@@ -432,9 +498,14 @@ public function editElderProfile()
         $this->view('careseeker/v_viewConsultantSession', $data);
       }
 
+      
 
-
+     
 }
+
+
+     
+
 
 
 ?>

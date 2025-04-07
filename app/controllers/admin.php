@@ -166,7 +166,7 @@ public function viewCompletedJob($job_id) {
     $data = [
       'title' => 'View Blog'
     ];
-    $this->view('admin/v_view_blog', $data);
+    $this->view('admin/v_view_blog', $data); 
   }
 
   public function editblog(){

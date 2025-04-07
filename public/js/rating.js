@@ -1,56 +1,65 @@
 function addRatingsAndReviews(data) {
-    // Target the container
     const container = document.querySelector(".rating-section-content");
-  
-    // Generate dynamic bar widths
-    const barsHTML = data.ratings
-      .map(
-        (rating) => `
-          <div class="rating-bar">
-            <span>${rating.stars}</span>
-            <div class="bar">
-              <div class="filled" style="width: ${rating.percentage}%;"></div>
+
+    const totalReviews = data.reviews.length;
+    const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+    // Count each rating
+    data.reviews.forEach((review) => {
+        const rating = Math.floor(review.rating);
+        if (rating >= 1 && rating <= 5) {
+            ratingCounts[rating]++;
+        }
+    });
+
+    // Calculate percentages
+    const ratingBars = Object.entries(ratingCounts)
+        .sort((a, b) => b[0] - a[0]) // Sort by rating (5 to 1)
+        .map(([rating, count]) => {
+            const percentage =
+                totalReviews > 0 ? (count / totalReviews) * 100 : 0;
+            return `
+            <div class="rating-bar">
+                <span>${rating}</span>
+                <div class="bar">
+                    <div class="filled" style="width: ${percentage}%;"></div>
+                </div>
+            </div>
+        `;
+        })
+        .join("");
+
+    const ratingHTML = `
+      <div class="rating-reviews">
+          <div class="rating-summary">
+              <div class="rating-score">
+                <h2>${parseFloat(data.rating).toFixed(1)}</h2>  
+                  <div class="stars">
+                      ${generateStars(data.rating)}
+                  </div>
+                  <p>${totalReviews} reviews</p>
+                  
+                  <p class="rating-description">Rating and reviews are verified and are from people who use the service</p>  
+
+              </div>
+          </div>
+          <div class="rating-breakdown">
+                ${ratingBars}
             </div>
           </div>
-        `
-      )
-      .join("");
-  
-    // Create the full HTML structure
-    const ratingReviewsHTML = `
-      <div class="rating-reviews">
-        <div class="rating-summary">
-          <div class="rating-score">
-            <h2>${data.averageRating}</h2>
-            <div class="stars">${"★".repeat(Math.floor(data.averageRating)) + "☆".repeat(5 - Math.floor(data.averageRating))}</div>
-            <p>${data.totalReviews} reviews</p>
-          </div>
-          <p>${data.reviewDescription}</p>
-        </div>
-        <div class="rating-breakdown">
-          ${barsHTML}
-        </div>
-      </div>
-    `;
-  
-    // Append the section dynamically
-    container.insertAdjacentHTML("beforeend", ratingReviewsHTML);
-  }
-  
-  // Example data from API or backend
-  const ratingsData = {
-    averageRating: 4.5,
-    totalReviews: "225",
-    reviewDescription: "Rating and reviews are verified and are from people who use the service",
-    ratings: [
-      { stars: 5, percentage: 90 },
-      { stars: 4, percentage: 70 },
-      { stars: 3, percentage: 30 },
-      { stars: 2, percentage: 10 },
-      { stars: 1, percentage: 5 },
-    ],
-  };
-  
-  // Add dynamically with data
-  addRatingsAndReviews(ratingsData);
-  
+  `;
+
+    container.innerHTML = ratingHTML;
+}
+
+function generateStars(rating) {
+    const fullStars = Math.floor(rating); // Number of full stars
+    const hasHalfStar = rating % 1 >= 0.5; // Check if there's a half-star
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Remaining empty stars
+
+    return (
+        `${'<i class="fas fa-star active"></i>'.repeat(fullStars)}` +
+        `${hasHalfStar ? '<i class="fas fa-star-half-alt active"></i>' : ""}` +
+        `${'<i class="far fa-star"></i>'.repeat(emptyStars)}`
+    );
+}

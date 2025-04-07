@@ -101,7 +101,7 @@
     align-items: center;
     gap: 2px;
     margin-top: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .rating i {
@@ -172,6 +172,34 @@
 
 .rating i:not(.active) {
     color: #ddd;
+}
+
+.no-reviews{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 1000px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.no-reviews img{
+    width: 500px;
+    height: 400px;
+    opacity: 0.7;
+    
+}
+
+.no-reviews p{
+   font-size: 24px;
+   opacity: 0.7;
 }
 
 /* Media Queries for different screen sizes */

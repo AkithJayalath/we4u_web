@@ -1,7 +1,7 @@
 <?php 
 class M_Caregivers {
     private $db;
-
+ 
     public function __construct() {
         $this->db = new Database();
     }
@@ -9,7 +9,7 @@ class M_Caregivers {
     // find the user by user email
     public function findUserByEmail($email){ 
         //:indicate a bind value
-        $this->db->query('SELECT * FROM user WHERE email = :email');
+        $this->db->query('SELECT * FROM user WHERE email = :email'); 
         $this->db->bind(':email' , $email);
   
         $row = $this->db->single();
@@ -146,5 +146,90 @@ public function deletePaymentMethod($email) {
     $this->db->bind(':email', $email);
     return $this->db->execute();
 }
+
+public function submitReview($data) 
+{
+    $this->db->query('INSERT INTO review (review_id, reviewer_id, reviewed_user_id, review_role, review_text, review_date)
+    VALUES (:review_id, :reviewer_id, :reviewed_user_id, :review_role, :review_text, NOW())'); 
+    
+    $this->db->bind(':review_id', $data['review_id']);
+    $this->db->bind(':reviewer_id', $data['reviewer_id']);
+    $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
+    $this->db->bind(':review_role', 'caregiver');
+    $this->db->bind(':review_text', $data['review_text']);
+
+    return $this->db->execute();
+
+}
+
+public function getReviews($email){
+    $this->db->query('SELECT r.*,u.username,u.profile_picture,r.rating,r.review_date
+    FROM review r
+    JOIN user u ON r.reviewer_id = u.user_id
+    JOIN user c ON r.reviewed_user_id = c.user_id
+    WHERE c.email = :email
+    AND r.review_role = "Caregiver"
+    ORDER BY r.review_date DESC');
+
+    $this->db->bind(':email',$email);
+    return $this->db->resultSet();
+}
+
+public function getAvgRating($email){
+    $this->db->query('SELECT AVG(r.rating) AS avg_rating
+                      FROM review r
+                      JOIN user u ON r.reviewed_user_id = u.user_id
+                      WHERE u.email = :email AND r.review_role = "Caregiver"');
+
+    $this->db->bind(':email',$email);
+    $result = $this->db->single();
+    return round($result->avg_rating ?? 0, 1);
+}
+
+public function showCaregiverProfile($email){
+    $this->db->query('SELECT u.*,c.*
+    FROM user u
+    JOIN caregiver c ON u.user_id = c.caregiver_id
+    WHERE u.email = :email');
+
+    $this->db->bind(':email',$email);
+    return $this->db->single();
+}
+
+public function updateCaregiverProfile($data){
+    $this->db->query('UPDATE user u
+    JOIN caregiver c ON u.user_id = c.caregiver_id
+    SET u.username = :username, 
+    u.email= :email,
+    u.profile_picture = :profile_picture,
+    u.updated_at = NOW(),
+    c.address = :address,
+    c.contact_info = :contact_info,
+    c.caregiver_type = :caregiver_type,
+    c.specialty = :specialty,
+    c.skills = :skills,
+    c.qualification = :qualification,
+    c.available_region = :available_region,
+    c.payment_details = :payment_details,
+    c.bio = :bio
+    WHERE u.email = :email');
+
+    $this->db->bind(':username',$data['username']);
+    $this->db->bind(':email', $data['email']);
+    $this->db->bind(':profile_picture', $data['profile_picture']);
+    $this->db->bind(':address', $data['address']);
+    $this->db->bind(':contact_info', $data['contact_info']);
+    $this->db->bind(':caregiver_type', $data['caregiver_type']);
+    $this->db->bind(':specialty', $data['specialty']);
+    $this->db->bind(':skills', $data['skills']);
+    $this->db->bind(':qualification', $data['qualification']);
+    $this->db->bind(':available_region', $data['available_region']);
+    $this->db->bind(':payment_details', $data['payment_details']);
+    $this->db->bind(':bio', $data['bio']);
+
+    return $this->db->execute();
+}
+
 }
 ?>
+
