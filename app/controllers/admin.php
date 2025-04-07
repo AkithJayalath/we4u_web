@@ -237,9 +237,6 @@ public function editannouncement($announcement_id) {
     }
 }
 
-
-   
-
 public function deleteannouncement($announcement_id) {
   if ($this->adminModel->deleteAnnouncement($announcement_id)) {
       redirect('admin/viewannouncement');
