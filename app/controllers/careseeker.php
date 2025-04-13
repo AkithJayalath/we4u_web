@@ -166,19 +166,32 @@ class careseeker extends controller{
         'elders' => $elders
     ];
 
-<<<<<<< HEAD
     $this->view('careseeker/v_createProfile', $data);
    
-=======
-    $this->view('careseeker/v_createProfile', $data); 
->>>>>>> 8bc8ae8ee10155bd362a6ec7e2037bd2ca31a8a7
 }
 
 public function requestCaregiver() {
-    $careseeker_id = $_SESSION['user_id'] ?? ''; 
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+
+    $caregiver_id = 26; // Example caregiver ID, replace with actual logic to get caregiver ID
+    // Get the careseeker ID from the session
+    $careseeker_id = $_SESSION['user_id'];
     $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+    
     $data = [
-        'elders' => $elders
+        'elders' => $elders,
+        'caregiver_id' => $caregiver_id,
+        'elder_profile' => '',
+        'duration_type' => '',
+        'from_date' => '',
+        'to_date' => '',
+        'timeslot' => [],
+        'expected_services' => '',
+        'additional_notes' => '',
+        'error' => ''
     ];
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -186,56 +199,63 @@ public function requestCaregiver() {
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // Extract data from the form
-        $elder_id = trim($_POST['elder_profile']);
-        $caregiver_id = trim($_POST['caregiver_id']);
-        $duration_type = trim($_POST['duration-type']);
-        $from_date = isset($_POST['from_date']) ? trim($_POST['from_date']) : null;
-        $to_date = isset($_POST['to_date']) ? trim($_POST['to_date']) : null;
-        $frequency = isset($_POST['frequency']) ? trim($_POST['frequency']) : null;
-        $selected_days = isset($_POST['selected_days']) ? json_encode($_POST['selected_days']) : null;
-        $specific_date = isset($_POST['specific_date']) ? trim($_POST['specific_date']) : null;
-        $time_slots = isset($_POST['timeslot']) ? json_encode($_POST['timeslot']) : null;
-        $expected_services = isset($_POST['expected_services']) ? trim($_POST['expected_services']) : '';
-        $additional_notes = isset($_POST['additional_notes']) ? trim($_POST['additional_notes']) : '';
-        $careseeker_id = $_SESSION['user_id']; // Get logged-in user's ID
-        
-        // Validate required fields
-        if (empty($elder_id) || empty($caregiver_id) || empty($duration_type) || empty($time_slots)) {
-            $data['error'] = 'Please fill in all required fields.';
-            $this->view('careseeker/v_requestCaregiver', $data);
-            return;
-        }
-        
-
-        // Prepare data for model insertion
-        $requestData = [
-            'careseeker_id' => $careseeker_id,
-            'elder_id' => $elder_id,
-            'caregiver_id' => $caregiver_id,
-            'duration_type' => $duration_type,
-            'from_date' => $from_date,
-            'to_date' => $to_date,
-            'frequency' => $frequency,
-            'selected_days' => $selected_days,
-            'specific_date' => $specific_date,
-            'time_slots' => $time_slots,
-            'expected_services' => $expected_services,
-            'additional_notes' => $additional_notes,
-            'status' => 'pending'
+        $data = [
+            'elders' => $elders,
+            'caregiver_id' => $caregiver_id,//trim($_POST['caregiver_id']),
+            'elder_profile' => trim($_POST['elder_profile']),
+            'duration_type' => trim($_POST['duration-type']),
+            'from_date' => isset($_POST['from_date']) ? trim($_POST['from_date']) : null,
+            'from_date_short' => isset($_POST['from_date_short']) ? trim($_POST['from_date_short']) : null,
+            'to_date' => isset($_POST['to_date']) ? trim($_POST['to_date']) : null,
+            'time_slots' => isset($_POST['timeslot']) ? $_POST['timeslot'] : [],
+            'expected_services' => trim($_POST['expected_services']),
+            'additional_notes' => trim($_POST['additional_notes']),
+            'error' => ''
         ];
 
-        // Insert into the database
-        if ($this->careseekersModel->sendCareRequest($requestData)) {
-            redirect('careseeker/v_viewRequests');
-        } else {
-            redirect('careseeker/v_requestCaregiver');
+        // Validate required fields
+        if (empty($data['elder_profile'])) {
+            $data['error'] = 'Please select an elder profile';
+        } elseif (empty($data['duration_type'])) { // Changed from duration-type
+            $data['error'] = 'Please select a duration type';
+        } elseif ($data['duration_type'] === 'long-term' && (empty($data['from_date']) || empty($data['to_date']))) {
+            $data['error'] = 'Please select both start and end dates for long-term care';
+        } elseif ($data['duration_type'] === 'short-term' && empty($data['from_date_short'])) {
+            $data['error'] = 'Please select a date for short-term care';
+        } elseif (empty($data['time_slots'])) {
+            $data['error'] = 'Please select at least one time slot';
         }
-    } else {
-        // Load the form page
-        $this->view('careseeker/v_requestCaregiver',$data);
-    }
-}
 
+        // If no errors, proceed with creating the request
+        if (empty($data['error'])) {
+            // Prepare data for model insertion
+            $requestData = [
+                'careseeker_id' => $careseeker_id,
+                'elder_id' => $data['elder_profile'],
+                'caregiver_id' => $data['caregiver_id'],
+                'duration_type' => $data['duration_type'],
+                'from_date' => $data['from_date'],
+                'from_date_short' => $data['from_date_short'],
+                'to_date' => $data['to_date'],
+                'time_slots' => json_encode($data['time_slots']),
+                'expected_services' => $data['expected_services'],
+                'additional_notes' => $data['additional_notes'],
+                'status' => 'pending'
+            ];
+            echo "<script>console.log('Debug Data:', " . json_encode($requestData) . ");</script>";
+            // Insert into the database
+            if ($this->careseekersModel->sendCareRequest($requestData)) {
+                flash('request_success', 'Care request sent successfully');
+                redirect('careseeker/viewRequests');
+            } else {
+                $data['error'] = 'Failed to send care request. Please try again.';
+            }
+        }
+    }
+
+    // Load the view (either initial load or with errors)
+    $this->view('careseeker/v_requestCaregiver', $data);
+}
 
 
 

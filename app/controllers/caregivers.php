@@ -2,17 +2,28 @@
   class caregivers extends controller{
 
     private $caregiversModel;
-    public function __construct(){
-      if(!$_SESSION['user_id']){
-          redirect('users/login');
-      }
-      else{
-          if($_SESSION['user_role']!= 'Caregiver'){
-              redirect('pages/permissonerror');
+    public function __construct() {
+      // Get current URL path
+      $currentUrl = $_SERVER['REQUEST_URI'] ?? '';
+      
+      // Define allowed routes for non-logged-in users
+      $allowedRoutes = [
+          '/we4u/caregivers/register',
+          '/we4u/users/login'
+          // Add other public routes as needed
+      ];
+      
+      // Only check authentication if not accessing a public route
+      if (!in_array($currentUrl, $allowedRoutes)) {
+          if (!isset($_SESSION['user_id'])) {
+              redirect('users/login');
+          } elseif ($_SESSION['user_role'] != 'Caregiver') {
+              redirect('pages/permissionerror');
           }
-          $this->caregiversModel = $this->model('M_Caregivers'); 
       }
-    
+      
+      // Always load the model (for both public and protected routes)
+      $this->caregiversModel = $this->model('M_Caregivers');
   }
 
     public function index(){
@@ -215,6 +226,7 @@
  $this->view('users/v_caregiver_register', $data);
 }
     }
+  
 
     public function isLoggedIn(){
       if(isset($_SESSION['user_id'])){
