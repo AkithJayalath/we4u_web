@@ -231,6 +231,53 @@ public function sendCareRequest($data) {
     
     return $this->db->execute();
 }
+
+//to view caregiver profile
+public function getReviews($caregiver_id) {
+    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
+                      FROM review r
+                      JOIN user u ON r.reviewer_id = u.user_id
+                      WHERE r.reviewed_user_id = :caregiver_id
+                      AND r.review_role = "Caregiver"
+                      ORDER BY r.review_date DESC');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    return $this->db->resultSet();
+}
+
+public function getAvgRating($caregiver_id) {
+    $this->db->query('SELECT AVG(r.rating) AS avg_rating
+                      FROM review r
+                      WHERE r.reviewed_user_id = :caregiver_id 
+                      AND r.review_role = "Caregiver"');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    $result = $this->db->single();
+    return round($result->avg_rating ?? 0, 1);
+}
+
+public function showCaregiverProfile($caregiver_id) {
+    $this->db->query('SELECT u.*, c.*
+                      FROM user u
+                      JOIN caregiver c ON u.user_id = c.caregiver_id
+                      WHERE u.user_id = :caregiver_id');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    return $this->db->single();
+}
+
+public function showCareseekerProfile($careseeker_id) {
+    $this->db->query('SELECT u.*, c.*
+                      FROM user u
+                      JOIN careseeker c ON u.user_id = c.careseeker_id
+                      WHERE u.user_id = :careseeker_id');
+
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    return $this->db->single();
+}
+
+
+
 }
 
 ?>

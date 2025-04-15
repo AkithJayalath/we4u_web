@@ -170,29 +170,54 @@ class careseeker extends controller{
    
 }
 
-public function requestCaregiver() {
-    // Check if user is logged in
+public function showCaregiverRequestForm($caregiver_id){
+   // Check if user is logged in
+   if (!isset($_SESSION['user_id'])) {
+    redirect('users/login');
+}
+
+// Get the careseeker_id from the session
+$careseeker_id = $_SESSION['user_id'];
+
+// Get the elder profiles for the careseeker
+$elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+$careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
+$caregiverProfile = $this->careseekersModel->showCaregiverProfile($caregiver_id);
+
+$dob = new DateTime($caregiverProfile->date_of_birth);
+    $today = new DateTime();
+    $age = $today->diff($dob)->y;
+
+$data = [
+    'elders' => $elders,
+    'careseeker' => $careseekerProfile,
+    'caregiver' => $caregiverProfile,
+    'age' => $age,
+    'caregiver_id' => $caregiver_id,
+    'elder_profile' => '',
+    'duration_type' => '',
+    'from_date' => '',
+    'to_date' => '',
+    'timeslot' => [],
+    'expected_services' => '',
+    'additional_notes' => '',
+    'error' => ''
+];
+
+$this->view('careseeker/v_requestCaregiver', $data);
+
+}
+
+public function requestCaregiver($caregiver_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
     }
-
-    $caregiver_id = 26; // Example caregiver ID, replace with actual logic to get caregiver ID
-    // Get the careseeker ID from the session
-    $careseeker_id = $_SESSION['user_id'];
-    $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
     
-    $data = [
-        'elders' => $elders,
-        'caregiver_id' => $caregiver_id,
-        'elder_profile' => '',
-        'duration_type' => '',
-        'from_date' => '',
-        'to_date' => '',
-        'timeslot' => [],
-        'expected_services' => '',
-        'additional_notes' => '',
-        'error' => ''
-    ];
+    // Get the careseeker_id from the session
+    $careseeker_id = $_SESSION['user_id'];
+    
+    // Get the elder profiles for the careseeker
+    $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Sanitize POST data
@@ -201,7 +226,7 @@ public function requestCaregiver() {
         // Extract data from the form
         $data = [
             'elders' => $elders,
-            'caregiver_id' => $caregiver_id,//trim($_POST['caregiver_id']),
+            'caregiver_id' => $caregiver_id,
             'elder_profile' => trim($_POST['elder_profile']),
             'duration_type' => trim($_POST['duration-type']),
             'from_date' => isset($_POST['from_date']) ? trim($_POST['from_date']) : null,
@@ -213,10 +238,10 @@ public function requestCaregiver() {
             'error' => ''
         ];
 
-        // Validate required fields
+        // Validation (same as before)
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
-        } elseif (empty($data['duration_type'])) { // Changed from duration-type
+        } elseif (empty($data['duration_type'])) {
             $data['error'] = 'Please select a duration type';
         } elseif ($data['duration_type'] === 'long-term' && (empty($data['from_date']) || empty($data['to_date']))) {
             $data['error'] = 'Please select both start and end dates for long-term care';
@@ -228,7 +253,6 @@ public function requestCaregiver() {
 
         // If no errors, proceed with creating the request
         if (empty($data['error'])) {
-            // Prepare data for model insertion
             $requestData = [
                 'careseeker_id' => $careseeker_id,
                 'elder_id' => $data['elder_profile'],
@@ -242,19 +266,21 @@ public function requestCaregiver() {
                 'additional_notes' => $data['additional_notes'],
                 'status' => 'pending'
             ];
-            echo "<script>console.log('Debug Data:', " . json_encode($requestData) . ");</script>";
-            // Insert into the database
+
             if ($this->careseekersModel->sendCareRequest($requestData)) {
                 flash('request_success', 'Care request sent successfully');
                 redirect('careseeker/viewRequests');
             } else {
                 $data['error'] = 'Failed to send care request. Please try again.';
+                $this->view('careseeker/v_requestCaregiver', $data);
             }
+        } else {
+            $this->view('careseeker/v_requestCaregiver', $data);
         }
+    } else {
+        // If someone tries to access this directly without POST, redirect
+        redirect('careseeker/showRequestForm/' . $caregiver_id);
     }
-
-    // Load the view (either initial load or with errors)
-    $this->view('careseeker/v_requestCaregiver', $data);
 }
 
 
@@ -481,10 +507,25 @@ public function editElderProfile()
         $this->view('careseeker/v_consultantProfile', $data);
       }
 
-      public function viewCaregiverProfile(){
-        $data=[];
+      public function viewCaregiverProfile($caregiver_id) {
+        $profile = $this->careseekersModel->showCaregiverProfile($caregiver_id);
+        $rating = $this->careseekersModel->getAvgRating($caregiver_id);
+        $reviews = $this->careseekersModel->getReviews($caregiver_id);
+    
+        // Calculate age
+        $dob = new DateTime($profile->date_of_birth);
+        $today = new DateTime();
+        $age = $today->diff($dob)->y;
+    
+        $data = [
+            'profile' => $profile,
+            'age' => $age,
+            'rating' => $rating,
+            'reviews' => $reviews
+        ];
+    
         $this->view('careseeker/v_caregiverProfile', $data);
-      }
+    }
 
 
 

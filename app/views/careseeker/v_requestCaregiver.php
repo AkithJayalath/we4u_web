@@ -19,21 +19,39 @@ echo loadCSS($required_styles);
         <!-- Personal info section -->
         <div class="request-header">
             <div class="request-header-left">
+            <?php 
+    
+    // Determine which image to display
+    $CareseekerprofilePic = !empty($data['careseeker']->profile_picture) 
+        ? URLROOT . '/public/images/profile_imgs/' . $data['careseeker']->profile_picture
+        : URLROOT . '/public/images/def_profile_pic2.jpg';
+    ?>
                 <div class="request-header-left-left">
-                    <div class="circle image1"><img src="https://media.istockphoto.com/id/1759448630/photo/happy-caucasian-young-student-female-looking-at-camera-enjoying-with-a-perfect-white-teeth.jpg?s=612x612&w=0&k=20&c=KbfDI3FjAdGYK5QxTx3PJdxFyx9ZNgvOBd0P7E3Ah38=" alt="Profile"  /></div>
-                    <div class="circle image1"><img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Profile"  /></div>
+                    <div class="circle image1"><img src="<?= $CareseekerprofilePic ?>" alt="Profile"  /></div>
+                    <div class="circle image1">
+    <?php 
+    
+    // Determine which image to display
+    $CaregiverprofilePic = !empty($data['caregiver']->profile_picture) 
+        ? URLROOT . '/public/images/profile_imgs/' . $data['caregiver']->profile_picture
+        : URLROOT . '/public/images/def_profile_pic2.jpg';
+    ?>
+    
+    <img src="<?= $CaregiverprofilePic ?>" alt="Profile Picture" />
+</div>
                 </div>
                 <div class="request-header-left-right">
                     <div class="request-personal-info-profile">
                         <div class="request-personal-info-details">
                             <span class="request-personal-info-tag">Verfied</span>
-                            <h2>Pawan Wickramarathne</h2>
-                            <span class="request-email">pawanwick@gmail.com</span>
+                            <h2><?php echo $data['caregiver']->username; ?></h2>
+                            <span class="request-email"><?php echo $data['caregiver']->email; ?></span>
                             <p class="consultant-rating">
                                 <span class="rating-stars" id="rating-stars"></span>
                             </p>
-                            <p>29 years</p>
-                            <p>Male</p>
+                            <p><?php echo $data['age']; ?></p>
+                            <p><?php echo $data['caregiver']->gender; ?></p>
+                           
                         </div>
                     </div>
                 </div>
@@ -43,7 +61,7 @@ echo loadCSS($required_styles);
         <div class="request-info-section">
             <div class="request-other-concern-section">
                 <div class="request-other-concern-section-content">
-                    <form class="request-form" action="<?php echo URLROOT; ?>/careseeker/requestCaregiver" method="POST">
+                <form class="request-form" action="<?php echo URLROOT; ?>/careseeker/requestCaregiver/<?php echo $data['caregiver_id']; ?>" method="POST">
                         <!-- Elder Profile -->
                         <div class="form-section">
                             <div class="form-section-title">Elder Details</div>
@@ -158,9 +176,9 @@ echo loadCSS($required_styles);
                             <button class="request-send-button">
                                 <i class="fas fa-paper-plane"></i> Send Request
                             </button>
-                            <button class="request-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/viewCaregiverProfile';" type="button">
-                                <i class="fas fa-times"></i> Cancel
-                            </button>
+                            <button class="request-cancel-button" type="button" onclick="window.history.back()">
+    <i class="fas fa-times"></i> Cancel
+</button>
                         </div>
                     </form>
                 </div>
