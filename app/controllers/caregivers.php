@@ -480,9 +480,16 @@
     $this->view('consultant/v_viewPayments');
   }
 
-   public function viewreqinfo(){
+   public function viewreqinfo($requestId){
        
-       $this->view('caregiver/v_reqinfo');
+    $careRequest = $this->caregiversModel->getFullCareRequestInfo($requestId);
+
+    if (!$careRequest) {
+        flash('request_not_found', 'Request not found');
+        redirect('careseeker/viewRequests');
+    }
+
+    $this->view('caregiver/v_viewRequestInfo', $careRequest);
     }
 
    public function norequest(){
@@ -490,9 +497,16 @@
        $this->view('caregiver/v_norequest');
     }
 
-    public function viewCareseeker(){
-       
-      $this->view('caregiver/v_careseekerProfile');
+    public function viewCareseeker($elder_id){
+      $elderProfile=$this->caregiversModel->getElderProfileById($elder_id);
+      if (!$elderProfile) {
+          flash('profile_not_found', 'Profile not found');
+          redirect('caregivers/viewCaregivers');
+      }
+       $data = [
+          'elderProfile' => $elderProfile,
+      ];
+      $this->view('caregiver/v_careseekerProfile', $data);
    }
 
    public function viewmyProfile(){
@@ -662,6 +676,74 @@ public function viewCaregiverProfile($id = null) {
   
   $this->view('careseeker/viewCaregiverProfile', $data);
 }
+
+
+public function viewRequests()
+{
+    
+    // Check if user is logged in as caregiver
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Caregiver') {
+        redirect('users/login');
+    }
+   
+
+    // Get caregiver ID from session
+    $caregiverId = $_SESSION['user_id'];
+    
+    // Get all requests for this caregiver
+    $careRequests = $this->caregiversModel->getAllCareRequestsByCaregiver($caregiverId);
+    
+    $data = [
+        'requests' => $careRequests
+    ];
+    
+    
+    $this->view('caregiver/v_request', $data);
+}
+
+
+public function acceptRequest($request_id) {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      // Get caregiver_id from session
+      $caregiverId = $_SESSION['user_id'];
+
+      // Verify request belongs to this caregiver
+      $request = $this->caregiversModel->getRequestById($request_id);
+      if (!$request || $request->caregiver_id != $caregiverId) {
+          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          redirect('caregivers/viewRequests');
+          return;
+      }
+
+      // Update status
+      if ($this->caregiversModel->updateRequestStatus($request_id, 'accepted')) {
+          flash('request_message', 'Request has been accepted.');
+      } else {
+          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+      }
+      redirect('caregivers/viewRequests');
+  }
+}
+
+public function rejectRequest($request_id) {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $caregiverId = $_SESSION['user_id'];
+      $request = $this->caregiversModel->getRequestById($request_id);
+      if (!$request || $request->caregiver_id != $caregiverId) {
+          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          redirect('caregivers/viewRequests');
+          return;
+      }
+
+      if ($this->caregiversModel->updateRequestStatus($request_id, 'rejected')) {
+          flash('request_message', 'Request has been rejected.');
+      } else {
+          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+      }
+      redirect('caregivers/viewRequests');
+  }
+}
+
 
 }
 ?>

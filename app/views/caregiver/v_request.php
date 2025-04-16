@@ -38,92 +38,40 @@
         </div>
 
         <div class="request-list">
+            
+    <?php if (empty($data['requests'])): ?>
+        <p class="no-requests">No requests found.</p>
+    <?php else: ?>
+        <?php foreach ($data['requests'] as $request): ?>
             <div class="request-item">
-                <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Image" class="pro-img"/>
-                <p class="name">Jerome Bell</p>
+                <img src="<?php echo URLROOT . (!empty($request->profile_picture) ? '/public/images/profile_imgs/' . $request->profile_picture : '/public/images/def_profile_pic2.jpg'); ?>" 
+                     alt="Profile Image" class="pro-img"/>
+                <p class="name"><?php echo $request->requester_name; ?></p>
                 <p class="req-date"><i class="fa-regular fa-calendar-days"></i>&nbsp;
-                12th Aug 2024</p>
-                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;12:53 PM</p>
+                <?php echo $request->formatted_date; ?></p>
+                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;<?php echo $request->formatted_time; ?></p>
                     
                 <div class="req-action">
-                    <span class="sts-pending">Pending</span>
-                    <button class="view-btn" onclick="navigateToDetails()">View</button>
-
-
+                    <span class="sts-<?php echo strtolower($request->status); ?>">
+                        <?php echo ucfirst($request->status); ?>
+                    </span>
+                    <button class="view-btn" onclick="window.location.href='<?php echo URLROOT; ?>/caregivers/viewreqinfo/<?php echo $request->request_id; ?>'">
+    View
+</button>
                 </div>
             </div>
-
-            <div class="request-item">
-                <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Image" class="pro-img"/>
-                <p class="name">Jerome Bell</p>
-                <p class="req-date"><i class="fa-regular fa-calendar-days"></i>&nbsp;
-                12th Aug 2024</p>
-                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;12:53 PM</p>
-                    
-                <div class="req-action">
-                    <span class="sts-accept">Accepted</span>
-                    <button class="view-btn">View</button>
-                </div>
-            </div>
-
-            <div class="request-item">
-                <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Image" class="pro-img"/>
-                <p class="name">Jerome Bell</p>
-                <p class="req-date"><i class="fa-regular fa-calendar-days"></i>&nbsp;
-                12th Aug 2024</p>
-                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;12:53 PM</p>
-                    
-                <div class="req-action">
-                    <span class="sts-reject">rejected</span>
-                    <button class="view-btn">View</button>
-                </div>
-            </div>
-
-            <div class="request-item">
-                <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Image" class="pro-img"/>
-                <p class="name">Jerome Bell</p>
-                <p class="req-date"><i class="fa-regular fa-calendar-days"></i>&nbsp;
-                12th Aug 2024</p>
-                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;12:53 PM</p>
-                    
-                <div class="req-action">
-                    <span class="sts-pending">Pending</span>
-                    <button class="view-btn">View</button>
-                </div>
-            </div>
-
-            <div class="request-item">
-                <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Image" class="pro-img"/>
-                <p class="name">Jerome Bell</p>
-                <p class="req-date"><i class="fa-regular fa-calendar-days"></i>&nbsp;
-                12th Aug 2024</p>
-                <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;12:53 PM</p>
-                    
-                <div class="req-action">
-                    <span class="sts-pending">Pending</span>
-                    <button class="view-btn">View</button>
-                </div>
-            </div>
-
-        </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
         
 
     </div>
 
 </page-body-container>
 
-
+<script src="<?php echo URLROOT; ?>/js/requestsfilterCaregiver.js"></script>
 <?php require APPROOT.'/views/includes/footer.php';?>
 
-<script>
-function navigateToDetails() {
-    window.location.href = '<?php echo URLROOT; ?>/caregivers/viewreqinfo';
-}
-
-
-
-
-</script>
 
 
 

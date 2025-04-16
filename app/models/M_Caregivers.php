@@ -359,6 +359,81 @@ public function getCaregiverById($id) {
     return $this->db->single();
 }
 
+
+//view care requests for caregiver
+public function getAllCareRequestsByCaregiver($caregiverId)
+{
+    $this->db->query("
+        SELECT cr.*, u.username AS requester_name, u.profile_picture,
+               cr.created_at AS request_date,
+               DATE_FORMAT(cr.created_at, '%e %b %Y') AS formatted_date,
+               DATE_FORMAT(cr.created_at, '%h:%i %p') AS formatted_time
+        FROM carerequests cr
+        LEFT JOIN user u ON cr.requester_id = u.user_id
+        WHERE cr.caregiver_id = :caregiver_id
+        ORDER BY cr.created_at DESC
+    ");
+    $this->db->bind(':caregiver_id', $caregiverId);
+    return $this->db->resultSet();
+}
+
+
+// To get all request details
+public function getFullCareRequestInfo($requestId)
+{
+    $this->db->query("SELECT cr.*, 
+                             cs.address AS careseeker_address,
+                             cs.contact_info AS careseeker_contact,
+                             cs.rating AS careseeker_rating,
+                             u.profile_picture AS caregiver_pic,
+                             req_user.username AS careseeker_name,
+                             req_user.profile_picture AS careseeker_pic,
+                             req_user.email AS careseeker_email,
+                           CONCAT(e.first_name, ' ', e.middle_name, ' ', e.last_name) AS elder_name,
+                             e.profile_picture AS elder_pic,
+                             e.relationship_to_careseeker
+                      FROM carerequests cr
+                      LEFT JOIN careseeker cs ON cr.requester_id = cs.careseeker_id
+                      LEFT JOIN user req_user ON req_user.user_id = cr.requester_id
+                      LEFT JOIN user u ON u.user_id = cr.caregiver_id
+                      LEFT JOIN elderprofile e ON e.elder_id = cr.elder_id
+                      WHERE cr.request_id = :request_id");
+    $this->db->bind(':request_id', $requestId);
+
+    return $this->db->single();
+}
+
+public function getElderProfileById($elderId) {
+    $this->db->query("
+        SELECT 
+            *, 
+            CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name 
+        FROM elderprofile 
+        WHERE elder_id = :elder_id
+    ");
+    $this->db->bind(':elder_id', $elderId);
+    return $this->db->single();
+}
+
+
+//Accept or reject a request
+public function updateRequestStatus($request_id, $status) {
+    $this->db->query("UPDATE carerequests SET status = :status WHERE request_id = :request_id");
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    return $this->db->execute();
+}
+
+//Get request by ID
+public function getRequestById($request_id) {
+    $this->db->query("SELECT * FROM carerequests WHERE request_id = :request_id");
+    $this->db->bind(':request_id', $request_id);
+    return $this->db->single();
+}
+
+
+
+
 }
 ?>
 

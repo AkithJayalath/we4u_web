@@ -157,7 +157,7 @@
 
 }
 
-.sts-accept{
+.sts-accepted{
     margin-right: 65px;
     padding: 5px 15px;
     font-size: 12px;
@@ -167,7 +167,7 @@
 
 }
 
-.sts-reject{
+.sts-rejected{
     margin-right: 65px;
     padding: 5px 15px;
     font-size: 12px;
