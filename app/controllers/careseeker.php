@@ -534,15 +534,56 @@ public function editElderProfile()
         $this->view('careseeker/v_requestConsultant', $data);
       } 
 
-      public function viewRequestInfo(){
-        $data=[];
-        $this->view('careseeker/v_viewRequestInfo', $data);
+      public function viewRequestInfo($requestId)
+{
+    
+    $careRequest = $this->careseekersModel->getFullCareRequestInfo($requestId);
+
+    if (!$careRequest) {
+        flash('request_not_found', 'Request not found');
+        redirect('careseeker/viewRequests');
+    }
+
+    $this->view('careseeker/v_viewRequestInfo', $careRequest);
+}
+
+
+      
+      public function viewRequests(){
+       
+            $careRequests = $this->careseekersModel->getAllCareRequestsByUser($_SESSION['user_id']);
+            
+            // Add service_type manually to each caregiving request
+            foreach ($careRequests as &$req) {
+                $req->service_category = 'Caregiving';
+            }
+        
+            // Placeholder for consultation requests
+            $consultRequests = []; // Will be populated when implemented
+            /*
+            $consultRequests = $this->careseekersModel->getAllConsultRequestsByUser($_SESSION['user_id']);
+            foreach ($consultRequests as &$req) {
+                $req->service_category = 'Consultation';
+            }
+            */
+        
+            $mergedRequests = array_merge($careRequests, $consultRequests);
+        
+            // Optionally sort by created_at
+            usort($mergedRequests, function($a, $b) {
+                return strtotime($b->created_at) - strtotime($a->created_at);
+            });
+        
+            $data = [
+                'requests' => $mergedRequests
+            ];
+        
+            $this->view('careseeker/v_viewRequests', $data);
+        
+        
       }
 
-      public function viewRequests(){
-        $data=[];
-        $this->view('careseeker/v_viewRequests', $data);
-      }
+
 
       public function viewPayments(){
         $data=[];

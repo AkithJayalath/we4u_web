@@ -232,6 +232,49 @@ public function sendCareRequest($data) {
     return $this->db->execute();
 }
 
+//To get carerequests of a careseeker
+public function getAllCareRequestsByUser($userId)
+{
+    $this->db->query("
+        SELECT cr.*, u.username AS caregiver_name
+        FROM carerequests cr
+        LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+        LEFT JOIN user u ON cr.caregiver_id = u.user_id
+        WHERE cr.requester_id = :user_id
+        ORDER BY cr.created_at DESC
+    ");
+    $this->db->bind(':user_id', $userId);
+    return $this->db->resultSet();
+}
+
+//similar function to get consultat requests of a careseeker
+
+// To get all request details
+public function getFullCareRequestInfo($requestId)
+{
+    $this->db->query("SELECT cr.*, 
+                             cg.caregiver_id, 
+                             u.username AS caregiver_name, 
+                             u.email AS caregiver_email, 
+                             u.profile_picture AS caregiver_pic,
+                             req_user.profile_picture AS requester_pic,
+                           CONCAT(e.first_name, ' ', e.middle_name, ' ', e.last_name) AS elder_name,
+                             e.profile_picture AS elder_pic,
+                             e.relationship_to_careseeker
+                      FROM carerequests cr
+                      LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+                      LEFT JOIN user req_user ON req_user.user_id = cr.requester_id
+                      LEFT JOIN user u ON u.user_id = cr.caregiver_id
+                      LEFT JOIN elderprofile e ON e.elder_id = cr.elder_id
+                      WHERE cr.request_id = :request_id");
+    $this->db->bind(':request_id', $requestId);
+
+    return $this->db->single();
+}
+
+
+
+
 //to view caregiver profile
 public function getReviews($caregiver_id) {
     $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
@@ -275,6 +318,8 @@ public function showCareseekerProfile($careseeker_id) {
     $this->db->bind(':careseeker_id', $careseeker_id);
     return $this->db->single();
 }
+
+
 
 
 
