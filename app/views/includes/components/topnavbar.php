@@ -30,7 +30,7 @@
                         $homeLink = URLROOT . '/moderator/';
                         break;
                     case 'Consultant':
-                        $homeLink = URLROOT . '/consultants/dashboard';
+                        $homeLink = URLROOT . '/consultant/';
                         break;
                     case 'Careseeker':
                         $homeLink = URLROOT . '/careseeker/';

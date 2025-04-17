@@ -2,9 +2,11 @@
   class users extends controller{
     private $usersModel;
     private $caregiversModel;
+    private $consultantsModel;
     public function __construct(){
       $this->usersModel = $this->model('M_Users');
       $this->caregiversModel = $this->model('M_Caregivers');
+      $this->consultantsModel = $this->model('M_Consultant');
     }
 
     public function register(){
@@ -561,6 +563,39 @@ public function viewCaregivers() {
   $this->view('users/v_viewCaregivers', $data);
 }
 
+public function viewConsultants() {
+  // Get filter and sort parameters
+  $region = $_GET['region'] ?? '';
+  $type = $_GET['type'] ?? '';
+  $speciality = $_GET['speciality'] ?? '';
+  $sortBy = $_GET['sort'] ?? '';
+  $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+  
+  // Items per page
+  $perPage = 8;
+  
+  // Get caregivers with filters
+  $consultants = $this->consultantsModel->getConsultants($region, $type, $speciality, $sortBy, $page, $perPage);
+  
+  // Get total filtered caregivers count for pagination
+  $totalCount = $this->consultantsModel->getConsultantsCount($region, $type, $speciality);
+  $totalPages = ceil($totalCount / $perPage);
+  
+  // Get all unique regions for the filter dropdown
+  $regions = $this->consultantsModel->getAllRegions();
+  
+  // Load view with data
+  $data = [
+      'consultants' => $consultants,
+      'regions' => $regions,
+      'currentPage' => $page,
+      'totalPages' => $totalPages,
+      'totalCount' => $totalCount
+  ];
+  
+  $this->view('users/v_viewConsultants', $data);
+}
+
 
 
 // View individual caregiver profile
@@ -582,10 +617,7 @@ public function viewCaregiverProfile($id = null) {
   
   $this->view('careseeker/viewCaregivers', $data);
 }
-public function viewConsultants(){
-  $data=[];
-  $this->view('users/v_viewConsultants', $data);
-}
+
 
 
 

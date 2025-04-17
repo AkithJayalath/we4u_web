@@ -47,6 +47,7 @@
     justify-content: center;
     position: relative;
     background-color: var(--white);
+    margin-left: 20px; /* Space between the two sections */
 }
 
 .request-info-header-left-left {

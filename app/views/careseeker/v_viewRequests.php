@@ -65,7 +65,10 @@ echo loadCSS($required_styles);
     <?= date('d/m/Y', strtotime($request->created_at)) ?>
 </div>
 
-                <div class="view-requests-m-c-r-table-cell"><?= htmlspecialchars($request->caregiver_name ?? 'N/A') ?></div>
+<div class="view-requests-m-c-r-table-cell">
+    <?= htmlspecialchars($request->caregiver_name ?? $request->consultant_name ?? 'N/A') ?>
+</div>
+
                 <div class="view-requests-m-c-r-table-cell"><?= $request->service_category ?></div>
                 <div class="view-requests-m-c-r-table-cell">
                   <span class="tag <?= strtolower($request->status) ?>">

@@ -27,7 +27,7 @@
   }
 
     public function index(){
-      $this->request();
+      $this->viewRequests();
     }
 
     public function register(){

@@ -208,6 +208,42 @@ $this->view('careseeker/v_requestCaregiver', $data);
 
 }
 
+public function showConsultantRequestForm($consultant_id){
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+     redirect('users/login');
+ }
+ 
+ // Get the careseeker_id from the session
+ $careseeker_id = $_SESSION['user_id'];
+ 
+ // Get the elder profiles for the careseeker
+ $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+ $careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
+ $consultantProfile = $this->careseekersModel->showConsultantProfile($consultant_id);
+ 
+ $dob = new DateTime($consultantProfile->date_of_birth);
+     $today = new DateTime();
+     $age = $today->diff($dob)->y;
+ 
+ $data = [
+     'elders' => $elders,
+     'careseeker' => $careseekerProfile,
+     'consultant' => $consultantProfile,
+     'age' => $age,
+     'consultant_id' => $consultant_id,
+     'elder_profile' => '',
+     'from_time' => '',
+     'to_time' => '',
+     'expected_services' => '',
+     'additional_notes' => '',
+     'error' => ''
+ ];
+ 
+ $this->view('careseeker/v_requestConsultant', $data);
+ 
+ }
+
 public function requestCaregiver($caregiver_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
@@ -279,7 +315,83 @@ public function requestCaregiver($caregiver_id) {
         }
     } else {
         // If someone tries to access this directly without POST, redirect
-        redirect('careseeker/showRequestForm/' . $caregiver_id);
+        redirect('careseeker/showCaregiverRequestForm/' . $caregiver_id);
+    }
+}
+
+
+public function requestConsultant($consultant_id) {
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+    
+    // Get the careseeker_id from the session
+    $careseeker_id = $_SESSION['user_id'];
+    
+    // Get the elder profiles for the careseeker
+    $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+    
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        // Extract data from the form
+        $data = [
+            'elders' => $elders,
+            'consultant_id' => $consultant_id,
+            'elder_profile' => trim($_POST['elder_profile']),
+            'appointment_date' => trim($_POST['appointment_date']),
+            'from_time' => trim($_POST['from_time']),
+            'to_time' => trim($_POST['to_time']),
+            'total_amount' => trim($_POST['total_amount']),
+            'expected_services' => trim($_POST['expected_services']),
+            'additional_notes' => trim($_POST['additional_notes']),
+            'error' => ''
+        ];
+
+        // Validation for the new form structure
+        if (empty($data['elder_profile'])) {
+            $data['error'] = 'Please select an elder profile';
+        } elseif (empty($data['appointment_date'])) {
+            $data['error'] = 'Please select an appointment date';
+        } elseif (empty($data['from_time']) || empty($data['to_time'])) {
+            $data['error'] = 'Please select both start and end times';
+        } elseif ($data['from_time'] >= $data['to_time']) {
+            $data['error'] = 'End time must be after start time';
+        } elseif (empty($data['total_amount']) || !is_numeric($data['total_amount'])) {
+            $data['error'] = 'Invalid payment amount';
+        }
+
+        // If no errors, proceed with creating the request
+        if (empty($data['error'])) {
+            // Format time slots as string (e.g. "13:00-16:00")
+            $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
+            
+            $requestData = [
+                'careseeker_id' => $careseeker_id,
+                'elder_id' => $data['elder_profile'],
+                'consultant_id' => $data['consultant_id'],
+                'appointment_date' => $data['appointment_date'],
+                'time_slot' => $formattedTimeSlot,
+                'expected_services' => $data['expected_services'],
+                'additional_notes' => $data['additional_notes'],
+                'payment_amount' => $data['total_amount'],
+                'status' => 'pending'
+            ];
+
+            if ($this->careseekersModel->sendConsultantRequest($requestData)) {
+                flash('request_success', 'Care request sent successfully');
+                redirect('careseeker/viewRequests');
+            } else {
+                $data['error'] = 'Failed to send consultant request. Please try again.';
+                $this->view('careseeker/v_requestConsultant', $data);
+            }
+        } else {
+            $this->view('careseeker/v_requestConsultant', $data);
+        }
+    } else {
+        // If someone tries to access this directly without POST, redirect
+        redirect('careseeker/showConsultantRequestForm/' . $consultant_id);
     }
 }
 
@@ -502,8 +614,22 @@ public function editElderProfile()
 
 
   
-    public function viewConsultantProfile(){
-        $data=[];
+    public function viewConsultantProfile($consultant_id){
+        $profile = $this->careseekersModel->showConsultantProfile($consultant_id);
+        $rating = $this->careseekersModel->getAvgRating($consultant_id);
+        $reviews = $this->careseekersModel->getReviews($consultant_id);
+    
+        // Calculate age
+        $dob = new DateTime($profile->date_of_birth);
+        $today = new DateTime();
+        $age = $today->diff($dob)->y;
+    
+        $data = [
+            'profile' => $profile,
+            'age' => $age,
+            'rating' => $rating,
+            'reviews' => $reviews
+        ];
         $this->view('careseeker/v_consultantProfile', $data);
       }
 
@@ -529,10 +655,7 @@ public function editElderProfile()
 
 
 
-      public function requestConsultant(){
-        $data=[];
-        $this->view('careseeker/v_requestConsultant', $data);
-      } 
+     
 
       public function viewRequestInfo($requestId)
 {
@@ -547,6 +670,19 @@ public function editElderProfile()
     $this->view('careseeker/v_viewRequestInfo', $careRequest);
 }
 
+public function viewConsultRequestInfo($requestId)
+{
+    
+    $consultRequest = $this->careseekersModel->getFullConsultRequestInfo($requestId);
+
+    if (!$consultRequest) {
+        flash('request_not_found', 'Request not found');
+        redirect('careseeker/viewRequests');
+    }
+
+    $this->view('careseeker/v_viewConsultRequestInfo', $consultRequest);
+}
+
 
       
       public function viewRequests(){
@@ -558,15 +694,13 @@ public function editElderProfile()
                 $req->service_category = 'Caregiving';
             }
         
-            // Placeholder for consultation requests
-            $consultRequests = []; // Will be populated when implemented
-            /*
+            
             $consultRequests = $this->careseekersModel->getAllConsultRequestsByUser($_SESSION['user_id']);
             foreach ($consultRequests as &$req) {
                 $req->service_category = 'Consultation';
             }
-            */
-        
+    
+    
             $mergedRequests = array_merge($careRequests, $consultRequests);
         
             // Optionally sort by created_at
