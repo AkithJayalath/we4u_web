@@ -14,6 +14,7 @@ echo loadCSS($required_styles);
     <div class="request-caregiver">
         <div class="request-heading">
             <p>Send Care Request</p>
+            <?php echo $data['error'] ?? ''; ?>
         </div>
         
         <!-- Personal info section -->
@@ -51,6 +52,7 @@ echo loadCSS($required_styles);
                             </p>
                             <p><?php echo $data['age']; ?></p>
                             <p><?php echo $data['caregiver']->gender; ?></p>
+                            <p><?php echo $data['caregiver']->caregiver_type; ?> Term Care</p>
                            
                         </div>
                     </div>
@@ -93,12 +95,20 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Care Duration</div>
                             <div class="duration-type-options">
                                 <div class="duration-type-option">
-                                    <input type="radio" id="long-term-radio" name="duration-type" value="long-term" onchange="toggleDurationFields()">
-                                    <label for="long-term-radio">Long Term Care</label>
+                                    <input type="radio" id="long-term-radio" name="duration-type" value="long-term" 
+                                        <?php echo ($data['caregiver']->caregiver_type == 'short') ? 'disabled' : ''; ?>
+                                        onchange="toggleDurationFields()">
+                                    <label for="long-term-radio" <?php echo ($data['caregiver']->caregiver_type == 'short') ? 'class="disabled-option"' : ''; ?>>
+                                        Long Term Care
+                                    </label>
                                 </div>
                                 <div class="duration-type-option">
-                                    <input type="radio" id="short-term-radio" name="duration-type" value="short-term" onchange="toggleDurationFields()">
-                                    <label for="short-term-radio">Short Term (One Day)</label>
+                                    <input type="radio" id="short-term-radio" name="duration-type" value="short-term" 
+                                        <?php echo ($data['caregiver']->caregiver_type == 'long') ? 'disabled' : ''; ?>
+                                        onchange="toggleDurationFields()">
+                                    <label for="short-term-radio" <?php echo ($data['caregiver']->caregiver_type == 'long') ? 'class="disabled-option"' : ''; ?>>
+                                        Short Term (One Day)
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -109,11 +119,11 @@ echo loadCSS($required_styles);
                             <div class="form-row two-columns">
                                 <div class="form-group">
                                     <label for="from-date">Start Date</label>
-                                    <input type="date" id="from-date"  name="from_date"/>
+                                    <input type="date" id="from-date" name="from_date" onchange="calculatePayment()"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="to-date">End Date</label>
-                                    <input type="date" id="to-date" name="to_date"/>
+                                    <input type="date" id="to-date" name="to_date" onchange="calculatePayment()"/>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +132,7 @@ echo loadCSS($required_styles);
                         <div id="short-term-fields" class="animated-section form-section">
                             <div class="form-section-title">Short Term Care Date</div>
                             <div class="form-group">
-                                <label for="from_date">Select Date</label>
+                                <label for="from_date_short">Select Date</label>
                                 <input type="date" id="from_date_short" name="from_date_short"/>
                             </div>
                         </div>
@@ -133,11 +143,11 @@ echo loadCSS($required_styles);
                             <div class="form-group">
                                 <label>Select Time Slots (Choose one or more)</label>
                                 <div class="time-slot-checkboxes">
-                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" onchange="handleFullDaySelection()"><span>Full Day (8am-8pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="morning" class="other-slot"><span>Morning (8am-12pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot"><span>Evening (12pm-6pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="night" class="other-slot"><span>Night (6pm-10pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot"><span>Overnight (10pm-8am)</span></label>
+                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" onchange="handleFullDaySelection(); calculatePayment();"><span>Full Day (8am-8pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="morning" class="other-slot" onchange="calculatePayment()"><span>Morning (8am-12pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot" onchange="calculatePayment()"><span>Evening (12pm-6pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="night" class="other-slot" onchange="calculatePayment()"><span>Night (6pm-10pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot" onchange="calculatePayment()"><span>Overnight (10pm-8am)</span></label>
                                 </div>
                             </div>
                         </div>
@@ -148,11 +158,12 @@ echo loadCSS($required_styles);
                             <div class="form-row two-columns">
                                 <div class="form-group">
                                     <label for="service">Service Type</label>
-                                    <input type="text" id="service" placeholder="Consultation" readonly/>
+                                    <input type="text" id="service" placeholder="Caregiving" readonly/>
                                 </div>
                                 <div class="form-group">
                                     <label for="payment-details">Payment Details</label>
-                                    <input type="text" id="payment-details" placeholder="Rs.4000 per visit + Rs.400 per session" readonly />
+                                    <input type="text" id="payment-details" placeholder="Calculating..." readonly />
+                                    <input type="hidden" id="total-payment" name="total_payment" value="0" />
                                 </div>
                             </div>
                         </div>
@@ -252,14 +263,27 @@ echo loadCSS($required_styles);
     pointer-events: none;
     background-color: #f0f0f0;
 }
+
+.duration-type-option label.disabled-option {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    toggleDurationFields(); // Handle pre-selected option (e.g., during form edit)
+    // Set default selection based on caregiver type
+    const caregiverType = '<?php echo $data['caregiver']->caregiver_type; ?>';
     
-    // Check for any pre-selected checkboxes
-    handleFullDaySelection();
+    if (caregiverType === 'long') {
+        document.getElementById('long-term-radio').checked = true;
+    } else if (caregiverType === 'short') {
+        document.getElementById('short-term-radio').checked = true;
+    }
+    
+    toggleDurationFields(); // Handle pre-selected option
+    handleFullDaySelection(); // Check for any pre-selected checkboxes
+    calculatePayment(); // Calculate initial payment
 });
 
 function toggleDurationFields() {
@@ -277,11 +301,14 @@ function toggleDurationFields() {
     setTimeout(() => {
         if (selectedType === 'long-term') {
             longTermFields.classList.add('show');
-            timeSlotsSection.classList.add('show');
+            // Time slots are only available for short term
+            timeSlotsSection.classList.remove('show');
         } else if (selectedType === 'short-term') {
             shortTermFields.classList.add('show');
             timeSlotsSection.classList.add('show');
         }
+        
+        calculatePayment(); // Recalculate payment when changing duration type
     }, 300);
 }
 
@@ -320,7 +347,142 @@ function handleFullDaySelection() {
             label.classList.remove('selected');
         }
     });
+    
+    calculatePayment(); // Recalculate payment when changing time slots
 }
+
+function calculatePayment() {
+    const selectedType = document.querySelector('input[name="duration-type"]:checked')?.value;
+    const paymentDetailsElement = document.getElementById('payment-details');
+    const totalPaymentElement = document.getElementById('total-payment');
+    let totalPayment = 0;
+    
+    // Get caregiver price info
+    const pricePerDay = <?php echo isset($data['caregiver']->price_per_day) ? $data['caregiver']->price_per_day : 0; ?>;
+    const pricePerSession = <?php echo isset($data['caregiver']->price_per_session) ? $data['caregiver']->price_per_session : 0; ?>;
+    
+    if (selectedType === 'long-term') {
+        const fromDate = document.getElementById('from-date').value;
+        const toDate = document.getElementById('to-date').value;
+        
+        if (fromDate && toDate) {
+            // Calculate number of days
+            const startDate = new Date(fromDate);
+            const endDate = new Date(toDate);
+            
+            // Check if dates are valid
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                // Calculate the difference in days
+                const diffTime = endDate - startDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
+                
+                if (diffDays > 0) {
+                    totalPayment = diffDays * pricePerDay;
+                    paymentDetailsElement.value = `Rs.${totalPayment} (${diffDays} days at Rs.${pricePerDay} per day)`;
+                } else {
+                    paymentDetailsElement.value = "Please select valid date range";
+                }
+            } else {
+                paymentDetailsElement.value = "Please select valid dates";
+            }
+        } else {
+            paymentDetailsElement.value = "Select dates to calculate payment";
+        }
+        
+    } else if (selectedType === 'short-term') {
+        // Count selected time slots
+        const selectedSlots = document.querySelectorAll('input[name="timeslot[]"]:checked');
+        
+        if (selectedSlots.length > 0) {
+            // Calculate based on number of slots selected
+            let slotCount = 0;
+            let slotNames = [];
+            
+            selectedSlots.forEach(slot => {
+                if (slot.value === 'full-day') {
+                    slotCount = 4; // Full day counts as 4 sessions
+                    slotNames.push("Full Day");
+                } else {
+                    slotCount += 1;
+                    slotNames.push(slot.value.charAt(0).toUpperCase() + slot.value.slice(1));
+                }
+            });
+            
+            totalPayment = slotCount * pricePerSession;
+            paymentDetailsElement.value = `Rs.${totalPayment} (${slotNames.join(', ')} - ${slotCount} sessions at Rs.${pricePerSession} per session)`;
+        } else {
+            paymentDetailsElement.value = "Select time slots to calculate payment";
+        }
+    } else {
+        paymentDetailsElement.value = "Select duration type to calculate payment";
+    }
+    
+    // Update hidden field with calculated total
+    totalPaymentElement.value = totalPayment;
+}
+
+
+
+//Edler profile selection error
+// Add this to your existing script section at the bottom of the file
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the form element
+    const requestForm = document.querySelector('.request-form');
+    
+    // Add event listener for form submission
+    requestForm.addEventListener('submit', function(event) {
+        // Get the elder profile select element
+        const elderProfileSelect = document.getElementById('elder-profile');
+        
+        // Check if a profile is selected
+        if (!elderProfileSelect.value) {
+            // Prevent form submission
+            event.preventDefault();
+            
+            // Create error message if it doesn't exist
+            let errorMsg = document.getElementById('elder-profile-error');
+            if (!errorMsg) {
+                errorMsg = document.createElement('div');
+                errorMsg.id = 'elder-profile-error';
+                errorMsg.className = 'form-error';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '14px';
+                errorMsg.style.marginTop = '5px';
+                errorMsg.textContent = 'Please select an elder profile';
+                
+                // Insert error message after the select element
+                elderProfileSelect.parentNode.appendChild(errorMsg);
+            }
+            
+            // Highlight the select field
+            elderProfileSelect.style.borderColor = 'red';
+            
+            // Scroll to the error
+            elderProfileSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            // If valid, remove any existing error message
+            const errorMsg = document.getElementById('elder-profile-error');
+            if (errorMsg) {
+                errorMsg.remove();
+            }
+            
+            // Reset border color
+            elderProfileSelect.style.borderColor = '';
+        }
+    });
+    
+    // Add change event listener to clear error when user selects a profile
+    document.getElementById('elder-profile').addEventListener('change', function() {
+        // Remove error message if it exists
+        const errorMsg = document.getElementById('elder-profile-error');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+        
+        // Reset border color
+        this.style.borderColor = '';
+    });
+});
 </script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>

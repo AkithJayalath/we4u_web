@@ -208,20 +208,33 @@
                 <div class="form-group">
                     <label><span style="color: red">*</span> Payment Details</label>
                     <div class="payment-inputs">
-                        <div class="payment-input-group">
-                            <label>Per Session (Rs.)</label>
-                            <input type="number" min="0"
-                                name="payment_per_session" 
-                                
-                                placeholder="Enter amount">
-                        </div>
-                        <div class="payment-input-group">
-                            <label>Per Visit (Rs.)</label>
-                            <input type="number" min="0"
-                                name="payment_per_visit" 
-                                
-                                placeholder="Enter amount">
-                        </div>
+                    <div class="payment-input-group">
+    <label>Per Session (Short Term) (Rs.)</label>
+    <input 
+        type="number" 
+        min="0"
+        name="payment_per_session"
+        id="payment_per_session"
+        placeholder="Enter amount"
+        value="<?= isset($data['profile']->price_per_session) ? htmlspecialchars($data['profile']->price_per_session) : '' ?>"
+        <?= ($data['caregiver_type'] === 'long') ? 'readonly' : '' ?>
+    >
+</div>
+
+<div class="payment-input-group">
+    <label>Per Day (Long Term) (Rs.)</label>
+    <input 
+        type="number" 
+        min="0"
+        name="payment_per_visit"
+        id="payment_per_visit"
+        placeholder="Enter amount"
+        value="<?= isset($data['profile']->price_per_day) ? htmlspecialchars($data['profile']->price_per_day) : '' ?>"
+        <?= ($data['caregiver_type'] === 'short') ? 'readonly' : '' ?>
+    >
+</div>
+
+
                     </div>
                     
                 </div>
@@ -391,6 +404,35 @@
             }
         });
     });
+
+
+// for payment types changing according to caregiver type
+    function updatePaymentFields() {
+        const typeSelect = document.getElementById('caregiver-type-select');
+        const sessionInput = document.getElementById('payment_per_session');
+        const dayInput = document.getElementById('payment_per_visit');
+
+        const selectedType = typeSelect.value;
+
+        if (selectedType === 'short') {
+            sessionInput.removeAttribute('readonly');
+            dayInput.setAttribute('readonly', true);
+            dayInput.value = ''; // Optional: Clear value
+        } else if (selectedType === 'long') {
+            sessionInput.setAttribute('readonly', true);
+            dayInput.removeAttribute('readonly');
+            sessionInput.value = ''; // Optional: Clear value
+        } else { // both
+            sessionInput.removeAttribute('readonly');
+            dayInput.removeAttribute('readonly');
+        }
+    }
+
+    // Initial call on page load
+    document.addEventListener('DOMContentLoaded', updatePaymentFields);
+
+    // Add event listener to handle user changes
+    document.getElementById('caregiver-type-select').addEventListener('change', updatePaymentFields);
 </script>
 
 <?php require APPROOT . '/views/includes/footer.php' ?>

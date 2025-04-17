@@ -269,6 +269,7 @@ public function requestCaregiver($caregiver_id) {
             'from_date_short' => isset($_POST['from_date_short']) ? trim($_POST['from_date_short']) : null,
             'to_date' => isset($_POST['to_date']) ? trim($_POST['to_date']) : null,
             'time_slots' => isset($_POST['timeslot']) ? $_POST['timeslot'] : [],
+            'total_payment' => isset($_POST['total_payment']) ? (int)trim($_POST['total_payment']) : 0,
             'expected_services' => trim($_POST['expected_services']),
             'additional_notes' => trim($_POST['additional_notes']),
             'error' => ''
@@ -283,10 +284,9 @@ public function requestCaregiver($caregiver_id) {
             $data['error'] = 'Please select both start and end dates for long-term care';
         } elseif ($data['duration_type'] === 'short-term' && empty($data['from_date_short'])) {
             $data['error'] = 'Please select a date for short-term care';
-        } elseif (empty($data['time_slots'])) {
-            $data['error'] = 'Please select at least one time slot';
-        }
-
+        } elseif($data['total_payment']<=0){
+            $data['error'] = 'Invalid payment amount';
+        } 
         // If no errors, proceed with creating the request
         if (empty($data['error'])) {
             $requestData = [
@@ -298,6 +298,7 @@ public function requestCaregiver($caregiver_id) {
                 'from_date_short' => $data['from_date_short'],
                 'to_date' => $data['to_date'],
                 'time_slots' => json_encode($data['time_slots']),
+                'total_payment' => $data['total_payment'],
                 'expected_services' => $data['expected_services'],
                 'additional_notes' => $data['additional_notes'],
                 'status' => 'pending'

@@ -210,7 +210,8 @@ public function updateCaregiverProfile($data){
     c.skills = :skills,
     c.qualification = :qualification,
     c.available_region = :available_region,
-    c.payment_details = :payment_details,
+    c.price_per_session = :price_per_session,
+    c.price_per_day = :price_per_day,
     c.bio = :bio
     WHERE u.email = :email');
 
@@ -224,7 +225,8 @@ public function updateCaregiverProfile($data){
     $this->db->bind(':skills', $data['skills']);
     $this->db->bind(':qualification', $data['qualification']);
     $this->db->bind(':available_region', $data['available_region']);
-    $this->db->bind(':payment_details', $data['payment_details']);
+    $this->db->bind(':price_per_session', $data['payment_per_session']);
+    $this->db->bind(':price_per_day', $data['payment_per_day']);
     $this->db->bind(':bio', $data['bio']);
 
     return $this->db->execute();
