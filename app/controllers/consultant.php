@@ -8,13 +8,10 @@
           $this->consultantModel = $this->model('M_Consultant');
           $this->caregiversModel = $this->model('M_Caregivers'); 
       }
+      
 
-      // Add the required index method
-      public function index() {
-          // This is your default method
-          // You can redirect to c_reg or show a different view
-          $this->viewpatients();
-          
+      public function index(){
+        $this->viewRequests();
       }
 
     // public function consultantview(){
@@ -48,6 +45,248 @@
 //   $this->view('caregiver/v_reqinfo');
 // }
 
+
+
+public function viewmyProfile(){
+    $email = $_SESSION['user_email'];
+    $profile = $this->consultantModel->showConsultantProfile($email);
+    $rating = $this->consultantModel->getAvgRating($email);
+    $reviews = $this->consultantModel->getReviews($email);
+
+    //calculate age
+    $dob = new DateTime($profile->date_of_birth);
+    $today = new DateTime();
+    $age = $today->diff($dob)->y;
+
+    $data = [
+        'profile' => $profile,
+        'age' => $age,
+        'rating' => $rating,
+        'reviews' => $reviews
+
+    ];
+
+  $this->view('consultant/v_consultantprofile',$data);
+}
+
+public function editmyProfile() {
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        //Handle profile picture
+        $profile = $this->consultantModel->showConsultantProfile($_SESSION['user_email']);
+        $profilePicture = $_FILES['profile_picture'] ?? null;
+        $currentProfilePicture = $profile->profile_picture ?? null;
+        
+        // Handle multi-select fields
+        $selectedRegions = isset($_POST['available_regions']) ? implode(',', $_POST['available_regions']) : '';
+        $selectedSpecializations = isset($_POST['specializations']) ? implode(',', $_POST['specializations']) : '';
+
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'profile' => $profile,
+            'username' => trim($_POST['username']),
+            'address' => trim($_POST['address']),
+            'contact_info' => trim($_POST['contact_info']),
+            'specialty' => $selectedSpecializations, // Now properly handled as array
+            'qualification' => trim($_POST['qualification']),
+            'available_region' => $selectedRegions, // Now properly handled as array
+            'payment_per_hour' => trim($_POST['payment_per_hour'] ?? ''),
+            'bio' => trim($_POST['bio']),
+            'profile_picture' => $currentProfilePicture, // Default to current picture
+            'profile_picture_name' => time().'_'.($_FILES['profile_picture']['name'] ?? ''),
+            'username_err' => '',
+            'address_err' => '',
+            'contact_info_err' => '',
+            'profile_picture_err' => ''
+        ];
+
+        // Validate inputs (same as before)
+        if(empty($data['username'])){
+            $data['username_err'] = 'Please enter username';
+        }
+        if(empty($data['address'])){
+            $data['address_err'] = 'Please enter address';
+        }
+        if(empty($data['contact_info'])){
+            $data['contact_info_err'] = 'Please enter contact info';
+        } elseif(!preg_match('/^[0-9]{10}$/', $data['contact_info'])) {
+            $data['contact_info_err'] = 'Contact number should be a 10-digit number';
+        }
+
+        // Handle profile picture upload
+        if ($profilePicture && $profilePicture['error'] === 0) {
+            $validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+            
+            if (in_array($profilePicture['type'], $validImageTypes)) {
+                $newFileName = uniqid() . '_' . $profilePicture['name'];
+                if (uploadImage($profilePicture['tmp_name'], $newFileName, '/images/profile_imgs/')) {
+                    $data['profile_picture'] = $newFileName;
+                } else {
+                    $data['profile_picture_err'] = 'Failed to upload profile picture';
+                }
+            } else {
+                $data['profile_picture_err'] = 'Please upload a valid image file (JPEG, PNG, GIF)';
+            }
+        }
+
+        if(empty($data['username_err']) && empty($data['address_err']) && 
+           empty($data['contact_info_err']) && empty($data['profile_picture_err'])){
+            
+            if($this->consultantModel->updateConsultantProfile($data)){
+                redirect('consultant/viewmyProfile');
+            } else {
+                // Handle update failure
+                die('Something went wrong');
+            }
+        } else {
+            $this->view('consultant/v_editConsultantProfile', $data);
+        }
+    } else {
+        // GET request - load existing data
+        $email = $_SESSION['user_email'];
+        $profile = $this->consultantModel->showConsultantProfile($email);
+        
+        $data = [
+            'profile' => $profile,
+            'email' => $_SESSION['user_email'],
+            'username' => $profile->username ?? '',
+            'address' => $profile->address ?? '',
+            'contact_info' => $profile->contact_info ?? '',
+            'specialty' => $profile->specializations ?? '',
+            'qualification' => $profile->qualifications ?? '',
+            'available_region' => $profile->available_regions ?? '',
+            'payment_per_hour' => $profile->payment_details ?? '',
+            'bio' => $profile->bio ?? '',
+            'profile_picture' => $profile->profile_picture ?? '',
+            'username_err' => '',
+            'address_err' => '',
+            'contact_info_err' => ''
+        ];
+
+        $this->view('consultant/v_editConsultantProfile', $data);
+    }
+}
+
+public function viewConsultantProfile($id = null) {
+    if ($id === null) {
+        redirect('users/viewConsultants');
+    }
+    
+    $consultant = $this->consultantModel->getConsultantById($id);
+    
+    if (!$consultant) {
+        redirect('users/viewConsultants');
+    }
+    
+    $data = [
+        'consultant' => $consultant,
+        'title' => 'Consultant Profile'
+    ];
+    
+    $this->view('consultant/v_consultantprofile', $data);
+  }
+
+
+
+  public function viewRequests()
+{
+    
+    // Check if user is logged in as caregiver
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
+        redirect('users/login');
+    }
+   
+
+    // Get caregiver ID from session
+    $consultantID = $_SESSION['user_id'];
+    
+    // Get all requests for this caregiver
+    $consultRequests = $this->consultantModel->getAllConsultRequestsByConsultant($consultantID);
+    
+    $data = [
+        'requests' => $consultRequests
+    ];
+    
+    
+    $this->view('consultant/v_viewRequests', $data);
+}
+
+public function viewreqinfo($requestId){
+       
+    $consultRequest = $this->consultantModel->getFullConsultRequestInfo($requestId);
+
+    if (!$consultRequest) {
+        flash('request_not_found', 'Request not found');
+        redirect('consultant/viewRequests');
+    }
+
+    $this->view('consultant/v_viewRequestInfo', $consultRequest);
+    }
+
+
+public function acceptRequest($request_id) {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      // Get caregiver_id from session
+      $consultantId = $_SESSION['user_id'];
+
+      // Verify request belongs to this caregiver
+      $request = $this->consultantModel->getRequestById($request_id);
+      if (!$request || $request->consultant_id != $consultantId) {
+          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          redirect('consultant/viewRequests');
+          return;
+      }
+
+      // Update status
+      if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
+          flash('request_message', 'Request has been accepted.');
+      } else {
+          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+      }
+      redirect('consultant/viewRequests');
+  }
+}
+
+public function rejectRequest($request_id) {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $consultantId = $_SESSION['user_id'];
+      $request = $this->consultantModel->getRequestById($request_id);
+      if (!$request || $request->consultant_id != $consultantId) {
+          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          redirect('consultant/viewRequests');
+          return;
+      }
+
+      if ($this->consultantModel->updateRequestStatus($request_id, 'rejected')) {
+          flash('request_message', 'Request has been rejected.');
+      } else {
+          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+      }
+      redirect('consultant/viewRequests');
+  }
+}
+
+
+public function viewCareseeker($elder_id){
+    $elderProfile=$this->consultantModel->getElderProfileById($elder_id);
+    if (!$elderProfile) {
+        flash('profile_not_found', 'Profile not found');
+        redirect('caregivers/viewCaregivers');
+    }
+     $data = [
+        'elderProfile' => $elderProfile,
+    ];
+    $this->view('consultant/v_careseekerProfile', $data);
+ }
+
+
   public function consultantprofile(){
     $this->view('consultant/v_consultantprofile');
   }
@@ -64,9 +303,7 @@
     $this->view('consultant/v_editElderProfile');
   }
 
-  public function viewrequests(){
-    $this->view('consultant/v_viewRequests');
-  }
+  
 
   public function viewrequestinfo(){
     $this->view('consultant/v_viewRequestInfo');

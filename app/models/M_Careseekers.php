@@ -205,29 +205,218 @@ class M_Careseekers{
 }
 
 public function sendCareRequest($data) {
-    $this->db->query('INSERT INTO caregiver_requests 
-    (careseeker_id, elder_id, caregiver_id, duration_type, from_date, to_date, frequency, selected_days, specific_date, time_slots, expected_services, additional_notes, status) 
+    $this->db->query('INSERT INTO carerequests 
+    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status) 
     VALUES 
-    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :from_date, :to_date, :frequency, :selected_days, :specific_date, :time_slots, :expected_services, :additional_notes, :status)');
+    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status)');
 
-    // Bind values
+    // Bind common values
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
     $this->db->bind(':elder_id', $data['elder_id']);
     $this->db->bind(':caregiver_id', $data['caregiver_id']);
     $this->db->bind(':duration_type', $data['duration_type']);
-    $this->db->bind(':from_date', $data['from_date']);
-    $this->db->bind(':to_date', $data['to_date']);
-    $this->db->bind(':frequency', $data['frequency']);
-    $this->db->bind(':selected_days', $data['selected_days']);
-    $this->db->bind(':specific_date', $data['specific_date']);
-    $this->db->bind(':time_slots', $data['time_slots']);
+    $this->db->bind(':time_slots', json_encode($data['time_slots']));
     $this->db->bind(':expected_services', $data['expected_services']);
     $this->db->bind(':additional_notes', $data['additional_notes']);
     $this->db->bind(':status', $data['status']);
 
-    // Execute and return result
+    // Handle date fields based on duration type
+    if ($data['duration_type'] === 'long-term') {
+        $this->db->bind(':start_date', $data['from_date']);
+        $this->db->bind(':end_date', $data['to_date']);
+    } else {
+        $this->db->bind(':start_date', $data['from_date_short']);
+        $this->db->bind(':end_date', null);
+    }
+    
     return $this->db->execute();
 }
+
+public function sendConsultantRequest($data) {
+    $this->db->query('INSERT INTO consultantrequests 
+    (requester_id, elder_id, consultant_id, appointment_date, time_slot, expected_services, additional_notes, payment_details, status) 
+    VALUES 
+    (:careseeker_id, :elder_id, :consultant_id, :appointment_date, :time_slot, :expected_services, :additional_notes, :payment_amount, :status)');
+
+    // Bind values
+    $this->db->bind(':careseeker_id', $data['careseeker_id']);
+    $this->db->bind(':elder_id', $data['elder_id']);
+    $this->db->bind(':consultant_id', $data['consultant_id']);
+    $this->db->bind(':appointment_date', $data['appointment_date']);
+    $this->db->bind(':time_slot', $data['time_slot']);
+    $this->db->bind(':expected_services', $data['expected_services']);
+    $this->db->bind(':additional_notes', $data['additional_notes']);
+    $this->db->bind(':payment_amount', $data['payment_amount']);
+    $this->db->bind(':status', $data['status']);
+    
+    return $this->db->execute();
+}
+//To get carerequests of a careseeker
+public function getAllCareRequestsByUser($userId)
+{
+    $this->db->query("
+        SELECT cr.*, u.username AS caregiver_name
+        FROM carerequests cr
+        LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+        LEFT JOIN user u ON cr.caregiver_id = u.user_id
+        WHERE cr.requester_id = :user_id
+        ORDER BY cr.created_at DESC
+    ");
+    $this->db->bind(':user_id', $userId);
+    return $this->db->resultSet();
+}
+
+//similar function to get consultat requests of a careseeker
+public function getAllConsultRequestsByUser($userId)
+{
+    $this->db->query("
+        SELECT cr.*, u.username AS consultant_name
+        FROM consultantrequests cr
+        LEFT JOIN consultant cs ON cr.consultant_id = cs.consultant_id
+        LEFT JOIN user u ON cr.consultant_id = u.user_id
+        WHERE cr.requester_id = :user_id
+        ORDER BY cr.created_at DESC
+    ");
+    $this->db->bind(':user_id', $userId);
+    return $this->db->resultSet();
+}
+// To get all request details
+public function getFullCareRequestInfo($requestId)
+{
+    $this->db->query("SELECT cr.*, 
+                             cg.caregiver_id, 
+                             u.username AS caregiver_name, 
+                             u.email AS caregiver_email, 
+                             u.profile_picture AS caregiver_pic,
+                             req_user.profile_picture AS requester_pic,
+                           CONCAT(e.first_name, ' ', e.middle_name, ' ', e.last_name) AS elder_name,
+                             e.profile_picture AS elder_pic,
+                             e.relationship_to_careseeker
+                      FROM carerequests cr
+                      LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+                      LEFT JOIN user req_user ON req_user.user_id = cr.requester_id
+                      LEFT JOIN user u ON u.user_id = cr.caregiver_id
+                      LEFT JOIN elderprofile e ON e.elder_id = cr.elder_id
+                      WHERE cr.request_id = :request_id");
+    $this->db->bind(':request_id', $requestId);
+
+    return $this->db->single();
+}
+
+
+public function getFullConsultRequestInfo($requestId)
+{
+    $this->db->query("SELECT cr.*, 
+                             cs.consultant_id, 
+                             u.username AS consultant_name, 
+                             u.email AS consultant_email, 
+                             u.profile_picture AS consultant_pic,
+                             req_user.profile_picture AS requester_pic,
+                           CONCAT(e.first_name, ' ', e.middle_name, ' ', e.last_name) AS elder_name,
+                             e.profile_picture AS elder_pic,
+                             e.relationship_to_careseeker
+                      FROM consultantrequests cr
+                      LEFT JOIN consultant cs ON cr.consultant_id = cs.consultant_id
+                      LEFT JOIN user req_user ON req_user.user_id = cr.requester_id
+                      LEFT JOIN user u ON u.user_id = cr.consultant_id
+                      LEFT JOIN elderprofile e ON e.elder_id = cr.elder_id
+                      WHERE cr.request_id = :request_id");
+    $this->db->bind(':request_id', $requestId);
+
+    return $this->db->single();
+}
+
+
+
+
+//to view caregiver profile
+public function getReviews($caregiver_id) {
+    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
+                      FROM review r
+                      JOIN user u ON r.reviewer_id = u.user_id
+                      WHERE r.reviewed_user_id = :caregiver_id
+                      AND r.review_role = "Caregiver"
+                      ORDER BY r.review_date DESC');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    return $this->db->resultSet();
+}
+
+public function getAvgRating($caregiver_id) {
+    $this->db->query('SELECT AVG(r.rating) AS avg_rating
+                      FROM review r
+                      WHERE r.reviewed_user_id = :caregiver_id 
+                      AND r.review_role = "Caregiver"');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    $result = $this->db->single();
+    return round($result->avg_rating ?? 0, 1);
+}
+
+public function showCaregiverProfile($caregiver_id) {
+    $this->db->query('SELECT u.*, c.*
+                      FROM user u
+                      JOIN caregiver c ON u.user_id = c.caregiver_id
+                      WHERE u.user_id = :caregiver_id');
+
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    return $this->db->single();
+}
+
+
+
+//to view careseeker profile
+
+public function showCareseekerProfile($careseeker_id) {
+    $this->db->query('SELECT u.*, c.*
+                      FROM user u
+                      JOIN careseeker c ON u.user_id = c.careseeker_id
+                      WHERE u.user_id = :careseeker_id');
+
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    return $this->db->single();
+}
+
+
+// To view consultant profile
+
+public function getReviewsConsultant($consultant_id) {
+    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
+                      FROM review r
+                      JOIN user u ON r.reviewer_id = u.user_id
+                      WHERE r.reviewed_user_id = :consultant_id
+                      AND r.review_role = "Consultant"
+                      ORDER BY r.review_date DESC');
+
+    $this->db->bind(':consultant_id', $consultant_id);
+    return $this->db->resultSet();
+}
+
+public function getAvgRatingConsultant($consultant_id) {
+    $this->db->query('SELECT AVG(r.rating) AS avg_rating
+                      FROM review r
+                      WHERE r.reviewed_user_id = :consultant_id 
+                      AND r.review_role = "Consultant"');
+
+    $this->db->bind(':consultant_id', $consultant_id);
+    $result = $this->db->single();
+    return round($result->avg_rating ?? 0, 1);
+}
+
+public function showConsultantProfile($consultant_id) {
+    $this->db->query('SELECT u.*, c.*
+                      FROM user u
+                      JOIN consultant c ON u.user_id = c.consultant_id
+                      WHERE u.user_id = :consultant_id');
+
+    $this->db->bind(':consultant_id', $consultant_id);
+    return $this->db->single();
+}
+
+
+
+
+
 }
 
 ?>

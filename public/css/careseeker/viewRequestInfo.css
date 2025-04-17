@@ -244,3 +244,14 @@
     margin: 0;
     font-weight: 500; /* Slightly bolder text for readability */
 }
+
+
+.view-elder-profile-link {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 8px;
+  font-weight: 500;
+}
+.view-elder-profile-link:hover {
+  text-decoration: underline;
+}
