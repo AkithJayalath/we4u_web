@@ -9,14 +9,14 @@ echo loadCSS($required_styles);
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
 
 <page-body-container>
-    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
+    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
     <!-- Container -->
     <div class="view-caregiver-profile">
         <!-- Personal info section -->
         <div class="caregiver-personal-info-section">
             <div class="caregiver-personal-info-left">
                 <div class="caregiver-personal-info-left-left">
-                    <img src="<?php echo !empty($data['profile']->profile_picture) ? URLROOT . '/images/profile_imgs/'. $data['profile']->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
+                    <img src="<?php echo !empty($data['profile']->profile_picture) ? URLROOT . '/images/profile_imgs/' . $data['profile']->profile_picture : URLROOT . '/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img" />
                 </div>
                 <div class="caregiver-personal-info-left-right">
                     <div class="caregiver-personal-info-profile">
@@ -25,7 +25,7 @@ echo loadCSS($required_styles);
                             <h2><?php echo $data['profile']->username; ?></h2>
                             <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
                             <p class="consultant-rating">
-                                <?php for($i=1; $i<=5; $i++) : ?>
+                                <?php for ($i = 1; $i <= 5; $i++) : ?>
                                     <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
                                 <?php endfor; ?>
                             </p>
@@ -41,8 +41,8 @@ echo loadCSS($required_styles);
                     <i class="fas fa-comments"></i> Chat
                 </button>
                 <button class="caregiver-send-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/showCaregiverRequestForm/<?= $data['profile']->caregiver_id ?>'">
-    <i class="fas fa-paper-plane"></i> Send Request
-</button>
+                    <i class="fas fa-paper-plane"></i> Send Request
+                </button>
 
             </div>
         </div>
@@ -59,7 +59,7 @@ echo loadCSS($required_styles);
                     <p><?php echo $data['profile']->bio; ?></p>
                 </div>
             </div>
-            
+
             <!-- Health concerns -->
             <div class="caregiver-health-concern-section">
                 <div class="caregiver-health-concern-section-header">
@@ -72,9 +72,9 @@ echo loadCSS($required_styles);
                         <i class="fas fa-graduation-cap icon"></i>
                         <div>
                             <h4>Qualifications</h4>
-                            <?php 
+                            <?php
                             $qualification = explode(',', $data['profile']->qualification);
-                            foreach($qualification as $qualification) : ?>
+                            foreach ($qualification as $qualification) : ?>
                                 <p><?php echo trim($qualification); ?></p>
                             <?php endforeach; ?>
                         </div>
@@ -83,9 +83,9 @@ echo loadCSS($required_styles);
                         <i class="fas fa-user-md icon"></i>
                         <div>
                             <h4>Specializations</h4>
-                            <?php 
+                            <?php
                             $specialty = explode(',', $data['profile']->specialty);
-                            foreach($specialty as $specialty) : ?>
+                            foreach ($specialty as $specialty) : ?>
                                 <p><?php echo trim($specialty); ?></p>
                             <?php endforeach; ?>
                         </div>
@@ -94,9 +94,9 @@ echo loadCSS($required_styles);
                         <i class="fas fa-map-marker-alt icon"></i>
                         <div>
                             <h4>Regions Available</h4>
-                            <?php 
+                            <?php
                             $available_region = explode(',', $data['profile']->available_region);
-                            foreach($available_region as $available_region) : ?>
+                            foreach ($available_region as $available_region) : ?>
                                 <p><?php echo trim($available_region); ?></p>
                             <?php endforeach; ?>
                         </div>
@@ -105,13 +105,14 @@ echo loadCSS($required_styles);
                         <i class="fas fa-hands-helping icon"></i>
                         <div>
                             <h4>Special Skills</h4>
-                            <?php 
-                            function formatSkillName($skill) {
+                            <?php
+                            function formatSkillName($skill)
+                            {
                                 return ucwords(str_replace('_', ' ', $skill));
                             }
 
                             $skills = explode(',', $data['profile']->skills);
-                            foreach($skills as $skill) : ?>
+                            foreach ($skills as $skill) : ?>
                                 <p><?php echo trim(formatSkillName($skill)); ?></p>
                             <?php endforeach; ?>
                         </div>
@@ -120,16 +121,19 @@ echo loadCSS($required_styles);
                         <i class="fas fa-dollar-sign icon"></i>
                         <div>
                             <h4>Payment details</h4>
-                            <?php 
-                            $payment_details = explode(',', $data['profile']->payment_details);
-                            foreach($payment_details as $payment_detail) : ?>
-                                <p><?php echo trim($payment_detail); ?></p>
-                            <?php endforeach; ?>
+                            <?php if ($data['profile']->caregiver_type === 'both') : ?>
+                                <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
+                                <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+                            <?php elseif ($data['profile']->caregiver_type === 'short') : ?>
+                                <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
+                            <?php elseif ($data['profile']->caregiver_type === 'long') : ?>
+                                <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Other concerns -->
             <div class="caregiver-other-concern-section">
                 <div class="caregiver-other-concern-section-header">
@@ -142,7 +146,7 @@ echo loadCSS($required_styles);
                 </div>
             </div>
         </div>
-        
+
         <div class="caregiver-other-info-section">
             <div class="caregiver-health-concern-section">
                 <div class="caregiver-health-concern-section-header">
@@ -170,7 +174,7 @@ echo loadCSS($required_styles);
         rating: <?php echo json_encode($data['rating']); ?>,
         reviews: <?php echo json_encode($data['reviews']); ?>
     };
-    
+
     addRatingsAndReviews(reviewData);
 </script>
 

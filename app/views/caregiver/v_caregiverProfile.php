@@ -130,14 +130,16 @@
                     <div class="caregiver-health-concern-item">                        
                         <i class="fas fa-dollar-sign icon"></i>
                         <div>
-                            <h4>Payment details</h4>
-                            <?php 
-                            $payment_details = explode(',', $data['profile']->payment_details);
-                            foreach($payment_details as $payment_details) : ?>
-                                <p><?php echo trim($payment_details); ?></p>
-                            <?php endforeach; ?>
-                            
-                        </div>
+                        <h4>Payment details</h4>
+<?php if ($data['profile']->caregiver_type === 'both') : ?>
+    <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
+    <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+<?php elseif ($data['profile']->caregiver_type === 'short') : ?>
+    <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
+<?php elseif ($data['profile']->caregiver_type === 'long') : ?>
+    <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+<?php endif; ?>
+
                         <a href="<?php echo URLROOT; ?>/Caregivers/paymentMethod" class="caregiver-payment-button">
                         <i class="fas fa-credit-card"></i> Payment Method
                         </a>

@@ -563,7 +563,7 @@
             'qualification' => trim($_POST['qualification']),
             'available_region' => $selectedRegions, // Now properly handled as array
             'payment_per_session' => trim($_POST['payment_per_session'] ?? ''),
-            'payment_per_visit' => trim($_POST['payment_per_visit'] ?? ''),
+            'payment_per_day' => trim($_POST['payment_per_visit'] ?? ''),
             'bio' => trim($_POST['bio']),
             'profile_picture' => $currentProfilePicture, // Default to current picture
             'profile_picture_name' => time().'_'.($_FILES['profile_picture']['name'] ?? ''),
@@ -630,8 +630,8 @@
             'skills' => $profile->skills ?? '',
             'qualification' => $profile->qualification ?? '',
             'available_region' => $profile->available_region ?? '',
-            'payment_per_session' => $profile->payment_per_session ?? '',
-            'payment_per_visit' => $profile->payment_per_visit ?? '',
+            'payment_per_session' => $profile->price_per_session ?? '',
+            'payment_per_day' => $profile->price_per_day ?? '',
             'bio' => $profile->bio ?? '',
             'profile_picture' => $profile->profile_picture ?? '',
             'username_err' => '',

@@ -206,19 +206,20 @@ class M_Careseekers{
 
 public function sendCareRequest($data) {
     $this->db->query('INSERT INTO carerequests 
-    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status) 
+    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status, payment_details) 
     VALUES 
-    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status)');
+    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details)');
 
     // Bind common values
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
     $this->db->bind(':elder_id', $data['elder_id']);
     $this->db->bind(':caregiver_id', $data['caregiver_id']);
     $this->db->bind(':duration_type', $data['duration_type']);
-    $this->db->bind(':time_slots', json_encode($data['time_slots']));
+    $this->db->bind(':time_slots', is_string($data['time_slots']) ? $data['time_slots'] : json_encode($data['time_slots']));
     $this->db->bind(':expected_services', $data['expected_services']);
     $this->db->bind(':additional_notes', $data['additional_notes']);
     $this->db->bind(':status', $data['status']);
+    $this->db->bind(':payment_details', $data['total_payment']);
 
     // Handle date fields based on duration type
     if ($data['duration_type'] === 'long-term') {
@@ -226,11 +227,12 @@ public function sendCareRequest($data) {
         $this->db->bind(':end_date', $data['to_date']);
     } else {
         $this->db->bind(':start_date', $data['from_date_short']);
-        $this->db->bind(':end_date', null);
+        $this->db->bind(':end_date', $data['from_date_short']); // For short-term, end_date is same as start_date
     }
     
     return $this->db->execute();
 }
+
 
 public function sendConsultantRequest($data) {
     $this->db->query('INSERT INTO consultantrequests 
