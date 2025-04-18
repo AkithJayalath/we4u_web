@@ -416,6 +416,51 @@ public function showConsultantProfile($consultant_id) {
 }
 
 
+public function getRequestById($id) {
+    $this->db->query("SELECT * FROM carerequests WHERE request_id = :id");
+    $this->db->bind(':id', $id);
+
+    return $this->db->single();
+}
+
+public function cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
+    $this->db->query("UPDATE carerequests 
+                      SET status = 'cancelled', 
+                          fine_amount = :fine_amount, 
+                          refund_amount = :refund_amount 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':fine_amount', $fineAmount);
+    $this->db->bind(':refund_amount', $refundAmount);
+    $this->db->bind(':id', $requestId);
+
+    return $this->db->execute();
+}
+
+public function markFineAsPaid($requestId) {
+    $this->db->query("UPDATE carerequests 
+                      SET is_paid = 1 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':id', $requestId);
+    return $this->db->execute();
+}
+
+public function deleteRequest($requestId) {
+    $this->db->query('DELETE FROM carerequests WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $requestId);
+    
+    // Execute query
+    if ($this->db->execute()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+
 
 
 

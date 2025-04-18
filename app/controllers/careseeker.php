@@ -718,6 +718,133 @@ public function viewConsultRequestInfo($requestId)
         
       }
 
+// Cancel Caregiving Request
+
+      public function cancelCaregivingRequest($requestId) {
+        $request = $this->careseekersModel->getRequestById($requestId);
+    
+        if (!$request) {
+            flash('request_error', 'Invalid request or service.');
+            redirect('careseeker/viewRequests');
+            return;
+        }
+    
+        $now = new DateTime();
+        $startDateTime = $this->getStartDateTime($request); // using slot-aware logic
+        $canCancel = false;
+        $fineAmount = 0;
+        $refundAmount = 0;
+    
+        if ($request->status === 'pending') {
+            $canCancel = true;
+        } elseif ($request->status === 'accepted') {
+            $hoursLeft = ($startDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+    
+            if ($hoursLeft >= 24) {
+                $canCancel = true;
+    
+                if ($request->is_paid) {
+                    $refundAmount = $request->payment_details; // full refund
+                }
+            } elseif ($hoursLeft > 0) {
+                $canCancel = true;
+    
+                if ($request->is_paid) {
+                    $fineAmount = $request->payment_details * 0.10;
+                    $refundAmount = $request->payment_details - $fineAmount;
+                } else {
+                    $fineAmount = $request->payment_details * 0.10;
+                }
+            }
+        }
+    
+        if (!$canCancel) {
+            flash('request_error', 'Request cannot be cancelled at this stage.');
+            redirect('careseeker/viewRequests');
+            return;
+        }
+    
+        $this->careseekersModel->cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
+    
+        if (!$request->is_paid && $fineAmount > 0) {
+            flash('request_warning', 'Request cancelled. Please proceed to pay the fine to complete cancellation.');
+            redirect('payment/payFine/' . $requestId);
+            return;
+        }
+    
+        flash('request_success', 'Request cancelled successfully.');
+        redirect('careseeker/viewRequests');
+    }
+    
+
+    private function getStartDateTime($request) {
+        $date = new DateTime($request->start_date);
+        
+        if ($request->duration_type === 'long-term') {
+            $date->setTime(8, 0);
+        } elseif ($request->duration_type === 'short-term') {
+            $slots = json_decode($request->time_slots);
+            if (in_array('morning', $slots)) {
+                $date->setTime(8, 0);
+            } elseif (in_array('afternoon', $slots)) {
+                $date->setTime(13, 0);
+            } elseif (in_array('overnight', $slots)) {
+                $date->setTime(20, 0);
+            } elseif (in_array('full_day', $slots)) {
+                $date->setTime(8, 0);
+            }
+        }
+    
+        return $date;
+    }
+
+// Delete Caregiving Request
+public function deleteRequest($requestId = null) {
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+    
+    // Check if user is a careseeker
+    if ($_SESSION['user_role'] !== 'Careseeker') {
+        flash('delete_error', 'You do not have permission to delete requests', 'alert alert-danger');
+        redirect('pages/index');
+    }
+    
+    // If no request ID provided, redirect back
+    if (!$requestId) {
+        flash('delete_error', 'No request specified', 'alert alert-danger');
+        redirect('careseeker/viewRequests');
+    }
+    
+    // Verify the request belongs to this careseeker
+    $request = $this->careseekersModel->getRequestById($requestId);
+    if (!$request || $request->requester_id != $_SESSION['user_id']) {
+        flash('delete_error', 'You do not have permission to delete this request', 'alert alert-danger');
+        redirect('careseeker/dashboard');
+    }
+    
+    // Check if the request is in a deletable state (cancelled, rejected, or completed)
+    $deletableStates = ['cancelled', 'rejected', 'completed'];
+    if (!in_array(strtolower($request->status), $deletableStates)) {
+        flash('delete_error', 'Only cancelled, rejected, or completed requests can be deleted', 'alert alert-danger');
+        redirect('careseeker/viewRequestInfo/' . $requestId);
+    }
+    
+    // Delete the request
+    if ($this->careseekersModel->deleteRequest($requestId)) {
+        flash('request_success', 'Request successfully deleted', 'alert alert-success');
+    } else {
+        flash('request_error', 'Failed to delete request. Please try again.', 'alert alert-danger');
+    }
+    
+    // Redirect to dashboard
+    redirect('careseeker/viewRequests');
+}
+    
+
+
+
 
 
       public function viewPayments(){

@@ -163,8 +163,11 @@
 .request-cancel-button {
     background-color: var(--color-btn-upload);
 }
+.request-delete-button {
+    background-color: var(--color-btn-delete);
+}
 
-.request-send-button, .request-cancel-button {
+.request-send-button, .request-cancel-button, .request-delete-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -191,6 +194,15 @@
 
 .request-cancel-button:hover {
     background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+}
+
+.request-delete-button:hover {
+    background-color: var(--color-btn-delete-hover); /* Darker shade on hover */
+}
+
+.request-cancel-button:disabled {
+    background-color: #cccccc; /* Greyed out color for disabled state */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
 }
 
 
@@ -255,3 +267,221 @@
 .view-elder-profile-link:hover {
   text-decoration: underline;
 }
+
+
+/* cancel Modal styles */
+.cancel-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.cancel-modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+  from {opacity: 0; transform: translateY(-20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.cancel-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.cancel-modal-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.close-modal {
+  color: #aaa;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+.cancel-modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.cancel-icon {
+  font-size: 40px;
+  color: #ff6b6b;
+  margin-bottom: 15px;
+}
+
+.cancel-modal-body p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.cancellation-details {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 15px;
+  text-align: left;
+}
+
+.fee-info-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.fee-info {
+  flex: 1;
+  min-width: 45%;
+  background-color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 5px;
+}
+
+.fee-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.fee-amount {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.fee-amount.positive {
+  color: #2ecc71;
+}
+
+.fee-amount.negative {
+  color: #e74c3c;
+}
+
+.cancellation-reason {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border-left: 4px solid #3498db;
+}
+
+.cancellation-reason.warning {
+  border-left-color: #e74c3c;
+}
+
+.cancellation-reason.success {
+  border-left-color: #2ecc71;
+}
+
+.cancellation-policy {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.cancellation-policy ul {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.cancellation-policy li {
+  margin-bottom: 5px;
+}
+
+.cancel-modal-footer {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #eaeaea;
+}
+
+.confirm-cancel-btn, .keep-request-btn, .pay-fine-btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirm-cancel-btn {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.confirm-cancel-btn:hover {
+  background-color: #ff5252;
+}
+
+.pay-fine-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.pay-fine-btn:hover {
+  background-color: #2980b9;
+}
+
+.keep-request-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.keep-request-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Hide the fee info when no fees apply */
+.no-fee {
+  display: none;
+}
+
+.status-message {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.status-message.success {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #27ae60;
+}
+
+.status-message.warning {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #c0392b;
+}
+
+.status-message.neutral {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #2980b9;
+}
+
+
