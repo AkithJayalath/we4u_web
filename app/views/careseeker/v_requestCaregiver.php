@@ -143,11 +143,10 @@ echo loadCSS($required_styles);
                             <div class="form-group">
                                 <label>Select Time Slots (Choose one or more)</label>
                                 <div class="time-slot-checkboxes">
-                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" onchange="handleFullDaySelection(); calculatePayment();"><span>Full Day (8am-8pm)</span></label>
+                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" onchange="handleFullDaySelection(); calculatePayment();"><span>Full Day (8am-8am)</span></label>
                                     <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="morning" class="other-slot" onchange="calculatePayment()"><span>Morning (8am-12pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot" onchange="calculatePayment()"><span>Evening (12pm-6pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="night" class="other-slot" onchange="calculatePayment()"><span>Night (6pm-10pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot" onchange="calculatePayment()"><span>Overnight (10pm-8am)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot" onchange="calculatePayment()"><span>Evening (1pm-5pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot" onchange="calculatePayment()"><span>Overnight (6pm-8am)</span></label>
                                 </div>
                             </div>
                         </div>
@@ -281,9 +280,132 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('short-term-radio').checked = true;
     }
     
+    // Set min date for all date inputs to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+    
+    document.getElementById('from-date').min = tomorrowFormatted;
+    document.getElementById('to-date').min = tomorrowFormatted;
+    document.getElementById('from_date_short').min = tomorrowFormatted;
+    
+    // Add event listeners for the duration type radio buttons
+    document.getElementById('long-term-radio').addEventListener('change', function() {
+        if (this.checked) {
+            // Make sure short term date is cleared
+            document.getElementById('from_date_short').value = '';
+            // Clear any time slot selections
+            document.querySelectorAll('input[name="timeslot[]"]:checked').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+    
+    document.getElementById('short-term-radio').addEventListener('change', function() {
+        if (this.checked) {
+            // Make sure both long term dates are cleared
+            document.getElementById('from-date').value = '';
+            document.getElementById('to-date').value = '';
+        }
+    });
+    
     toggleDurationFields(); // Handle pre-selected option
     handleFullDaySelection(); // Check for any pre-selected checkboxes
     calculatePayment(); // Calculate initial payment
+    
+    // Add event listeners for date inputs
+    document.getElementById('from-date').addEventListener('change', function() {
+        // When start date changes, set the min date of the end date
+        const startDate = new Date(this.value);
+        
+        if (!isNaN(startDate.getTime())) {
+            // Set minimum end date to the same as start date
+            const minEndDate = startDate.toISOString().split('T')[0];
+            
+            // Calculate maximum end date (start date + 4 days = 5 days total)
+            const maxEndDate = new Date(startDate);
+            maxEndDate.setDate(startDate.getDate() + 4);
+            const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
+            
+            const toDateInput = document.getElementById('to-date');
+            toDateInput.min = minEndDate;
+            toDateInput.max = maxEndDateFormatted;
+            
+            // If current end date is beyond the new max, adjust it
+            if (toDateInput.value) {
+                const currentEndDate = new Date(toDateInput.value);
+                if (currentEndDate > maxEndDate) {
+                    toDateInput.value = maxEndDateFormatted;
+                }
+            }
+        }
+        
+        calculatePayment();
+    });
+    
+    document.getElementById('to-date').addEventListener('change', function() {
+        enforceDateLimits();
+        calculatePayment();
+    });
+    
+    document.getElementById('from_date_short').addEventListener('change', calculatePayment);
+    
+    // Get the form element
+    const requestForm = document.querySelector('.request-form');
+    
+    // Add event listener for form submission
+    requestForm.addEventListener('submit', function(event) {
+        // Get the elder profile select element
+        const elderProfileSelect = document.getElementById('elder-profile');
+        
+        // Check if a profile is selected
+        if (!elderProfileSelect.value) {
+            // Prevent form submission
+            event.preventDefault();
+            
+            // Create error message if it doesn't exist
+            let errorMsg = document.getElementById('elder-profile-error');
+            if (!errorMsg) {
+                errorMsg = document.createElement('div');
+                errorMsg.id = 'elder-profile-error';
+                errorMsg.className = 'form-error';
+                errorMsg.style.color = 'red';
+                errorMsg.style.fontSize = '14px';
+                errorMsg.style.marginTop = '5px';
+                errorMsg.textContent = 'Please select an elder profile';
+                
+                // Insert error message after the select element
+                elderProfileSelect.parentNode.appendChild(errorMsg);
+            }
+            
+            // Highlight the select field
+            elderProfileSelect.style.borderColor = 'red';
+            
+            // Scroll to the error
+            elderProfileSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            // If valid, remove any existing error message
+            const errorMsg = document.getElementById('elder-profile-error');
+            if (errorMsg) {
+                errorMsg.remove();
+            }
+            
+            // Reset border color
+            elderProfileSelect.style.borderColor = '';
+        }
+    });
+    
+    // Add change event listener to clear error when user selects a profile
+    document.getElementById('elder-profile').addEventListener('change', function() {
+        // Remove error message if it exists
+        const errorMsg = document.getElementById('elder-profile-error');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+        
+        // Reset border color
+        this.style.borderColor = '';
+    });
 });
 
 function toggleDurationFields() {
@@ -296,6 +418,21 @@ function toggleDurationFields() {
     longTermFields.classList.remove('show');
     shortTermFields.classList.remove('show');
     timeSlotsSection.classList.remove('show');
+
+    // Clear date values when switching between duration types
+    if (selectedType === 'long-term') {
+        // Clear short term date
+        document.getElementById('from_date_short').value = '';
+        // Clear any time slot selections
+        document.querySelectorAll('input[name="timeslot[]"]:checked').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        handleFullDaySelection(); // Update UI for time slots
+    } else if (selectedType === 'short-term') {
+        // Clear long term dates - ensure both are cleared
+        document.getElementById('from-date').value = '';
+        document.getElementById('to-date').value = '';
+    }
 
     // After a short delay, show the appropriate sections
     setTimeout(() => {
@@ -349,6 +486,33 @@ function handleFullDaySelection() {
     });
     
     calculatePayment(); // Recalculate payment when changing time slots
+}
+
+function enforceDateLimits() {
+    const fromDate = document.getElementById('from-date').value;
+    const toDate = document.getElementById('to-date').value;
+    
+    if (fromDate && toDate) {
+        const startDate = new Date(fromDate);
+        const endDate = new Date(toDate);
+        
+        // Calculate the difference in days
+        const diffTime = endDate - startDate;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
+        
+        if (diffDays > 5) {
+            // Reset the end date to be 5 days from start date
+            const maxEndDate = new Date(startDate);
+            maxEndDate.setDate(startDate.getDate() + 4); // 4 more days after start date = 5 days total
+            
+            // Format maxEndDate to YYYY-MM-DD for input value
+            const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
+            document.getElementById('to-date').value = maxEndDateFormatted;
+            
+            // Optionally, show a notification to the user
+            alert('Maximum care duration is 5 days. End date has been adjusted accordingly.');
+        }
+    }
 }
 
 function calculatePayment() {
@@ -420,69 +584,6 @@ function calculatePayment() {
     // Update hidden field with calculated total
     totalPaymentElement.value = totalPayment;
 }
-
-
-
-//Edler profile selection error
-// Add this to your existing script section at the bottom of the file
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the form element
-    const requestForm = document.querySelector('.request-form');
-    
-    // Add event listener for form submission
-    requestForm.addEventListener('submit', function(event) {
-        // Get the elder profile select element
-        const elderProfileSelect = document.getElementById('elder-profile');
-        
-        // Check if a profile is selected
-        if (!elderProfileSelect.value) {
-            // Prevent form submission
-            event.preventDefault();
-            
-            // Create error message if it doesn't exist
-            let errorMsg = document.getElementById('elder-profile-error');
-            if (!errorMsg) {
-                errorMsg = document.createElement('div');
-                errorMsg.id = 'elder-profile-error';
-                errorMsg.className = 'form-error';
-                errorMsg.style.color = 'red';
-                errorMsg.style.fontSize = '14px';
-                errorMsg.style.marginTop = '5px';
-                errorMsg.textContent = 'Please select an elder profile';
-                
-                // Insert error message after the select element
-                elderProfileSelect.parentNode.appendChild(errorMsg);
-            }
-            
-            // Highlight the select field
-            elderProfileSelect.style.borderColor = 'red';
-            
-            // Scroll to the error
-            elderProfileSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            // If valid, remove any existing error message
-            const errorMsg = document.getElementById('elder-profile-error');
-            if (errorMsg) {
-                errorMsg.remove();
-            }
-            
-            // Reset border color
-            elderProfileSelect.style.borderColor = '';
-        }
-    });
-    
-    // Add change event listener to clear error when user selects a profile
-    document.getElementById('elder-profile').addEventListener('change', function() {
-        // Remove error message if it exists
-        const errorMsg = document.getElementById('elder-profile-error');
-        if (errorMsg) {
-            errorMsg.remove();
-        }
-        
-        // Reset border color
-        this.style.borderColor = '';
-    });
-});
 </script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>
