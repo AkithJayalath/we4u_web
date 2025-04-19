@@ -2,6 +2,7 @@
   class caregivers extends controller{
 
     private $caregiversModel;
+    private $sheduleModel;
     public function __construct() {
       // Get current URL path
       $currentUrl = $_SERVER['REQUEST_URI'] ?? '';
@@ -24,20 +25,13 @@
       
       // Always load the model (for both public and protected routes)
       $this->caregiversModel = $this->model('M_Caregivers');
-    private $sheduleModel;
-    public function __construct(){
-      // if(!$_SESSION['user_id']){
-      //     redirect('users/login');
-      // }
-      // else{
-      //     if($_SESSION['user_role']!= 'Caregiver'){
-      //         redirect('pages/permissonerror');
-      //     }
+      $this->sheduleModel = $this->model('M_Shedules');
+
           $this->caregiversModel = $this->model('M_Caregivers');
-          $this->sheduleModel = $this->model('M_Shedules');
-      // }
+
+    }
     
-  }
+  
 
     public function index(){
       $this->viewRequests();
@@ -758,8 +752,8 @@ public function rejectRequest($request_id) {
 }
 
 
-      }
-    }
+      
+    
 
     // public function viewMyCalendar(){
 
@@ -803,5 +797,5 @@ public function rejectRequest($request_id) {
       $this->view('calendar/v_calendar', $data);
   }
   
-}
+  }
 ?>
