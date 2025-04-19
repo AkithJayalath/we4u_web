@@ -166,12 +166,7 @@ class careseeker extends controller{
         'elders' => $elders
     ];
 
-<<<<<<< HEAD
-    $this->view('careseeker/v_createProfile', $data);
-   
-=======
     $this->view('careseeker/v_createProfile', $data); 
->>>>>>> 8bc8ae8ee10155bd362a6ec7e2037bd2ca31a8a7
 }
 
 public function requestCaregiver() {

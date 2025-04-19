@@ -7,6 +7,7 @@ class M_Shedules{
         $this->db = new Database();
     }
 
+    // caregiver shedule endpoints
     public function getAllShedulesForCaregiver($caregiverID){
         $this->db->query('SELECT * From cg_shedules WHERE provider_id = :caregiverID');
         $this->db->bind(':caregiverID', $caregiverID);
@@ -14,7 +15,7 @@ class M_Shedules{
     }
 
     public function getAllLongShedulesForCaregiver($caregiverID){
-        $this->db->query('SELECT * From cg_long_bookings WHERE caregiver_id = :caregiverID');
+        $this->db->query('SELECT * From cg_long_shedules WHERE caregiver_id = :caregiverID');
         $this->db->bind(':caregiverID', $caregiverID);
         return $this->db->resultSet();
     }
@@ -60,6 +61,25 @@ class M_Shedules{
         
         return $this->db->resultSet();
     }
+
+    //end of caregiver shedule endpoints
+
+    // consultant shedule endpoints
+    public function getAllShedulesForConsultant($consultantID){
+        $this->db->query('SELECT * From co_shedules WHERE consultant_id = :consultantID');
+        $this->db->bind(':consultantID', $consultantID);
+        return $this->db->resultSet();
+    }
+
+    public function getAllShedulesForConsultantByDate($consultantID, $date){
+        $this->db->query('SELECT * FROM co_shedules WHERE consultant_id = :consultantID AND sheduled_date = :date');
+        $this->db->bind(':consultantID', $consultantID);
+    }
+    // end of consultant shedule endpoints
+
+
+
+
 
     public function createSchedule($caregiverID, $date, $shift){
         $this->db->query('INSERT INTO cg_shedules (provider_id, sheduled_date, shift) VALUES (:caregiverID, :date, :shift)');

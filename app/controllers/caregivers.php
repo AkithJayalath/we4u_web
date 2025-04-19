@@ -2,16 +2,18 @@
   class caregivers extends controller{
 
     private $caregiversModel;
+    private $sheduleModel;
     public function __construct(){
-      if(!$_SESSION['user_id']){
-          redirect('users/login');
-      }
-      else{
-          if($_SESSION['user_role']!= 'Caregiver'){
-              redirect('pages/permissonerror');
-          }
-          $this->caregiversModel = $this->model('M_Caregivers'); 
-      }
+      // if(!$_SESSION['user_id']){
+      //     redirect('users/login');
+      // }
+      // else{
+      //     if($_SESSION['user_role']!= 'Caregiver'){
+      //         redirect('pages/permissonerror');
+      //     }
+          $this->caregiversModel = $this->model('M_Caregivers');
+          $this->sheduleModel = $this->model('M_Shedules');
+      // }
     
   }
 
@@ -615,7 +617,49 @@
         // Load view
         $this->view('caregiver/v_editCaregiverProfile', $data);
       }
-     
     }
+
+    // public function viewMyCalendar(){
+
+    //   // $id = $_SESSION['user_id'];
+    //   $id = 26;
+    //   // this response having id, provider id, sheduled date, status and shift
+    //   $shortShedules = $this->sheduleModel->getAllShedulesForCaregiver($id);
+      
+    //   // this having id, caregiverid, startdate time, enddate time and status
+    //   $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
+
+
+
+    //   $data= [
+    //     'shortShedules' => $shortShedules,
+    //     'longShedules' => $longShedules
+    //   ];
+    //   $this->view('calendar/v_calendar', $data);
+    // }
+
+    public function viewMyCalendar(){
+      // Check if user is logged in
+      if(!$this->isLoggedIn()){
+          redirect('users/login');
+      }
+      
+      // Get caregiver ID from session
+      $id = $_SESSION['user_id'];
+      
+      // Get all schedules for the caregiver
+      $shortShedules = $this->sheduleModel->getAllShedulesForCaregiver($id);
+      $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
+      
+      // Prepare data for the view
+      $data = [
+          'shortShedules' => $shortShedules,
+          'longShedules' => $longShedules
+      ];
+      
+      // Load the calendar view
+      $this->view('calendar/v_calendar', $data);
+  }
+  
 }
 ?>
