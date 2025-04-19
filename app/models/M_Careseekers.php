@@ -446,6 +446,28 @@ public function markFineAsPaid($requestId) {
     return $this->db->execute();
 }
 
+//consultant request cancellation
+
+public function getConsultantRequestById($id) {
+    $this->db->query("SELECT * FROM consultantrequests WHERE request_id = :id");
+    $this->db->bind(':id', $id);
+
+    return $this->db->single();
+}
+public function cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
+    $this->db->query("UPDATE consultantrequests 
+                      SET status = 'cancelled', 
+                          fine_amount = :fine_amount, 
+                          refund_amount = :refund_amount 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':fine_amount', $fineAmount);
+    $this->db->bind(':refund_amount', $refundAmount);
+    $this->db->bind(':id', $requestId);
+
+    return $this->db->execute();
+}
+
 public function deleteRequest($requestId) {
     $this->db->query('DELETE FROM carerequests WHERE request_id = :request_id');
     $this->db->bind(':request_id', $requestId);

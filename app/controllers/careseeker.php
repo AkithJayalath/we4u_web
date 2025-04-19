@@ -721,6 +721,8 @@ public function viewConsultRequestInfo($requestId)
 // Cancel Caregiving Request
 
       public function cancelCaregivingRequest($requestId) {
+        date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
         $request = $this->careseekersModel->getRequestById($requestId);
     
         if (!$request) {
@@ -797,6 +799,85 @@ public function viewConsultRequestInfo($requestId)
     
         return $date;
     }
+
+
+// Cancel Consultation Request
+public function cancelConsultRequest($requestId) {
+    date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
+    $request = $this->careseekersModel->getConsultantRequestById($requestId);
+
+    if (!$request) {
+        flash('request_error', 'Invalid consultation request.');
+        redirect('careseeker/viewRequests');
+        return;
+    }
+
+    $now = new DateTime();
+    $appointmentDateTime = $this->getAppointmentDateTime($request);
+    $canCancel = false;
+    $fineAmount = 0;
+    $refundAmount = 0;
+
+    if ($request->status === 'pending') {
+        $canCancel = true;
+        if ($request->is_paid) {
+            $refundAmount = $request->payment_details; // full refund for pending requests
+        }
+    } elseif ($request->status === 'accepted') {
+        $hoursLeft = ($appointmentDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+
+        if ($hoursLeft >= 5) {
+            $canCancel = true;
+            if ($request->is_paid) {
+                $refundAmount = $request->payment_details; // full refund if > 5 hours
+            }
+        } elseif ($hoursLeft > 0) {
+            $canCancel = true;
+            if ($request->is_paid) {
+                $fineAmount = $request->payment_details * 0.10;
+                $refundAmount = $request->payment_details - $fineAmount;
+            } else {
+                $fineAmount = $request->payment_details * 0.10;
+            }
+        }
+    }
+
+    if (!$canCancel) {
+        flash('request_error', 'Consultation cannot be cancelled at this stage.');
+        redirect('careseeker/viewRequests');
+        return;
+    }
+
+    $this->careseekersModel->cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
+
+    if (!$request->is_paid && $fineAmount > 0) {
+        flash('request_warning', 'Consultation cancelled. Please proceed to pay the cancellation fee to complete this process.');
+        redirect('payment/payConsultFine/' . $requestId);
+        return;
+    }
+
+    flash('request_success', 'Consultation request cancelled successfully.');
+    redirect('careseeker/viewRequests');
+}
+
+private function getAppointmentDateTime($request) {
+    $date = new DateTime($request->appointment_date);
+    
+    if (!empty($request->time_slot)) {
+        [$from, $to] = explode('-', $request->time_slot);
+        $fromTime = trim($from);
+        
+        // Set the appointment time
+        list($hours, $minutes) = explode(':', $fromTime);
+        $date->setTime((int)$hours, (int)$minutes, 0);
+    } else {
+        // Default to 8:00 AM if no time slot is specified
+        $date->setTime(8, 0, 0);
+    }
+
+    return $date;
+}
 
 // Delete Caregiving Request
 public function deleteRequest($requestId = null) {
