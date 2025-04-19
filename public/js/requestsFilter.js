@@ -41,15 +41,15 @@ document
         // Sort rows by date
         if (dateFilter === "newest") {
             filteredRows.sort((a, b) => {
-                const dateA = new Date(a.children[1].textContent.trim());
-                const dateB = new Date(b.children[1].textContent.trim());
-                return dateB - dateA; // Newest first
+                const dateA = new Date(a.children[1].dataset.date);
+                const dateB = new Date(b.children[1].dataset.date);
+                return dateB - dateA;
             });
         } else if (dateFilter === "oldest") {
             filteredRows.sort((a, b) => {
-                const dateA = new Date(a.children[1].textContent.trim());
-                const dateB = new Date(b.children[1].textContent.trim());
-                return dateA - dateB; // Oldest first
+                const dateA = new Date(a.children[1].dataset.date);
+                const dateB = new Date(b.children[1].dataset.date);
+                return dateA - dateB;
             });
         }
 

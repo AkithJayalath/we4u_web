@@ -1,6 +1,6 @@
 <?php
 $required_styles = [
-    'careseeker/viewConsultantProfile',
+    'careseeker/viewCaregiverProfile',
 ];
 echo loadCSS($required_styles);
 ?>
@@ -9,125 +9,167 @@ echo loadCSS($required_styles);
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
 
 <page-body-container>
-    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+    <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
     <!-- Container -->
-    <div class="view-consultant-profile">
+    <div class="view-caregiver-profile">
         <!-- Personal info section -->
-        <div class="consultant-personal-info-section">
-            <div class="consultant-personal-info-left">
-                <div class="consultant-personal-info-left-left">
-                    <img src="https://media.istockphoto.com/id/1371009338/photo/portrait-of-confident-a-young-dentist-working-in-his-consulting-room.jpg?s=612x612&w=0&k=20&c=I212vN7lPpAOwGKRoEY9kYWunJaMj9vH2g-8YBGc2MI=" alt="Profile" class="consultant-personal-info-pic" />
+        <div class="caregiver-personal-info-section">
+            <div class="caregiver-personal-info-left">
+                <div class="caregiver-personal-info-left-left">
+                    <img src="<?php echo !empty($data['profile']->profile_picture) ? URLROOT . '/images/profile_imgs/'. $data['profile']->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                 </div>
-                <div class="consultant-personal-info-left-right">
-                    <div class="consultant-personal-info-profile">
-
-                        <div class="consultant-personal-info-details">
-                            <span class="consultant-personal-info-tag">Verfied</span>
-                            <h2>Dr.Amal Perera</h2>
-                            <span class="consultant-email">consultant@gmail.com</span>
+                <div class="caregiver-personal-info-left-right">
+                    <div class="caregiver-personal-info-profile">
+                        <div class="caregiver-personal-info-details">
+                            <span class="caregiver-personal-info-tag">Verified</span>
+                            <h2><?php echo $data['profile']->username; ?></h2>
+                            <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
                             <p class="consultant-rating">
-                                <span class="rating-stars" id="rating-stars"></span>
+                                <?php for($i=1; $i<=5; $i++) : ?>
+                                    <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
+                                <?php endfor; ?>
                             </p>
-                            <p>38 years</p>
+                            <p><?php echo $data['age']; ?> Years</p>
+                            <p><?php echo $data['profile']->gender; ?></p>
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="consultant-personal-info-right">
-                <button class="consultant-chat-button">
+            <div class="caregiver-personal-info-right">
+                <button class="caregiver-chat-button">
                     <i class="fas fa-comments"></i> Chat
                 </button>
-                <button class="consultant-send-button" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/requestConsultant';">
-                    <i class="fas fa-paper-plane"></i> Send Request
-                </button>
-            </div>
+                <button class="caregiver-send-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/showConsultantRequestForm/<?= $data['profile']->consultant_id ?>'">
+    <i class="fas fa-paper-plane"></i> Send Request
+</button>
 
+            </div>
         </div>
 
         <!-- other info section -->
-        <div class="consultant-other-info-section">
+        <div class="caregiver-other-info-section">
+            <div class="caregiver-other-concern-section">
+                <div class="caregiver-other-concern-section-header">
+                    <div class="caregiver-header-with-icon">
+                        <h3>Bio</h3>
+                    </div>
+                </div>
+                <div class="caregiver-other-concern-section-content">
+                    <p><?php echo $data['profile']->bio; ?></p>
+                </div>
+            </div>
+            
             <!-- Health concerns -->
-            <div class="consultant-health-concern-section">
-                <div class="consultant-health-concern-section-header">
-                    <div class="consultant-header-with-icon">
+            <div class="caregiver-health-concern-section">
+                <div class="caregiver-health-concern-section-header">
+                    <div class="caregiver-header-with-icon">
                         <h3>Profile</h3>
                     </div>
                 </div>
-                <div class="consultant-health-concern-section-content">
-                    <div class="consultant-health-concern-item">
-                        <i class="fas fa-graduation-cap"></i>
+                <div class="caregiver-health-concern-section-content">
+                    <div class="caregiver-health-concern-item">
+                        <i class="fas fa-graduation-cap icon"></i>
                         <div>
                             <h4>Qualifications</h4>
-                            <p>Bachelor of Medicine, Bachelor of Surgery (MBBS/MBChB)</p>
-                            <p>MS (Master of Surgery)</p>
+                            <?php 
+                            $qualification = explode(',', $data['profile']->qualifications);
+                            foreach($qualification as $qualification) : ?>
+                                <p><?php echo trim($qualification); ?></p>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="consultant-health-concern-item">
+                    <div class="caregiver-health-concern-item">
                         <i class="fas fa-user-md icon"></i>
                         <div>
                             <h4>Specializations</h4>
-                            <p>Cardiology</p>
-                            <p> Pulmonology</p>
+                            <?php 
+                            $specialty = explode(',', $data['profile']->specializations);
+                            foreach($specialty as $specialty) : ?>
+                                <p><?php echo trim($specialty); ?></p>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="consultant-health-concern-item">
+                    <div class="caregiver-health-concern-item">
                         <i class="fas fa-map-marker-alt icon"></i>
                         <div>
                             <h4>Regions Available</h4>
-                            <p>Colombo Suburbs</p>
+                            <?php 
+                            $available_region = explode(',', $data['profile']->available_regions);
+                            foreach($available_region as $available_region) : ?>
+                                <p><?php echo trim($available_region); ?></p>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="consultant-health-concern-item">
-                        <i class="fas fa-wheelchair icon"></i>
+                    <div class="caregiver-health-concern-item">
+                        <i class="fas fa-hands-helping icon"></i>
                         <div>
-                            <h4>Hospitals</h4>
-                            <p>Colombo General Hospital</p>
-                            <p>Health care Clinic,Colombo</p>
+                            <h4>Expertise</h4>
+                            <?php 
+                            $expertise = explode(',', $data['profile']->expertise);
+                            foreach($expertise as $expertise) : ?>
+                                <p><?php echo trim($expertise); ?></p>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    <div class="consultant-health-concern-item">
+                    <div class="caregiver-health-concern-item">
                         <i class="fas fa-dollar-sign icon"></i>
                         <div>
                             <h4>Payment details</h4>
-                            <p>Rs.2000 per visit</p>
-                            <p>+ Rs.400 per session</p>
+                            <p>Rs.<?php echo $data['profile']->payment_details ; ?> per hour</p>
                         </div>
                     </div>
                 </div>
             </div>
+            
             <!-- Other concerns -->
-            <div class="consultant-other-concern-section">
-                <div class="consultant-other-concern-section-header">
-                    <div class="consultant-header-with-icon">
+            <div class="caregiver-other-concern-section">
+                <div class="caregiver-other-concern-section-header">
+                    <div class="caregiver-header-with-icon">
                         <h3>Availability</h3>
                     </div>
                 </div>
-                <div class="consultant-other-concern-section-content">
-                   
-                    </div>
+                <div class="caregiver-other-concern-section-content">
+                    <!-- Availability content here -->
                 </div>
             </div>
-            <div class="consultant-other-info-section">
-            <div class="consultant-health-concern-section">
-            <div class="consultant-health-concern-section-header">
-                    <div class="consultant-header-with-icon">
+        </div>
+        
+        <div class="caregiver-other-info-section">
+            <div class="caregiver-health-concern-section">
+                <div class="caregiver-health-concern-section-header">
+                    <div class="caregiver-header-with-icon">
                         <h3>Rating & reviews</h3>
                     </div>
                 </div>
                 <div class="rating-section-content">
-                    
+                    <!-- ratings.js -->
                 </div>
                 <div class="reviews-section-content">
-
+                    <!-- reviews.js -->
                 </div>
             </div>
-            </div>
+        </div>
     </div>
-
 </page-body-container>
+
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <script src="<?php echo URLROOT; ?>/js/rating.js"></script>
 <script src="<?php echo URLROOT; ?>/js/reviews.js"></script>
+
+<script>
+    const reviewData = {
+        rating: <?php echo json_encode($data['rating']); ?>,
+        reviews: <?php echo json_encode($data['reviews']); ?>
+    };
+    
+    addRatingsAndReviews(reviewData);
+</script>
+
+<script>
+    const URLROOT = '<?php echo URLROOT; ?>';
+    const reviewsData = <?php echo json_encode($data['reviews']); ?>;
+    addReviewsForConsultant(reviewsData);
+</script>
+
 <?php require APPROOT . '/views/includes/footer.php' ?>

@@ -210,7 +210,8 @@ public function updateCaregiverProfile($data){
     c.skills = :skills,
     c.qualification = :qualification,
     c.available_region = :available_region,
-    c.payment_details = :payment_details,
+    c.price_per_session = :price_per_session,
+    c.price_per_day = :price_per_day,
     c.bio = :bio
     WHERE u.email = :email');
 
@@ -224,11 +225,216 @@ public function updateCaregiverProfile($data){
     $this->db->bind(':skills', $data['skills']);
     $this->db->bind(':qualification', $data['qualification']);
     $this->db->bind(':available_region', $data['available_region']);
-    $this->db->bind(':payment_details', $data['payment_details']);
+    $this->db->bind(':price_per_session', $data['payment_per_session']);
+    $this->db->bind(':price_per_day', $data['payment_per_day']);
     $this->db->bind(':bio', $data['bio']);
 
     return $this->db->execute();
 }
+
+
+public function getCaregivers($region = '', $type = '', $speciality = '', $sortBy = '', $page = 1, $perPage = 8) {
+    // Build the SQL query with JOIN between users and caregivers tables
+    $sql = "SELECT c.*, u.username, u.profile_picture, u.gender, u.date_of_birth
+            FROM caregiver c
+            JOIN user u ON c.caregiver_id = u.user_id
+            WHERE u.role = 'Caregiver' AND c.is_approved = 'approved'";
+    
+    // Add filters if provided
+    $params = [];
+    
+    if (!empty($region)) {
+        $sql .= " AND c.available_region LIKE :region";
+        $params[':region'] = "%$region%"; // Using LIKE for comma-separated values
+    }
+    
+    if (!empty($type)) {
+        $sql .= " AND c.caregiver_type = :type";
+        $params[':type'] = $type;
+    }
+    
+    if (!empty($speciality)) {
+        $sql .= " AND c.specialty LIKE :speciality";
+        $params[':speciality'] = "%$speciality%"; // Using LIKE for comma-separated values
+    }
+    
+    // Add sorting
+    // if (!empty($sortBy)) {
+    //     switch ($sortBy) {
+    //         case 'rating':
+    //             $sql .= " ORDER BY c.rating DESC";
+    //             break;
+    //         case 'price-asc':
+    //             $sql .= " ORDER BY c.payment_rate ASC";
+    //             break;
+    //         case 'price-desc':
+    //             $sql .= " ORDER BY c.payment_rate DESC";
+    //             break;
+    //         default:
+    //             $sql .= " ORDER BY c.rating DESC"; // Default sort
+    //             break;
+    //     }
+    // } else {
+    //     $sql .= " ORDER BY c.rating DESC"; // Default sort
+    // }
+    
+    // Add pagination
+    $offset = ($page - 1) * $perPage;
+    $sql .= " LIMIT :offset, :limit";
+    $params[':offset'] = $offset;
+    $params[':limit'] = $perPage;
+    
+    // Prepare and execute query
+    $this->db->query($sql);
+    
+    // Bind parameters
+    foreach ($params as $param => $value) {
+        $this->db->bind($param, $value);
+    }
+    
+    return $this->db->resultSet();
+}
+
+public function getCaregiversCount($region = '', $type = '', $speciality = '') {
+    // Count query with same filters as main query
+    $sql = "SELECT COUNT(*) as count
+            FROM caregiver c
+            JOIN user u ON c.caregiver_id = u.user_id
+            WHERE u.role = 'Caregiver' AND c.is_approved = 'approved'";
+    
+    // Add filters if provided
+    $params = [];
+    
+    if (!empty($region)) {
+        $sql .= " AND c.available_region LIKE :region";
+        $params[':region'] = "%$region%";
+    }
+    
+    if (!empty($type)) {
+        $sql .= " AND c.caregiver_type = :type";
+        $params[':type'] = $type;
+    }
+    
+    if (!empty($speciality)) {
+        $sql .= " AND c.specialty LIKE :speciality";
+        $params[':speciality'] = "%$speciality%";
+    }
+    
+    // Prepare and execute query
+    $this->db->query($sql);
+    
+    // Bind parameters
+    foreach ($params as $param => $value) {
+        $this->db->bind($param, $value);
+    }
+    
+    $result = $this->db->single();
+    return $result->count;
+}
+
+public function getAllRegions() {
+    // Get all unique regions from the database (handling comma-separated values)
+    $this->db->query("SELECT DISTINCT available_region FROM caregiver WHERE is_approved = 'approved'");
+    $results = $this->db->resultSet();
+    
+    $allRegions = [];
+    foreach ($results as $row) {
+        $regions = explode(',', $row->available_region);
+        foreach ($regions as $region) {
+            $region = trim($region);
+            if (!empty($region) && !in_array($region, $allRegions)) {
+                $allRegions[] = $region;
+            }
+        }
+    }
+    
+    sort($allRegions); // Sort alphabetically
+    return $allRegions;
+}
+
+public function getCaregiverById($id) {
+    $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
+                    FROM caregiver c
+                    JOIN user  ON c.caregiver_id = u.user_id
+                    WHERE c.caregiver_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
+
+
+//view care requests for caregiver
+public function getAllCareRequestsByCaregiver($caregiverId)
+{
+    $this->db->query("
+        SELECT cr.*, u.username AS requester_name, u.profile_picture,
+               cr.created_at AS request_date,
+               DATE_FORMAT(cr.created_at, '%e %b %Y') AS formatted_date,
+               DATE_FORMAT(cr.created_at, '%h:%i %p') AS formatted_time
+        FROM carerequests cr
+        LEFT JOIN user u ON cr.requester_id = u.user_id
+        WHERE cr.caregiver_id = :caregiver_id
+        ORDER BY cr.created_at DESC
+    ");
+    $this->db->bind(':caregiver_id', $caregiverId);
+    return $this->db->resultSet();
+}
+
+
+// To get all request details
+public function getFullCareRequestInfo($requestId)
+{
+    $this->db->query("SELECT cr.*, 
+                             cs.address AS careseeker_address,
+                             cs.contact_info AS careseeker_contact,
+                             cs.rating AS careseeker_rating,
+                             u.profile_picture AS caregiver_pic,
+                             req_user.username AS careseeker_name,
+                             req_user.profile_picture AS careseeker_pic,
+                             req_user.email AS careseeker_email,
+                           CONCAT(e.first_name, ' ', e.middle_name, ' ', e.last_name) AS elder_name,
+                             e.profile_picture AS elder_pic,
+                             e.relationship_to_careseeker
+                      FROM carerequests cr
+                      LEFT JOIN careseeker cs ON cr.requester_id = cs.careseeker_id
+                      LEFT JOIN user req_user ON req_user.user_id = cr.requester_id
+                      LEFT JOIN user u ON u.user_id = cr.caregiver_id
+                      LEFT JOIN elderprofile e ON e.elder_id = cr.elder_id
+                      WHERE cr.request_id = :request_id");
+    $this->db->bind(':request_id', $requestId);
+
+    return $this->db->single();
+}
+
+public function getElderProfileById($elderId) {
+    $this->db->query("
+        SELECT 
+            *, 
+            CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name 
+        FROM elderprofile 
+        WHERE elder_id = :elder_id
+    ");
+    $this->db->bind(':elder_id', $elderId);
+    return $this->db->single();
+}
+
+
+//Accept or reject a request
+public function updateRequestStatus($request_id, $status) {
+    $this->db->query("UPDATE carerequests SET status = :status WHERE request_id = :request_id");
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    return $this->db->execute();
+}
+
+//Get request by ID
+public function getRequestById($request_id) {
+    $this->db->query("SELECT * FROM carerequests WHERE request_id = :request_id");
+    $this->db->bind(':request_id', $request_id);
+    return $this->db->single();
+}
+
+
+
 
 }
 ?>

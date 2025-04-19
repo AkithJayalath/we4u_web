@@ -50,6 +50,13 @@
     position: relative;
     
   }
+  .pro-img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+  }
   
   .caregiver-personal-info-pic {
     width: 250px;

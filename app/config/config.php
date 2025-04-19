@@ -16,4 +16,6 @@
     // PUBROOT
     define('PUBROOT',dirname(dirname(dirname(__FILE__))).'\public');
 
+    define('DEBUG_MODE', true);
+
 ?>
