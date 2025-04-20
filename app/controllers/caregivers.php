@@ -15,7 +15,7 @@
     
   }
 
-    public function index(){
+    public function index(){ 
       $this->request();
     }
 

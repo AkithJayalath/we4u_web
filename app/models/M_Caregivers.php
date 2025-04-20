@@ -38,7 +38,7 @@ class M_Caregivers {
         $this->db->bind(':password', $data['password']);
         $this->db->bind(':role', 'Caregiver'); 
 
-        // Execute the query and check if the insertion was successful
+        // Execute the query and check if the insertion was successful 
         if ($this->db->execute()) {
             // Get the ID of the newly created user
             $newUserId = $this->db->lastInsertId();
