@@ -391,6 +391,52 @@ public function getRequestById($request_id) {
     return $this->db->single();
 }
     
+//cancel requests
+
+public function cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag = false) {
+    // Update request status to cancelled
+    $this->db->query("UPDATE consultantrequests 
+                      SET status = 'cancelled', 
+                          refund_amount = :refund_amount 
+                      WHERE request_id = :id");
+    
+    $this->db->bind(':refund_amount', $refundAmount);
+    $this->db->bind(':id', $requestId);
+    
+    $requestUpdated = $this->db->execute();
+    
+    // If flagging is required, increment the consultant's flag count
+    if ($shouldFlag) {
+        // First get the consultant ID from the request
+        $this->db->query("SELECT consultant_id FROM consultantrequests WHERE request_id = :id");
+        $this->db->bind(':id', $requestId);
+        $result = $this->db->single();
+        
+        if ($result && isset($result->consultant_id)) {
+            // Increment the flag count in consultant table
+            $this->db->query("UPDATE consultant
+                              SET cancellation_flags = COALESCE(cancellation_flags, 0) + 1 
+                              WHERE consultant_id = :consultant_id");
+            $this->db->bind(':consultant_id', $result->consultant_id);
+            $this->db->execute();
+        }
+    }
+    
+    // Process refund if necessary
+    /*if ($refundAmount > 0) {
+        // Update payment status to refunded
+        $this->db->query("UPDATE payments 
+                         SET status = 'refunded', 
+                             refund_amount = :refund_amount,
+                             refund_date = NOW() 
+                         WHERE request_id = :id AND service_type = 'consultation'");
+        $this->db->bind(':refund_amount', $refundAmount);
+        $this->db->bind(':id', $requestId);
+        $this->db->execute();
+    }*/
+    
+    return $requestUpdated;
+}
 
 }
 ?>

@@ -184,6 +184,10 @@ echo loadCSS($required_styles);
                     <p>Caregiving</p>
                 </div>
                 <div class="request-info-row">
+                    <label>Service Address</label>
+                    <p><?= htmlspecialchars($data->service_address) ?></p>
+                </div>
+                <div class="request-info-row">
                     <label>Expected Services</label>
                     <p><?= htmlspecialchars($data->expected_services) ?></p>
                 </div>

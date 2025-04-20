@@ -14,32 +14,30 @@ echo loadCSS($required_styles);
     <div class="request-caregiver">
         <div class="request-heading">
             <p>Send Care Request</p>
-            <?php echo $data['error'] ?? ''; ?>
         </div>
-        
+
+
+
         <!-- Personal info section -->
         <div class="request-header">
             <div class="request-header-left">
-            <?php 
-    
-    // Determine which image to display
-    $CareseekerprofilePic = !empty($data['careseeker']->profile_picture) 
-        ? URLROOT . '/public/images/profile_imgs/' . $data['careseeker']->profile_picture
-        : URLROOT . '/public/images/def_profile_pic2.jpg';
-    ?>
+                <?php
+                // Determine which image to display
+                $CareseekerprofilePic = !empty($data['careseeker']->profile_picture)
+                    ? URLROOT . '/public/images/profile_imgs/' . $data['careseeker']->profile_picture
+                    : URLROOT . '/public/images/def_profile_pic2.jpg';
+                ?>
                 <div class="request-header-left-left">
-                    <div class="circle image1"><img src="<?= $CareseekerprofilePic ?>" alt="Profile"  /></div>
+                    <div class="circle image1"><img src="<?= $CareseekerprofilePic ?>" alt="Profile" /></div>
                     <div class="circle image1">
-    <?php 
-    
-    // Determine which image to display
-    $CaregiverprofilePic = !empty($data['caregiver']->profile_picture) 
-        ? URLROOT . '/public/images/profile_imgs/' . $data['caregiver']->profile_picture
-        : URLROOT . '/public/images/def_profile_pic2.jpg';
-    ?>
-    
-    <img src="<?= $CaregiverprofilePic ?>" alt="Profile Picture" />
-</div>
+                        <?php
+                        // Determine which image to display
+                        $CaregiverprofilePic = !empty($data['caregiver']->profile_picture)
+                            ? URLROOT . '/public/images/profile_imgs/' . $data['caregiver']->profile_picture
+                            : URLROOT . '/public/images/def_profile_pic2.jpg';
+                        ?>
+                        <img src="<?= $CaregiverprofilePic ?>" alt="Profile Picture" />
+                    </div>
                 </div>
                 <div class="request-header-left-right">
                     <div class="request-personal-info-profile">
@@ -53,7 +51,6 @@ echo loadCSS($required_styles);
                             <p><?php echo $data['age']; ?></p>
                             <p><?php echo $data['caregiver']->gender; ?></p>
                             <p><?php echo $data['caregiver']->caregiver_type; ?> Term Care</p>
-                           
                         </div>
                     </div>
                 </div>
@@ -63,27 +60,30 @@ echo loadCSS($required_styles);
         <div class="request-info-section">
             <div class="request-other-concern-section">
                 <div class="request-other-concern-section-content">
-                <form class="request-form" action="<?php echo URLROOT; ?>/careseeker/requestCaregiver/<?php echo $data['caregiver_id']; ?>" method="POST">
+                    <form class="request-form" action="<?php echo URLROOT; ?>/careseeker/requestCaregiver/<?php echo $data['caregiver_id']; ?>" method="POST">
                         <!-- Elder Profile -->
                         <div class="form-section">
                             <div class="form-section-title">Elder Details</div>
                             <div class="form-group">
                                 <label for="elder-profile">Select Elder Profile</label>
-                                <select id="elder-profile" name="elder_profile">
-                                    <option value="" disabled selected>Select a profile</option>
-                                    <?php foreach($data['elders'] as $elder): ?>
-                                        <option value="<?php echo $elder->elder_id; ?>">
-                                            <?php echo htmlspecialchars($elder->first_name . ' ' . $elder->last_name); ?> 
+                                <select id="elder-profile" name="elder_profile" class="<?php echo (!empty($data['elder_profile_err'])) ? 'is-invalid' : ''; ?>">
+                                    <option value="" disabled <?php echo empty($data['elder_profile']) ? 'selected' : ''; ?>>Select a profile</option>
+                                    <?php foreach ($data['elders'] as $elder): ?>
+                                        <option value="<?php echo $elder->elder_id; ?>" <?php echo ($data['elder_profile'] == $elder->elder_id) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($elder->first_name . ' ' . $elder->last_name); ?>
                                             (<?php echo htmlspecialchars($elder->age); ?> years)
                                         </option>
                                     <?php endforeach; ?>
-                                    <?php if(empty($data['elders'])): ?>
+                                    <?php if (empty($data['elders'])): ?>
                                         <option value="" disabled>No profiles available. Please create an elder profile first.</option>
                                     <?php endif; ?>
                                 </select>
+                                <?php if (!empty($data['error']) && strpos($data['error'], 'elder profile') !== false): ?>
+                                    <div class="field-error">Please select an elder profile</div>
+                                <?php endif; ?>
                             </div>
 
-                            <?php if(empty($data['elders'])): ?>
+                            <?php if (empty($data['elders'])): ?>
                                 <div class="create-profile-prompt">
                                     <p>You don't have any elder profiles yet. <a href="<?php echo URLROOT; ?>/careseeker/createElderProfile">Create a profile</a> to continue.</p>
                                 </div>
@@ -95,22 +95,29 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Care Duration</div>
                             <div class="duration-type-options">
                                 <div class="duration-type-option">
-                                    <input type="radio" id="long-term-radio" name="duration-type" value="long-term" 
+                                    <input type="radio" id="long-term-radio" name="duration-type" value="long-term"
                                         <?php echo ($data['caregiver']->caregiver_type == 'short') ? 'disabled' : ''; ?>
+                                        <?php echo (isset($data['duration_type']) && $data['duration_type'] === 'long-term') ? 'checked' : ''; ?>
                                         onchange="toggleDurationFields()">
                                     <label for="long-term-radio" <?php echo ($data['caregiver']->caregiver_type == 'short') ? 'class="disabled-option"' : ''; ?>>
                                         Long Term Care
                                     </label>
                                 </div>
                                 <div class="duration-type-option">
-                                    <input type="radio" id="short-term-radio" name="duration-type" value="short-term" 
+                                    <input type="radio" id="short-term-radio" name="duration-type" value="short-term"
                                         <?php echo ($data['caregiver']->caregiver_type == 'long') ? 'disabled' : ''; ?>
+                                        <?php echo (isset($data['duration_type']) && $data['duration_type'] === 'short-term') ? 'checked' : ''; ?>
                                         onchange="toggleDurationFields()">
                                     <label for="short-term-radio" <?php echo ($data['caregiver']->caregiver_type == 'long') ? 'class="disabled-option"' : ''; ?>>
                                         Short Term (One Day)
                                     </label>
                                 </div>
+
                             </div>
+                            <?php if (!empty($data['error']) && strpos($data['error'], 'duration type') !== false): ?>
+                                <div class="field-error">Please select a duration type</div>
+                            <?php endif; ?>
+
                         </div>
 
                         <!-- Long Term Fields -->
@@ -119,11 +126,17 @@ echo loadCSS($required_styles);
                             <div class="form-row two-columns">
                                 <div class="form-group">
                                     <label for="from-date">Start Date</label>
-                                    <input type="date" id="from-date" name="from_date" onchange="calculatePayment()"/>
+                                    <input type="date" id="from-date" name="from_date" value="<?php echo $data['from_date'] ?? ''; ?>" onchange="calculatePayment()" />
+                                    <?php if (!empty($data['error']) && strpos($data['error'], 'start date') !== false): ?>
+                                        <div class="field-error">Please select a start date</div>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="to-date">End Date</label>
-                                    <input type="date" id="to-date" name="to_date" onchange="calculatePayment()"/>
+                                    <input type="date" id="to-date" name="to_date" value="<?php echo $data['to_date'] ?? ''; ?>" onchange="calculatePayment()" />
+                                    <?php if (!empty($data['error']) && strpos($data['error'], 'end date') !== false): ?>
+                                        <div class="field-error">Please select an end date</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +146,10 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Short Term Care Date</div>
                             <div class="form-group">
                                 <label for="from_date_short">Select Date</label>
-                                <input type="date" id="from_date_short" name="from_date_short"/>
+                                <input type="date" id="from_date_short" name="from_date_short" value="<?php echo $data['from_date_short'] ?? ''; ?>" />
+                                <?php if (!empty($data['error']) && strpos($data['error'], 'date for short-term') !== false): ?>
+                                    <div class="field-error">Please select a date for short-term care</div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -143,11 +159,21 @@ echo loadCSS($required_styles);
                             <div class="form-group">
                                 <label>Select Time Slots (Choose one or more)</label>
                                 <div class="time-slot-checkboxes">
-                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" onchange="handleFullDaySelection(); calculatePayment();"><span>Full Day (8am-8am)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="morning" class="other-slot" onchange="calculatePayment()"><span>Morning (8am-12pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot" onchange="calculatePayment()"><span>Evening (1pm-5pm)</span></label>
-                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot" onchange="calculatePayment()"><span>Overnight (6pm-8am)</span></label>
+                                    <?php
+                                    $timeSlots = $data['time_slots'] ?? [];
+                                    $fullDayChecked = in_array('full-day', $timeSlots) ? 'checked' : '';
+                                    $morningChecked = in_array('morning', $timeSlots) ? 'checked' : '';
+                                    $eveningChecked = in_array('evening', $timeSlots) ? 'checked' : '';
+                                    $overnightChecked = in_array('overnight', $timeSlots) ? 'checked' : '';
+                                    ?>
+                                    <label><input type="checkbox" name="timeslot[]" value="full-day" id="full-day-checkbox" <?php echo $fullDayChecked; ?> onchange="handleFullDaySelection(); calculatePayment();"><span>Full Day (8am-8am)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="morning" class="other-slot" <?php echo $morningChecked; ?> onchange="calculatePayment()"><span>Morning (8am-12pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="evening" class="other-slot" <?php echo $eveningChecked; ?> onchange="calculatePayment()"><span>Evening (1pm-5pm)</span></label>
+                                    <label class="other-timeframe"><input type="checkbox" name="timeslot[]" value="overnight" class="other-slot" <?php echo $overnightChecked; ?> onchange="calculatePayment()"><span>Overnight (6pm-8am)</span></label>
                                 </div>
+                                <?php if (!empty($data['error']) && strpos($data['error'], 'time slot') !== false): ?>
+                                    <div class="field-error">Please select at least one time slot</div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -157,12 +183,22 @@ echo loadCSS($required_styles);
                             <div class="form-row two-columns">
                                 <div class="form-group">
                                     <label for="service">Service Type</label>
-                                    <input type="text" id="service" placeholder="Caregiving" readonly/>
+                                    <input type="text" id="service" placeholder="Caregiving" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label for="payment-details">Payment Details</label>
                                     <input type="text" id="payment-details" placeholder="Calculating..." readonly />
-                                    <input type="hidden" id="total-payment" name="total_payment" value="0" />
+                                    <input type="hidden" id="total-payment" name="total_payment" value="<?php echo $data['total_payment'] ?? 0; ?>" />
+                                    <?php if (!empty($data['error']) && strpos($data['error'], 'payment') !== false): ?>
+                                        <div class="field-error">Invalid payment amount</div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="form-group">
+                                    <label for="service">Service Address</label>
+                                    <input type="text" id="service-address" name="service_address" value="<?php echo $data['service_address'] ?? ''; ?>" />
+                                    <?php if (!empty($data['error']) && strpos($data['error'], 'service address') !== false): ?>
+                                        <div class="field-error">Please enter service address</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -172,12 +208,12 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Additional Information</div>
                             <div class="form-row two-columns">
                                 <div class="form-group">
-                                    <label for="expected_services" >Expected Services</label>
-                                    <textarea id="expected_services" name="expected_services" placeholder="Services you expect from the provider"></textarea>
+                                    <label for="expected_services">Expected Services</label>
+                                    <textarea id="expected_services" name="expected_services" placeholder="Services you expect from the provider"><?php echo $data['expected_services'] ?? ''; ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="additional_notes">Additional Notes</label>
-                                    <textarea id="additional_notes" name="additional_notes" placeholder="Any additional information or special requirements..."></textarea>
+                                    <textarea id="additional_notes" name="additional_notes" placeholder="Any additional information or special requirements..."><?php echo $data['additional_notes'] ?? ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -186,9 +222,10 @@ echo loadCSS($required_styles);
                             <button class="request-send-button">
                                 <i class="fas fa-paper-plane"></i> Send Request
                             </button>
-                            <button class="request-cancel-button" type="button" onclick="window.history.back()">
-    <i class="fas fa-times"></i> Cancel
-</button>
+                            <button class="request-cancel-button" type="button" onclick="location.href='<?php echo URLROOT; ?>/careseeker/viewCaregiverProfile/<?php echo $data['caregiver_id']; ?>'">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -198,392 +235,465 @@ echo loadCSS($required_styles);
 </page-body-container>
 
 <style>
-/* Add styles for disabled time slot options */
-.time-slot-checkboxes label.disabled-option {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: #f0f0f0;
-    border-color: #ddd;
-}
+    /* Add styles for the error message display */
+    .error-alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
 
-.time-slot-checkboxes label.disabled-option:hover {
-    background-color: #f0f0f0;
-    border-color: #ddd;
-}
+    .error-alert i {
+        margin-right: 10px;
+        font-size: 16px;
+    }
 
-.time-slot-checkboxes input[type="checkbox"]:disabled + span {
-    color: #999;
-}
+    .field-error {
+        color: #dc3545;
+        font-size: 13px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 
-#long-term-fields, #short-term-fields, #time-slots-section {
-    transition: all 0.4s ease-in-out;
-    opacity: 0;
-    transform: translateY(-20px);
-    height: 0;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-}
+    select.is-invalid,
+    input.is-invalid {
+        border-color: #dc3545;
+    }
 
-#long-term-fields.show,
-#short-term-fields.show,
-#time-slots-section.show {
-    opacity: 1;
-    transform: translateY(0);
-    height: auto;
-    overflow: visible;
-    margin-bottom: 20px;
-    padding: 15px;
-}
+    /* Rest of the styles remain the same */
+    .time-slot-checkboxes label.disabled-option {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f0f0f0;
+        border-color: #ddd;
+    }
 
-/* Style for the time slot checkboxes to make them stand out more */
-.time-slot-checkboxes label {
-    display: block;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+    .time-slot-checkboxes label.disabled-option:hover {
+        background-color: #f0f0f0;
+        border-color: #ddd;
+    }
 
-.time-slot-checkboxes label:hover {
-    background-color: #f5f5f5;
-    border-color: #ccc;
-}
+    .time-slot-checkboxes input[type="checkbox"]:disabled+span {
+        color: #999;
+    }
 
-.time-slot-checkboxes label.selected {
-    background-color: #e6f7ff;
-    border-color: #1890ff;
-}
+    #long-term-fields,
+    #short-term-fields,
+    #time-slots-section {
+        transition: all 0.4s ease-in-out;
+        opacity: 0;
+        transform: translateY(-20px);
+        height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
 
-.time-slot-checkboxes label.disabled-option {
-    opacity: 0.5;
-    pointer-events: none;
-    background-color: #f0f0f0;
-}
+    #long-term-fields.show,
+    #short-term-fields.show,
+    #time-slots-section.show {
+        opacity: 1;
+        transform: translateY(0);
+        height: auto;
+        overflow: visible;
+        margin-bottom: 20px;
+        padding: 15px;
+    }
 
-.duration-type-option label.disabled-option {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+    /* Style for the time slot checkboxes to make them stand out more */
+    .time-slot-checkboxes label {
+        display: block;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .time-slot-checkboxes label:hover {
+        background-color: #f5f5f5;
+        border-color: #ccc;
+    }
+
+    .time-slot-checkboxes label.selected {
+        background-color: #e6f7ff;
+        border-color: #1890ff;
+    }
+
+    .time-slot-checkboxes label.disabled-option {
+        opacity: 0.5;
+        pointer-events: none;
+        background-color: #f0f0f0;
+    }
+
+    .duration-type-option label.disabled-option {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 </style>
 
+<!-- The rest of your JavaScript remains the same -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Set default selection based on caregiver type
-    const caregiverType = '<?php echo $data['caregiver']->caregiver_type; ?>';
-    
-    if (caregiverType === 'long') {
-        document.getElementById('long-term-radio').checked = true;
-    } else if (caregiverType === 'short') {
-        document.getElementById('short-term-radio').checked = true;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set default selection based on caregiver type
+        const caregiverType = '<?php echo $data['caregiver']->caregiver_type; ?>';
+
+        if (caregiverType === 'long') {
+            document.getElementById('long-term-radio').checked = true;
+        } else if (caregiverType === 'short') {
+            document.getElementById('short-term-radio').checked = true;
+        }
+
+        // Set min date for all date inputs to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+
+        document.getElementById('from-date').min = tomorrowFormatted;
+        document.getElementById('to-date').min = tomorrowFormatted;
+        document.getElementById('from_date_short').min = tomorrowFormatted;
+
+        // Add event listeners for the duration type radio buttons
+        document.getElementById('long-term-radio').addEventListener('change', function() {
+            if (this.checked) {
+                // Make sure short term date is cleared
+                document.getElementById('from_date_short').value = '';
+                // Clear any time slot selections
+                document.querySelectorAll('input[name="timeslot[]"]:checked').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                // Clear error messages
+                clearErrorMessages();
+            }
+        });
+
+        document.getElementById('short-term-radio').addEventListener('change', function() {
+            if (this.checked) {
+                // Make sure both long term dates are cleared
+                document.getElementById('from-date').value = '';
+                document.getElementById('to-date').value = '';
+                // Clear error messages
+                clearErrorMessages();
+            }
+        });
+
+        toggleDurationFields(); // Handle pre-selected option
+        handleFullDaySelection(); // Check for any pre-selected checkboxes
+        calculatePayment(); // Calculate initial payment
+
+        // Add event listeners for date inputs
+        document.getElementById('from-date').addEventListener('change', function() {
+            // When start date changes, set the min date of the end date
+            const startDate = new Date(this.value);
+
+            if (!isNaN(startDate.getTime())) {
+                // Set minimum end date to the same as start date
+                const minEndDate = startDate.toISOString().split('T')[0];
+
+                // Calculate maximum end date (start date + 4 days = 5 days total)
+                const maxEndDate = new Date(startDate);
+                maxEndDate.setDate(startDate.getDate() + 4);
+                const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
+
+                const toDateInput = document.getElementById('to-date');
+                toDateInput.min = minEndDate;
+                toDateInput.max = maxEndDateFormatted;
+
+                // If current end date is beyond the new max, adjust it
+                if (toDateInput.value) {
+                    const currentEndDate = new Date(toDateInput.value);
+                    if (currentEndDate > maxEndDate) {
+                        toDateInput.value = maxEndDateFormatted;
+                    }
+                }
+            }
+
+            // Clear any error messages related to date fields
+            clearErrorMessageFor('start date');
+            calculatePayment();
+        });
+
+        document.getElementById('to-date').addEventListener('change', function() {
+            enforceDateLimits();
+            // Clear any error messages related to date fields
+            clearErrorMessageFor('end date');
+            calculatePayment();
+        });
+
+        document.getElementById('from_date_short').addEventListener('change', function() {
+            // Clear any error messages related to short-term date field
+            clearErrorMessageFor('date for short-term');
+            calculatePayment();
+        });
+
+        // Add event listener for elder profile selection
+        document.getElementById('elder-profile').addEventListener('change', function() {
+            clearErrorMessageFor('elder profile');
+        });
+
+        // Add event listeners for time slot checkboxes
+        document.querySelectorAll('input[name="timeslot[]"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                clearErrorMessageFor('time slot');
+                calculatePayment();
+            });
+        });
+
+        // Create a MutationObserver to watch for attribute changes on the to-date input
+        const toDateInput = document.getElementById('to-date');
+        const observer = new MutationObserver(function() {
+            setupDateInputConstraints();
+        });
+
+        observer.observe(toDateInput, {
+            attributes: true
+        });
+
+        // Setup initial date constraints if needed
+        setupDateInputConstraints();
+    });
+
+    // Function to setup date input constraints
+    function setupDateInputConstraints() {
+        const fromDateInput = document.getElementById('from-date');
+        const toDateInput = document.getElementById('to-date');
+
+        if (fromDateInput.value) {
+            const startDate = new Date(fromDateInput.value);
+            if (!isNaN(startDate.getTime())) {
+                const maxEndDate = new Date(startDate);
+                maxEndDate.setDate(startDate.getDate() + 4);
+
+                // Create a date range of allowed dates (start date to start date + 4)
+                const allowedDates = [];
+                for (let i = 0; i <= 4; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + i);
+                    allowedDates.push(date.toISOString().split('T')[0]);
+                }
+
+                // Override the date input's onchange handler temporarily
+                const originalOnChange = toDateInput.onchange;
+
+                // Apply a custom validation function to the end date input
+                toDateInput.addEventListener('input', function(e) {
+                    const selectedDate = e.target.value;
+                    if (selectedDate && !allowedDates.includes(selectedDate)) {
+                        // If selected date is not in allowed range, reset to empty
+                        e.target.value = '';
+                        alert('Please select a date within the 5-day range from the start date.');
+                    }
+                });
+            }
+        }
     }
-    
-    // Set min date for all date inputs to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
-    
-    document.getElementById('from-date').min = tomorrowFormatted;
-    document.getElementById('to-date').min = tomorrowFormatted;
-    document.getElementById('from_date_short').min = tomorrowFormatted;
-    
-    // Add event listeners for the duration type radio buttons
-    document.getElementById('long-term-radio').addEventListener('change', function() {
-        if (this.checked) {
-            // Make sure short term date is cleared
+
+    function toggleDurationFields() {
+        const longTermFields = document.getElementById('long-term-fields');
+        const shortTermFields = document.getElementById('short-term-fields');
+        const timeSlotsSection = document.getElementById('time-slots-section');
+        const selectedType = document.querySelector('input[name="duration-type"]:checked')?.value;
+
+        // First hide all sections with a smooth transition
+        longTermFields.classList.remove('show');
+        shortTermFields.classList.remove('show');
+        timeSlotsSection.classList.remove('show');
+
+        // Clear date values when switching between duration types
+        if (selectedType === 'long-term') {
+            // Clear short term date
             document.getElementById('from_date_short').value = '';
             // Clear any time slot selections
             document.querySelectorAll('input[name="timeslot[]"]:checked').forEach(checkbox => {
                 checkbox.checked = false;
             });
-        }
-    });
-    
-    document.getElementById('short-term-radio').addEventListener('change', function() {
-        if (this.checked) {
-            // Make sure both long term dates are cleared
+            handleFullDaySelection(); // Update UI for time slots
+
+            // Only clear error if a selection is made
+            clearErrorMessageFor('duration type');
+        } else if (selectedType === 'short-term') {
+            // Clear long term dates - ensure both are cleared
             document.getElementById('from-date').value = '';
             document.getElementById('to-date').value = '';
+
+            // Only clear error if a selection is made
+            clearErrorMessageFor('duration type');
         }
-    });
-    
-    toggleDurationFields(); // Handle pre-selected option
-    handleFullDaySelection(); // Check for any pre-selected checkboxes
-    calculatePayment(); // Calculate initial payment
-    
-    // Add event listeners for date inputs
-    document.getElementById('from-date').addEventListener('change', function() {
-        // When start date changes, set the min date of the end date
-        const startDate = new Date(this.value);
-        
-        if (!isNaN(startDate.getTime())) {
-            // Set minimum end date to the same as start date
-            const minEndDate = startDate.toISOString().split('T')[0];
-            
-            // Calculate maximum end date (start date + 4 days = 5 days total)
-            const maxEndDate = new Date(startDate);
-            maxEndDate.setDate(startDate.getDate() + 4);
-            const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
-            
-            const toDateInput = document.getElementById('to-date');
-            toDateInput.min = minEndDate;
-            toDateInput.max = maxEndDateFormatted;
-            
-            // If current end date is beyond the new max, adjust it
-            if (toDateInput.value) {
-                const currentEndDate = new Date(toDateInput.value);
-                if (currentEndDate > maxEndDate) {
-                    toDateInput.value = maxEndDateFormatted;
-                }
+
+        // After a short delay, show the appropriate sections
+        setTimeout(() => {
+            if (selectedType === 'long-term') {
+                longTermFields.classList.add('show');
+                // Time slots are only available for short term
+                timeSlotsSection.classList.remove('show');
+            } else if (selectedType === 'short-term') {
+                shortTermFields.classList.add('show');
+                timeSlotsSection.classList.add('show');
             }
-        }
-        
-        calculatePayment();
-    });
-    
-    document.getElementById('to-date').addEventListener('change', function() {
-        enforceDateLimits();
-        calculatePayment();
-    });
-    
-    document.getElementById('from_date_short').addEventListener('change', calculatePayment);
-    
-    // Get the form element
-    const requestForm = document.querySelector('.request-form');
-    
-    // Add event listener for form submission
-    requestForm.addEventListener('submit', function(event) {
-        // Get the elder profile select element
-        const elderProfileSelect = document.getElementById('elder-profile');
-        
-        // Check if a profile is selected
-        if (!elderProfileSelect.value) {
-            // Prevent form submission
-            event.preventDefault();
-            
-            // Create error message if it doesn't exist
-            let errorMsg = document.getElementById('elder-profile-error');
-            if (!errorMsg) {
-                errorMsg = document.createElement('div');
-                errorMsg.id = 'elder-profile-error';
-                errorMsg.className = 'form-error';
-                errorMsg.style.color = 'red';
-                errorMsg.style.fontSize = '14px';
-                errorMsg.style.marginTop = '5px';
-                errorMsg.textContent = 'Please select an elder profile';
-                
-                // Insert error message after the select element
-                elderProfileSelect.parentNode.appendChild(errorMsg);
-            }
-            
-            // Highlight the select field
-            elderProfileSelect.style.borderColor = 'red';
-            
-            // Scroll to the error
-            elderProfileSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            calculatePayment(); // Recalculate payment when changing duration type
+        }, 300);
+    }
+
+    function handleFullDaySelection() {
+        const fullDayCheckbox = document.getElementById('full-day-checkbox');
+        const otherTimeSlots = document.querySelectorAll('.other-slot');
+        const otherTimeFrames = document.querySelectorAll('.other-timeframe');
+
+        if (fullDayCheckbox.checked) {
+            // If Full Day is selected, disable other options
+            otherTimeSlots.forEach(slot => {
+                slot.checked = false;
+                slot.disabled = true;
+            });
+
+            otherTimeFrames.forEach(frame => {
+                frame.classList.add('disabled-option');
+            });
         } else {
-            // If valid, remove any existing error message
-            const errorMsg = document.getElementById('elder-profile-error');
-            if (errorMsg) {
-                errorMsg.remove();
+            // If Full Day is not selected, enable other options
+            otherTimeSlots.forEach(slot => {
+                slot.disabled = false;
+            });
+
+            otherTimeFrames.forEach(frame => {
+                frame.classList.remove('disabled-option');
+            });
+        }
+
+        // Highlight selected options
+        document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]').forEach(checkbox => {
+            const label = checkbox.closest('label');
+            if (checkbox.checked && !checkbox.disabled) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
             }
-            
-            // Reset border color
-            elderProfileSelect.style.borderColor = '';
-        }
-    });
-    
-    // Add change event listener to clear error when user selects a profile
-    document.getElementById('elder-profile').addEventListener('change', function() {
-        // Remove error message if it exists
-        const errorMsg = document.getElementById('elder-profile-error');
-        if (errorMsg) {
-            errorMsg.remove();
-        }
-        
-        // Reset border color
-        this.style.borderColor = '';
-    });
-});
-
-function toggleDurationFields() {
-    const longTermFields = document.getElementById('long-term-fields');
-    const shortTermFields = document.getElementById('short-term-fields');
-    const timeSlotsSection = document.getElementById('time-slots-section');
-    const selectedType = document.querySelector('input[name="duration-type"]:checked')?.value;
-
-    // First hide all sections with a smooth transition
-    longTermFields.classList.remove('show');
-    shortTermFields.classList.remove('show');
-    timeSlotsSection.classList.remove('show');
-
-    // Clear date values when switching between duration types
-    if (selectedType === 'long-term') {
-        // Clear short term date
-        document.getElementById('from_date_short').value = '';
-        // Clear any time slot selections
-        document.querySelectorAll('input[name="timeslot[]"]:checked').forEach(checkbox => {
-            checkbox.checked = false;
         });
-        handleFullDaySelection(); // Update UI for time slots
-    } else if (selectedType === 'short-term') {
-        // Clear long term dates - ensure both are cleared
-        document.getElementById('from-date').value = '';
-        document.getElementById('to-date').value = '';
+
+        calculatePayment(); // Recalculate payment when changing time slots
     }
 
-    // After a short delay, show the appropriate sections
-    setTimeout(() => {
-        if (selectedType === 'long-term') {
-            longTermFields.classList.add('show');
-            // Time slots are only available for short term
-            timeSlotsSection.classList.remove('show');
-        } else if (selectedType === 'short-term') {
-            shortTermFields.classList.add('show');
-            timeSlotsSection.classList.add('show');
-        }
-        
-        calculatePayment(); // Recalculate payment when changing duration type
-    }, 300);
-}
-
-function handleFullDaySelection() {
-    const fullDayCheckbox = document.getElementById('full-day-checkbox');
-    const otherTimeSlots = document.querySelectorAll('.other-slot');
-    const otherTimeFrames = document.querySelectorAll('.other-timeframe');
-    
-    if (fullDayCheckbox.checked) {
-        // If Full Day is selected, disable other options
-        otherTimeSlots.forEach(slot => {
-            slot.checked = false;
-            slot.disabled = true;
-        });
-        
-        otherTimeFrames.forEach(frame => {
-            frame.classList.add('disabled-option');
-        });
-    } else {
-        // If Full Day is not selected, enable other options
-        otherTimeSlots.forEach(slot => {
-            slot.disabled = false;
-        });
-        
-        otherTimeFrames.forEach(frame => {
-            frame.classList.remove('disabled-option');
-        });
-    }
-    
-    // Highlight selected options
-    document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]').forEach(checkbox => {
-        const label = checkbox.closest('label');
-        if (checkbox.checked && !checkbox.disabled) {
-            label.classList.add('selected');
-        } else {
-            label.classList.remove('selected');
-        }
-    });
-    
-    calculatePayment(); // Recalculate payment when changing time slots
-}
-
-function enforceDateLimits() {
-    const fromDate = document.getElementById('from-date').value;
-    const toDate = document.getElementById('to-date').value;
-    
-    if (fromDate && toDate) {
-        const startDate = new Date(fromDate);
-        const endDate = new Date(toDate);
-        
-        // Calculate the difference in days
-        const diffTime = endDate - startDate;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
-        
-        if (diffDays > 5) {
-            // Reset the end date to be 5 days from start date
-            const maxEndDate = new Date(startDate);
-            maxEndDate.setDate(startDate.getDate() + 4); // 4 more days after start date = 5 days total
-            
-            // Format maxEndDate to YYYY-MM-DD for input value
-            const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
-            document.getElementById('to-date').value = maxEndDateFormatted;
-            
-            // Optionally, show a notification to the user
-            alert('Maximum care duration is 5 days. End date has been adjusted accordingly.');
-        }
-    }
-}
-
-function calculatePayment() {
-    const selectedType = document.querySelector('input[name="duration-type"]:checked')?.value;
-    const paymentDetailsElement = document.getElementById('payment-details');
-    const totalPaymentElement = document.getElementById('total-payment');
-    let totalPayment = 0;
-    
-    // Get caregiver price info
-    const pricePerDay = <?php echo isset($data['caregiver']->price_per_day) ? $data['caregiver']->price_per_day : 0; ?>;
-    const pricePerSession = <?php echo isset($data['caregiver']->price_per_session) ? $data['caregiver']->price_per_session : 0; ?>;
-    
-    if (selectedType === 'long-term') {
+    function enforceDateLimits() {
         const fromDate = document.getElementById('from-date').value;
         const toDate = document.getElementById('to-date').value;
-        
+
         if (fromDate && toDate) {
-            // Calculate number of days
             const startDate = new Date(fromDate);
             const endDate = new Date(toDate);
-            
-            // Check if dates are valid
-            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
-                // Calculate the difference in days
-                const diffTime = endDate - startDate;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
-                
-                if (diffDays > 0) {
-                    totalPayment = diffDays * pricePerDay;
-                    paymentDetailsElement.value = `Rs.${totalPayment} (${diffDays} days at Rs.${pricePerDay} per day)`;
+
+            // Calculate the difference in days
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
+
+            if (diffDays > 5) {
+                // Reset the end date to be 5 days from start date
+                const maxEndDate = new Date(startDate);
+                maxEndDate.setDate(startDate.getDate() + 4); // 4 more days after start date = 5 days total
+
+                // Format maxEndDate to YYYY-MM-DD for input value
+                const maxEndDateFormatted = maxEndDate.toISOString().split('T')[0];
+                document.getElementById('to-date').value = maxEndDateFormatted;
+
+                // Optionally, show a notification to the user
+                alert('Maximum care duration is 5 days. End date has been adjusted accordingly.');
+            }
+        }
+    }
+
+    function calculatePayment() {
+        const selectedType = document.querySelector('input[name="duration-type"]:checked')?.value;
+        const paymentDetailsElement = document.getElementById('payment-details');
+        const totalPaymentElement = document.getElementById('total-payment');
+        let totalPayment = 0;
+
+        // Get caregiver price info
+        const pricePerDay = <?php echo isset($data['caregiver']->price_per_day) ? $data['caregiver']->price_per_day : 0; ?>;
+        const pricePerSession = <?php echo isset($data['caregiver']->price_per_session) ? $data['caregiver']->price_per_session : 0; ?>;
+
+        if (selectedType === 'long-term') {
+            const fromDate = document.getElementById('from-date').value;
+            const toDate = document.getElementById('to-date').value;
+
+            if (fromDate && toDate) {
+                // Calculate number of days
+                const startDate = new Date(fromDate);
+                const endDate = new Date(toDate);
+
+                // Check if dates are valid
+                if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                    // Calculate the difference in days
+                    const diffTime = endDate - startDate;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end day
+
+                    if (diffDays > 0) {
+                        totalPayment = diffDays * pricePerDay;
+                        paymentDetailsElement.value = `Rs.${totalPayment} (${diffDays} days at Rs.${pricePerDay} per day)`;
+                    } else {
+                        paymentDetailsElement.value = "Please select valid date range";
+                    }
                 } else {
-                    paymentDetailsElement.value = "Please select valid date range";
+                    paymentDetailsElement.value = "Please select valid dates";
                 }
             } else {
-                paymentDetailsElement.value = "Please select valid dates";
+                paymentDetailsElement.value = "Select dates to calculate payment";
+            }
+
+        } else if (selectedType === 'short-term') {
+            // Count selected time slots
+            const selectedSlots = document.querySelectorAll('input[name="timeslot[]"]:checked');
+
+            if (selectedSlots.length > 0) {
+                // Calculate based on number of slots selected
+                let slotCount = 0;
+                let slotNames = [];
+
+                selectedSlots.forEach(slot => {
+                    if (slot.value === 'full-day') {
+                        slotCount = 4; // Full day counts as 4 sessions
+                        slotNames.push("Full Day");
+                    } else {
+                        slotCount += 1;
+                        slotNames.push(slot.value.charAt(0).toUpperCase() + slot.value.slice(1));
+                    }
+                });
+
+                totalPayment = slotCount * pricePerSession;
+                paymentDetailsElement.value = `Rs.${totalPayment} (${slotNames.join(', ')} - ${slotCount} sessions at Rs.${pricePerSession} per session)`;
+            } else {
+                paymentDetailsElement.value = "Select time slots to calculate payment";
             }
         } else {
-            paymentDetailsElement.value = "Select dates to calculate payment";
+            paymentDetailsElement.value = "Select duration type to calculate payment";
         }
-        
-    } else if (selectedType === 'short-term') {
-        // Count selected time slots
-        const selectedSlots = document.querySelectorAll('input[name="timeslot[]"]:checked');
-        
-        if (selectedSlots.length > 0) {
-            // Calculate based on number of slots selected
-            let slotCount = 0;
-            let slotNames = [];
-            
-            selectedSlots.forEach(slot => {
-                if (slot.value === 'full-day') {
-                    slotCount = 4; // Full day counts as 4 sessions
-                    slotNames.push("Full Day");
-                } else {
-                    slotCount += 1;
-                    slotNames.push(slot.value.charAt(0).toUpperCase() + slot.value.slice(1));
-                }
-            });
-            
-            totalPayment = slotCount * pricePerSession;
-            paymentDetailsElement.value = `Rs.${totalPayment} (${slotNames.join(', ')} - ${slotCount} sessions at Rs.${pricePerSession} per session)`;
-        } else {
-            paymentDetailsElement.value = "Select time slots to calculate payment";
-        }
-    } else {
-        paymentDetailsElement.value = "Select duration type to calculate payment";
+
+        // Update hidden field with calculated total
+        totalPaymentElement.value = totalPayment;
     }
-    
-    // Update hidden field with calculated total
-    totalPaymentElement.value = totalPayment;
-}
+
+    // Function to clear all error messages
+    function clearErrorMessages() {
+        const errorElements = document.querySelectorAll('.field-error');
+        errorElements.forEach(element => {
+            element.style.display = 'none';
+        });
+    }
+
+    // Function to clear specific error message containing the given text
+    function clearErrorMessageFor(fieldType) {
+        const errorElements = document.querySelectorAll('.field-error');
+        errorElements.forEach(element => {
+            if (element.textContent.toLowerCase().includes(fieldType.toLowerCase())) {
+                element.style.display = 'none';
+            }
+        });
+    }
 </script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>

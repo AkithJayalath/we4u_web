@@ -270,6 +270,7 @@
 
 
 /* cancel Modal styles */
+/* cancel Modal styles */
 .cancel-modal {
   display: none;
   position: fixed;
@@ -278,210 +279,185 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .cancel-modal-content {
   background-color: #fff;
   margin: 10% auto;
-  max-width: 500px;
+  padding: 0;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 600px;
   animation: modalFadeIn 0.3s;
-}
-
-@keyframes modalFadeIn {
-  from {opacity: 0; transform: translateY(-20px);}
-  to {opacity: 1; transform: translateY(0);}
 }
 
 .cancel-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #eaeaea;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .cancel-modal-header h2 {
   margin: 0;
+  font-size: 1.5rem;
   color: #333;
-  font-size: 1.3rem;
 }
 
 .close-modal {
   color: #aaa;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  transition: color 0.2s;
 }
 
 .close-modal:hover {
-  color: #333;
+  color: #555;
 }
 
 .cancel-modal-body {
   padding: 20px;
-  text-align: center;
 }
 
 .cancel-icon {
-  font-size: 40px;
-  color: #ff6b6b;
+  text-align: center;
   margin-bottom: 15px;
 }
 
-.cancel-modal-body p {
-  font-size: 1.1rem;
+.cancel-icon i {
+  font-size: 48px;
+  color: #ff9800;
+}
+
+.status-message {
+  text-align: center;
+  font-size: 1.2rem;
   margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.status-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-message.warning {
+  background-color: #fff8e1;
+  color: #f57c00;
+}
+
+.status-message.error {
+  background-color: #ffebee;
+  color: #c62828;
 }
 
 .cancellation-details {
-  background-color: #f9f9f9;
-  border-radius: 6px;
-  padding: 15px;
-  margin-top: 15px;
-  text-align: left;
+  margin-top: 20px;
 }
 
 .fee-info-container {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
-  flex-wrap: wrap;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
 }
 
 .fee-info {
-  flex: 1;
-  min-width: 45%;
-  background-color: #fff;
-  padding: 10px 15px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fee-info.no-fee {
+  display: none;
 }
 
 .fee-label {
-  display: block;
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 4px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .fee-amount {
   font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
 }
 
 .fee-amount.positive {
-  color: #2ecc71;
+  color: #2e7d32;
 }
 
 .fee-amount.negative {
-  color: #e74c3c;
+  color: #c62828;
 }
 
 .cancellation-reason {
-  background-color: #fff;
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 15px;
-  border-left: 4px solid #3498db;
-}
-
-.cancellation-reason.warning {
-  border-left-color: #e74c3c;
 }
 
 .cancellation-reason.success {
-  border-left-color: #2ecc71;
+  background-color: #e8f5e9;
+}
+
+.cancellation-reason.warning {
+  background-color: #fff8e1;
 }
 
 .cancellation-policy {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
   font-size: 0.9rem;
-  color: #666;
 }
 
 .cancellation-policy ul {
   padding-left: 20px;
-  margin-top: 5px;
-}
-
-.cancellation-policy li {
-  margin-bottom: 5px;
 }
 
 .cancel-modal-footer {
-  padding: 15px 20px;
   display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #eaeaea;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+  gap: 10px;
 }
 
-.confirm-cancel-btn, .keep-request-btn, .pay-fine-btn {
-  padding: 10px 20px;
-  border-radius: 5px;
+.confirm-cancel-btn, .pay-fine-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 15px;
   border: none;
-  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.2s;
+  font-weight: 500;
 }
 
-.confirm-cancel-btn {
-  background-color: #ff6b6b;
-  color: white;
-}
-
-.confirm-cancel-btn:hover {
-  background-color: #ff5252;
-}
-
-.pay-fine-btn {
-  background-color: #3498db;
-  color: white;
-}
-
-.pay-fine-btn:hover {
-  background-color: #2980b9;
+.confirm-cancel-btn:hover, .pay-fine-btn:hover {
+  background-color: #d32f2f;
 }
 
 .keep-request-btn {
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
   color: #333;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
 }
 
 .keep-request-btn:hover {
-  background-color: #e0e0e0;
-}
-
-/* Hide the fee info when no fees apply */
-.no-fee {
-  display: none;
-}
-
-.status-message {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  padding: 10px 15px;
-  border-radius: 5px;
-}
-
-.status-message.success {
-  background-color: rgba(46, 204, 113, 0.1);
-  color: #27ae60;
-}
-
-.status-message.warning {
-  background-color: rgba(231, 76, 60, 0.1);
-  color: #c0392b;
-}
-
-.status-message.neutral {
-  background-color: rgba(52, 152, 219, 0.1);
-  color: #2980b9;
+  background-color: #bdbdbd;
 }
 
 
+
+@keyframes modalFadeIn {
+  from {opacity: 0; transform: translateY(-50px);}
+  to {opacity: 1; transform: translateY(0);}
+}

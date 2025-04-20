@@ -206,9 +206,9 @@ class M_Careseekers{
 
 public function sendCareRequest($data) {
     $this->db->query('INSERT INTO carerequests 
-    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status, payment_details) 
+    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status, payment_details,service_address) 
     VALUES 
-    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details)');
+    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details,:service_address)');
 
     // Bind common values
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
@@ -220,6 +220,7 @@ public function sendCareRequest($data) {
     $this->db->bind(':additional_notes', $data['additional_notes']);
     $this->db->bind(':status', $data['status']);
     $this->db->bind(':payment_details', $data['total_payment']);
+    $this->db->bind(':service_address', $data['service_address']);
 
     // Handle date fields based on duration type
     if ($data['duration_type'] === 'long-term') {
@@ -231,6 +232,13 @@ public function sendCareRequest($data) {
     }
     
     return $this->db->execute();
+}
+
+public function getCaregiverById($caregiverId) {
+    $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :caregiver_id');
+    $this->db->bind(':caregiver_id', $caregiverId);
+    
+    return $this->db->single();
 }
 
 
@@ -248,7 +256,7 @@ public function sendConsultantRequest($data) {
     $this->db->bind(':time_slot', $data['time_slot']);
     $this->db->bind(':expected_services', $data['expected_services']);
     $this->db->bind(':additional_notes', $data['additional_notes']);
-    $this->db->bind(':payment_amount', $data['payment_amount']);
+    $this->db->bind(':payment_amount', $data['total_amount']);
     $this->db->bind(':status', $data['status']);
     
     return $this->db->execute();
