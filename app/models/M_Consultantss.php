@@ -85,7 +85,7 @@ class M_Consultantss {
                     if (!empty($trimmedSpeciality) && !in_array($trimmedSpeciality, $specialities)) {
                         $specialities[] = $trimmedSpeciality;
                     }
-                }
+                }.
             }
         }
     

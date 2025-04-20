@@ -14,8 +14,10 @@
   <div class="caregivers-wrapper">
     <div class="caregivers-header">
        <div class="filter-sort-bar">
-        <form method="GET" action="<?php echo URLROOT; ?>/careseeker/viewCaregivers">
+        <form method="GET" action="<?php echo URLROOT; ?>/users/viewCaregivers" id="filter-form">
             <div class="filters">
+                <label for="username-filter">Username:</label>
+                <input type="text" id="username-filter" class="live-search" name="username" placeholder="Search by name" value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
               <label for="region-filter">Region:</label>
               <select id="region-filter" name="region">
                 <option value="">All</option>
@@ -37,7 +39,30 @@
               </select>
 
               <label for="speciality-filter">Speciality:</label>
-              <input type="text" id="speciality-filter" name="speciality" placeholder="Type speciality" value="<?php echo $_GET['speciality'] ?? ''; ?>" />
+                <select id="speciality-filter" name="speciality">
+                    <option value="">All</option>
+                    <?php 
+                    $specialities = $data['specialities'] ?? [];
+                    foreach ($specialities as $speciality): ?>
+                        <option value="<?php echo htmlspecialchars($speciality); ?>" 
+                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $speciality) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($speciality); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <!-- Calendar -->
+                <label for="date-filter">Date:</label>
+                <input type="date" id="date-filter" name="date" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>" />
+
+                <!-- Availability Selector -->
+                <label for="availability-filter">Availability:</label>
+                <select id="availability-filter" name="availability">
+                <option value="">All</option>
+                <option value="morning" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'morning') ? 'selected' : ''; ?>>Morning</option>
+                <option value="afternoon" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'afternoon') ? 'selected' : ''; ?>>Afternoon</option>
+                <option value="overnight" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'overnight') ? 'selected' : ''; ?>>Overnight</option>
+                <option value="day" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'day') ? 'selected' : ''; ?>>Day</option>
+                </select>
             </div>
 
             <div class="sort-options">
@@ -212,6 +237,47 @@
     
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.live-search');
+    const consultantCards = document.querySelectorAll('.caregivers-post');
+    const cardsContainer = document.querySelector('.caregivers-container');
+
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let foundResults = false;
+
+        consultantCards.forEach(card => {
+            const name = card.querySelector('h2').textContent.toLowerCase();
+            const isMatch = name.includes(searchTerm);
+            card.style.display = isMatch ? 'flex' : 'none';
+            if (isMatch) foundResults = true;
+        });
+
+        let noResultsMsg = cardsContainer.querySelector('.no-results');
+        if (!foundResults) {
+            if (!noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.className = 'no-results';
+                noResultsMsg.textContent = 'No consultants found matching your search.';
+                cardsContainer.appendChild(noResultsMsg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    }
+
+    searchInput.addEventListener('input', performSearch);
+    searchInput.addEventListener('keyup', performSearch);
+});
+
+  if (performance.navigation.type === 1) {
+    // Page was refreshed
+    window.location.href = "<?php echo URLROOT; ?>/users/viewCaregivers";
+  }
+
+</script>
 </container>
 
 <?php require APPROOT.'/views/includes/footer.php'; ?>

@@ -11,42 +11,6 @@ class Consultants extends Controller {
         $this->consultantsModel = $this->model('M_Consultantss');
     }
 
-    public function viewConsultants() {
-        // Get filter parameters with proper sanitization
-        $filters = [
-            'username' => trim(filter_input(INPUT_GET, 'username', FILTER_SANITIZE_STRING) ?? ''),
-            'region' => trim(filter_input(INPUT_GET, 'region', FILTER_SANITIZE_STRING) ?? ''),
-            'speciality' => trim(filter_input(INPUT_GET, 'speciality', FILTER_SANITIZE_STRING) ?? ''),
-            'sort' => trim(filter_input(INPUT_GET, 'sort', FILTER_SANITIZE_STRING) ?? '')
-        ];
-
-        // Pagination setup
-        $page = max(1, (int)(filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT) ?? 1));
-        $perPage = 9;
-
-        // Get filtered consultants and total count
-        $consultants = $this->consultantsModel->getFilteredConsultants($filters, $page, $perPage);
-        $totalConsultants = $this->consultantsModel->getTotalFilteredConsultants($filters);
-        $totalPages = ceil($totalConsultants / $perPage);
-
-        // Get regions and specialities for filter dropdowns
-        $regions = $this->consultantsModel->getAllRegions();
-        $specialities = $this->consultantsModel->getAllSpecialities();
-
-
-        $data = [
-            'consultants' => $consultants,
-            'regions' => $regions,
-            'specialities' => $specialities,
-            'currentPage' => $page,
-            'totalPages' => $totalPages,
-            'totalConsultants' => $totalConsultants,
-            'filters' => $filters
-        ];
-
-        $this->view('consultant/viewConsultants', $data);
-    }
-
     public function register() {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
