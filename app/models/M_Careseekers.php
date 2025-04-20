@@ -206,9 +206,9 @@ class M_Careseekers{
 
 public function sendCareRequest($data) {
     $this->db->query('INSERT INTO carerequests 
-    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status, payment_details) 
+    (requester_id, elder_id, caregiver_id, duration_type, start_date, end_date, time_slots, expected_services, additional_notes, status, payment_details,service_address) 
     VALUES 
-    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details)');
+    (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details,:service_address)');
 
     // Bind common values
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
@@ -220,6 +220,7 @@ public function sendCareRequest($data) {
     $this->db->bind(':additional_notes', $data['additional_notes']);
     $this->db->bind(':status', $data['status']);
     $this->db->bind(':payment_details', $data['total_payment']);
+    $this->db->bind(':service_address', $data['service_address']);
 
     // Handle date fields based on duration type
     if ($data['duration_type'] === 'long-term') {
@@ -231,6 +232,13 @@ public function sendCareRequest($data) {
     }
     
     return $this->db->execute();
+}
+
+public function getCaregiverById($caregiverId) {
+    $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :caregiver_id');
+    $this->db->bind(':caregiver_id', $caregiverId);
+    
+    return $this->db->single();
 }
 
 
@@ -248,7 +256,7 @@ public function sendConsultantRequest($data) {
     $this->db->bind(':time_slot', $data['time_slot']);
     $this->db->bind(':expected_services', $data['expected_services']);
     $this->db->bind(':additional_notes', $data['additional_notes']);
-    $this->db->bind(':payment_amount', $data['payment_amount']);
+    $this->db->bind(':payment_amount', $data['total_amount']);
     $this->db->bind(':status', $data['status']);
     
     return $this->db->execute();
@@ -414,6 +422,73 @@ public function showConsultantProfile($consultant_id) {
     $this->db->bind(':consultant_id', $consultant_id);
     return $this->db->single();
 }
+
+
+public function getRequestById($id) {
+    $this->db->query("SELECT * FROM carerequests WHERE request_id = :id");
+    $this->db->bind(':id', $id);
+
+    return $this->db->single();
+}
+
+public function cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
+    $this->db->query("UPDATE carerequests 
+                      SET status = 'cancelled', 
+                          fine_amount = :fine_amount, 
+                          refund_amount = :refund_amount 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':fine_amount', $fineAmount);
+    $this->db->bind(':refund_amount', $refundAmount);
+    $this->db->bind(':id', $requestId);
+
+    return $this->db->execute();
+}
+
+public function markFineAsPaid($requestId) {
+    $this->db->query("UPDATE carerequests 
+                      SET is_paid = 1 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':id', $requestId);
+    return $this->db->execute();
+}
+
+//consultant request cancellation
+
+public function getConsultantRequestById($id) {
+    $this->db->query("SELECT * FROM consultantrequests WHERE request_id = :id");
+    $this->db->bind(':id', $id);
+
+    return $this->db->single();
+}
+public function cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
+    $this->db->query("UPDATE consultantrequests 
+                      SET status = 'cancelled', 
+                          fine_amount = :fine_amount, 
+                          refund_amount = :refund_amount 
+                      WHERE request_id = :id");
+
+    $this->db->bind(':fine_amount', $fineAmount);
+    $this->db->bind(':refund_amount', $refundAmount);
+    $this->db->bind(':id', $requestId);
+
+    return $this->db->execute();
+}
+
+public function deleteRequest($requestId) {
+    $this->db->query('DELETE FROM carerequests WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $requestId);
+    
+    // Execute query
+    if ($this->db->execute()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 
 
 

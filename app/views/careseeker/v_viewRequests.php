@@ -60,14 +60,20 @@ echo loadCSS($required_styles);
 
             <?php foreach ($data['requests'] as $request): ?>
               <div class="view-requests-m-c-r-table-row">
-                <div class="view-requests-m-c-r-table-cell">#<?= $request->request_id ?></div>
-                <div class="view-requests-m-c-r-table-cell" data-date="<?= date('Y-m-d', strtotime($request->created_at)) ?>">
-    <?= date('d/m/Y', strtotime($request->created_at)) ?>
-</div>
+                <div class="view-requests-m-c-r-table-cell">
+                  <?php
+                  $prefix = ($request->service_category === 'Caregiving') ? 'CG' : (($request->service_category === 'Consultation') ? 'CT' : '');
+                  echo '#' . $prefix . $request->request_id;
+                  ?>
+                </div>
 
-<div class="view-requests-m-c-r-table-cell">
-    <?= htmlspecialchars($request->caregiver_name ?? $request->consultant_name ?? 'N/A') ?>
-</div>
+                <div class="view-requests-m-c-r-table-cell" data-date="<?= date('Y-m-d', strtotime($request->created_at)) ?>">
+                  <?= date('d/m/Y', strtotime($request->created_at)) ?>
+                </div>
+
+                <div class="view-requests-m-c-r-table-cell">
+                  <?= htmlspecialchars($request->caregiver_name ?? $request->consultant_name ?? 'N/A') ?>
+                </div>
 
                 <div class="view-requests-m-c-r-table-cell"><?= $request->service_category ?></div>
                 <div class="view-requests-m-c-r-table-cell">
@@ -76,25 +82,25 @@ echo loadCSS($required_styles);
                   </span>
                 </div>
                 <div class="view-requests-m-c-r-table-cell">
-                <?php
-  $baseUrl = URLROOT;
-  $requestId = $request->request_id;
-  $category = strtolower($request->service_category); // make it lowercase for consistency
+                  <?php
+                  $baseUrl = URLROOT;
+                  $requestId = $request->request_id;
+                  $category = strtolower($request->service_category); // make it lowercase for consistency
 
-  // Determine the path based on category
-  if ($category === 'caregiving') {
-      $url = "$baseUrl/careseeker/viewRequestInfo/$requestId";
-  } elseif ($category === 'consultation') {
-      $url = "$baseUrl/careseeker/viewConsultRequestInfo/$requestId";
-  } else {
-      $url = "#"; // fallback in case of unknown category
-  }
-?>
+                  // Determine the path based on category
+                  if ($category === 'caregiving') {
+                    $url = "$baseUrl/careseeker/viewRequestInfo/$requestId";
+                  } elseif ($category === 'consultation') {
+                    $url = "$baseUrl/careseeker/viewConsultRequestInfo/$requestId";
+                  } else {
+                    $url = "#"; // fallback in case of unknown category
+                  }
+                  ?>
 
-<button type="submit" class="view-requests-m-c-r-view-req-action-btn"
-        onclick="window.location.href='<?= $url ?>'">
-  View request
-</button>
+                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn"
+                    onclick="window.location.href='<?= $url ?>'">
+                    View request
+                  </button>
 
                 </div>
               </div>
