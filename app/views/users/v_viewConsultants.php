@@ -1,7 +1,6 @@
 <?php 
     $required_styles = [
         'careseeker/viewCaregivers',
-        // 'components/sidebar',
     ];
     echo loadCSS($required_styles);
 ?>
@@ -14,13 +13,20 @@
   <div class="caregivers-wrapper">
     <div class="caregivers-header">
        <div class="filter-sort-bar">
-        <form method="GET" action="<?php echo URLROOT; ?>/consultant/viewConsultants" id="filter-form">
+        <form method="GET" action="<?php echo URLROOT; ?>/users/viewConsultants" id="filter-form">
             <div class="filters">
+              <label for="username-filter">Username:</label>
+              <input type="text" 
+                     id="username-filter" 
+                     class="live-search"
+                     name="username" 
+                     placeholder="Search by name" 
+                     value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
+
               <label for="region-filter">Region:</label>
               <select id="region-filter" name="region">
                 <option value="">All</option>
                 <?php 
-                // Get all unique regions from the database
                 $regions = $data['regions'] ?? [];
                 foreach($regions as $region): ?>
                     <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
@@ -29,12 +35,36 @@
                 <?php endforeach; ?>
               </select>
 
-
               <label for="speciality-filter">Speciality:</label>
-              <input type="text" id="speciality-filter" name="speciality" placeholder="Type speciality" value="<?php echo $_GET['speciality'] ?? ''; ?>" />
-            </div>
+                <select id="speciality-filter" name="speciality">
+                    <option value="">All</option>
+                    <?php 
+                    $specialities = $data['specialities'] ?? [];
+                    foreach ($specialities as $speciality): ?>
+                        <option value="<?php echo htmlspecialchars($speciality); ?>" 
+                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $speciality) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($speciality); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-            <div class="sort-options">
+
+                <!-- Calendar -->
+                <label for="date-filter">Date:</label>
+                <input type="date" id="date-filter" name="date" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>" />
+
+                <!-- Availability Selector -->
+                <label for="availability-filter">Availability:</label>
+                <select id="availability-filter" name="availability">
+                <option value="">All</option>
+                <option value="morning" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'morning') ? 'selected' : ''; ?>>Morning</option>
+                <option value="afternoon" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'afternoon') ? 'selected' : ''; ?>>Afternoon</option>
+                <option value="overnight" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'overnight') ? 'selected' : ''; ?>>Overnight</option>
+                <option value="day" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'day') ? 'selected' : ''; ?>>Day</option>
+                </select>
+
+
+             <div class="sort-options">
               <label for="sort-by">Sort by:</label>
               <select id="sort-by" name="sort">
                 <option value="">Select</option>
@@ -52,30 +82,22 @@
     <div class="caregivers-container">
     <?php
     if(empty($data['consultants'])) {
-        echo '<div class="no-results">No caregivers found matching your criteria.</div>';
+        echo '<div class="no-results">No consultants found matching your criteria.</div>';
     } else {
         foreach($data['consultants'] as $consultant) {
-            // Extract tags from comma-separated values
             $regions = explode(',', $consultant->available_regions);
             $specialties = explode(',', $consultant->specializations);
             
-            // Convert rating to stars (assuming rating is stored as a number 1-5)
             $ratingValue = $consultant->rating ?? 0;
             $ratingStars = '';
             for($i = 1; $i <= 5; $i++) {
-                if($i <= $ratingValue) {
-                    $ratingStars .= '★'; // Filled star
-                } else {
-                    $ratingStars .= '☆'; // Empty star
-                }
+                $ratingStars .= ($i <= $ratingValue) ? '★' : '☆';
             }
             
-            // Default image if none exists
             $imgPath = !empty($consultant->profile_picture) 
                 ? 'profile_imgs/'.$consultant->profile_picture 
                 : 'def_profile_pic2.jpg';
             
-            // Extract first name and last name (assuming name is stored in format "First Last")
             $nameParts = explode(' ', $consultant->username ?? 'Unknown User', 2);
             $fullName = count($nameParts) > 1 ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
     ?>
@@ -100,11 +122,9 @@
                 <p>Rs <?php echo htmlspecialchars($consultant->payment_details ?? 0); ?> per hour</p>
             </div>
 
-            <!-- Caregiver Tags Section -->
             <div class="caregiver-tags-section">
                 <div class="tags-group">
                     <?php 
-                    // Show first region (or default if none)
                     $primaryRegion = !empty($regions[0]) ? trim($regions[0]) : 'Not specified';
                     ?>
                     <span class="tag"><?php echo htmlspecialchars($primaryRegion); ?></span>
@@ -114,7 +134,6 @@
                 </div>
                 <div class="tags-group">
                     <?php 
-                    // Show first specialty (or default if none)
                     $primarySpecialty = !empty($specialties[0]) ? trim($specialties[0]) : 'General Care';
                     ?>
                     <span class="tag"><?php echo htmlspecialchars($primarySpecialty); ?></span>
@@ -131,48 +150,42 @@
     ?>
     </div>
     
-    <!-- Pagination Controls -->
     <?php if($data['totalPages'] > 0): ?>
     <div class="pagination">
         <?php 
         $currentPage = $data['currentPage'];
         $totalPages = $data['totalPages'];
         
-        // Build the query string for pagination links
         $queryParams = [];
+        if(!empty($_GET['username'])) $queryParams['username'] = $_GET['username'];
         if(!empty($_GET['region'])) $queryParams['region'] = $_GET['region'];
-        if(!empty($_GET['type'])) $queryParams['type'] = $_GET['type'];
         if(!empty($_GET['speciality'])) $queryParams['speciality'] = $_GET['speciality'];
         if(!empty($_GET['sort'])) $queryParams['sort'] = $_GET['sort'];
         
-        // Previous button
         if($currentPage > 1) {
             $prevPageParams = $queryParams;
             $prevPageParams['page'] = $currentPage - 1;
-            $prevPageUrl = URLROOT . '/users/viewConsultants?' . http_build_query($prevPageParams);
+            $prevPageUrl = URLROOT . '/consultant/viewConsultants?' . http_build_query($prevPageParams);
             echo '<a href="' . $prevPageUrl . '" class="page-link">&laquo; Previous</a>';
         }
         
-        // Page numbers
         $startPage = max(1, $currentPage - 2);
         $endPage = min($totalPages, $currentPage + 2);
         
-        // Always show first page if we're not starting from it
         if($startPage > 1) {
             $firstPageParams = $queryParams;
             $firstPageParams['page'] = 1;
-            $firstPageUrl = URLROOT . '/users/viewConsultants?' . http_build_query($firstPageParams);
+            $firstPageUrl = URLROOT . '/consultant/viewConsultants?' . http_build_query($firstPageParams);
             echo '<a href="' . $firstPageUrl . '" class="page-link">1</a>';
             if($startPage > 2) {
                 echo '<span class="page-ellipsis">...</span>';
             }
         }
         
-        // Display page numbers
         for($i = $startPage; $i <= $endPage; $i++) {
             $pageParams = $queryParams;
             $pageParams['page'] = $i;
-            $pageUrl = URLROOT . '/users/viewConsultants?' . http_build_query($pageParams);
+            $pageUrl = URLROOT . '/consultant/viewConsultants?' . http_build_query($pageParams);
             
             if($i == $currentPage) {
                 echo '<span class="page-link current-page">' . $i . '</span>';
@@ -181,22 +194,20 @@
             }
         }
         
-        // Always show last page if we're not ending on it
         if($endPage < $totalPages) {
             if($endPage < $totalPages - 1) {
                 echo '<span class="page-ellipsis">...</span>';
             }
             $lastPageParams = $queryParams;
             $lastPageParams['page'] = $totalPages;
-            $lastPageUrl = URLROOT . '/users/viewConsultants?' . http_build_query($lastPageParams);
+            $lastPageUrl = URLROOT . '/consultant/viewConsultants?' . http_build_query($lastPageParams);
             echo '<a href="' . $lastPageUrl . '" class="page-link">' . $totalPages . '</a>';
         }
         
-        // Next button
         if($currentPage < $totalPages) {
             $nextPageParams = $queryParams;
             $nextPageParams['page'] = $currentPage + 1;
-            $nextPageUrl = URLROOT . '/users/viewConsultants?' . http_build_query($nextPageParams);
+            $nextPageUrl = URLROOT . '/consultant/viewConsultants?' . http_build_query($nextPageParams);
             echo '<a href="' . $nextPageUrl . '" class="page-link">Next &raquo;</a>';
         }
         ?>
@@ -205,6 +216,48 @@
     
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.live-search');
+    const consultantCards = document.querySelectorAll('.caregivers-post');
+    const cardsContainer = document.querySelector('.caregivers-container');
+
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let foundResults = false;
+
+        consultantCards.forEach(card => {
+            const name = card.querySelector('h2').textContent.toLowerCase();
+            const isMatch = name.includes(searchTerm);
+            card.style.display = isMatch ? 'flex' : 'none';
+            if (isMatch) foundResults = true;
+        });
+
+        let noResultsMsg = cardsContainer.querySelector('.no-results');
+        if (!foundResults) {
+            if (!noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.className = 'no-results';
+                noResultsMsg.textContent = 'No consultants found matching your search.';
+                cardsContainer.appendChild(noResultsMsg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    }
+
+    searchInput.addEventListener('input', performSearch);
+    searchInput.addEventListener('keyup', performSearch);
+});
+
+  if (performance.navigation.type === 1) {
+    // Page was refreshed
+    window.location.href = "<?php echo URLROOT; ?>/users/viewConsultants";
+  }
+
+</script>
+
 </container>
 
 <?php require APPROOT.'/views/includes/footer.php'; ?>
