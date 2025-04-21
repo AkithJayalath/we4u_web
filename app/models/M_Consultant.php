@@ -438,5 +438,157 @@ public function cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag =
     return $requestUpdated;
 }
 
+// handle consultant sessions
+public function handleConsultantSession($consultant_id, $elder_id, $careseeker_id, $request_id) {
+    // Check if session already exists for this consultant + elder + careseeker
+    $this->db->query("SELECT * FROM consultantsessions 
+                      WHERE consultant_id = :consultant_id 
+                        AND elder_id = :elder_id 
+                        AND careseeker_id = :careseeker_id");
+
+    $this->db->bind(':consultant_id', $consultant_id);
+    $this->db->bind(':elder_id', $elder_id);
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    $existing = $this->db->single();
+
+    if ($existing) {
+        // Update request_id + updated_at
+        $this->db->query("UPDATE consultantsessions 
+                          SET request_id = :request_id 
+                          WHERE session_id = :session_id");
+        $this->db->bind(':request_id', $request_id);
+        $this->db->bind(':session_id', $existing->session_id);
+        $this->db->execute();
+        return $existing->session_id;
+    } else {
+        // Create new session
+        $this->db->query("INSERT INTO consultantsessions 
+            (consultant_id, careseeker_id, elder_id, request_id) 
+            VALUES (:consultant_id, :careseeker_id, :elder_id, :request_id)");
+        $this->db->bind(':consultant_id', $consultant_id);
+        $this->db->bind(':careseeker_id', $careseeker_id);
+        $this->db->bind(':elder_id', $elder_id);
+        $this->db->bind(':request_id', $request_id);
+        $this->db->execute();
+        return $this->db->lastInsertId();
+    }
+}
+
+public function getAllConsultantSessions($consultant_id) {
+    $this->db->query("SELECT 
+                        cs.*, 
+                        cr.appointment_date, 
+                        cr.time_slot, 
+                        cr.status,
+                        u.username AS careseeker_name,
+                        u.profile_picture AS careseeker_pic,
+                        ep.profile_picture AS elder_pic,
+                        ep.relationship_to_careseeker,
+                        CONCAT(ep.first_name, ' ', ep.middle_name, ' ', ep.last_name) AS elder_name
+                      FROM consultantsessions cs
+                      JOIN consultantrequests cr ON cs.request_id = cr.request_id
+                      JOIN user u ON cs.careseeker_id = u.user_id
+                      JOIN elderprofile ep ON cs.elder_id = ep.elder_id
+                      WHERE cs.consultant_id = :consultant_id
+                      ORDER BY cs.updated_at DESC");
+
+    $this->db->bind(':consultant_id', $consultant_id);
+    return $this->db->resultSet();
+}
+
+
+public function getAllConsultantSessionsById($session_id) {
+    $this->db->query("SELECT 
+                        cs.*, 
+                        cr.appointment_date, 
+                        cr.time_slot, 
+                        cr.status,
+                        u.username AS careseeker_name,
+                        u.profile_picture AS careseeker_pic,
+                        ep.elder_id,
+                        ep.profile_picture AS elder_pic,
+                        ep.relationship_to_careseeker,
+                        CONCAT(ep.first_name, ' ', ep.middle_name, ' ', ep.last_name) AS elder_name
+                      FROM consultantsessions cs
+                      JOIN consultantrequests cr ON cs.request_id = cr.request_id
+                      JOIN user u ON cs.careseeker_id = u.user_id
+                      JOIN elderprofile ep ON cs.elder_id = ep.elder_id
+                      WHERE cs.session_id = :session_id
+                      ORDER BY cs.updated_at DESC");
+
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->single();
+}
+
+
+// upload session documents
+public function uploadSessionFile($session_id, $uploaded_by, $file_type, $file_value) {
+    $this->db->query("INSERT INTO sessionfiles 
+                      (session_id, uploaded_by, file_type, file_value) 
+                      VALUES (:session_id, :uploaded_by, :file_type, :file_value)");
+    $this->db->bind(':session_id', $session_id);
+    $this->db->bind(':uploaded_by', $uploaded_by);
+    $this->db->bind(':file_type', $file_type);
+    $this->db->bind(':file_value', $file_value);
+    return $this->db->execute();
+}
+
+
+
+public function getSessionFiles($session_id) {
+    $this->db->query("SELECT * FROM sessionfiles WHERE session_id = :session_id ORDER BY uploaded_at DESC");
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->resultSet();
+}
+
+
+public function deleteSessionFile($file_id) {
+    // First, get the file info
+    $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    $file = $this->db->single();
+
+    if ($file && $file->file_type !== 'link') {
+        // It's a file, so delete from filesystem
+        $file_path = dirname(APPROOT) . '/public/' . $file->file_value;
+        if (file_exists($file_path)) {
+            unlink($file_path); // delete the physical file
+        }
+    }
+
+    // Delete from DB
+    $this->db->query("DELETE FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    return $this->db->execute();
+}
+
+public function getFileById($file_id) {
+    $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    return $this->db->single();
+}
+
+
+
+
+// Get files by uploader type (careseeker or consultant)
+public function getSessionFilesByUploader($session_id, $uploaded_by) {
+    $this->db->query("SELECT * FROM sessionfiles 
+                    WHERE session_id = :session_id 
+                    AND uploaded_by = :uploaded_by 
+                    ORDER BY uploaded_at DESC");
+    $this->db->bind(':session_id', $session_id);
+    $this->db->bind(':uploaded_by', $uploaded_by);
+    return $this->db->resultSet();
+}
+
+
+
+
+
+
+
+
+
 }
 ?>

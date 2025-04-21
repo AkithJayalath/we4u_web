@@ -192,7 +192,7 @@
             ],
             [
                 'title' => 'Sessions',
-                'url' => URLROOT . '/careseeker/viewConsultants',
+                'url' => URLROOT . '/careseeker/viewMyConsultantSessions',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M680-280q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-160v-112q0-34 17.5-62.5T264-378q62-31 126-46.5T520-440q14 0 27 .5t27 1.5q-16 20-27 43.5T533-347l-13-1q-63 0-120 14.5T292-296q-11 5-16.5 15.5T270-260v20h297q5 22 13.5 42T597-160H200Z"/></svg>',
                 'active' => false
             ],
@@ -258,8 +258,8 @@
                 'active' => false
             ],
             [
-                'title' => 'Patient List',
-                'url' => URLROOT . '/consultant/patientlist',
+                'title' => 'My Sessions',
+                'url' => URLROOT . '/consultant/viewMyConsultantSessions',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>',
                 'active' => false
             ],
