@@ -8,10 +8,9 @@ echo loadCSS($required_styles);
 <?php require APPROOT . '/views/includes/header.php'; ?>
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<!-- FullCalendar 5.x Core and Required Packages -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
@@ -75,7 +74,7 @@ echo loadCSS($required_styles);
 <?php require APPROOT . '/views/includes/footer.php'; ?>
 
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     // Convert PHP data to JavaScript
     const shortSchedules = <?php echo json_encode($data['shortShedules']); ?>;
     const longSchedules = <?php echo json_encode($data['longShedules']); ?>;
@@ -86,35 +85,71 @@ $(document).ready(function() {
     // Process short schedules
     if (shortSchedules && shortSchedules.length) {
         shortSchedules.forEach(schedule => {
-            // Define shift times
-            let startTime = '08:00:00';
-            let endTime = '16:00:00';
-            let shiftName = 'Day Shift (8:00 AM - 4:00 PM)';
+            // Define shift times based on new requirements
+            let startTime = '';
+            let endTime = '';
+            let shiftName = '';
+            let nextDay = false;
             
-            if (schedule.shift === 'night') {
-                startTime = '16:00:00';
-                endTime = '23::00';
-                shiftName = 'Night Shift (4:00 PM - 12:00 AM)';
-            } else if (schedule.shift === 'overnight') {
-                startTime = '00:00:00';
-                endTime = '08:00:00';
-                shiftName = 'Overnight Shift (12:00 AM - 8:00 AM)';
+            switch(schedule.shift) {
+                case 'day':
+                    startTime = '08:00:00';
+                    endTime = '12:00:00';
+                    shiftName = 'Morning Shift (8:00 AM - 12:00 PM)';
+                    break;
+                case 'night':
+                    startTime = '13:00:00';
+                    endTime = '19:00:00';
+                    shiftName = 'Afternoon Shift (1:00 PM - 7:00 PM)';
+                    break;
+                case 'overnight':
+                    startTime = '20:00:00';
+                    endTime = '08:00:00';
+                    shiftName = 'Overnight Shift (8:00 PM - 8:00 AM next day)';
+                    nextDay = true;
+                    break;
+                case 'fullday':
+                    startTime = '08:00:00';
+                    endTime = '08:00:00';
+                    shiftName = 'Full Day Shift (8:00 AM - 8:00 AM next day)';
+                    nextDay = true;
+                    break;
+                default:
+                    startTime = '08:00:00';
+                    endTime = '16:00:00';
+                    shiftName = 'Default Shift (8:00 AM - 4:00 PM)';
             }
             
             // Create event
-            events.push({
+            const event = {
                 id: 'short_' + schedule.id,
-                title: 'Shift: ' + schedule.shift.charAt(0).toUpperCase() + schedule.shift.slice(1),
+                title: 'Shift: ' + capitalizeFirstLetter(schedule.shift),
                 start: schedule.sheduled_date + 'T' + startTime,
-                end: schedule.sheduled_date + 'T' + endTime,
                 backgroundColor: getStatusColor(schedule.status),
                 borderColor: getStatusColor(schedule.status),
                 textColor: '#fff',
-                eventType: 'short',
-                status: schedule.status,
-                shift: shiftName,
-                className: 'status-' + schedule.status
-            });
+                extendedProps: {
+                    eventType: 'short',
+                    status: schedule.status,
+                    shift: shiftName
+                },
+                classNames: ['status-' + schedule.status]
+            };
+            
+            // Handle end time for overnight shifts
+            if (nextDay) {
+                // Create a date object for the next day
+                const endDate = new Date(schedule.sheduled_date);
+                endDate.setDate(endDate.getDate() + 1);
+                
+                // Format the date as YYYY-MM-DD
+                const formattedEndDate = formatDate(endDate);
+                event.end = formattedEndDate + 'T' + endTime;
+            } else {
+                event.end = schedule.sheduled_date + 'T' + endTime;
+            }
+            
+            events.push(event);
         });
     }
     
@@ -129,35 +164,53 @@ $(document).ready(function() {
                 backgroundColor: getStatusColor(schedule.status),
                 borderColor: getStatusColor(schedule.status),
                 textColor: '#fff',
-                eventType: 'long',
-                status: schedule.status,
-                className: 'status-' + schedule.status
+                extendedProps: {
+                    eventType: 'long',
+                    status: schedule.status
+                },
+                classNames: ['status-' + schedule.status]
             });
         });
     }
     
-    // Initialize calendar
-    $('#calendar').fullCalendar({
-        header: {
+    // Initialize calendar with FullCalendar 5.x
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        defaultView: 'month',
+        initialView: 'dayGridMonth',
         editable: false,
-        eventLimit: false, // Allow "more" link when too many events
+        dayMaxEvents: false, // Show all events without the "+more" link
+        height: 'auto', // Adjust height automatically to fit all events
         events: events,
-        eventClick: function(event) {
-            showEventDetails(event);
+        eventClick: function(info) {
+            showEventDetails(info.event);
         }
     });
+    
+    calendar.render();
 });
+
+// Helper function to capitalize first letter
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Helper function to format date as YYYY-MM-DD
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
 function getStatusColor(status) {
     switch(status) {
         case 'yes': return '#28a745'; // Green
         case 'pending': return '#ffc107';   // Yellow
-        case 'cancelled': return '#dc3545'; // Red
         default: return '#007bff';          // Blue
     }
 }
@@ -171,47 +224,47 @@ function showEventDetails(event) {
     
     // Set event type
     document.getElementById('event-type').textContent = 
-        event.eventType === 'short' ? 'Short-term Shift' : 'Long-term Booking';
+        event.extendedProps.eventType === 'short' ? 'Short-term Shift' : 'Long-term Booking';
     
     // Set date
-    if (moment(event.start).format('YYYY-MM-DD') === moment(event.end).format('YYYY-MM-DD')) {
-        document.getElementById('event-date').textContent = moment(event.start).format('MMMM D, YYYY');
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end || event.start);
+    
+    if (formatDate(startDate) === formatDate(endDate)) {
+        document.getElementById('event-date').textContent = formatDateLong(startDate);
     } else {
         document.getElementById('event-date').textContent = 
-            moment(event.start).format('MMMM D, YYYY') + ' - ' + moment(event.end).format('MMMM D, YYYY');
+            formatDateLong(startDate) + ' - ' + formatDateLong(endDate);
     }
     
     // Set time
-    document.getElementById('event-time').textContent = 
-        moment(event.start).format('h:mm A')
+    document.getElementById('event-time').textContent = formatTime(startDate);
     
     // Set status with appropriate class
     const statusElement = document.getElementById('event-status');
-    statusElement.textContent = event.status.charAt(0).toUpperCase() + event.status.slice(1);
+    statusElement.textContent = capitalizeFirstLetter(event.extendedProps.status);
     
     // Remove any existing status classes
     statusElement.className = 'status-indicator';
     // Add the appropriate status class
-    statusElement.classList.add('status-' + event.status);
+    statusElement.classList.add('status-' + event.extendedProps.status);
     
     // Show/hide shift details
-    if (event.eventType === 'short') {
+    if (event.extendedProps.eventType === 'short') {
         document.getElementById('shift-details').style.display = 'block';
-        document.getElementById('event-shift').textContent = event.shift;
+        document.getElementById('event-shift').textContent = event.extendedProps.shift;
         document.getElementById('duration-details').style.display = 'none';
     } else {
         document.getElementById('shift-details').style.display = 'none';
         document.getElementById('duration-details').style.display = 'block';
         
         // Calculate duration
-        const start = moment(event.start);
-        const end = moment(event.end);
-        const duration = moment.duration(end.diff(start));
+        const durationMs = endDate - startDate;
+        const days = Math.floor(durationMs / (24 * 60 * 60 * 1000));
+        const hours = Math.floor((durationMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        const minutes = Math.floor((durationMs % (60 * 60 * 1000)) / (60 * 1000));
         
         let durationText = '';
-        const days = Math.floor(duration.asDays());
-        const hours = duration.hours();
-        const minutes = duration.minutes();
         
         if (days > 0) {
             durationText += days + ' day' + (days > 1 ? 's' : '');
@@ -229,5 +282,17 @@ function showEventDetails(event) {
         
         document.getElementById('event-duration').textContent = durationText;
     }
+}
+
+// Format date as "Month Day, Year"
+function formatDateLong(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Format time as "h:mm AM/PM"
+function formatTime(date) {
+    const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+    return date.toLocaleTimeString('en-US', options);
 }
 </script>

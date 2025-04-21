@@ -275,6 +275,7 @@ public function requestCaregiver($caregiver_id) {
             'error' => ''
         ];
 
+
         // Validation (same as before)
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
@@ -287,6 +288,10 @@ public function requestCaregiver($caregiver_id) {
         } elseif($data['total_payment']<=0){
             $data['error'] = 'Invalid payment amount';
         } 
+
+        // Validate time slots
+
+
         // If no errors, proceed with creating the request
         if (empty($data['error'])) {
             $requestData = [
@@ -734,6 +739,52 @@ public function viewConsultRequestInfo($requestId)
         $data=[];
         $this->view('careseeker/v_viewConsultantSession', $data);
       }
+
+      public function getCaregiverSchedule($caregiverId) {
+        // Prevent any PHP errors or warnings from being output
+        ob_start();
+        
+        try {
+            // Load the schedule model
+            $scheduleModel = $this->model('M_Shedules');
+            
+            // Get caregiver schedules
+            $shortSchedules = $scheduleModel->getAllShedulesForCaregiver($caregiverId);
+            $longSchedules = $scheduleModel->getAllLongShedulesForCaregiver($caregiverId);
+            
+            // Clear any output buffer to prevent PHP errors from being included in the response
+            ob_end_clean();
+            
+            // Prepare response data
+            $data = [
+                'shortSchedules' => $shortSchedules ? $shortSchedules : [],
+                'longSchedules' => $longSchedules ? $longSchedules : []
+            ];
+            
+            // Set content type header and output JSON
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } catch (Exception $e) {
+            // Clear any output buffer
+            ob_end_clean();
+            
+            // Return error as JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'shortSchedules' => [],
+                'longSchedules' => []
+            ]);
+        }
+        exit;
+    }
+    
+    
+    
+    
+    
+    
+    
 
       
 

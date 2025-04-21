@@ -27,8 +27,6 @@
       $this->caregiversModel = $this->model('M_Caregivers');
       $this->sheduleModel = $this->model('M_Shedules');
 
-          $this->caregiversModel = $this->model('M_Caregivers');
-
     }
     
   
