@@ -213,6 +213,7 @@ echo loadCSS($required_styles);
 
 <script>
     // Initialize mini calendar for caregiver availability
+    
     document.addEventListener('DOMContentLoaded', function() {
         // Get caregiver ID from the URL
         const caregiverId = <?php echo $data['caregiver_id']; ?>;
@@ -227,6 +228,7 @@ echo loadCSS($required_styles);
     function fetchCaregiverSchedule(caregiverId) {
         // Define the URL with URLROOT
         const url = `<?php echo URLROOT; ?>/careseeker/getCaregiverSchedule/${caregiverId}`;
+        console.log('Fetching schedule from:', url);
         
         // AJAX call to get caregiver's schedule
         fetch(url)
@@ -246,6 +248,7 @@ echo loadCSS($required_styles);
                 initializeCalendar({shortSchedules: [], longSchedules: []});
             });
     }
+
     function initializeCalendar(scheduleData) {
         const calendarEl = document.getElementById('mini-calendar');
         
@@ -260,7 +263,7 @@ echo loadCSS($required_styles);
             headerToolbar: {
                 left: 'prev,next',
                 center: 'title',
-                right: ''
+                right: '' // Remove 'today' button
             },
             initialView: 'dayGridMonth',
             height: 'auto',
@@ -297,7 +300,11 @@ echo loadCSS($required_styles);
         
         calendar.render();
     }
+
+
     function processUnavailableDates(scheduleData) {
+        console.log('Processing schedule data:', scheduleData);
+        
         const unavailableDates = {
             fullDays: [], // Completely unavailable days
             partialDays: {} // Partially unavailable days with specific time slots
@@ -309,7 +316,7 @@ echo loadCSS($required_styles);
                 // Get the date from the schedule
                 const date = schedule.sheduled_date;
                 
-                // If it's a full day shift (oneday), mark the whole day as unavailable
+                // If it's a full day shift, mark the whole day as unavailable
                 if (schedule.shift === 'fullday') {
                     unavailableDates.fullDays.push(date);
                 } else {
@@ -321,22 +328,12 @@ echo loadCSS($required_styles);
                     // Map database shift values to form time slot values
                     let timeSlot;
                     switch(schedule.shift) {
-                        case 'morning': timeSlot = 'morning'; break;
-                        case 'afternoon': timeSlot = 'evening'; break;
-                        case 'overnight': timeSlot = 'overnight'; break;
+                        case 'day': timeSlot = 'morning'; break;
+                        case 'night': timeSlot = 'night'; break;
                         default: timeSlot = schedule.shift;
                     }
                     
                     unavailableDates.partialDays[date].push(timeSlot);
-                    
-                    // Check if all time slots are taken for this date
-                    const slots = unavailableDates.partialDays[date];
-                    if (slots.includes('morning') && slots.includes('evening') && slots.includes('overnight')) {
-                        // If all individual slots are taken, move this date to fullDays
-                        unavailableDates.fullDays.push(date);
-                        // Remove from partialDays to avoid duplicate processing
-                        delete unavailableDates.partialDays[date];
-                    }
                 }
             });
         }
@@ -344,8 +341,8 @@ echo loadCSS($required_styles);
         // Process long schedules
         if (scheduleData.longSchedules && scheduleData.longSchedules.length) {
             scheduleData.longSchedules.forEach(schedule => {
-                const startDate = new Date(schedule.start_date);
-                const endDate = new Date(schedule.end_date);
+                const startDate = new Date(schedule.start_date_time);
+                const endDate = new Date(schedule.end_date_time);
                 
                 // Mark all days in the range as unavailable
                 const currentDate = new Date(startDate);
@@ -356,9 +353,22 @@ echo loadCSS($required_styles);
             });
         }
         
+        console.log('Processed unavailable dates:', unavailableDates);
         return unavailableDates;
-}
+    }
 
+
+    function isDateUnavailable(date, unavailableDates) {
+        const formattedDate = formatDate(date);
+        
+        // Check if the date is fully unavailable
+        if (unavailableDates.fullDays.includes(formattedDate)) {
+            return true;
+        }
+        
+        // For partial days, we'll handle this in the time slot selection
+        return false;
+    }
 
     function handleDateSelection(info, unavailableDates) {
         const selectedDate = info.date;
@@ -392,6 +402,8 @@ echo loadCSS($required_styles);
         showTimeSlots(formattedDate, unavailableDates);
     }
 
+
+
     function updateFormFields(selectedDate, unavailableDates) {
         // Get the duration type
         const durationType = document.querySelector('input[name="duration-type"]:checked')?.value;
@@ -415,11 +427,11 @@ echo loadCSS($required_styles);
         // Recalculate payment
         calculatePayment();
     }
+
     function updateAvailableTimeSlots(selectedDate, unavailableDates) {
         // Get all time slot checkboxes
         const timeSlotCheckboxes = document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]');
         const longTermRadio = document.getElementById('long-term-radio');
-        const fullDayCheckbox = document.getElementById('full-day-checkbox');
         
         // Reset all time slots to enabled
         timeSlotCheckboxes.forEach(checkbox => {
@@ -449,17 +461,6 @@ echo loadCSS($required_styles);
                     }
                 }
             });
-            
-            // Special handling for full-day checkbox
-            // If any individual slot is unavailable, full-day should also be unavailable
-            if (unavailableSlots.includes('morning') || unavailableSlots.includes('evening') || unavailableSlots.includes('overnight')) {
-                fullDayCheckbox.disabled = true;
-                fullDayCheckbox.checked = false;
-                const label = fullDayCheckbox.closest('label');
-                if (label) {
-                    label.classList.add('disabled-option');
-                }
-            }
         }
         
         // Check if any time slots are selected
@@ -478,56 +479,37 @@ echo loadCSS($required_styles);
             }
         }
     }
+
     // Add event listeners to time slot checkboxes
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                // Get the long-term radio button
-                const longTermRadio = document.getElementById('long-term-radio');
-                
-                // Check if any time slot is selected
-                const anyTimeSlotSelected = Array.from(
-                    document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]')
-                ).some(cb => cb.checked);
-                
-                // If any time slot is selected, disable long-term radio
-                if (longTermRadio) {
-                    longTermRadio.disabled = anyTimeSlotSelected;
-                    const label = longTermRadio.closest('label');
-                    if (label) {
-                        if (anyTimeSlotSelected) {
-                            label.classList.add('disabled-option');
-                        } else {
-                            label.classList.remove('disabled-option');
-                        }
+    document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Get the long-term radio button
+            const longTermRadio = document.getElementById('long-term-radio');
+            
+            // Check if any time slot is selected
+            const anyTimeSlotSelected = Array.from(
+                document.querySelectorAll('.time-slot-checkboxes input[type="checkbox"]')
+            ).some(cb => cb.checked);
+            
+            // If any time slot is selected, disable long-term radio
+            if (longTermRadio) {
+                longTermRadio.disabled = anyTimeSlotSelected;
+                const label = longTermRadio.closest('label');
+                if (label) {
+                    if (anyTimeSlotSelected) {
+                        label.classList.add('disabled-option');
+                    } else {
+                        label.classList.remove('disabled-option');
                     }
                 }
-                
-                // If this is an individual time slot (not full-day)
-                if (this.value !== 'full-day' && this.checked) {
-                    // Disable full-day option when individual slots are selected
-                    const fullDayCheckbox = document.getElementById('full-day-checkbox');
-                    if (fullDayCheckbox) {
-                        fullDayCheckbox.disabled = true;
-                        const fullDayLabel = fullDayCheckbox.closest('label');
-                        if (fullDayLabel) {
-                            fullDayLabel.classList.add('disabled-option');
-                        }
-                    }
-                } else if (!anyTimeSlotSelected) {
-                    // If no time slots are selected, enable full-day option
-                    const fullDayCheckbox = document.getElementById('full-day-checkbox');
-                    if (fullDayCheckbox) {
-                        fullDayCheckbox.disabled = false;
-                        const fullDayLabel = fullDayCheckbox.closest('label');
-                        if (fullDayLabel) {
-                            fullDayLabel.classList.remove('disabled-option');
-                        }
-                    }
-                }
-            });
+            }
         });
     });
+
+
+
+
+
     function showTimeSlots(selectedDate, unavailableDates) {
         const timeSlotList = document.getElementById('time-slot-list');
         const selectDateMessage = document.querySelector('.select-date-message');
@@ -552,15 +534,7 @@ echo loadCSS($required_styles);
         
         // Create time slot elements
         timeSlots.forEach(slot => {
-            // Check if slot is unavailable
-            let isUnavailable = unavailableSlots.includes(slot.value);
-            
-            // Special handling for full-day: if any individual slot is unavailable, full-day is also unavailable
-            if (slot.id === 'full-day' && !isUnavailable) {
-                if (unavailableSlots.includes('morning') || unavailableSlots.includes('evening') || unavailableSlots.includes('overnight')) {
-                    isUnavailable = true;
-                }
-            }
+            const isUnavailable = unavailableSlots.includes(slot.value);
             
             const slotElement = document.createElement('div');
             slotElement.className = `time-slot-item ${isUnavailable ? 'unavailable' : ''}`;
@@ -580,6 +554,8 @@ echo loadCSS($required_styles);
             timeSlotList.appendChild(slotElement);
         });
     }
+
+
 
     function selectTimeSlot(slotId, slotElement) {
         // Remove selection from all slots
@@ -619,6 +595,8 @@ echo loadCSS($required_styles);
         return `${year}-${month}-${day}`;
     }
 
+    // Update the toggleDurationFields function to show/hide the calendar
+    // Update the toggleDurationFields function to show/hide the calendar
     function toggleDurationFields() {
         const longTermFields = document.getElementById('long-term-fields');
         const shortTermFields = document.getElementById('short-term-fields');
@@ -664,6 +642,8 @@ echo loadCSS($required_styles);
         });
     }
 
+
+    // Update the handleFullDaySelection function to work with the new UI
     function handleFullDaySelection() {
         const fullDayCheckbox = document.getElementById('full-day-checkbox');
         const otherTimeSlots = document.querySelectorAll('.other-slot');
@@ -724,8 +704,8 @@ echo loadCSS($required_styles);
         
         calculatePayment(); // Recalculate payment when changing time slots
     }
-</script>
 
+</script>
 
                         <!-- Duration Type Selection -->
                         <div class="form-section">

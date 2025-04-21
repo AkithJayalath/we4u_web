@@ -231,7 +231,18 @@ public function sendCareRequest($data) {
         $this->db->bind(':end_date', $data['from_date_short']); // For short-term, end_date is same as start_date
     }
     
-    return $this->db->execute();
+    if ($this->db->execute()) {
+        // Return this success states and the ID
+        return [
+            'success' => true,
+            'id' => $this->db->lastInsertId()
+        ];
+    } else {
+        return [
+            'success' => false,
+            'id' => null
+        ];
+    }
 }
 
 public function getCaregiverById($caregiverId) {

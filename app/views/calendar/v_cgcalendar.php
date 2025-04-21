@@ -26,47 +26,66 @@ echo loadCSS($required_styles);
                 <div id="calendar"></div>
             </div>
             
-            <!-- Event details on the right -->
+            <!-- event details  -->
             <div class="event-details-container">
                 <div class="event-details-header">
                     <h3>Event Details</h3>
-                    <div>
-                        <span class="confirmed">confirmed</span> <span class="dot1"></span>
-                        <span>           </span>
-                        <span class="pending">pending</span> <span class="dot2"></span>
+                    <div class="status-legend">
+                        <div class="status-item">
+                            <span class="status-label">Confirmed</span>
+                            <span class="status-dot confirmed-dot"></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Pending</span>
+                            <span class="status-dot pending-dot"></span>
+                        </div>
                     </div>
-
                 </div>
                 <div class="event-details-content" id="no-event-message">
-                    <p>Select an event to view details</p>
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-day empty-icon"></i>
+                        <p>Select an event to view details</p>
+                    </div>
                 </div>
                 <div class="event-details-content" id="event-details" style="display:none;">
-                    <div class="detail-row">
-                        <span class="detail-label">Event Type:</span>
-                        <span id="event-type" class="detail-value"></span>
+                    <div class="detail-card">
+                        <div class="detail-row">
+                            <span class="detail-label">Event Type:</span>
+                            <span id="event-type" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date:</span>
+                            <span id="event-date" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Time:</span>
+                            <span id="event-time" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span id="event-status" class="status-indicator"></span>
+                        </div>
+                        <div class="detail-row" id="shift-details" style="display:none;">
+                            <span class="detail-label">Shift:</span>
+                            <span id="event-shift" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row" id="duration-details" style="display:none;">
+                            <span class="detail-label">Duration:</span>
+                            <span id="event-duration" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row" id="request-id-row" style="display:none;">
+                            <span class="detail-label">Request ID:</span>
+                            <span id="request-id" class="detail-value"></span>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Date:</span>
-                        <span id="event-date" class="detail-value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Time:</span>
-                        <span id="event-time" class="detail-value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Status:</span>
-                        <span id="event-status" class="status-indicator"></span>
-                    </div>
-                    <div class="detail-row" id="shift-details" style="display:none;">
-                        <span class="detail-label">Shift:</span>
-                        <span id="event-shift" class="detail-value"></span>
-                    </div>
-                    <div class="detail-row" id="duration-details" style="display:none;">
-                        <span class="detail-label">Duration:</span>
-                        <span id="event-duration" class="detail-value"></span>
+                    <div class="event-actions">
+                        <button id="view-request-btn" class="view-request-button">
+                            <i class="fas fa-external-link-alt"></i> View Request
+                        </button>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </page-body-container>
@@ -92,12 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
             let nextDay = false;
             
             switch(schedule.shift) {
-                case 'day':
+                case 'morning':
                     startTime = '08:00:00';
                     endTime = '12:00:00';
                     shiftName = 'Morning Shift (8:00 AM - 12:00 PM)';
                     break;
-                case 'night':
+                case 'evening':
                     startTime = '13:00:00';
                     endTime = '19:00:00';
                     shiftName = 'Afternoon Shift (1:00 PM - 7:00 PM)';
@@ -110,9 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
                 case 'fullday':
                     startTime = '08:00:00';
-                    endTime = '08:00:00';
+                    endTime = '23:59:00';
                     shiftName = 'Full Day Shift (8:00 AM - 8:00 AM next day)';
-                    nextDay = true;
+                    // nextDay = true;
                     break;
                 default:
                     startTime = '08:00:00';
@@ -159,8 +178,8 @@ document.addEventListener('DOMContentLoaded', function() {
             events.push({
                 id: 'long_' + schedule.id,
                 title: 'Long-term Booking',
-                start: schedule.start_date_time,
-                end: schedule.end_date_time,
+                start: schedule.start_date + 'T00:00:00',
+                end: schedule.end_date + 'T24:00:00',
                 backgroundColor: getStatusColor(schedule.status),
                 borderColor: getStatusColor(schedule.status),
                 textColor: '#fff',
@@ -188,7 +207,19 @@ document.addEventListener('DOMContentLoaded', function() {
         events: events,
         eventClick: function(info) {
             showEventDetails(info.event);
+        },
+        eventDidMount: function(info) {
+        // Check if this is a long-term event
+        if (info.event.extendedProps.eventType === 'long') {
+            info.el.style.height = 'auto';
+            info.el.style.minHeight = '30px';
+            info.el.style.paddingTop = '6px';
+            info.el.style.paddingBottom = '6px';
+            info.el.style.fontSize = '0.9em';
+            info.el.style.fontWeight = 'bold';
         }
+    
+    }
     });
     
     calendar.render();
@@ -295,4 +326,12 @@ function formatTime(date) {
     const options = { hour: 'numeric', minute: '2-digit', hour12: true };
     return date.toLocaleTimeString('en-US', options);
 }
+
+
+const viewRequestBtn = document.getElementById('view-request-btn');
+viewRequestBtn.onclick = function() {
+    console.log("hello");
+    const requestType = event.extendedProps.eventType === 'short' ? 'shortTerm' : 'longTerm';
+    window.location.href = `<?php echo URLROOT; ?>/careseeker/viewRequest/${requestId}?type=${requestType}`;
+};
 </script>

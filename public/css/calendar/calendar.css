@@ -113,7 +113,7 @@
     font-weight: bold;
 }
 
-.status-indicator.status-confirmed {
+.status-indicator.status-approverd{ 
     background-color: #28a745;
 }
 
@@ -140,20 +140,16 @@
 }
 
 /* Status colors for events */
-.fc-event.status-confirmed {
+.fc-event.status-approverd {
     background-color: #28a745 !important;
     border-color: #28a745 !important;
+    color: #fff !important;
 }
 
 .fc-event.status-pending {
     background-color: #ffc107 !important;
     border-color: #ffc107 !important;
     color: #212529 !important;
-}
-
-.fc-event.status-cancelled {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
 }
 
 /* Fix for month view to ensure events span multiple days properly */
@@ -272,3 +268,115 @@
 .fc-scroller {
     overflow: visible !important;
 }
+
+/* Add status legend with colored dots */
+.status-legend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-label {
+    font-size: 13px;
+    color: #555;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.confirmed-dot {
+    background-color: #28a745;
+}
+
+.pending-dot {
+    background-color: #ffc107;
+}
+
+/* Improve the detail rows */
+.detail-row {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Add a view request button */
+.event-actions {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.view-request-button {
+    background-color: #013CC6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.view-request-button:hover {
+    background-color: #0030a0;
+}
+
+.view-request-button i {
+    font-size: 14px;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+}
+
+.empty-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+/* Force height for long-term events */
+.fc-event[class*="long"] {
+    min-height: 30px !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+/* Ensure the event content has enough space */
+.fc-event[class*="long"] .fc-event-title {
+    padding: 4px 0 !important;
+    line-height: 1.5 !important;
+}
+
+/* Make sure the event container allows for taller events */
+.fc-daygrid-event-harness {
+    height: auto !important;
+    min-height: 30px !important;
+}
+
+
+

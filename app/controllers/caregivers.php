@@ -845,31 +845,6 @@ private function getStartDateTime($request) {
   return $date;
 }
 
-
-
-
-      
-    
-
-    // public function viewMyCalendar(){
-
-    //   // $id = $_SESSION['user_id'];
-    //   $id = 26;
-    //   // this response having id, provider id, sheduled date, status and shift
-    //   $shortShedules = $this->sheduleModel->getAllShedulesForCaregiver($id);
-      
-    //   // this having id, caregiverid, startdate time, enddate time and status
-    //   $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
-
-
-
-    //   $data= [
-    //     'shortShedules' => $shortShedules,
-    //     'longShedules' => $longShedules
-    //   ];
-    //   $this->view('calendar/v_calendar', $data);
-    // }
-
     public function viewMyCalendar(){
       // Check if user is logged in
       if(!$this->isLoggedIn()){
@@ -880,7 +855,7 @@ private function getStartDateTime($request) {
       $id = $_SESSION['user_id'];
       
       // Get all schedules for the caregiver
-      $shortShedules = $this->sheduleModel->getAllShedulesForCaregiver($id);
+      $shortShedules = $this->sheduleModel->getAllShortShedulesForCaregiver($id);
       $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
       
       // Prepare data for the view
@@ -890,7 +865,7 @@ private function getStartDateTime($request) {
       ];
       
       // Load the calendar view
-      $this->view('calendar/v_calendar', $data);
+      $this->view('calendar/v_cgcalendar', $data);
   }
   
   }
