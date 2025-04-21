@@ -85,7 +85,7 @@ class M_Consultantss {
                     if (!empty($trimmedSpeciality) && !in_array($trimmedSpeciality, $specialities)) {
                         $specialities[] = $trimmedSpeciality;
                     }
-                }.
+                }
             }
         }
     
@@ -109,7 +109,7 @@ class M_Consultantss {
 
     public function register($data, $uploadedFiles) {
         try {
-            $this->db->beginTransaction();
+           // $this->db->beginTransaction();
 
             // Insert user
             $userId = $this->insertUser($data);
@@ -129,11 +129,11 @@ class M_Consultantss {
                 throw new Exception("Document insertion failed");
             }
 
-            $this->db->commit();
+           // $this->db->commit();
             return true;
 
         } catch (Exception $e) {
-            $this->db->rollBack();
+          //  $this->db->rollBack();
             return false;
         }
     }

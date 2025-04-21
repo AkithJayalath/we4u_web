@@ -198,7 +198,7 @@ public function viewConsultantProfile($id = null) {
   public function viewRequests()
 {
     
-    // Check if user is logged in as caregiver
+    // Check if user is logged in as consultant
     if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
         redirect('users/login');
     }
@@ -207,7 +207,7 @@ public function viewConsultantProfile($id = null) {
     // Get caregiver ID from session
     $consultantID = $_SESSION['user_id'];
     
-    // Get all requests for this caregiver
+    // Get all requests for this consultant
     $consultRequests = $this->consultantModel->getAllConsultRequestsByConsultant($consultantID);
     
     $data = [
@@ -246,7 +246,8 @@ public function acceptRequest($request_id) {
 
       // Update status
       if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
-          flash('request_message', 'Request has been accepted.');
+          $this->createOrReuseConsultantSession($request_id);
+          flash('request_message', 'Request has been accepted and session is now active.');
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
       }
@@ -603,5 +604,160 @@ public function deletereview($review_id) {
           }
       }
   }
+
+  // consultant sessions
+
+  public function createOrReuseConsultantSession($request_id) {
+    // First, get the request details (consultant_id, careseeker_id, elder_id)
+    $request = $this->consultantModel->getRequestById($request_id);
+
+    if (!$request) {
+        // Redirect or show error
+        die('Invalid Request ID');
+    }
+
+    // Extract needed fields
+    $consultant_id = $request->consultant_id;
+    $careseeker_id = $request->requester_id;
+    $elder_id = $request->elder_id;
+
+    // Call model function to handle session logic
+    $session_id = $this->consultantModel->handleConsultantSession($consultant_id, $elder_id, $careseeker_id, $request_id);
+
+    // Redirect to the session view or wherever you want
+    redirect('consultant/viewSession/' . $session_id);
+}
+
+
+//view consultation session
+public function viewMyConsultantSessions()
+{
+    
+    // Check if user is logged in as consultant
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
+        redirect('users/login');
+    }
+   
+
+    // Get caregiver ID from session
+    $consultant_id = $_SESSION['user_id'];
+    
+    // Get all requests for this consultant
+    $consultant_sessions = $this->consultantModel->getAllConsultantSessions($consultant_id);
+    
+    $data = [
+        'sessions' => $consultant_sessions
+    ];
+    
+    
+    $this->view('consultant/v_viewConsultantsessions', $data);
+}
+
+
+
+public function uploadSessionFile() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check login and role
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
+            redirect('users/login');
+        }
+
+        $session_id = $_POST['session_id'];
+        $file_type = $_POST['file_type'];
+        $uploaded_by = 'consultant'; 
+
+        // Handle link upload
+        if ($file_type === 'link') {
+            $link = trim($_POST['link']);
+            if (!empty($link)) {
+                $this->consultantModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $link);
+                flash('upload_success', 'Link shared successfully');
+            } else {
+                flash('upload_error', 'Link cannot be empty');
+            }
+        }
+
+        // Handle file upload
+        elseif (!empty($_FILES['file']['name'])) {
+            $file_name = time() . '_' . basename($_FILES['file']['name']);
+
+            // Define file system and public path
+            $target_dir = dirname(APPROOT) . '/public/documents/sessionDocuments/';
+            $public_path = 'documents/sessionDocuments/' . $file_name;
+
+            // Create directory if not exists
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $target_path = $target_dir . $file_name;
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+                $this->consultantModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $public_path);
+                flash('upload_success', 'File uploaded successfully');
+            } else {
+                flash('upload_error', 'File upload failed');
+            }
+        }
+
+        redirect("consultant/viewConsultantSession/$session_id");
+    }
+}
+
+
+public function deleteSessionFile($file_id) {
+    // You can add role-based security here if needed
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+
+    // Load the file first to get session_id for redirection after delete
+    $file = $this->consultantModel->getFileById($file_id); // See helper below
+
+    if (!$file) {
+        flash('upload_error', 'File not found');
+        redirect('pages/notfound'); // or wherever you prefer
+    }
+
+    if ($this->consultantModel->deleteSessionFile($file_id)) {
+        flash('upload_success', 'File deleted successfully');
+    } else {
+        flash('upload_error', 'File deletion failed');
+    }
+
+    redirect('consultant/viewConsultantSession/' . $file->session_id);
+}
+
+
+public function viewConsultantSession($session_id) {
+    // Get session details
+    $session = $this->consultantModel->getAllConsultantSessionsById($session_id);
+    
+    // Check if session exists and belongs to the current user
+    if (!$session || $session->consultant_id != $_SESSION['user_id']) {
+        flash('session_error', 'Unauthorized access or session not found');
+        redirect('careseeker/');
+    }
+    
+
+    
+    // Get files uploaded by careseeker
+    $your_files = $this->consultantModel->getSessionFilesByUploader($session_id, 'consultant');
+    
+    // Get files uploaded by consultant
+    $consultant_files = $this->consultantModel->getSessionFilesByUploader($session_id, 'careseeker');
+    
+    // Prepare data for view
+    $data = [
+        'session_id' => $session_id,
+        'session' => $session,
+        'your_files' => $your_files,
+        'consultant_files' => $consultant_files
+    ];
+    
+    // Load view
+    $this->view('consultant/v_viewConsultantSession', $data);
+}
+
 
 }

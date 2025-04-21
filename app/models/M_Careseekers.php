@@ -489,6 +489,116 @@ public function deleteRequest($requestId) {
 }
 
 
+// sessions
+
+public function getAllConsultantSessions($careseeker_id) {
+    $this->db->query("SELECT 
+                        cs.*, 
+                        cr.appointment_date, 
+                        cr.time_slot, 
+                        cr.status,
+                        u.username AS consultant_name,
+                        u.profile_picture AS consultant_pic,
+                        ep.profile_picture AS elder_pic,
+                        ep.relationship_to_careseeker,
+                        CONCAT(ep.first_name, ' ', ep.middle_name, ' ', ep.last_name) AS elder_name
+                      FROM consultantsessions cs
+                      JOIN consultantrequests cr ON cs.request_id = cr.request_id
+                      JOIN user u ON cs.consultant_id = u.user_id
+                      JOIN elderprofile ep ON cs.elder_id = ep.elder_id
+                      WHERE cs.careseeker_id = :careseeker_id
+                      ORDER BY cs.updated_at DESC");
+
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    return $this->db->resultSet();
+}
+
+
+public function getAllConsultantSessionsById($session_id) {
+    $this->db->query("SELECT 
+                        cs.*, 
+                        cr.appointment_date, 
+                        cr.time_slot, 
+                        cr.status,
+                        u.username AS consultant_name,
+                        u.profile_picture AS consultant_pic,
+                        ep.elder_id,
+                        ep.profile_picture AS elder_pic,
+                        ep.relationship_to_careseeker,
+                        CONCAT(ep.first_name, ' ', ep.middle_name, ' ', ep.last_name) AS elder_name
+                      FROM consultantsessions cs
+                      JOIN consultantrequests cr ON cs.request_id = cr.request_id
+                      JOIN user u ON cs.consultant_id = u.user_id
+                      JOIN elderprofile ep ON cs.elder_id = ep.elder_id
+                      WHERE cs.session_id = :session_id
+                      ORDER BY cs.updated_at DESC");
+
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->single();
+}
+
+
+// upload session documents
+public function uploadSessionFile($session_id, $uploaded_by, $file_type, $file_value) {
+    $this->db->query("INSERT INTO sessionfiles 
+                      (session_id, uploaded_by, file_type, file_value) 
+                      VALUES (:session_id, :uploaded_by, :file_type, :file_value)");
+    $this->db->bind(':session_id', $session_id);
+    $this->db->bind(':uploaded_by', $uploaded_by);
+    $this->db->bind(':file_type', $file_type);
+    $this->db->bind(':file_value', $file_value);
+    return $this->db->execute();
+}
+
+
+
+public function getSessionFiles($session_id) {
+    $this->db->query("SELECT * FROM sessionfiles WHERE session_id = :session_id ORDER BY uploaded_at DESC");
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->resultSet();
+}
+
+
+public function deleteSessionFile($file_id) {
+    // First, get the file info
+    $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    $file = $this->db->single();
+
+    if ($file && $file->file_type !== 'link') {
+        // It's a file, so delete from filesystem
+        $file_path = dirname(APPROOT) . '/public/' . $file->file_value;
+        if (file_exists($file_path)) {
+            unlink($file_path); // delete the physical file
+        }
+    }
+
+    // Delete from DB
+    $this->db->query("DELETE FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    return $this->db->execute();
+}
+
+public function getFileById($file_id) {
+    $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
+    $this->db->bind(':file_id', $file_id);
+    return $this->db->single();
+}
+
+
+
+
+// Get files by uploader type (careseeker or consultant)
+public function getSessionFilesByUploader($session_id, $uploaded_by) {
+    $this->db->query("SELECT * FROM sessionfiles 
+                    WHERE session_id = :session_id 
+                    AND uploaded_by = :uploaded_by 
+                    ORDER BY uploaded_at DESC");
+    $this->db->bind(':session_id', $session_id);
+    $this->db->bind(':uploaded_by', $uploaded_by);
+    return $this->db->resultSet();
+}
+
 
 
 

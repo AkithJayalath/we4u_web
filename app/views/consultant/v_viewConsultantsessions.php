@@ -36,20 +36,6 @@
                     </select>
                 </div>
                 
-                <div class="filter-group">
-                    <span class="filter-label">Elder Profile:</span>
-                    <select class="filter-select" id="filter-elder">
-                        <option value="all">All</option>
-                        <?php if(isset($data['elder_profiles'])): ?>
-    <?php foreach($data['elder_profiles'] as $profile): ?>
-        <option value="<?= $profile->elder_id ?>">
-            <?= htmlspecialchars($profile->first_name . ' ' . $profile->last_name) ?>
-        </option>
-    <?php endforeach; ?>
-<?php endif; ?>
-                    </select>
-                </div>
-                
                 <button class="apply-filter-btn" id="apply-filters">Apply</button>
             </div>
 
@@ -57,8 +43,8 @@
             <div id="sessions-container">
                 <?php foreach ($data['sessions'] as $session): ?>
                     <?php
-                        $consultantPic = !empty($session->consultant_pic)
-                            ? URLROOT . '/public/images/profile_imgs/' . $session->consultant_pic
+                        $careseekerPic = !empty($session->careseeker_pic)
+                            ? URLROOT . '/public/images/profile_imgs/' . $session->careseeker_pic
                             : URLROOT . '/public/images/def_profile_pic2.jpg';
 
                         $elderPic = !empty($session->elder_pic)
@@ -77,13 +63,13 @@
                                     <img src="<?= $elderPic ?>" alt="Elder Profile" />
                                 </div>
                                 <div class="info-circle image2">
-                                    <img src="<?= $consultantPic ?>" alt="Consultant Profile" />
+                                    <img src="<?= $careseekerPic ?>" alt="careseeker Profile" />
                                 </div>
                             </div>
                             
                             <!-- Text information -->
                             <div class="profile-text">
-                                <h4><?= htmlspecialchars($session->consultant_name) ?></h4>
+                                <h4><?= htmlspecialchars($session->careseeker_name) ?></h4>
                                 <p class="session-id">Session ID: <?= $session->session_id ?></p>
                             </div>
                             <div class="profile-elder">
@@ -115,8 +101,8 @@
 <span class="tag <?= $statusClass ?>">
     <?= $displayStatus ?>
 </span>
-                            <button class="view-profile-btn" onclick="window.location.href='<?= URLROOT ?>/careseeker/viewConsultantSession/<?= $session->session_id ?>'">
-                                View
+                            <button class="view-profile-btn" onclick="window.location.href='<?= URLROOT ?>/consultant/viewConsultantSession/<?= $session->session_id ?>'">
+                                View request
                             </button>
                         </div>
                     </div>
@@ -134,22 +120,19 @@ document.addEventListener('DOMContentLoaded', function() {
     applyBtn.addEventListener('click', function() {
         const sortDate = document.getElementById('sort-date').value;
         const filterStatus = document.getElementById('filter-status').value;
-        const filterElder = document.getElementById('filter-elder').value;
-        
-        filterAndSortSessions(sortDate, filterStatus, filterElder);
+        filterAndSortSessions(sortDate, filterStatus);
     });
     
     // Initial sorting (newest first)
     filterAndSortSessions('newest', 'all', 'all');
     
-    function filterAndSortSessions(sortDate, filterStatus, filterElder) {
+    function filterAndSortSessions(sortDate, filterStatus) {
         const sessionsContainer = document.getElementById('sessions-container');
         const sessions = Array.from(sessionsContainer.getElementsByClassName('profile-card'));
         
         // Filter sessions
         sessions.forEach(session => {
             const sessionStatus = session.getAttribute('data-status');
-            const sessionElder = session.getAttribute('data-elder');
             let showSession = true;
             
             // Apply status filter
@@ -157,10 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 showSession = false;
             }
             
-            // Apply elder filter
-            if (filterElder !== 'all' && sessionElder !== filterElder) {
-                showSession = false;
-            }
             
             // Show or hide session
             session.style.display = showSession ? 'flex' : 'none';
