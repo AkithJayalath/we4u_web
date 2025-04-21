@@ -4,15 +4,15 @@ class admin extends controller{
   private $adminModel;
 
   public function __construct(){
-    if(!$_SESSION['user_id']) {
-      redirect('users/login');
-    }else{
-      if($_SESSION['user_role'] != 'Admin'){
-        redirect('pages/permissonerror');
-      }
+    // if(!$_SESSION['user_id']) {
+    //   redirect('users/login');
+    // }else{
+    //   if($_SESSION['user_role'] != 'Admin'){
+    //     redirect('pages/permissonerror');
+    //   }
     $this->adminModel = $this->model('M_Admin');
 
-  }
+//   }
 
 
   }
@@ -147,9 +147,10 @@ public function viewCompletedJob($job_id) {
   }
 
 
-  public function user_detailes(){
+  public function user_detailes($page = 1){
+    $users = $this->adminModel->getAllUsers();
     $data = [
-      'title' => 'User Detailes'
+      'users' => $users
     ];
     $this->view('admin/v_users', $data);
   }
@@ -162,6 +163,7 @@ public function viewCompletedJob($job_id) {
   }
 
   public function viewblog(){
+    
     $data = [
       'title' => 'View Blog'
     ];
@@ -236,9 +238,6 @@ public function editannouncement($announcement_id) {
     }
 }
 
-
-   
-
 public function deleteannouncement($announcement_id) {
   if ($this->adminModel->deleteAnnouncement($announcement_id)) {
       redirect('admin/viewannouncement');
@@ -289,7 +288,30 @@ public function deleteannouncement($announcement_id) {
             ];
             $this->view('admin/v_addannouncement', $data);
         }
-      }
+
+    }
+
+    // just a function to send a email
+public function sendWelcomeEmail() {
+    // $email = $_SESSION['user_email'];
+    $email = 'nadun202327@gmail.com';
+    
+    $result = sendEmail(
+        $email,
+        'Welcome to We4u',
+        '<h1>Welcome to We4u!</h1><p>ammo hutto kohomada ithin</p>'
+    );
+    
+    if ($result['success']) {
+        // Email sent successfully
+        return true;
+    } else {
+        // Log the error
+        error_log($result['message']);
+        return false;
+    }
+}
+
 
    
   

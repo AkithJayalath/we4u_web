@@ -43,7 +43,7 @@
 
                 <div class="a-a-a-form-buttons">
                     <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/viewrateandreview'">Cancel</button>
-                    <button type="button" class="a-a-a-btn-save">Submit Review</button>
+                    <button type="submit" class="a-a-a-btn-save">Submit Review</button>
                 </div>
             </form>
         </div>

@@ -2,6 +2,7 @@
   class caregivers extends controller{
 
     private $caregiversModel;
+    private $sheduleModel;
     public function __construct() {
       // Get current URL path
       $currentUrl = $_SERVER['REQUEST_URI'] ?? '';
@@ -24,7 +25,11 @@
       
       // Always load the model (for both public and protected routes)
       $this->caregiversModel = $this->model('M_Caregivers');
-  }
+      $this->sheduleModel = $this->model('M_Shedules');
+
+    }
+    
+  
 
     public function index(){
       $this->viewRequests();
@@ -840,8 +845,28 @@ private function getStartDateTime($request) {
   return $date;
 }
 
-
-
-
-}
+    public function viewMyCalendar(){
+      // Check if user is logged in
+      if(!$this->isLoggedIn()){
+          redirect('users/login');
+      }
+      
+      // Get caregiver ID from session
+      $id = $_SESSION['user_id'];
+      
+      // Get all schedules for the caregiver
+      $shortShedules = $this->sheduleModel->getAllShortShedulesForCaregiver($id);
+      $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
+      
+      // Prepare data for the view
+      $data = [
+          'shortShedules' => $shortShedules,
+          'longShedules' => $longShedules
+      ];
+      
+      // Load the calendar view
+      $this->view('calendar/v_cgcalendar', $data);
+  }
+  
+  }
 ?>

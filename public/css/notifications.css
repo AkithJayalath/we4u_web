@@ -27,7 +27,7 @@
 }
 
 /* Individual notification */
-.notification {
+.notification-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -38,75 +38,96 @@
     transition: box-shadow 0.2s ease-in-out;
 }
 
-.notification:hover {
+.notification-item:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification-item.unread {
+    background-color: #f0f7ff;
+    border-left: 3px solid #0B63F8;
 }
 
 /* Notification icon */
 .notification-icon {
     font-size: 24px;
-    color: #0B63F8
-    ;
+    color: #0B63F8;
     margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: #e8f0fe;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
-
-
 
 /* Notification content */
 .notification-content {
     flex: 1;
 }
 
-.notification-content p {
+.notification-message {
     margin: 0;
     font-size: 16px;
     color: #555;
 }
 
-.notification-content .notification-date {
+.notification-time {
     font-size: 14px;
     color: #aaa;
+    margin-top: 5px;
 }
 
 /* Actions (buttons) */
 .notification-actions {
     display: flex;
-    gap: 50px;
+    gap: 15px;
 }
 
 .notification-actions button {
-    padding: 8px 12px;
+    background: none;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
+    font-size: 16px;
 }
 
-.notification-actions .delete{
+.mark-read-btn {
+    color: #0B63F8;
+}
+
+.mark-read-btn:hover {
+    color: #0850c9;
+}
+
+.delete-btn {
     color: #EE1D52;
-    font-size: larger;
-    margin-top: 5px;
-    
 }
 
-.notification-actions .delete:hover{
+.delete-btn:hover {
     color: #C31945;
-    
 }
 
-
-
-.btn-view {
-    background-color: #08DCC1
-    ;
-    color: white;
+/* Status messages */
+.loading-indicator,
+.no-notifications,
+.error-message {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 16px;
 }
 
-.btn-view:hover {
-    background-color: #06CBAF;
+.error-message {
+    color: #EE1D52;
 }
 
+.no-notifications {
+    color: #555;
+}
+
+/* Scrollbar styling */
 .notification-list::-webkit-scrollbar {
     width: 8px;
 }
@@ -124,5 +145,20 @@
 
 .notification-list::-webkit-scrollbar-thumb:hover {
     background-color: #7d7b7b; /* Darker color when hovering */
-  }
+}
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .notification-container {
+        width: 90%;
+        padding: 15px;
+    }
+    
+    .notification-item {
+        padding: 12px;
+    }
+    
+    .notification-message {
+        font-size: 14px;
+    }
+}
