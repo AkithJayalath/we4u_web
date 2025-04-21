@@ -244,7 +244,14 @@ public function showConsultantRequestForm($consultant_id){
  
  }
 
-public function requestCaregiver($caregiver_id) {
+ public function calculateAge($dob) {
+    $birthDate = new DateTime($dob);
+    $today = new DateTime('today');
+    $age = $birthDate->diff($today)->y; 
+    return $age;
+
+}
+ public function requestCaregiver($caregiver_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
     }
@@ -255,6 +262,13 @@ public function requestCaregiver($caregiver_id) {
     // Get the elder profiles for the careseeker
     $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
     
+    // First, check if caregiver exists
+    $caregiver = $this->careseekersModel->showCaregiverProfile($caregiver_id);
+    if (!$caregiver) {
+        flash('request_error', 'Caregiver not found', 'alert alert-danger');
+        redirect('careseeker/ViewRequests');
+    }
+    
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Sanitize POST data
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -262,32 +276,115 @@ public function requestCaregiver($caregiver_id) {
         // Extract data from the form
         $data = [
             'elders' => $elders,
+            'caregiver' => $caregiver,
+            'age'=> $this->calculateAge($caregiver->date_of_birth),
             'caregiver_id' => $caregiver_id,
-            'elder_profile' => trim($_POST['elder_profile']),
-            'duration_type' => trim($_POST['duration-type']),
+            'careseeker_id' => $careseeker_id,
+            'elder_profile' => isset($_POST['elder_profile']) ? trim($_POST['elder_profile']) : '',
+            'duration_type' => isset($_POST['duration-type']) ? trim($_POST['duration-type']) : '',
             'from_date' => isset($_POST['from_date']) ? trim($_POST['from_date']) : null,
             'from_date_short' => isset($_POST['from_date_short']) ? trim($_POST['from_date_short']) : null,
             'to_date' => isset($_POST['to_date']) ? trim($_POST['to_date']) : null,
             'time_slots' => isset($_POST['timeslot']) ? $_POST['timeslot'] : [],
             'total_payment' => isset($_POST['total_payment']) ? (int)trim($_POST['total_payment']) : 0,
-            'expected_services' => trim($_POST['expected_services']),
-            'additional_notes' => trim($_POST['additional_notes']),
+            'service_address' => isset($_POST['service_address']) ? trim($_POST['service_address']) : '',
+            'expected_services' => isset($_POST['expected_services']) ? trim($_POST['expected_services']) : '',
+            'additional_notes' => isset($_POST['additional_notes']) ? trim($_POST['additional_notes']) : '',
             'error' => ''
         ];
+        
 
 
-        // Validation (same as before)
+        // Validate elder profile selection
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
-        } elseif (empty($data['duration_type'])) {
-            $data['error'] = 'Please select a duration type';
-        } elseif ($data['duration_type'] === 'long-term' && (empty($data['from_date']) || empty($data['to_date']))) {
-            $data['error'] = 'Please select both start and end dates for long-term care';
-        } elseif ($data['duration_type'] === 'short-term' && empty($data['from_date_short'])) {
-            $data['error'] = 'Please select a date for short-term care';
-        } elseif($data['total_payment']<=0){
-            $data['error'] = 'Invalid payment amount';
         } 
+        // Validate duration type selection
+        elseif (empty($data['duration_type'])) {
+            $data['error'] = 'Please select a duration type';
+        }
+        // Validate dates and time slots based on duration type
+        elseif ($data['duration_type'] === 'long-term') {
+            // Validate start and end dates for long-term care
+            if (empty($data['from_date'])) {
+                $data['error'] = 'Please select a start date for long-term care';
+            } elseif (empty($data['to_date'])) {
+                $data['error'] = 'Please select an end date for long-term care';
+            } else {
+                // Check if caregiver type matches the selected duration
+                if ($caregiver->caregiver_type !== 'long' && $caregiver->caregiver_type !== 'both') {
+                    $data['error'] = 'This caregiver does not offer long-term care services';
+                } else {
+                    // Validate date range
+                    $from_date = new DateTime($data['from_date']);
+                    $to_date = new DateTime($data['to_date']);
+                    $today = new DateTime();
+                    
+                    // Check if from_date is in the future (at least tomorrow)
+                    $tomorrow = new DateTime();
+                    $tomorrow->modify('+1 day');
+                    if ($from_date < $tomorrow) {
+                        $data['error'] = 'Start date must be at least tomorrow';
+                    }
+                    // Check if to_date is after from_date
+                    elseif ($to_date < $from_date) {
+                        $data['error'] = 'End date must be after or equal to start date';
+                    } else {
+                        // Calculate days between from_date and to_date
+                        $interval = $from_date->diff($to_date);
+                        $days = $interval->days + 1; // Include both start and end day
+                        
+                        // Check if the duration exceeds 5 days
+                        if ($days > 5) {
+                            $data['error'] = 'Maximum care duration is 5 days';
+                        }
+                    }
+                }
+            }
+        } elseif ($data['duration_type'] === 'short-term') {
+            // Validate date for short-term care
+            if (empty($data['from_date_short'])) {
+                $data['error'] = 'Please select a date for short-term care';
+            } 
+            // Validate time slots for short-term care
+            elseif (empty($data['time_slots'])) {
+                $data['error'] = 'Please select at least one time slot';
+            } else {
+                // Check if caregiver type matches the selected duration
+                if ($caregiver->caregiver_type !== 'short' && $caregiver->caregiver_type !== 'both') {
+                    $data['error'] = 'This caregiver does not offer short-term care services';
+                } else {
+                    // Validate that the short-term date is in the future
+                    $from_date_short = new DateTime($data['from_date_short']);
+                    $tomorrow = new DateTime();
+                    $tomorrow->modify('+1 day');
+                    
+                    if ($from_date_short < $tomorrow) {
+                        $data['error'] = 'Date for short-term care must be at least tomorrow';
+                    }
+                    
+                    // Validate time slots selection
+                    $fullDaySelected = in_array('full-day', $data['time_slots']);
+                    $otherSlotsSelected = array_diff($data['time_slots'], ['full-day']);
+                    
+                    if ($fullDaySelected && !empty($otherSlotsSelected)) {
+                        $data['error'] = 'Cannot select Full Day and other time slots together';
+                    }
+                }
+            }
+        }
+        
+        // Validate payment amount
+        if (empty($data['error']) && $data['total_payment'] <= 0) {
+            $data['error'] = 'Invalid payment amount';
+        }
+
+        //validate service address
+        if (empty($data['error']) && empty($data['service_address'])) {
+            $data['error'] = 'Please enter a service address';
+        }
+
+        
 
         // Validate time slots
 
@@ -299,11 +396,12 @@ public function requestCaregiver($caregiver_id) {
                 'elder_id' => $data['elder_profile'],
                 'caregiver_id' => $data['caregiver_id'],
                 'duration_type' => $data['duration_type'],
-                'from_date' => $data['from_date'],
-                'from_date_short' => $data['from_date_short'],
-                'to_date' => $data['to_date'],
-                'time_slots' => json_encode($data['time_slots']),
+                'from_date' => $data['duration_type'] === 'long-term' ? $data['from_date'] : null,
+                'from_date_short' => $data['duration_type'] === 'short-term' ? $data['from_date_short'] : null,
+                'to_date' => $data['duration_type'] === 'long-term' ? $data['to_date'] : null,
+                'time_slots' => $data['duration_type'] === 'short-term' ? json_encode($data['time_slots']) : null,
                 'total_payment' => $data['total_payment'],
+                'service_address' => $data['service_address'],
                 'expected_services' => $data['expected_services'],
                 'additional_notes' => $data['additional_notes'],
                 'status' => 'pending'
@@ -317,6 +415,8 @@ public function requestCaregiver($caregiver_id) {
                 $this->view('careseeker/v_requestCaregiver', $data);
             }
         } else {
+            // If there are errors, pass the data back to the view
+            $data['careseeker'] = $this->careseekersModel->showCareseekerProfile($careseeker_id);
             $this->view('careseeker/v_requestCaregiver', $data);
         }
     } else {
@@ -330,76 +430,94 @@ public function requestConsultant($consultant_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
     }
-    
-    // Get the careseeker_id from the session
+
     $careseeker_id = $_SESSION['user_id'];
-    
-    // Get the elder profiles for the careseeker
     $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
-    
+
+    // Check if consultant exists
+    $consultant = $this->careseekersModel->showConsultantProfile($consultant_id);
+    if (!$consultant) {
+        flash('request_error', 'Consultant not found', 'alert alert-danger');
+        redirect('careseeker/viewConsultantRequests');
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Sanitize POST data
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        // Extract data from the form
         $data = [
             'elders' => $elders,
+            'consultant' => $consultant,
             'consultant_id' => $consultant_id,
-            'elder_profile' => trim($_POST['elder_profile']),
-            'appointment_date' => trim($_POST['appointment_date']),
-            'from_time' => trim($_POST['from_time']),
-            'to_time' => trim($_POST['to_time']),
-            'total_amount' => trim($_POST['total_amount']),
-            'expected_services' => trim($_POST['expected_services']),
-            'additional_notes' => trim($_POST['additional_notes']),
+            'careseeker_id' => $careseeker_id,
+            'age'=> $this->calculateAge($consultant->date_of_birth),
+            'elder_profile' => isset($_POST['elder_profile']) ? trim($_POST['elder_profile']) : '',
+            'appointment_date' => isset($_POST['appointment_date']) ? trim($_POST['appointment_date']) : '',
+            'from_time' => isset($_POST['from_time']) ? trim($_POST['from_time']) : '',
+            'to_time' => isset($_POST['to_time']) ? trim($_POST['to_time']) : '',
+            'total_amount' => isset($_POST['total_amount']) ? trim($_POST['total_amount']) : '',
+            'expected_services' => isset($_POST['expected_services']) ? trim($_POST['expected_services']) : '',
+            'additional_notes' => isset($_POST['additional_notes']) ? trim($_POST['additional_notes']) : '',
             'error' => ''
         ];
 
-        // Validation for the new form structure
+        // Validations
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
         } elseif (empty($data['appointment_date'])) {
             $data['error'] = 'Please select an appointment date';
-        } elseif (empty($data['from_time']) || empty($data['to_time'])) {
+        } else {
+            // Check if appointment date is at least tomorrow
+            $appointment_date = new DateTime($data['appointment_date']);
+            $tomorrow = new DateTime();
+            $tomorrow->modify('+1 day');
+            if ($appointment_date < $tomorrow) {
+                $data['error'] = 'Appointment date must be at least tomorrow';
+            }
+        }
+
+        if (empty($data['error']) && (empty($data['from_time']) || empty($data['to_time']))) {
             $data['error'] = 'Please select both start and end times';
-        } elseif ($data['from_time'] >= $data['to_time']) {
+        } elseif (empty($data['error']) && $data['from_time'] >= $data['to_time']) {
             $data['error'] = 'End time must be after start time';
-        } elseif (empty($data['total_amount']) || !is_numeric($data['total_amount'])) {
+        }
+
+        if (empty($data['error']) && (empty($data['total_amount']) || !is_numeric($data['total_amount']) || $data['total_amount'] <= 0)) {
             $data['error'] = 'Invalid payment amount';
         }
 
-        // If no errors, proceed with creating the request
+        // If all validations pass
         if (empty($data['error'])) {
-            // Format time slots as string (e.g. "13:00-16:00")
             $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
-            
+
             $requestData = [
                 'careseeker_id' => $careseeker_id,
                 'elder_id' => $data['elder_profile'],
-                'consultant_id' => $data['consultant_id'],
+                'consultant_id' => $consultant_id,
                 'appointment_date' => $data['appointment_date'],
                 'time_slot' => $formattedTimeSlot,
                 'expected_services' => $data['expected_services'],
                 'additional_notes' => $data['additional_notes'],
-                'payment_amount' => $data['total_amount'],
+                'total_amount' => $data['total_amount'],
                 'status' => 'pending'
             ];
 
             if ($this->careseekersModel->sendConsultantRequest($requestData)) {
-                flash('request_success', 'Care request sent successfully');
+                flash('request_success', 'Consultant request sent successfully');
                 redirect('careseeker/viewRequests');
             } else {
-                $data['error'] = 'Failed to send consultant request. Please try again.';
+                $data['error'] = 'Failed to send request. Please try again.';
                 $this->view('careseeker/v_requestConsultant', $data);
             }
         } else {
+            $data['careseeker'] = $this->careseekersModel->showCareseekerProfile($careseeker_id);
             $this->view('careseeker/v_requestConsultant', $data);
         }
     } else {
-        // If someone tries to access this directly without POST, redirect
+        // Not a POST request, redirect to form
         redirect('careseeker/showConsultantRequestForm/' . $consultant_id);
     }
 }
+
 
 
 
@@ -723,6 +841,214 @@ public function viewConsultRequestInfo($requestId)
         
       }
 
+// Cancel Caregiving Request
+
+      public function cancelCaregivingRequest($requestId) {
+        date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
+        $request = $this->careseekersModel->getRequestById($requestId);
+    
+        if (!$request) {
+            flash('request_error', 'Invalid request or service.');
+            redirect('careseeker/viewRequests');
+            return;
+        }
+    
+        $now = new DateTime();
+        $startDateTime = $this->getStartDateTime($request); // using slot-aware logic
+        $canCancel = false;
+        $fineAmount = 0;
+        $refundAmount = 0;
+    
+        if ($request->status === 'pending') {
+            $canCancel = true;
+        } elseif ($request->status === 'accepted') {
+            $hoursLeft = ($startDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+    
+            if ($hoursLeft >= 24) {
+                $canCancel = true;
+    
+                if ($request->is_paid) {
+                    $refundAmount = $request->payment_details; // full refund
+                }
+            } elseif ($hoursLeft > 0) {
+                $canCancel = true;
+    
+                if ($request->is_paid) {
+                    $fineAmount = $request->payment_details * 0.10;
+                    $refundAmount = $request->payment_details - $fineAmount;
+                } else {
+                    $fineAmount = $request->payment_details * 0.10;
+                }
+            }
+        }
+    
+        if (!$canCancel) {
+            flash('request_error', 'Request cannot be cancelled at this stage.');
+            redirect('careseeker/viewRequests');
+            return;
+        }
+    
+        $this->careseekersModel->cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
+    
+        if (!$request->is_paid && $fineAmount > 0) {
+            flash('request_warning', 'Request cancelled. Please proceed to pay the fine to complete cancellation.');
+            redirect('payment/payFine/' . $requestId);
+            return;
+        }
+    
+        flash('request_success', 'Request cancelled successfully.');
+        redirect('careseeker/viewRequests');
+    }
+    
+
+    private function getStartDateTime($request) {
+        $date = new DateTime($request->start_date);
+        
+        if ($request->duration_type === 'long-term') {
+            $date->setTime(8, 0);
+        } elseif ($request->duration_type === 'short-term') {
+            $slots = json_decode($request->time_slots);
+            if (in_array('morning', $slots)) {
+                $date->setTime(8, 0);
+            } elseif (in_array('afternoon', $slots)) {
+                $date->setTime(13, 0);
+            } elseif (in_array('overnight', $slots)) {
+                $date->setTime(20, 0);
+            } elseif (in_array('full_day', $slots)) {
+                $date->setTime(8, 0);
+            }
+        }
+    
+        return $date;
+    }
+
+
+// Cancel Consultation Request
+public function cancelConsultRequest($requestId) {
+    date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
+    $request = $this->careseekersModel->getConsultantRequestById($requestId);
+
+    if (!$request) {
+        flash('request_error', 'Invalid consultation request.');
+        redirect('careseeker/viewRequests');
+        return;
+    }
+
+    $now = new DateTime();
+    $appointmentDateTime = $this->getAppointmentDateTime($request);
+    $canCancel = false;
+    $fineAmount = 0;
+    $refundAmount = 0;
+
+    if ($request->status === 'pending') {
+        $canCancel = true;
+        if ($request->is_paid) {
+            $refundAmount = $request->payment_details; // full refund for pending requests
+        }
+    } elseif ($request->status === 'accepted') {
+        $hoursLeft = ($appointmentDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+
+        if ($hoursLeft >= 5) {
+            $canCancel = true;
+            if ($request->is_paid) {
+                $refundAmount = $request->payment_details; // full refund if > 5 hours
+            }
+        } elseif ($hoursLeft > 0) {
+            $canCancel = true;
+            if ($request->is_paid) {
+                $fineAmount = $request->payment_details * 0.10;
+                $refundAmount = $request->payment_details - $fineAmount;
+            } else {
+                $fineAmount = $request->payment_details * 0.10;
+            }
+        }
+    }
+
+    if (!$canCancel) {
+        flash('request_error', 'Consultation cannot be cancelled at this stage.');
+        redirect('careseeker/viewRequests');
+        return;
+    }
+
+    $this->careseekersModel->cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
+
+    if (!$request->is_paid && $fineAmount > 0) {
+        flash('request_warning', 'Consultation cancelled. Please proceed to pay the cancellation fee to complete this process.');
+        redirect('payment/payConsultFine/' . $requestId);
+        return;
+    }
+
+    flash('request_success', 'Consultation request cancelled successfully.');
+    redirect('careseeker/viewRequests');
+}
+
+private function getAppointmentDateTime($request) {
+    $date = new DateTime($request->appointment_date);
+    
+    if (!empty($request->time_slot)) {
+        [$from, $to] = explode('-', $request->time_slot);
+        $fromTime = trim($from);
+        
+        // Set the appointment time
+        list($hours, $minutes) = explode(':', $fromTime);
+        $date->setTime((int)$hours, (int)$minutes, 0);
+    } else {
+        // Default to 8:00 AM if no time slot is specified
+        $date->setTime(8, 0, 0);
+    }
+
+    return $date;
+}
+
+// Delete Caregiving Request
+public function deleteRequest($requestId = null) {
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+    
+    // Check if user is a careseeker
+    if ($_SESSION['user_role'] !== 'Careseeker') {
+        flash('delete_error', 'You do not have permission to delete requests', 'alert alert-danger');
+        redirect('pages/index');
+    }
+    
+    // If no request ID provided, redirect back
+    if (!$requestId) {
+        flash('delete_error', 'No request specified', 'alert alert-danger');
+        redirect('careseeker/viewRequests');
+    }
+    
+    // Verify the request belongs to this careseeker
+    $request = $this->careseekersModel->getRequestById($requestId);
+    if (!$request || $request->requester_id != $_SESSION['user_id']) {
+        flash('delete_error', 'You do not have permission to delete this request', 'alert alert-danger');
+        redirect('careseeker/dashboard');
+    }
+    
+    // Check if the request is in a deletable state (cancelled, rejected, or completed)
+    $deletableStates = ['cancelled', 'rejected', 'completed'];
+    if (!in_array(strtolower($request->status), $deletableStates)) {
+        flash('delete_error', 'Only cancelled, rejected, or completed requests can be deleted', 'alert alert-danger');
+        redirect('careseeker/viewRequestInfo/' . $requestId);
+    }
+    
+    // Delete the request
+    if ($this->careseekersModel->deleteRequest($requestId)) {
+        flash('request_success', 'Request successfully deleted', 'alert alert-success');
+    } else {
+        flash('request_error', 'Failed to delete request. Please try again.', 'alert alert-danger');
+    }
+    
+    // Redirect to dashboard
+    redirect('careseeker/viewRequests');
+}
+    
+
+
+
 
 
       public function viewPayments(){
@@ -739,6 +1065,52 @@ public function viewConsultRequestInfo($requestId)
         $data=[];
         $this->view('careseeker/v_viewConsultantSession', $data);
       }
+
+      public function getCaregiverSchedule($caregiverId) {
+        // Prevent any PHP errors or warnings from being output
+        ob_start();
+        
+        try {
+            // Load the schedule model
+            $scheduleModel = $this->model('M_Shedules');
+            
+            // Get caregiver schedules
+            $shortSchedules = $scheduleModel->getAllShedulesForCaregiver($caregiverId);
+            $longSchedules = $scheduleModel->getAllLongShedulesForCaregiver($caregiverId);
+            
+            // Clear any output buffer to prevent PHP errors from being included in the response
+            ob_end_clean();
+            
+            // Prepare response data
+            $data = [
+                'shortSchedules' => $shortSchedules ? $shortSchedules : [],
+                'longSchedules' => $longSchedules ? $longSchedules : []
+            ];
+            
+            // Set content type header and output JSON
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } catch (Exception $e) {
+            // Clear any output buffer
+            ob_end_clean();
+            
+            // Return error as JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'shortSchedules' => [],
+                'longSchedules' => []
+            ]);
+        }
+        exit;
+    }
+    
+    
+    
+    
+    
+    
+    
 
       public function getCaregiverSchedule($caregiverId) {
         // Prevent any PHP errors or warnings from being output

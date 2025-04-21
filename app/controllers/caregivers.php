@@ -750,6 +750,104 @@ public function rejectRequest($request_id) {
 }
 
 
+
+//cancel request
+public function cancelRequest($requestId, $flag = false) {
+  date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
+  $request = $this->caregiversModel->getRequestById($requestId);
+
+  if (!$request) {
+      flash('request_error', 'Invalid request or service.');
+      redirect('caregivers/viewRequests');
+      return;
+  }
+
+  $now = new DateTime();
+  $startDateTime = $this->getStartDateTime($request); // using slot-aware logic
+  $canCancel = false;
+  $shouldFlag = $flag; // Flag parameter from URL
+
+  // Check if service has already started
+  if ($now > $startDateTime) {
+      flash('request_error', 'Cannot cancel a service that has already started.');
+      redirect('caregivers/viewRequests');
+      return;
+  }
+
+  // Calculate hours left before service starts
+  $hoursLeft = ($startDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+
+  if ($hoursLeft >= 24) {
+      // More than 24 hours before - can cancel without penalty
+      $canCancel = true;
+      $shouldFlag = false; // Override flag parameter - no flag needed
+  } elseif ($hoursLeft >= 12) {
+      // Between 12-24 hours - can cancel but will be flagged
+      $canCancel = true;
+      $shouldFlag = true; // Ensure flag is set
+  } else {
+      // Less than 12 hours before - cannot cancel
+      flash('request_error', 'Requests cannot be cancelled less than 12 hours before start time.');
+      redirect('caregivers/viewRequests');
+      return;
+  }
+
+  // Check if there's a payment to refund
+  $refundAmount = 0;
+  if (isset($request->is_paid) && $request->is_paid && isset($request->payment_details)) {
+      $refundAmount = $request->payment_details; // Full refund
+  }
+
+  // Process the cancellation
+  $result = $this->caregiversModel->cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag);
+
+  if ($result) {
+      $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
+      flash('request_success', 'Request cancelled successfully.' . $flagMessage);
+  } else {
+      flash('request_error', 'Failed to cancel the request. Please try again.');
+  }
+  
+  redirect('caregivers/viewRequests');
+}
+
+// Helper function to determine start time based on request details
+private function getStartDateTime($request) {
+  $date = new DateTime($request->start_date);
+  
+  if ($request->duration_type === 'long-term') {
+      $date->setTime(8, 0);
+  } else {
+      // Decode time slots
+      $slots = json_decode($request->time_slots);
+      
+      // Set time based on slot
+      if (is_array($slots)) {
+          if (in_array('morning', $slots)) {
+              $date->setTime(8, 0);
+          } elseif (in_array('evening', $slots) || in_array('afternoon', $slots)) {
+              $date->setTime(13, 0);
+          } elseif (in_array('overnight', $slots)) {
+              $date->setTime(20, 0);
+          } elseif (in_array('full_day', $slots) || in_array('full-day', $slots)) {
+              $date->setTime(8, 0);
+          } else {
+              // Default if no specific time slot matched
+              $date->setTime(8, 0);
+          }
+      } else {
+          // Default time if slots couldn't be decoded
+          $date->setTime(8, 0);
+      }
+  }
+
+  return $date;
+}
+
+
+
+
       
     
 

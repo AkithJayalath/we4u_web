@@ -52,7 +52,7 @@
                 <p class="req-time"><i class="fa-solid fa-clock"></i>&nbsp;<?php echo $request->formatted_time; ?></p>
                     
                 <div class="req-action">
-                    <span class="sts-<?php echo strtolower($request->status); ?>">
+                    <span class="tag <?php echo strtolower($request->status); ?>">
                         <?php echo ucfirst($request->status); ?>
                     </span>
                     <button class="view-btn" onclick="window.location.href='<?php echo URLROOT; ?>/caregivers/viewreqinfo/<?php echo $request->request_id; ?>'">

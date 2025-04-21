@@ -56,7 +56,14 @@ echo loadCSS($required_styles);
             <button class="request-send-button" type="submit">Accept</button>
         </form>
         <form action="<?= URLROOT ?>/consultant/rejectRequest/<?= $data->request_id ?>" method="post">
-            <button class="request-cancel-button" type="submit">Reject</button>
+            <button class="request-reject-button" type="submit">Reject</button>
+        </form>
+    </div>
+
+<?php elseif ($data->status === 'accepted'): ?>
+    <div class="request-info-buttons">
+        <form action="<?= URLROOT ?>/consultant/cancelRequest/<?= $data->request_id ?>" method="post">
+            <button class="request-cancel-button" type="submit">Cancel Request</button>
         </form>
     </div>
 <?php endif; ?>
@@ -159,6 +166,203 @@ echo loadCSS($required_styles);
 
     </div>
 
+<!-- Cancel Modal -->
+<div id="cancelModal" class="cancel-modal">
+    <div class="cancel-modal-content">
+        <div class="cancel-modal-header">
+            <h2>Cancel Request</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="cancel-modal-body">
+            <div class="cancel-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div id="cancellationMessage">
+                <!-- Dynamic message will be inserted here -->
+            </div>
+
+            <div id="cancellationDetails" class="cancellation-details">
+                <div id="cancellationReason" class="cancellation-reason">
+                    <!-- Dynamic reason will be inserted here -->
+                </div>
+                <div class="cancellation-policy">
+                    <p><strong>Consultant Cancellation Policy:</strong></p>
+                    <ul>
+                        <li>Cancel more than 24 hours before start: No penalty</li>
+                        <li>Cancel between 12-24 hours before start: Warning flag added to your account</li>
+                        <li>Cannot cancel less than 12 hours before service start</li>
+                        <li>Cannot cancel after service has started</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="cancel-modal-footer" id="modalFooter">
+            <button id="cancelRequestBtn" class="confirm-cancel-btn">Confirm Cancellation</button>
+            <button id="closeModalBtn" class="keep-request-btn">Keep Request</button>
+        </div>
+    </div>
+</div>
+
 </page-body-container>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get modal elements
+        const cancelModal = document.getElementById('cancelModal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const keepRequestBtn = document.getElementById('closeModalBtn');
+        const cancelButton = document.querySelector('.request-cancel-button');
+        const modalFooter = document.getElementById('modalFooter');
+
+        if (!cancelButton) {
+            // If button doesn't exist, don't set up the modal
+            return;
+        }
+
+        // Override the original cancel button click handler
+        cancelButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openCancelModal();
+            return false;
+        };
+
+        // Close modal functions
+        closeModalBtn.onclick = closeModal;
+        keepRequestBtn.onclick = closeModal;
+        window.onclick = function(event) {
+            if (event.target === cancelModal) {
+                closeModal();
+            }
+        };
+
+        function openCancelModal() {
+            // Show the modal
+            cancelModal.style.display = 'block';
+
+            // Calculate cancellation details
+            calculateCancellationDetails();
+        }
+
+        function closeModal() {
+            cancelModal.style.display = 'none';
+        }
+
+        function calculateCancellationDetails() {
+            // Get request data from PHP
+            const requestData = {
+                id: <?= $data->request_id ?>,
+                status: '<?= $data->status ?>',
+                appointmentDate: '<?= $data->appointment_date ?>',
+                timeSlot: '<?= $data->time_slot ?>',
+                paymentDetails: <?= $data->payment_details ?? 0 ?>
+            };
+
+            const now = new Date();
+            const startDateTime = getStartDateTime(requestData);
+            const hoursLeft = (startDateTime - now) / (1000 * 60 * 60);
+
+            let cancellationMessage = '';
+            let reasonMessage = '';
+            let messageClass = 'neutral';
+            let reasonClass = '';
+            let canCancel = true;
+
+            // Check if service has already started
+            if (hoursLeft < 0) {
+                // Service has already started - cannot cancel
+                cancellationMessage = "Cannot cancel an active service.";
+                reasonMessage = "This appointment has already started. You cannot cancel a service that is already in progress. Please contact support if you have an emergency situation.";
+                messageClass = 'error';
+                reasonClass = 'error';
+                canCancel = false;
+            }
+            // Apply cancellation logic for consultants
+            else if (hoursLeft >= 24) {
+                // More than 24 hours - no flag
+                cancellationMessage = "You can cancel this request without penalty.";
+                reasonMessage = "Your cancellation is more than 24 hours before the appointment start time.";
+                messageClass = 'success';
+                reasonClass = 'success';
+            } else if (hoursLeft >= 12) {
+                // Between 12-24 hours - flag but can cancel
+                cancellationMessage = "Cancellation will add a warning flag to your account.";
+                reasonMessage = "Your cancellation is less than 24 hours but more than 12 hours before the appointment start time. This will add a warning flag to your account that may be reviewed by administrators.";
+                messageClass = 'warning';
+                reasonClass = 'warning';
+            } else {
+                // Less than 12 hours - cannot cancel
+                cancellationMessage = "You cannot cancel this request.";
+                reasonMessage = "Cancellations are not allowed less than 12 hours before the appointment start time. Please contact support if you have an emergency situation.";
+                messageClass = 'error';
+                reasonClass = 'error';
+                canCancel = false;
+            }
+
+            // Update the UI - Message
+            const cancellationMessageElem = document.getElementById('cancellationMessage');
+            cancellationMessageElem.innerHTML = `<p class="status-message ${messageClass}">${cancellationMessage}</p>`;
+
+            // Update the UI - Reason
+            const cancellationReasonElem = document.getElementById('cancellationReason');
+            cancellationReasonElem.innerHTML = `<p>${reasonMessage}</p>`;
+            cancellationReasonElem.className = `cancellation-reason ${reasonClass}`;
+
+            // Update buttons based on whether cancellation is allowed
+            updateModalButtons(canCancel, requestData.id, hoursLeft);
+        }
+
+        function updateModalButtons(canCancel, requestId, hoursLeft) {
+            // Clear existing buttons first
+            modalFooter.innerHTML = '';
+
+            if (canCancel) {
+                // Create Confirm Cancellation button
+                const confirmCancelBtn = document.createElement('button');
+                confirmCancelBtn.id = 'cancelRequestBtn';
+                confirmCancelBtn.className = 'confirm-cancel-btn';
+                confirmCancelBtn.textContent = 'Confirm Cancellation';
+                confirmCancelBtn.onclick = function() {
+                    // Add flag parameter if hours left is between 12-24
+                    const flagParam = (hoursLeft < 24 && hoursLeft >= 12) ? '/flag' : '';
+                    window.location.href = '<?= URLROOT ?>/consultant/cancelRequest/' + requestId + flagParam;
+                };
+                modalFooter.appendChild(confirmCancelBtn);
+            }
+
+            // Always create Keep Request button
+            const keepRequestBtn = document.createElement('button');
+            keepRequestBtn.id = 'closeModalBtn';
+            keepRequestBtn.className = 'keep-request-btn';
+            keepRequestBtn.textContent = 'Keep Request';
+            keepRequestBtn.onclick = closeModal;
+            modalFooter.appendChild(keepRequestBtn);
+        }
+
+        function getStartDateTime(request) {
+            const date = new Date(request.appointmentDate);
+            
+            // Parse time slot for consultants
+            if (request.timeSlot) {
+                // Time slot format is expected to be like "9:00-10:00"
+                const timeSlotParts = request.timeSlot.split('-');
+                if (timeSlotParts.length >= 1) {
+                    const startTimeParts = timeSlotParts[0].trim().split(':');
+                    if (startTimeParts.length >= 2) {
+                        const hours = parseInt(startTimeParts[0], 10);
+                        const minutes = parseInt(startTimeParts[1], 10);
+                        
+                        // Set the appointment start time
+                        date.setHours(hours, minutes, 0);
+                        return date;
+                    }
+                }
+            }
+            
+            // Default time if time slot couldn't be parsed
+            date.setHours(9, 0, 0);
+            return date;
+        }
+    });
+</script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>

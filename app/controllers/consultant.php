@@ -273,6 +273,89 @@ public function rejectRequest($request_id) {
   }
 }
 
+//cancel careseeker request
+public function cancelRequest($requestId, $flag = false) {
+    date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+
+    $request = $this->consultantModel->getRequestById($requestId);
+
+    if (!$request) {
+        flash('request_error', 'Invalid request or appointment.');
+        redirect('consultant/viewRequests');
+        return;
+    }
+
+    $now = new DateTime();
+    $startDateTime = $this->getStartDateTime($request); // using appointment-aware logic
+    $canCancel = false;
+    $shouldFlag = $flag; // Flag parameter from URL
+
+    // Check if appointment has already started
+    if ($now > $startDateTime) {
+        flash('request_error', 'Cannot cancel an appointment that has already started.');
+        redirect('consultant/viewRequests');
+        return;
+    }
+
+    // Calculate hours left before appointment starts
+    $hoursLeft = ($startDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
+
+    if ($hoursLeft >= 24) {
+        // More than 24 hours before - can cancel without penalty
+        $canCancel = true;
+        $shouldFlag = false; // Override flag parameter - no flag needed
+    } elseif ($hoursLeft >= 12) {
+        // Between 12-24 hours - can cancel but will be flagged
+        $canCancel = true;
+        $shouldFlag = true; // Ensure flag is set
+    } else {
+        // Less than 12 hours before - cannot cancel
+        flash('request_error', 'Appointments cannot be cancelled less than 12 hours before start time.');
+        redirect('consultant/viewRequests');
+        return;
+    }
+
+    // Check if there's a payment to refund
+    $refundAmount = 0;
+    if (isset($request->is_paid) && $request->is_paid && isset($request->payment_details)) {
+        $refundAmount = $request->payment_details; // Full refund
+    }
+
+    // Process the cancellation
+    $result = $this->consultantModel->cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag);
+
+    if ($result) {
+        $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
+        flash('request_success', 'Appointment cancelled successfully.' . $flagMessage);
+    } else {
+        flash('request_error', 'Failed to cancel the appointment. Please try again.');
+    }
+    
+    redirect('consultant/viewRequests');
+}
+
+// Helper method to calculate start date/time from request data
+private function getStartDateTime($request) {
+    $date = new DateTime($request->appointment_date);
+    
+    // Parse time slot (expected format "HH:MM-HH:MM")
+    if (isset($request->time_slot) && !empty($request->time_slot)) {
+        $timeSlotParts = explode('-', $request->time_slot);
+        if (count($timeSlotParts) >= 1) {
+            $startTimeParts = explode(':', trim($timeSlotParts[0]));
+            if (count($startTimeParts) >= 2) {
+                $hours = (int)$startTimeParts[0];
+                $minutes = (int)$startTimeParts[1];
+                $date->setTime($hours, $minutes, 0);
+                return $date;
+            }
+        }
+    }
+    
+    // Default time if time slot couldn't be parsed
+    $date->setTime(9, 0, 0);
+    return $date;
+}
 
 public function viewCareseeker($elder_id){
     $elderProfile=$this->consultantModel->getElderProfileById($elder_id);

@@ -67,10 +67,10 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Elder Details</div>
                             <div class="form-group">
                                 <label for="elder-profile">Select Elder Profile</label>
-                                <select id="elder-profile" name="elder_profile">
-                                    <option value="" disabled selected>Select a profile</option>
+                                <select id="elder-profile" name="elder_profile" class="<?php echo (!empty($data['elder_profile_err'])) ? 'is-invalid' : ''; ?>">
+                                    <option value="" disabled <?php echo empty($data['elder_profile']) ? 'selected' : ''; ?>>Select a profile</option>
                                     <?php foreach($data['elders'] as $elder): ?>
-                                        <option value="<?php echo $elder->elder_id; ?>">
+                                        <option value="<?php echo $elder->elder_id; ?>" <?php echo (isset($data['elder_profile']) && $data['elder_profile'] == $elder->elder_id) ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($elder->first_name . ' ' . $elder->last_name); ?> 
                                             (<?php echo htmlspecialchars($elder->age); ?> years)
                                         </option>
@@ -79,6 +79,9 @@ echo loadCSS($required_styles);
                                         <option value="" disabled>No profiles available. Please create an elder profile first.</option>
                                     <?php endif; ?>
                                 </select>
+                                <?php if(!empty($data['error']) && strpos($data['error'], 'elder profile') !== false): ?>
+                                    <div class="field-error">Please select an elder profile</div>
+                                <?php endif; ?>
                             </div>
 
                             <?php if(empty($data['elders'])): ?>
@@ -94,7 +97,10 @@ echo loadCSS($required_styles);
                             <div class="form-row two-columns">
                                 <div class="form-group">
                                     <label for="appointment-date">Select Date</label>
-                                    <input type="date" id="appointment-date" name="appointment_date" required/>
+                                    <input type="date" id="appointment-date" name="appointment_date" class="<?php echo (!empty($data['appointment_date_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['appointment_date'] ?? ''; ?>" required/>
+                                    <?php if(!empty($data['error']) && strpos($data['error'], 'date') !== false): ?>
+                                        <div class="field-error">Please select a date</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -104,30 +110,30 @@ echo loadCSS($required_styles);
                                         <div class="time-selector-row">
                                             <div class="time-selection">
                                                 <label for="from-time">From</label>
-                                                <select id="from-time" name="from_time" required onchange="updateToTimeOptions(); calculatePayment();">
-                                                    <option value="" disabled selected>Select start time</option>
-                                                    <option value="8">8:00 AM</option>
-                                                    <option value="9">9:00 AM</option>
-                                                    <option value="10">10:00 AM</option>
-                                                    <option value="11">11:00 AM</option>
-                                                    <option value="12">12:00 PM</option>
-                                                    <option value="13">1:00 PM</option>
-                                                    <option value="14">2:00 PM</option>
-                                                    <option value="15">3:00 PM</option>
-                                                    <option value="16">4:00 PM</option>
-                                                    <option value="17">5:00 PM</option>
-                                                    <option value="18">6:00 PM</option>
-                                                    <option value="19">7:00 PM</option>
-                                                    <option value="20">8:00 PM</option>
-                                                    <option value="21">9:00 PM</option>
+                                                <select id="from-time" name="from_time" class="<?php echo (!empty($data['from_time_err'])) ? 'is-invalid' : ''; ?>" required onchange="updateToTimeOptions(); calculatePayment();">
+                                                    <option value="" disabled <?php echo empty($data['from_time']) ? 'selected' : ''; ?>>Select start time</option>
+                                                    <?php 
+                                                        for ($i = 8; $i <= 21; $i++) {
+                                                            $selected = (isset($data['from_time']) && $data['from_time'] == $i) ? 'selected' : '';
+                                                            $displayHour = $i > 12 ? $i - 12 : $i;
+                                                            $ampm = $i >= 12 ? 'PM' : 'AM';
+                                                            echo "<option value=\"$i\" $selected>$displayHour:00 $ampm</option>";
+                                                        }
+                                                    ?>
                                                 </select>
+                                                <?php if(!empty($data['error']) && strpos($data['error'], 'start time') !== false): ?>
+                                                    <div class="field-error">Please select a start time</div>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="time-selection">
                                                 <label for="to-time">To</label>
-                                                <select id="to-time" name="to_time" required onchange="calculatePayment();">
-                                                    <option value="" disabled selected>Select end time</option>
+                                                <select id="to-time" name="to_time" class="<?php echo (!empty($data['to_time_err'])) ? 'is-invalid' : ''; ?>" required onchange="calculatePayment();">
+                                                    <option value="" disabled <?php echo empty($data['to_time']) ? 'selected' : ''; ?>>Select end time</option>
                                                     <!-- Options will be populated by JavaScript -->
                                                 </select>
+                                                <?php if(!empty($data['error']) && strpos($data['error'], 'end time') !== false): ?>
+                                                    <div class="field-error">Please select an end time</div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -146,7 +152,10 @@ echo loadCSS($required_styles);
                                 <div class="form-group">
                                     <label for="payment-details">Payment Details</label>
                                     <input type="text" id="payment-details" readonly />
-                                    <input type="hidden" id="total-amount" name="total_amount" value="0" />
+                                    <input type="hidden" id="total-amount" name="total_amount" value="<?php echo $data['total_amount'] ?? 0; ?>" />
+                                    <?php if(!empty($data['error']) && strpos($data['error'], 'payment') !== false): ?>
+                                        <div class="field-error">Invalid payment amount</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -156,12 +165,12 @@ echo loadCSS($required_styles);
                             <div class="form-section-title">Additional Information</div>
                             <div class="form-row two-columns">
                                 <div class="form-group">
-                                    <label for="expected_services" >Expected Services</label>
-                                    <textarea id="expected_services" name="expected_services" placeholder="Services you expect from the provider"></textarea>
+                                    <label for="expected_services">Expected Services</label>
+                                    <textarea id="expected_services" name="expected_services" placeholder="Services you expect from the provider"><?php echo $data['expected_services'] ?? ''; ?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="additional_notes">Additional Notes</label>
-                                    <textarea id="additional_notes" name="additional_notes" placeholder="Any additional information or special requirements..."></textarea>
+                                    <textarea id="additional_notes" name="additional_notes" placeholder="Any additional information or special requirements..."><?php echo $data['additional_notes'] ?? ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +179,7 @@ echo loadCSS($required_styles);
                             <button class="request-send-button">
                                 <i class="fas fa-paper-plane"></i> Send Request
                             </button>
-                            <button class="request-cancel-button" type="button" onclick="window.history.back()">
+                            <button class="request-cancel-button" type="button" onclick="location.href='<?php echo URLROOT; ?>/careseeker/viewConsultantProfile/<?php echo $data['consultant_id']; ?>'">
     <i class="fas fa-times"></i> Cancel
 </button>
                         </div>
@@ -222,6 +231,36 @@ echo loadCSS($required_styles);
     color: #333;
     background-color: #f9f9f9;
 }
+
+/* Add styles for the error message display */
+.error-alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.error-alert i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.field-error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+select.is-invalid, 
+input.is-invalid {
+    border-color: #dc3545;
+}
 </style>
 
 <script>
@@ -243,11 +282,50 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Set initial payment details
     document.getElementById('payment-details').value = `Please select time to see cost`;
+    
+    // Add event listeners for form fields to clear errors
+    document.getElementById('elder-profile').addEventListener('change', function() {
+        clearErrorMessageFor('elder profile');
+    });
+    
+    document.getElementById('appointment-date').addEventListener('change', function() {
+        clearErrorMessageFor('date');
+        calculatePayment();
+    });
+    
+    document.getElementById('from-time').addEventListener('change', function() {
+        clearErrorMessageFor('start time');
+        updateToTimeOptions();
+        calculatePayment();
+    });
+    
+    document.getElementById('to-time').addEventListener('change', function() {
+        clearErrorMessageFor('end time');
+        calculatePayment();
+    });
+
+    // Pre-select to-time option if we have a saved value
+    const savedToTime = '<?php echo $data["to_time"] ?? ""; ?>';
+    if (savedToTime) {
+        setTimeout(() => {
+            const toTimeSelect = document.getElementById('to-time');
+            if (toTimeSelect && toTimeSelect.options.length > 0) {
+                for (let i = 0; i < toTimeSelect.options.length; i++) {
+                    if (toTimeSelect.options[i].value === savedToTime) {
+                        toTimeSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+                calculatePayment();
+            }
+        }, 100); // Small delay to ensure options are populated
+    }
 });
 
 function updateToTimeOptions() {
     const fromTime = parseInt(document.getElementById('from-time').value) || 8;
     const toTimeSelect = document.getElementById('to-time');
+    const savedToTime = '<?php echo $data["to_time"] ?? ""; ?>';
     
     // Clear existing options
     toTimeSelect.innerHTML = '<option value="" disabled selected>Select end time</option>';
@@ -261,6 +339,12 @@ function updateToTimeOptions() {
         const option = document.createElement('option');
         option.value = hour;
         option.textContent = `${displayHour}:00 ${ampm}`;
+        
+        // If we have a saved to_time value and it's valid, select it
+        if (savedToTime && parseInt(savedToTime) === hour) {
+            option.selected = true;
+        }
+        
         toTimeSelect.appendChild(option);
     }
     
@@ -289,6 +373,24 @@ function calculatePayment() {
         paymentDetails.value = `Please select time to see cost`;
         totalAmountField.value = 0;
     }
+}
+
+// Function to clear all error messages
+function clearErrorMessages() {
+    const errorElements = document.querySelectorAll('.field-error');
+    errorElements.forEach(element => {
+        element.style.display = 'none';
+    });
+}
+
+// Function to clear specific error message containing the given text
+function clearErrorMessageFor(fieldType) {
+    const errorElements = document.querySelectorAll('.field-error');
+    errorElements.forEach(element => {
+        if (element.textContent.toLowerCase().includes(fieldType.toLowerCase())) {
+            element.style.display = 'none';
+        }
+    });
 }
 </script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
