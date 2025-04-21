@@ -1,8 +1,14 @@
 
+<?php
+$required_styles = [
+    'consultant/viewConsultantProfile',
+];
+echo loadCSS($required_styles);
+?>
+
 <?php require APPROOT . '/views/includes/header.php'; ?>
 <?php require APPROOT . '/views/includes/components/topnavbar.php'; ?>
 
-<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/caregiverProfile.css"> 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 

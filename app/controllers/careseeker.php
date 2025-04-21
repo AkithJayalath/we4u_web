@@ -2,6 +2,7 @@
 
 class careseeker extends controller{
   private $careseekersModel;
+  private $scheduleModel;
     public function __construct(){
         if(!$_SESSION['user_id']){
             redirect('users/login');
@@ -11,6 +12,7 @@ class careseeker extends controller{
                 redirect('pages/permissonerror');
             }
             $this->careseekersModel = $this->model('M_Careseekers'); 
+            $this->scheduleModel = $this->model('M_Shedules');
         }
       
     }
@@ -294,6 +296,7 @@ public function showConsultantRequestForm($consultant_id){
         ];
         
 
+
         // Validate elder profile selection
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
@@ -369,6 +372,37 @@ public function showConsultantRequestForm($consultant_id){
                     if ($fullDaySelected && !empty($otherSlotsSelected)) {
                         $data['error'] = 'Cannot select Full Day and other time slots together';
                     }
+
+                    // check is that time slot is available
+                    // For short schedules
+                    if (isset($data['shift']) && isset($data['sheduled_date'])) {
+                        $isAvailable = $this->scheduleModel->isTimeSlotAvailable(
+                            $data['sheduled_date'], 
+                            $data['shift'], 
+                            $data['caregiver_id']
+                        );
+                        
+                        if (!$isAvailable) {
+                            // Time slot is not available
+                            $data['errors'][] = 'The selected time slot is already booked or falls within a long-term booking period. Please choose another time.';
+                            return $data; // Return with error
+                        }
+                    }
+                    
+                    // For long schedules
+                    if (isset($data['from_date']) && isset($data['to_date'])) {
+                        $isAvailable = $this->scheduleModel->isDateRangeAvailable(
+                            $data['from_date'], 
+                            $data['to_date'], 
+                            $data['caregiver_id']
+                        );
+                        
+                        if (!$isAvailable) {
+                            // Date range is not available
+                            $data['errors'][] = 'The selected date range overlaps with existing bookings. Please choose another date range.';
+                            return $data; // Return with error
+                        }
+                    }     
                 }
             }
         }
@@ -401,8 +435,35 @@ public function showConsultantRequestForm($consultant_id){
                 'status' => 'pending'
             ];
 
-            if ($this->careseekersModel->sendCareRequest($requestData)) {
+            // execute the query and get the resulting data 
+            $result = $this->careseekersModel->sendCareRequest($requestData);
+            if ($result['success']) {
                 flash('request_success', 'Care request sent successfully');
+                // update sheduling table for caregiver
+                // first check duration type if if that is a short term then
+                if($data['duration_type'] === 'short-term'){
+                    // if there are several time slots then go through each of them and pass that data in to the model
+                    foreach ($data['time_slots'] as $time_slot) {
+                        $sheduleData = [
+                            'caregiver_id' => $data['caregiver_id'],
+                            'sheduled_date' => $data['from_date_short'],
+                            'shift' => $time_slot,
+                            'status' => 'pending',
+                            'request_id' => $result['id'] 
+                        ];
+                        $this->scheduleModel->createShortShedule($sheduleData);
+                    }
+                } elseif($data['duration_type'] === 'long-term'){
+                    $sheduleData = [
+                        'caregiver_id' => $data['caregiver_id'],
+                        'from_date' => $data['from_date'],
+                        'to_date' => $data['to_date'],
+                        'status' => 'pending',
+                        'request_id' => $result['id']
+                    ];
+                    $this->scheduleModel->createLongShedule($sheduleData);
+                }
+
                 redirect('careseeker/viewRequests');
             } else {
                 $data['error'] = 'Failed to send care request. Please try again.';
@@ -1192,6 +1253,49 @@ public function viewConsultantSession($session_id) {
 
 
 
+
+      public function getCaregiverSchedule($caregiverId) {
+        // Prevent any PHP errors or warnings from being output
+        ob_start();
+        
+        try {
+            // Get caregiver schedules
+            $shortSchedules = $this->scheduleModel->getAllShortShedulesForCaregiver($caregiverId);
+            $longSchedules =  $this->scheduleModel->getAllLongShedulesForCaregiver($caregiverId);
+            
+            // Clear any output buffer to prevent PHP errors from being included in the response
+            ob_end_clean();
+            
+            // Prepare response data
+            $data = [
+                'shortSchedules' => $shortSchedules ? $shortSchedules : [],
+                'longSchedules' => $longSchedules ? $longSchedules : []
+            ];
+            
+            // Set content type header and output JSON
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } catch (Exception $e) {
+            // Clear any output buffer
+            ob_end_clean();
+            
+            // Return error as JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'shortSchedules' => [],
+                'longSchedules' => []
+            ]);
+        }
+        exit;
+    }
+    
+    
+    
+    
+    
+    
+    
 
       
 

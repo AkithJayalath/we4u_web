@@ -117,154 +117,57 @@
                           <th>USER</th>
                           <th>ROLE</th>
                           <th>USERID</th>
+                          <th>EMAIL</th>
                           <th>STATUS</th>
                       </tr>
                   </thead>
                   <tbody>
+                    <?php foreach($data['users'] as $user):?>
+                        <!-- <span><?php echo $user->username; ?></span> -->
                       <tr>
                           <td class="ad-users-user-cell">
                                 <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/moderator-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
+                              
+                            <img 
+                                src="<?php echo URLROOT; ?>/public/images/<?php echo strtolower($user->role); ?>-logo.png"
+                                alt="User"
+                                class="ad-users-user-avatar"
                               />
                               </a>
                               <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
+                                  <div class="ad-users-user-name"><?php echo $user->username; ?></div>
                               </div>
                             </a>
                           </td>
-                          <td>Moderator</td>
-                          <td>#AHGA68</td>
+                          <td><?php echo $user->role;?></td>
+                          <td><?php 
+                                if($user->role =='Caregiver'){
+                                    echo '#CG'.$user->user_id;
+                                }elseif($user->role == 'Careseeker'){
+                                    echo '#CS'.$user->user_id;
+                                }elseif($user->role == 'Consultant'){
+                                    echo '#CO'.$user->user_id;
+                                }elseif($user->role == 'Moderator'){
+                                    echo '#MO'.$user->user_id;
+                                }else{
+                                    echo '#AD'.$user->user_id;
+                                }
+                          ?></td>
+                          <td><?php echo $user->email; ?></td>
                           <td>
                               <span class="ad-users-status ad-users-active">Active</span>
                           </td>
                       </tr>
 
-                      <tr>
-                          <td class="ad-users-user-cell">
-                          <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/moderator-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                              </a>
-                              <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                            </a>
-                          </td>
-                          <td>Moderator</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
-                          <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                            </a>    
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                                </a>
-                          </td>
-                          <td>Caregiver</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
-                          <a href="<?php echo URLROOT; ?>/operator/viewcaregiver">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-
-                            </a>
-                            <a href="<?php echo URLROOT; ?>/operator/viewcaregiver">
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                            </a>
-                          </td>
-                          <td>Careseeker</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/consultant-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                          </td>
-                          <td>Consultant</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/caregiver-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                          </td>
-                          <td>CareGiver</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
-
-                      <tr>
-                          <td class="ad-users-user-cell">
-                              <img
-                                  src="<?php echo URLROOT; ?>/public/images/careseeker-logo.png"
-                                  alt="User"
-                                  class="ad-users-user-avatar"
-                              />
-                              <div class="ad-users-user-info">
-                                  <div class="ad-users-user-name">Jordan Stevenson</div>
-                              </div>
-                          </td>
-                          <td>Careseeker</td>
-                          <td>#AHGA68</td>
-                          <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
-                          </td>
-                      </tr>
+                      
                       <!-- More table rows... -->
+                      <?php endforeach;?>
+
                   </tbody>
               </table>
+
+                <!--- pagination--->
               <div class="ad-users-pagination">
                   <button class="ad-users-page-btn">
                       <i data-lucide="chevrons-left"></i>
