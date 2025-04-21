@@ -136,15 +136,13 @@ table {
     font-weight: bold;
   }
   
-  .status.success {
-    color: green;
-  }
-
-  .status.pending{ /*10% paid or paid amount*/
+  .status.Success {
     color: #0B63F8;
   }
 
-  
-  .status.failed {
+  .status.Refunded{ /*10% paid or paid amount*/
     color: red;
   }
+
+  
+  

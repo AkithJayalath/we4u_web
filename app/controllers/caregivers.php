@@ -229,7 +229,7 @@
   
 
     public function isLoggedIn(){
-      if(isset($_SESSION['user_id'])){
+      if(isset($_SESSION['user_id'])){ 
         return true;
       }else{
         return false;
@@ -467,7 +467,17 @@
     }
     
    public function paymentHistory(){
-       $data = [];
+    if (!$this->isLoggedIn()) {
+        redirect('users/login');
+    }
+    
+    $caregiverId = $_SESSION['user_id'];
+    $payments = $this->caregiversModel->getPaymentHistory($caregiverId);
+
+    $data=[
+        'payments' => $payments
+        
+    ];
        $this->view('caregiver/v_paymentHistory',$data);
     }
 
@@ -477,8 +487,16 @@
    }
 
    public function viewpayments(){
-    $this->view('consultant/v_viewPayments');
-  }
+    
+
+    
+    
+   
+    
+
+    $this->view('caregiver/v_viewPayments', $data);
+}
+  
 
    public function viewreqinfo($requestId){
        

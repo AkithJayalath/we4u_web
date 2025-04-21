@@ -9,7 +9,7 @@ class M_Caregivers {
     // find the user by user email
     public function findUserByEmail($email){ 
         //:indicate a bind value
-        $this->db->query('SELECT * FROM user WHERE email = :email'); 
+        $this->db->query('SELECT * FROM user WHERE email = :email');  
         $this->db->bind(':email' , $email);
   
         $row = $this->db->single();
@@ -476,6 +476,20 @@ public function cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag =
     }*/
     
     return $requestUpdated;
+}
+
+public function getPaymentHistory($caregiverId){
+    $this->db->query('SELECT cp.*,u.username,u.profile_picture
+    FROM care_payments cp
+    JOIN user u ON cp.payer_id = u.user_id
+    
+    WHERE cp.caregiver_id = :caregiverId
+   
+    ORDER BY cp.payment_date DESC');
+
+    $this->db->bind(':caregiverId', $caregiverId);
+
+    return $this->db->resultSet();
 }
 
 

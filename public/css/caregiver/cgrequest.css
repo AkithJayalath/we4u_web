@@ -207,5 +207,32 @@
     background-color: #06BFA9;
 }
 
+.no-requests{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 1000px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.no-requests img{
+    width: 500px;
+    height: 400px;
+    opacity: 0.7;
+    
+}
+
+.no-requests p{
+   font-size: 24px;
+   opacity: 0.7;
+}
 
 

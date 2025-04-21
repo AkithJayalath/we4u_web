@@ -6,7 +6,7 @@ class M_Careseekers{
         $this->db = new Database(); 
     }
 
-    public function createElderProfile($data) {
+    public function createElderProfile($data) { 
         $query = "INSERT INTO elderprofile (
             careseeker_id,
             first_name,
@@ -292,7 +292,7 @@ public function getAllConsultRequestsByUser($userId)
 }
 // To get all request details
 public function getFullCareRequestInfo($requestId)
-{
+{ 
     $this->db->query("SELECT cr.*, 
                              cg.caregiver_id, 
                              u.username AS caregiver_name, 
@@ -487,6 +487,19 @@ public function deleteRequest($requestId) {
         return false;
     }
 }
+
+public function markCareRequestAsPaid($requestId) {
+    $this->db->query("UPDATE carerequests SET is_paid = 1 WHERE request_id = :id");
+    $this->db->bind(':id', $requestId);
+    $this->db->execute();
+}
+
+public function markConsultRequestAsPaid($requestId) {
+    $this->db->query("UPDATE consultantrequests SET is_paid = 1 WHERE request_id = :id");
+    $this->db->bind(':id', $requestId);
+    $this->db->execute();
+}
+
 
 
 

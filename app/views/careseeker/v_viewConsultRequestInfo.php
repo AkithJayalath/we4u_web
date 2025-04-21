@@ -51,10 +51,13 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
                 <div class="request-info-buttons">
-                    <button class="request-send-button">
-                        Make Payment
-                    </button>
-                    <?php
+                
+                <?php if ($data->is_paid == 0): ?>
+                 <a href="<?= URLROOT ?>/payments/checkout?type=consulting&request_id=<?= $data->request_id ?>" class="request-send-button">Make Payment</a>
+                <?php else: ?>
+                    <span class="text-success" style="color: #007bff; font-weight: bold;">✅ Payment Done</span>
+                <?php endif; ?>   
+ <?php
 // Determine button state: delete or cancel
 $disabledStatuses = ['cancelled', 'rejected', 'completed'];
 $isDeleteButton = in_array(strtolower($data->status), $disabledStatuses);
