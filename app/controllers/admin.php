@@ -17,9 +17,6 @@ class admin extends controller{
 
   }
 
-  
-
-
   public function index(){
     $data = [
       'title' => 'Admin Dashboard'
@@ -311,6 +308,187 @@ public function sendWelcomeEmail() {
         return false;
     }
 }
+
+// In your controller
+public function downloadPdf() {
+    $content = '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+            line-height: 1.3;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #dddddd;
+            padding-bottom: 10px;
+        }
+        
+        .brand {
+            float: left;
+            font-size: 18pt;
+            font-weight: bold;
+        }
+        
+        .date {
+            float: right;
+        }
+        
+        .supplier-section {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        .supplier-title {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .supplier-info {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .supplier-info p {
+            margin: 3px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        thead tr {
+            background-color: #f0f0f0;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: none;
+        }
+        
+        td {
+            border-bottom: 1px solid #eeeeee;
+        }
+        
+        .total-section {
+            text-align: right;
+            margin: 20px 0;
+        }
+        
+        .total {
+            display: inline-block;
+            background-color: #6c5ce7;
+            color: white;
+            padding: 8px 20px;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .footer-separator {
+            border-top: 1px solid #dddddd;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand">Brand</div>
+            <div class="date">Date</div>
+        </div>
+        
+        <div class="supplier-section">
+            <div class="supplier-title">Supplier Company INC</div>
+            <div class="supplier-info">
+                <p>Number: 23456789</p>
+                <p>VAT: 23456789</p>
+                <p>6522 Abshire Mills</p>
+                <p>Port Orfolurt, 05820</p>
+                <p>United States</p>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bank</th>
+                    <th>Bank Holder Name</th>
+                    <th>Phone Number</th>
+                    <th>Account Number</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1.</td>
+                    <td>Bank of America</td>
+                    <td>John Smith</td>
+                    <td>+1-555-123-4567</td>
+                    <td>123456789</td>
+                    <td>$180.00</td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Chase Bank</td>
+                    <td>Sarah Johnson</td>
+                    <td>+1-555-234-5678</td>
+                    <td>987654321</td>
+                    <td>$144.00</td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Wells Fargo</td>
+                    <td>Michael Brown</td>
+                    <td>+1-555-345-6789</td>
+                    <td>456789123</td>
+                    <td>$60.00</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="total-section">
+            <div class="total">Total: $384.00</div>
+        </div>
+        
+        <div class="footer-separator"></div>
+    </div>
+</body>
+</html>';
+    
+    generate_pdf('We4U Invoice', $content, 'we4u_invoice.pdf', 'download');
+}
+
+
 
 
    

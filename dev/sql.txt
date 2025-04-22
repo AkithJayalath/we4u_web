@@ -241,3 +241,31 @@ CREATE TABLE co_availability_instances (
     FOREIGN KEY (consultant_id) REFERENCES consultant(consultant_id)
 );
 
+
+
+
+
+
+
+CREATE TABLE `care_payments` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `care_request_id` int(11) NOT NULL,
+  `payer_id` int(11) NOT NULL,
+  `caregiver_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) DEFAULT 'Stripe',
+  `payment_date` datetime DEFAULT current_timestamp(),
+  `is_refunded` tinyint(1) DEFAULT 0,
+  `refund_reason` text DEFAULT NULL,
+  `refund_date` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`payment_id`),
+  KEY `fk_care_request_id` (`care_request_id`),
+  KEY `fk_payer_id` (`payer_id`),
+  KEY `fk_caregiver_id` (`caregiver_id`),
+  CONSTRAINT `fk_care_request_id` FOREIGN KEY (`care_request_id`) REFERENCES `carerequest` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_payer_id` FOREIGN KEY (`payer_id`) REFERENCES `careseeker` (`careseeker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_caregiver_id` FOREIGN KEY (`caregiver_id`) REFERENCES `caregiver` (`caregiver_id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
