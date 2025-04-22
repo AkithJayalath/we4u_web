@@ -740,6 +740,7 @@ public function acceptRequest($request_id) {
 
       // Update status
       if ($this->caregiversModel->updateRequestStatus($request_id, 'accepted')) {
+            $this->sheduleModel->updateScheduleStatusByRequestId($request_id, 'accepted');
           flash('request_message', 'Request has been accepted.');
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
@@ -821,6 +822,7 @@ public function cancelRequest($requestId, $flag = false) {
   $result = $this->caregiversModel->cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag);
 
   if ($result) {
+        $this->sheduleModel->deleteSchedulesByRequestId($requestId);
       $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
       flash('request_success', 'Request cancelled successfully.' . $flagMessage);
   } else {
@@ -885,6 +887,137 @@ private function getStartDateTime($request) {
       // Load the calendar view
       $this->view('calendar/v_cgcalendar', $data);
   }
+
+    public function editMyCalendar() {
+        
+        if(!$this->isLoggedIn()){
+            redirect('users/login');
+        }
+        
+        // Get caregiver ID from session
+        $id = $_SESSION['user_id'];
+        
+        // Initialize error variable
+        $error = '';
+        
+        // Process form submission for marking unavailability
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
+            // Check if it's short-term or long-term unavailability
+            if(isset($_POST['unavailability_type']) && $_POST['unavailability_type'] == 'short') {
+                // Short-term unavailability
+                $data = [
+                    'caregiver_id' => $id,
+                    'sheduled_date' => trim($_POST['selected_date']),
+                    'shift' => trim($_POST['shift']),
+                    'status' => 'unavailable',
+                    'request_id' => null // No request associated with unavailability
+                ];
+                
+                // Validate the data
+                if(empty($data['sheduled_date'])) {
+                    $error = 'Please select a date';
+                } elseif(empty($data['shift'])) {
+                    $error = 'Please select a time slot';
+                } else {
+                    // Check if the time slot is already marked as unavailable
+                    if($this->sheduleModel->isTimeSlotAvailable($data['sheduled_date'], $data['shift'], $id)) {
+                        // Time slot is available, mark it as unavailable
+                        if($this->sheduleModel->createShortShedule($data)) {
+                            flash('calendar_message', 'Time slot marked as unavailable', 'alert alert-success');
+                        } else {
+                            $error = 'Something went wrong while saving your unavailability';
+                        }
+                    } else {
+                        $error = 'This time slot is already unavailable or booked';
+                    }
+                }
+            } elseif(isset($_POST['unavailability_type']) && $_POST['unavailability_type'] == 'long') {
+                // Long-term unavailability
+                $data = [
+                    'caregiver_id' => $id,
+                    'from_date' => trim($_POST['from_date']),
+                    'to_date' => trim($_POST['to_date']),
+                    'status' => 'unavailable',
+                    'request_id' => null // No request associated with unavailability
+                ];
+                
+                // Validate the data
+                if(empty($data['from_date']) || empty($data['to_date'])) {
+                    $error = 'Please select both start and end dates';
+                } elseif(strtotime($data['to_date']) < strtotime($data['from_date'])) {
+                    $error = 'End date cannot be before start date';
+                } else {
+                    // Check if the date range is available
+                    if($this->sheduleModel->isDateRangeAvailable($data['from_date'], $data['to_date'], $id)) {
+                        // Date range is available, mark it as unavailable
+                        if($this->sheduleModel->createLongShedule($data)) {
+                            flash('calendar_message', 'Date range marked as unavailable', 'alert alert-success');
+                        } else {
+                            $error = 'Something went wrong while saving your unavailability';
+                        }
+                    } else {
+                        $error = 'This date range overlaps with existing unavailability or bookings';
+                    }
+                }
+            } elseif(isset($_POST['delete_schedule']) && $_POST['delete_schedule'] == 'true') {
+                // Delete unavailability
+                $schedule_id = trim($_POST['schedule_id']);
+                $schedule_type = trim($_POST['schedule_type']);
+                
+                if($schedule_type == 'short') {
+                    if($this->sheduleModel->deleteShortSchedule($schedule_id, $id)) {
+                        flash('calendar_message', 'Unavailability removed successfully', 'alert alert-success');
+                    } else {
+                        $error = 'Failed to remove unavailability';
+                    }
+                } else {
+                    if($this->sheduleModel->deleteLongSchedule($schedule_id, $id)) {
+                        flash('calendar_message', 'Unavailability removed successfully', 'alert alert-success');
+                    } else {
+                        $error = 'Failed to remove unavailability';
+                    }
+                }
+            }
+            
+            // If there's an error, don't redirect, pass the error to the view
+            if (!empty($error)) {
+                // Get all schedules for the caregiver
+                $shortShedules = $this->sheduleModel->getAllShortShedulesForCaregiver($id);
+                $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
+                
+                // Prepare data for the view with error
+                $data = [
+                    'shortShedules' => $shortShedules,
+                    'longShedules' => $longShedules,
+                    'error' => $error
+                ];
+                
+                // Load the calendar edit view with error
+                $this->view('calendar/v_editcgcalander', $data);
+                return;
+            }
+            
+            // Redirect to prevent form resubmission
+            redirect('caregivers/editMyCalendar');
+        }
+        
+        // Get all schedules for the caregiver
+        $shortShedules = $this->sheduleModel->getAllShortShedulesForCaregiver($id);
+        $longShedules = $this->sheduleModel->getAllLongShedulesForCaregiver($id);
+        
+        // Prepare data for the view
+        $data = [
+            'shortShedules' => $shortShedules,
+            'longShedules' => $longShedules,
+            'error' => $error
+        ];
+        
+        // Load the calendar edit view
+        $this->view('calendar/v_editcgcalander', $data);
+    }
   
   }
 ?>

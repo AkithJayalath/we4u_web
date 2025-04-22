@@ -19,7 +19,7 @@ class M_Shedules{
     }
 
     public function createLongShedule($data){
-        $this->db->query('INSERT INTO cg_long_shedules (caregiver_id, start_date, end_date, requset_id, status) VALUES (:caregiver_id, :start_date, :end_date, :request_id, :status)');
+        $this->db->query('INSERT INTO cg_long_shedules (caregiver_id, start_date, end_date, request_id, status) VALUES (:caregiver_id, :start_date, :end_date, :request_id, :status)');
         $this->db->bind(':caregiver_id', $data['caregiver_id']);
         $this->db->bind(':start_date', $data['from_date']);
         $this->db->bind(':end_date', $data['to_date']);
@@ -105,63 +105,98 @@ class M_Shedules{
         return ($result->count == 0);
     }
 
-
-
-
-
-
-
-
-
-// only checking the date without the time this can be use for fetching what are the user having as a schedule for the day along with the short ones
-    public function getAllLongShedulesForCaregiverByDate($caregiverID, $date){
-        $this->db->query('SELECT * FROM cg_long_bookings WHERE caregiver_id = :caregiverID AND DATE(:date) BETWEEN DATE(start_date_time) AND DATE(end_date_time)');
-        $this->db->bind(':caregiverID', $caregiverID);
-        $this->db->bind(':date', $date);
-        return $this->db->resultSet();
+public function deleteShortSchedule($scheduleId, $caregiverId) {
+    // First check if this schedule belongs to the caregiver and is an unavailability
+    $this->db->query('SELECT * FROM cg_shedules 
+                     WHERE id = :id 
+                     AND caregiver_id = :caregiver_id 
+                     AND status = :status');
+    $this->db->bind(':id', $scheduleId);
+    $this->db->bind(':caregiver_id', $caregiverId);
+    $this->db->bind(':status', 'unavailable');
+    
+    $schedule = $this->db->single();
+    
+    // If no matching schedule found or it's not an unavailability, return false
+    if (!$schedule) {
+        return false;
     }
+    
+    // Delete the schedule
+    $this->db->query('DELETE FROM cg_shedules 
+                     WHERE id = :id 
+                     AND caregiver_id = :caregiver_id 
+                     AND status = :status');
+    $this->db->bind(':id', $scheduleId);
+    $this->db->bind(':caregiver_id', $caregiverId);
+    $this->db->bind(':status', 'unavailable');
+    
+    return $this->db->execute();
+}
 
-    // this is for checking the date of the long shedules but when it got a date and time range- this is for when user is filtering the shedules by date and time range
-    public function getAllLongShedulesForCaregiverByDateAndTime($caregiverID, $startDate, $endDate){
-        $this->db->query('SELECT * FROM cg_long_bookings WHERE caregiver_id = :caregiverID AND start_date_time <= :endDate AND end_date_time >= :startDate');
-        $this->db->bind(':caregiverID', $caregiverID);
-        $this->db->bind(':startDate', $startDate);
-        $this->db->bind(':endDate', $endDate);
-        return $this->db->resultSet();
+public function deleteLongSchedule($scheduleId, $caregiverId) {
+    // First check if this schedule belongs to the caregiver and is an unavailability
+    $this->db->query('SELECT * FROM cg_long_shedules 
+                     WHERE id = :id 
+                     AND caregiver_id = :caregiver_id 
+                     AND status = :status');
+    $this->db->bind(':id', $scheduleId);
+    $this->db->bind(':caregiver_id', $caregiverId);
+    $this->db->bind(':status', 'unavailable');
+    
+    $schedule = $this->db->single();
+    
+    // If no matching schedule found or it's not an unavailability, return false
+    if (!$schedule) {
+        return false;
     }
+    
+    // Delete the schedule
+    $this->db->query('DELETE FROM cg_long_shedules 
+                     WHERE id = :id 
+                     AND caregiver_id = :caregiver_id 
+                     AND status = :status');
+    $this->db->bind(':id', $scheduleId);
+    $this->db->bind(':caregiver_id', $caregiverId);
+    $this->db->bind(':status', 'unavailable');
+    
+    return $this->db->execute();
+}
 
-    public function getAllShedulesForCaregiverByDateAndShift($caregiverID, $date, $shift = null){
-        $query = 'SELECT * From cg_shedules WHERE provider_id = :caregiverID AND sheduled_date = :date';
-        
-        if ($shift !== null) {
-            $query .= ' AND shift = :shift';
-        }
-        
-        $this->db->query($query);
-        $this->db->bind(':caregiverID', $caregiverID);
-        $this->db->bind(':date', $date);
-        
-        if ($shift !== null) {
-            $this->db->bind(':shift', $shift);
-        }
-        
-        return $this->db->resultSet();
-    }
+public function updateScheduleStatusByRequestId($request_id, $status) {
+    // Update status in short schedules
+    $this->db->query('UPDATE cg_shedules SET status = :status WHERE request_id = :request_id');
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    $shortResult = $this->db->execute();
+    
+    // Update status in long schedules
+    $this->db->query('UPDATE cg_long_shedules SET status = :status WHERE request_id = :request_id');
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    $longResult = $this->db->execute();
+    
+    // Return true if either query was successful (meaning records were found and updated)
+    return $shortResult || $longResult;
+}
 
-    //end of caregiver shedule endpoints
+public function deleteSchedulesByRequestId($request_id) {
+    // Delete entries from short schedules table
+    $this->db->query('DELETE FROM cg_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $shortResult = $this->db->execute();
+    
+    // Delete entries from long schedules table
+    $this->db->query('DELETE FROM cg_long_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $longResult = $this->db->execute();
+    
+    // Return true if either deletion was successful
+    return $shortResult || $longResult;
+}
 
-    // consultant shedule endpoints
-    public function getAllShedulesForConsultant($consultantID){
-        $this->db->query('SELECT * From co_shedules WHERE consultant_id = :consultantID');
-        $this->db->bind(':consultantID', $consultantID);
-        return $this->db->resultSet();
-    }
 
-    public function getAllShedulesForConsultantByDate($consultantID, $date){
-        $this->db->query('SELECT * FROM co_shedules WHERE consultant_id = :consultantID AND sheduled_date = :date');
-        $this->db->bind(':consultantID', $consultantID);
-    }
-    // end of consultant shedule endpoints
+
 
 }
 

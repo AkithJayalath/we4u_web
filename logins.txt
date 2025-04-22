@@ -1,4 +1,10 @@
-caregiver
+careseeker
 adminn@gmail.com
 Admin1234
 
+caregiver@gmail.com
+Caregiver10
+
+consultant Login
+consultant10@gmail.com
+#Consultant10

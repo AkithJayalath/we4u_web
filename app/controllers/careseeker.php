@@ -253,7 +253,8 @@ public function showConsultantRequestForm($consultant_id){
     return $age;
 
 }
- public function requestCaregiver($caregiver_id) {
+
+public function requestCaregiver($caregiver_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
     }
@@ -295,8 +296,6 @@ public function showConsultantRequestForm($consultant_id){
             'error' => ''
         ];
         
-
-
         // Validate elder profile selection
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
@@ -324,8 +323,13 @@ public function showConsultantRequestForm($consultant_id){
                     
                     // Check if from_date is in the future (at least tomorrow)
                     $tomorrow = new DateTime();
+                    $tomorrow->setTime(0, 0, 0);
                     $tomorrow->modify('+1 day');
-                    if ($from_date < $tomorrow) {
+
+                    $from_date_normalized = clone $from_date;
+                    $from_date_normalized->setTime(0, 0, 0);
+                    
+                    if ($from_date_normalized < $tomorrow) {
                         $data['error'] = 'Start date must be at least tomorrow';
                     }
                     // Check if to_date is after from_date
@@ -339,6 +343,23 @@ public function showConsultantRequestForm($consultant_id){
                         // Check if the duration exceeds 5 days
                         if ($days > 5) {
                             $data['error'] = 'Maximum care duration is 5 days';
+                        }
+                        
+                        // Check date range availability - FIXED: Moved this check here
+                        if (empty($data['error'])) {
+                            // Make sure dates are in the correct format
+                            $fromDate = date('Y-m-d', strtotime($data['from_date']));
+                            $toDate = date('Y-m-d', strtotime($data['to_date']));
+                            
+                            $isAvailable = $this->scheduleModel->isDateRangeAvailable(
+                                $fromDate, 
+                                $toDate, 
+                                $data['caregiver_id']
+                            );
+                            
+                            if (!$isAvailable) {
+                                $data['error'] = 'The selected date range overlaps with existing bookings. Please choose another date range.';
+                            }
                         }
                     }
                 }
@@ -358,8 +379,12 @@ public function showConsultantRequestForm($consultant_id){
                 } else {
                     // Validate that the short-term date is in the future
                     $from_date_short = new DateTime($data['from_date_short']);
+                    $from_date_short->setTime(0, 0, 0);
+
                     $tomorrow = new DateTime();
+                    $tomorrow->setTime(0, 0, 0);
                     $tomorrow->modify('+1 day');
+
                     
                     if ($from_date_short < $tomorrow) {
                         $data['error'] = 'Date for short-term care must be at least tomorrow';
@@ -373,36 +398,38 @@ public function showConsultantRequestForm($consultant_id){
                         $data['error'] = 'Cannot select Full Day and other time slots together';
                     }
 
-                    // check is that time slot is available
-                    // For short schedules
-                    if (isset($data['shift']) && isset($data['sheduled_date'])) {
-                        $isAvailable = $this->scheduleModel->isTimeSlotAvailable(
-                            $data['sheduled_date'], 
-                            $data['shift'], 
-                            $data['caregiver_id']
-                        );
+                    // Check if time slots are available
+                    if (empty($data['error'])) {
+                        $allSlotsAvailable = true;
                         
-                        if (!$isAvailable) {
-                            // Time slot is not available
-                            $data['errors'][] = 'The selected time slot is already booked or falls within a long-term booking period. Please choose another time.';
-                            return $data; // Return with error
+                        // Convert time slot names from frontend to database format
+                        $slotMapping = [
+                            'morning' => 'morning',
+                            'evening' => 'evening',
+                            'overnight' => 'overnight',
+                            'full-day' => 'fullday'
+                        ];
+                        
+                        foreach ($data['time_slots'] as $timeSlot) {
+                            // Convert frontend slot name to database format
+                            $dbSlot = isset($slotMapping[$timeSlot]) ? $slotMapping[$timeSlot] : $timeSlot;
+                            
+                            $isAvailable = $this->scheduleModel->isTimeSlotAvailable(
+                                $data['from_date_short'], 
+                                $dbSlot, 
+                                $data['caregiver_id']
+                            );
+                            
+                            if (!$isAvailable) {
+                                $allSlotsAvailable = false;
+                                break;
+                            }
+                        }
+                        
+                        if (!$allSlotsAvailable) {
+                            $data['error'] = 'One or more selected time slots are already booked or fall within a long-term booking period. Please choose different time slots.';
                         }
                     }
-                    
-                    // For long schedules
-                    if (isset($data['from_date']) && isset($data['to_date'])) {
-                        $isAvailable = $this->scheduleModel->isDateRangeAvailable(
-                            $data['from_date'], 
-                            $data['to_date'], 
-                            $data['caregiver_id']
-                        );
-                        
-                        if (!$isAvailable) {
-                            // Date range is not available
-                            $data['errors'][] = 'The selected date range overlaps with existing bookings. Please choose another date range.';
-                            return $data; // Return with error
-                        }
-                    }     
                 }
             }
         }
@@ -479,6 +506,7 @@ public function showConsultantRequestForm($consultant_id){
         redirect('careseeker/showCaregiverRequestForm/' . $caregiver_id);
     }
 }
+
 
 
 public function requestConsultant($consultant_id) {
