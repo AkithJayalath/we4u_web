@@ -102,7 +102,8 @@ public function addAnnouncement($data) {
     $this->db->bind(':content', $data['content']);
     $this->db->bind(':image_path', $data['image_path']);
     return $this->db->execute();
-  }
+}
+
 
   // Get a single blog by ID
   public function getBlogById($blogId) {

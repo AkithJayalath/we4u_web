@@ -154,13 +154,34 @@ public function viewCompletedJob($job_id) {
     $this->view('admin/v_users', $data);
   }
 
-  public function viewblog() {
+  public function blog() {
     $blogs = $this->adminModel->getAllBlogs(); // Fetch all blogs (admin/moderator can see all)
     $data = [
         'title' => 'All Blogs',
-        'blogs' => $blogs
+        'blogs' => $blogs,
+        'nextPage' => isset($_GET['page']) ? $_GET['page'] + 1 : 2
     ];
-    $this->view('admin/v_view_blog', $data); 
+    
+    $this->view('admin/v_blog', $data); 
+}
+
+public function viewblog($blog_id) {
+    // Fetch the blog details using the model
+    $blog = $this->adminModel->getBlogById($blog_id);
+
+    // Check if the blog exists
+    if (!$blog) {
+        redirect('admin/blog'); // Redirect to the blog list if the blog doesn't exist
+    }
+
+    // Prepare data for the view
+    $data = [
+        'title' => $blog->title,
+        'blog' => $blog
+    ];
+
+    // Load the view
+    $this->view('admin/v_view_blog', $data);
 }
 
 public function editblog($blog_id) {
@@ -187,7 +208,8 @@ public function editblog($blog_id) {
 
         if (empty($data['title_err']) && empty($data['content_err'])) {
             if ($this->adminModel->updateBlog($data)) {
-                redirect('admin/viewblog');
+                // Redirect to the viewblog page with the blog_id
+                redirect('admin/viewblog/' . $blog_id);
             } else {
                 die('Something went wrong updating blog');
             }
@@ -217,6 +239,56 @@ public function deleteblog($blog_id) {
     }
 }
 
+public function addblog() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $imagePath = '';
+        if (!empty($_FILES['image_path']['name'])) {
+            $imageName = basename($_FILES['image_path']['name']);
+            $imagePath = 'images/blogs/' . $imageName;
+            move_uploaded_file($_FILES['image_path']['tmp_name'], APPROOT . '/../public/' . $imagePath);
+        }
+
+        $data = [
+            'user_id' => $_SESSION['user_id'], // Ensure session contains this
+            'title' => trim($_POST['title']),
+            'content' => trim($_POST['content']),
+            'image_path' => $imagePath,
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+
+        if (empty($data['title'])) {
+            $data['title_err'] = 'Please enter a blog title';
+        }
+        if (empty($data['content'])) {
+            $data['content_err'] = 'Please enter blog content';
+        }
+
+        if (empty($data['title_err']) && empty($data['content_err'])) {
+            if ($this->adminModel->addBlog($data)) {
+                flash('blog_message', 'Blog added successfully');
+                redirect('admin/blog');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            $this->view('admin/v_add_blog', $data);
+        }
+    } else {
+        $data = [
+            'title' => '',
+            'content' => '',
+            'image_path' => '',
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+        $this->view('admin/v_add_blog', $data);
+    }
+}
 
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();
