@@ -206,7 +206,7 @@ $data = [
     'error' => ''
 ];
 
-$this->view('careseeker/v_requestCaregiver', $data);
+$this->view('careseeker/v_requestCaregiver', $data); 
 
 }
 
@@ -884,7 +884,7 @@ public function viewConsultRequestInfo($requestId)
         
             // Optionally sort by created_at
             usort($mergedRequests, function($a, $b) {
-                return strtotime($b->created_at) - strtotime($a->created_at);
+                return strtotime($b->created_at) - strtotime($a->created_at); 
             });
         
             $data = [

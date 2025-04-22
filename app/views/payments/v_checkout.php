@@ -17,52 +17,70 @@
             <h2>Payment Details</h2>
 
             <div class="detail-item">
+                <div class="detail-label">Request ID:</div>
+                <div class="detail-value">#<?= htmlspecialchars($data['request_id']) ?></div>
+            </div>
+
+            <div class="detail-item">
                 <div class="detail-label">Service:</div>
-                <div class="detail-value">Caregiving</div>
+                <div class="detail-value"><?= ucfirst($data['type']) ?></div>
             </div>
 
             <div class="detail-item">
                 <div class="detail-label">Client (payer):</div>
-                <div class="detail-value">Smith robert</div>
+                <div class="detail-value"><?= htmlspecialchars($data['payer']) ?></div>
             </div>
 
             <div class="detail-item">
-                <div class="detail-label">Caregiver:</div>
-                <div class="detail-value">John Doe</div>
-            </div>
+                <div class="detail-label">Service Provider:</div>
+                <div class="detail-value">#<?= $data['provider_id'] ?>      <?= htmlspecialchars($data['provider']) ?> </div>           
+             </div>
 
             <div class="detail-item">
                 <div class="detail-label">Service Type:</div>
-                <div class="detail-value">Short Term 7-12 , 13-19</div>
+                <div class="detail-value">
+                <?= htmlspecialchars($data['service_type']) ?> (
+                    <?php
+                        if ($data['type'] === 'caregiving') {
+                            if (isset($data['time_slots']) && $data['time_slots'] !== 'N/A') {
+                                $slots = json_decode($data['time_slots']);
+                                if (is_array($slots)) {
+                                    echo htmlspecialchars(implode(' + ', array_map('ucfirst', $slots)));
+                                } else {
+                                    
+                                }
+                            } else {
+                                echo 'N/A';
+                            }
+                        } elseif ($data['type'] === 'consulting') {
+                            // Just display the plain text time slot
+                            echo htmlspecialchars($data['time_slots'] ?? 'N/A');
+                        } else {
+                            echo 'N/A';
+                        }
+                        ?>
+                )
+            </div>
             </div>
 
             <div class="detail-item">
-                <div class="detail-label">Service Date:</div>
-                <div class="detail-value">April 10 , 2025</div>
+            <?php
+
+            date_default_timezone_set('Asia/Colombo');
+
+
+            ?>
+
+                <div class="detail-label">Payment Date & Time:</div>
+                <div class="detail-value"><?= date('F j, Y   g:i A') ?></div>
             </div>
 
             <div class="payment-breakdown">
-                <h3>Your Payment Breakdown</h3>
-                <div class="breakdown-row">
-                    <div class="breakdown-label">payment for 1 slot:</div>
-                    <div class="breakdown-value">Rs.1500</div>
-                </div>
-                <div class="breakdown-row">
-                    <div class="breakdown-label">Number of slots:</div>
-                    <div class="breakdown-value">2</div>
-                </div>
-                <div class="breakdown-row">
-                    
-                    <div class="breakdown-value">Rs.1500 * 2</div>
-                </div>
-                <div class="breakdown-row">
-                    <div class="breakdown-label">Additional Payments:</div>
-                    <div class="breakdown-value">-</div>
-                </div>
+                
 
                 <div class="breakdown-row total">
                     <div class="breakdown-label">Total Payment:</div>
-                    <div class="breakdown-value">Rs.3000</div>
+                    <div class="breakdown-value">Rs.<?= number_format($data['amount'], 2) ?></div>
                 </div>
 
                 
@@ -71,7 +89,7 @@
             </div>
 
             <form action="<?php echo URLROOT; ?>/payments/stripe" method="post">
-                <input type="hidden" name="amount" value="3000"> 
+                <input type="hidden" name="amount" value="<?= $data['amount'] ?>"> 
                 <input type="hidden" name="description" value="Elderly Care Visit">
                 <div class="btn">
                     <button class="proceed-btn" type="submit">Proceed to Payment</button>
