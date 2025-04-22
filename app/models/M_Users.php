@@ -153,7 +153,213 @@
     return $row ? $row->is_approved : 'pending'; // Return the status or 'pending' if no record is found
 }
 
+    public function getFilteredConsultants($filters, $page, $perPage) {
+        $sql = 'SELECT c.*, u.username, u.gender, u.profile_picture 
+                FROM consultant c 
+                JOIN user u ON c.consultant_id = u.user_id 
+                WHERE u.role = "Consultant"';
+
+        $params = $this->buildFilterParams($filters);
+        $sql .= $this->buildFilterConditions($filters);
+        $sql .= $this->buildSortCondition($filters['sort'] ?? '');
+
+        // Pagination
+        $offset = ($page - 1) * $perPage;
+        $sql .= ' LIMIT :offset, :limit';
+        $params[':offset'] = $offset;
+        $params[':limit'] = $perPage;
+
+        $this->db->query($sql);
+        foreach ($params as $param => $value) {
+            $this->db->bind($param, $value);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getTotalFilteredConsultants($filters) {
+        $sql = 'SELECT COUNT(*) as total 
+                FROM consultant c 
+                JOIN user u ON c.consultant_id = u.user_id 
+                WHERE u.role = "Consultant"';
+
+        $params = $this->buildFilterParams($filters);
+        $sql .= $this->buildFilterConditions($filters);
+
+        $this->db->query($sql);
+        foreach ($params as $param => $value) {
+            $this->db->bind($param, $value);
+        }
+
+        $result = $this->db->single();
+        return $result->total;
+    }
+
+    public function getAllRegions() {
+        $this->db->query('SELECT DISTINCT available_regions FROM consultant WHERE available_regions IS NOT NULL');
+        $results = $this->db->resultSet();
+
+        $regions = [];
+        foreach ($results as $result) {
+            if (!empty($result->available_regions)) {
+                $regionArray = explode(',', $result->available_regions);
+                foreach ($regionArray as $region) {
+                    $trimmedRegion = trim($region);
+                    if (!empty($trimmedRegion) && !in_array($trimmedRegion, $regions)) {
+                        $regions[] = $trimmedRegion;
+                    }
+                }
+            }
+        }
+
+        sort($regions);
+        return $regions;
+    }
+
+    public function getAllSpecialities() {
+        $this->db->query('SELECT specializations, expertise FROM consultant');
+        $results = $this->db->resultSet();
+
+        $specialities = [];
+        foreach ($results as $result) {
+            if (!empty($result->specializations)) {
+                $specialitiesArray = explode(',', $result->specializations);
+                foreach ($specialitiesArray as $speciality) {
+                    $trimmedSpeciality = trim($speciality);
+                    if (!empty($trimmedSpeciality) && !in_array($trimmedSpeciality, $specialities)) {
+                        $specialities[] = $trimmedSpeciality;
+                    }
+                }
+            }
+        }
+
+        sort($specialities);
+        return $specialities;
+    }
+
+    public function getConsultantsCount($region, $type, $speciality) {
+        $query = "SELECT COUNT(*) as total FROM consultant WHERE 1=1";
+
+        if (!empty($region)) {
+            $query .= " AND available_regions LIKE :region";
+        }
+        if (!empty($type)) {
+            $query .= " AND type = :type";
+        }
+        if (!empty($speciality)) {
+            $query .= " AND specializations LIKE :speciality";
+        }
+
+        $this->db->query($query);
+
+        if (!empty($region)) {
+            $this->db->bind(':region', '%' . $region . '%');
+        }
+        if (!empty($type)) {
+            $this->db->bind(':type', $type);
+        }
+        if (!empty($speciality)) {
+            $this->db->bind(':speciality', '%' . $speciality . '%');
+        }
+
+        return $this->db->single()->total;
+    }
+
+    public function getConsultants($region, $type, $speciality, $sortBy, $page, $perPage) {
+        $offset = ($page - 1) * $perPage;
+
+        $query = "SELECT c.*, u.username, u.profile_picture, u.gender 
+                  FROM consultant c 
+                  JOIN user u ON c.consultant_id = u.user_id 
+                  WHERE u.role = 'Consultant'";
+
+        if (!empty($region)) {
+            $query .= " AND c.available_regions LIKE :region";
+        }
+        if (!empty($type)) {
+            $query .= " AND c.type = :type";
+        }
+        if (!empty($speciality)) {
+            $query .= " AND c.specializations LIKE :speciality";
+        }
+
+        // Sorting
+        if ($sortBy === 'rating') {
+            $query .= " ORDER BY c.rating DESC";
+        } elseif ($sortBy === 'price-asc') {
+            $query .= " ORDER BY c.payment_details ASC";
+        } elseif ($sortBy === 'price-desc') {
+            $query .= " ORDER BY c.payment_details DESC";
+        } else {
+            $query .= " ORDER BY c.consultant_id DESC";
+        }
+
+        $query .= " LIMIT :offset, :perPage";
+
+        $this->db->query($query);
+
+        if (!empty($region)) {
+            $this->db->bind(':region', '%' . $region . '%');
+        }
+        if (!empty($type)) {
+            $this->db->bind(':type', $type);
+        }
+        if (!empty($speciality)) {
+            $this->db->bind(':speciality', '%' . $speciality . '%');
+        }
+
+        $this->db->bind(':offset', $offset, PDO::PARAM_INT);
+        $this->db->bind(':perPage', $perPage, PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
+    // === Helper Methods ===
+
+    private function buildFilterParams($filters) {
+        $params = [];
+
+        if (!empty($filters['username'])) {
+            $params[':username'] = '%' . $filters['username'] . '%';
+        }
+        if (!empty($filters['region'])) {
+            $params[':region'] = '%' . $filters['region'] . '%';
+        }
+        if (!empty($filters['speciality'])) {
+            $params[':speciality'] = '%' . $filters['speciality'] . '%';
+        }
+
+        return $params;
+    }
+
+    private function buildFilterConditions($filters) {
+        $conditions = '';
+
+        if (!empty($filters['username'])) {
+            $conditions .= ' AND u.username LIKE :username';
+        }
+        if (!empty($filters['region'])) {
+            $conditions .= ' AND c.available_regions LIKE :region';
+        }
+        if (!empty($filters['speciality'])) {
+            $conditions .= ' AND c.specializations LIKE :speciality';
+        }
+
+        return $conditions;
+    }
+
+    private function buildSortCondition($sort) {
+        switch ($sort) {
+            case 'price_asc':
+                return ' ORDER BY c.payment_details ASC';
+            case 'price_desc':
+                return ' ORDER BY c.payment_details DESC';
+            case 'rating':
+                return ' ORDER BY c.rating DESC';
+            default:
+                return '';
+        }
+    }
 
 }
 
-  

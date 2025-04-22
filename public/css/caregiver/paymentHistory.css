@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container{
     margin: auto;
     padding: 10px;
@@ -146,3 +147,155 @@ table {
 
   
   
+=======
+.container{
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 1050px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: 80vh;
+    overflow: hidden;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    height: 65px;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #F7F6FA;
+}
+
+.header i{
+    margin-right: 100px;
+    cursor: pointer;
+}
+
+.header i:hover{
+    color: #08DCC1;
+}
+
+.header h2{
+    font-size: 28px;
+    color: #013CC6;
+    margin-left: 20px;
+}
+
+.btn-Method{
+    justify-items: center;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-left: 850px;
+   
+}
+
+.btn-Method button{
+    padding: 10px 10px;
+    margin-right: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #0B63F8;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-Method button:hover{
+    background-color: #0953D6;
+}
+
+.details{
+  max-height: 65vh; /* Set the maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  
+}
+
+.details::-webkit-scrollbar {
+    width: 12px; /* Width of the vertical scrollbar */
+  }
+  
+  .details::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Track color */
+    border-radius: 10px; /* Track rounded corners */
+  }
+  
+  .details::-webkit-scrollbar-thumb {
+    background-color: #ddd; /* Thumb color */
+    border-radius: 10px; /* Rounded corners on the thumb */
+    border: 3px solid #f1f1f1; /* Padding around the thumb */
+  }
+  
+  .details::-webkit-scrollbar-thumb:hover {
+    background-color: #7d7b7b; /* Darker color when hovering */
+  }
+  
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+ 
+  }
+  
+  thead {
+    background-color: #f1f1f1;
+  }
+
+  table thead th {
+    position: sticky;
+    top: 0; 
+    background-color: #f8f9fa; 
+    z-index: 10; 
+    border-bottom: 2px solid #ddd; 
+    text-align: center; 
+    padding: 10px; 
+  }
+  
+  
+  tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tbody td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  tr .p-id{
+    color: #0B63F8;
+    
+  }
+
+  tbody td .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  tbody td .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.success {
+    color: green;
+  }
+
+  .status.pending{ /*10% paid or paid amount*/
+    color: #0B63F8;
+  }
+
+  
+  .status.failed {
+    color: red;
+  }
+>>>>>>> c7291afc54e61c0fd4c872653c5e5fbe32b2a8b5

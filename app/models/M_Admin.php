@@ -6,6 +6,13 @@ class M_Admin {
       $this->db = new Database();
   }
 
+  public function getAllUsers() {
+    $this->db->query('SELECT user_id, username, email, role, profile_picture, created_at 
+                      FROM user 
+                      ORDER BY created_at DESC');
+    return $this->db->resultSet();
+  }
+
   public function findUserByEmail($email){ 
       $this->db->query('SELECT * FROM user WHERE email = :email');
       $this->db->bind(':email' , $email);
