@@ -20,7 +20,7 @@ echo loadCSS($required_styles);
             <h2>My Calendar</h2>
             <a href="<?php echo URLROOT; ?>/caregivers/editMyCalendar" class="edit-calendar-btn">
             <i class="fas fa-edit"></i> Edit Availability
-        </a>
+            </a>
         </div>
         
         <div class="calendar-wrapper">
