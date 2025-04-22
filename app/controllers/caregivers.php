@@ -722,6 +722,7 @@ public function acceptRequest($request_id) {
 
       // Update status
       if ($this->caregiversModel->updateRequestStatus($request_id, 'accepted')) {
+            $this->sheduleModel->updateScheduleStatusByRequestId($request_id, 'accepted');
           flash('request_message', 'Request has been accepted.');
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');

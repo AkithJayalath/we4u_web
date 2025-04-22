@@ -105,13 +105,6 @@ class M_Shedules{
         return ($result->count == 0);
     }
 
-/**
- * Delete a short schedule (unavailability)
- * 
- * @param int $scheduleId The ID of the schedule to delete
- * @param int $caregiverId The ID of the caregiver (for security check)
- * @return bool True if deletion was successful, false otherwise
- */
 public function deleteShortSchedule($scheduleId, $caregiverId) {
     // First check if this schedule belongs to the caregiver and is an unavailability
     $this->db->query('SELECT * FROM cg_shedules 
@@ -141,13 +134,6 @@ public function deleteShortSchedule($scheduleId, $caregiverId) {
     return $this->db->execute();
 }
 
-/**
- * Delete a long schedule (unavailability)
- * 
- * @param int $scheduleId The ID of the schedule to delete
- * @param int $caregiverId The ID of the caregiver (for security check)
- * @return bool True if deletion was successful, false otherwise
- */
 public function deleteLongSchedule($scheduleId, $caregiverId) {
     // First check if this schedule belongs to the caregiver and is an unavailability
     $this->db->query('SELECT * FROM cg_long_shedules 
@@ -176,6 +162,24 @@ public function deleteLongSchedule($scheduleId, $caregiverId) {
     
     return $this->db->execute();
 }
+
+public function updateScheduleStatusByRequestId($request_id, $status) {
+    // Update status in short schedules
+    $this->db->query('UPDATE cg_shedules SET status = :status WHERE request_id = :request_id');
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    $shortResult = $this->db->execute();
+    
+    // Update status in long schedules
+    $this->db->query('UPDATE cg_long_shedules SET status = :status WHERE request_id = :request_id');
+    $this->db->bind(':status', $status);
+    $this->db->bind(':request_id', $request_id);
+    $longResult = $this->db->execute();
+    
+    // Return true if either query was successful (meaning records were found and updated)
+    return $shortResult || $longResult;
+}
+
 
 
 }
