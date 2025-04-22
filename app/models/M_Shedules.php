@@ -180,6 +180,22 @@ public function updateScheduleStatusByRequestId($request_id, $status) {
     return $shortResult || $longResult;
 }
 
+public function deleteSchedulesByRequestId($request_id) {
+    // Delete entries from short schedules table
+    $this->db->query('DELETE FROM cg_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $shortResult = $this->db->execute();
+    
+    // Delete entries from long schedules table
+    $this->db->query('DELETE FROM cg_long_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $longResult = $this->db->execute();
+    
+    // Return true if either deletion was successful
+    return $shortResult || $longResult;
+}
+
+
 
 
 }

@@ -804,6 +804,7 @@ public function cancelRequest($requestId, $flag = false) {
   $result = $this->caregiversModel->cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag);
 
   if ($result) {
+        $this->sheduleModel->deleteSchedulesByRequestId($requestId);
       $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
       flash('request_success', 'Request cancelled successfully.' . $flagMessage);
   } else {
@@ -999,9 +1000,6 @@ private function getStartDateTime($request) {
         // Load the calendar edit view
         $this->view('calendar/v_editcgcalander', $data);
     }
-
-
-
   
   }
 ?>
