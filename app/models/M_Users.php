@@ -360,6 +360,112 @@
                 return '';
         }
     }
+    // Fetch all blogs for a user to view
+    public function getAllBlogs() {
+        // Select all blogs along with their authors' information
+        $this->db->query('SELECT b.*, u.username, u.profile_picture
+                          FROM blog b
+                          JOIN user u ON b.user_id = u.user_id
+                          WHERE b.status = "published"'); // Only fetch published blogs
+        return $this->db->resultSet();
+    }
 
+    // Fetch a single blog by its ID for detailed view
+    public function getBlogById($blogId) {
+        $this->db->query('SELECT b.*, u.username, u.profile_picture 
+                          FROM blog b
+                          JOIN user u ON b.user_id = u.user_id
+                          WHERE b.blog_id = :blog_id AND b.status = "published"'); // Fetch only published blogs
+        $this->db->bind(':blog_id', $blogId);
+        return $this->db->single();
+    }
+
+    // Fetch blogs for a user (could be for a consultant or careseeker)
+    public function getUserBlogs($userId) {
+        $this->db->query('SELECT b.*, u.username, u.profile_picture
+                          FROM blog b
+                          JOIN user u ON b.user_id = u.user_id
+                          WHERE b.user_id = :user_id AND b.status = "published"');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->resultSet();
+    }
+
+    // Helper method to build the query for retrieving blogs based on filters
+    public function getFilteredBlogs($filters, $page, $perPage) {
+        $sql = 'SELECT b.*, u.username, u.profile_picture 
+                FROM blog b 
+                JOIN user u ON b.user_id = u.user_id 
+                WHERE b.status = "published"';
+
+        $params = $this->buildBlogFilterParams($filters);
+        $sql .= $this->buildBlogFilterConditions($filters);
+
+        // Pagination
+        $offset = ($page - 1) * $perPage;
+        $sql .= ' LIMIT :offset, :limit';
+        $params[':offset'] = $offset;
+        $params[':limit'] = $perPage;
+
+        $this->db->query($sql);
+        foreach ($params as $param => $value) {
+            $this->db->bind($param, $value);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    // Helper method to count the total number of blogs matching filters
+    public function getTotalFilteredBlogs($filters) {
+        $sql = 'SELECT COUNT(*) as total 
+                FROM blog b 
+                JOIN user u ON b.user_id = u.user_id 
+                WHERE b.status = "published"';
+
+        $params = $this->buildBlogFilterParams($filters);
+        $sql .= $this->buildBlogFilterConditions($filters);
+
+        $this->db->query($sql);
+        foreach ($params as $param => $value) {
+            $this->db->bind($param, $value);
+        }
+
+        $result = $this->db->single();
+        return $result->total;
+    }
+
+    // === Helper Methods for Blog Filters ===
+    private function buildBlogFilterParams($filters) {
+        $params = [];
+
+        if (!empty($filters['title'])) {
+            $params[':title'] = '%' . $filters['title'] . '%';
+        }
+        if (!empty($filters['author'])) {
+            $params[':author'] = '%' . $filters['author'] . '%';
+        }
+        if (!empty($filters['category'])) {
+            $params[':category'] = '%' . $filters['category'] . '%';
+        }
+
+        return $params;
+    }
+
+    private function buildBlogFilterConditions($filters) {
+        $conditions = '';
+
+        if (!empty($filters['title'])) {
+            $conditions .= ' AND b.title LIKE :title';
+        }
+        if (!empty($filters['author'])) {
+            $conditions .= ' AND u.username LIKE :author';
+        }
+        if (!empty($filters['category'])) {
+            $conditions .= ' AND b.category LIKE :category';
+        }
+
+        return $conditions;
+    }
 }
+
+
 

@@ -154,33 +154,69 @@ public function viewCompletedJob($job_id) {
     $this->view('admin/v_users', $data);
   }
 
-  public function blog(){
+  public function viewblog() {
+    $blogs = $this->adminModel->getAllBlogs(); // Fetch all blogs (admin/moderator can see all)
     $data = [
-      'title' => 'Blog'
-    ];
-    $this->view('admin/v_blog', $data);
-  }
-
-  public function viewblog(){
-    $data = [
-      'title' => 'View Blog'
+        'title' => 'All Blogs',
+        'blogs' => $blogs
     ];
     $this->view('admin/v_view_blog', $data); 
-  }
+}
 
-  public function editblog(){
-    $data = [
-      'title' => 'Add Blog'
-    ];
-    $this->view('admin/v_edit_blog', $data);
-  }
+public function editblog($blog_id) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-  public function addblog(){
-    $data = [
-      'title' => 'Add Blog'
-    ];
-    $this->view('admin/v_add_blog', $data);
-  }
+        $data = [
+            'blog_id' => $blog_id,
+            'title' => trim($_POST['title']),
+            'content' => trim($_POST['content']),
+            'image_path' => trim($_POST['image_path']),
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+
+        // Validation
+        if (empty($data['title'])) {
+            $data['title_err'] = 'Please enter blog title';
+        }
+        if (empty($data['content'])) {
+            $data['content_err'] = 'Please enter blog content';
+        }
+
+        if (empty($data['title_err']) && empty($data['content_err'])) {
+            if ($this->adminModel->updateBlog($data)) {
+                redirect('admin/viewblog');
+            } else {
+                die('Something went wrong updating blog');
+            }
+        } else {
+            $this->view('admin/v_edit_blog', $data);
+        }
+    } else {
+        $blog = $this->adminModel->getBlogById($blog_id);
+        $data = [
+            'blog_id' => $blog_id,
+            'title' => $blog->title,
+            'content' => $blog->content,
+            'image_path' => $blog->image_path,
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+        $this->view('admin/v_edit_blog', $data);
+    }
+}
+
+public function deleteblog($blog_id) {
+    if ($this->adminModel->deleteBlog($blog_id)) {
+        redirect('admin/viewblog');
+    } else {
+        die('Something went wrong deleting blog');
+    }
+}
+
 
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();

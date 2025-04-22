@@ -633,11 +633,126 @@ public function viewCaregiverProfile($id = null) {
   
   $this->view('careseeker/viewCaregivers', $data);
 }
-
-
-
-
-
-
+// Fetch all blogs for a user (view blogs as a careseeker/consultant)
+public function getAllBlogs() {
+  $this->db->query('SELECT b.*, u.username, u.profile_picture 
+                    FROM blog b 
+                    JOIN users u ON b.user_id = u.user_id 
+                    WHERE b.status = "published"');
+  return $this->db->resultSet();
 }
+
+// Fetch a single blog by its ID for detailed view
+public function getBlogById($blogId) {
+  $this->db->query('SELECT b.*, u.username, u.profile_picture 
+                    FROM blog b 
+                    JOIN users u ON b.user_id = u.user_id 
+                    WHERE b.blog_id = :blog_id AND b.status = "published"');
+  $this->db->bind(':blog_id', $blogId);
+  return $this->db->single();
+}
+
+// Fetch blogs for a specific user (e.g., for a consultant or careseeker)
+public function getUserBlogs($userId) {
+  $this->db->query('SELECT b.*, u.username, u.profile_picture
+                    FROM blog b
+                    JOIN users u ON b.user_id = u.user_id
+                    WHERE b.user_id = :user_id AND b.status = "published"');
+  $this->db->bind(':user_id', $userId);
+  return $this->db->resultSet();
+}
+
+// Get filtered blogs with pagination
+public function getFilteredBlogs($filters, $page, $perPage) {
+  $sql = 'SELECT b.*, u.username, u.profile_picture 
+          FROM blog b 
+          JOIN users u ON b.user_id = u.user_id 
+          WHERE b.status = "published"';
+
+  $params = $this->buildBlogFilterParams($filters);
+  $sql .= $this->buildBlogFilterConditions($filters);
+
+  // Pagination
+  $offset = ($page - 1) * $perPage;
+  $sql .= ' LIMIT :offset, :limit';
+  $params[':offset'] = $offset;
+  $params[':limit'] = $perPage;
+
+  $this->db->query($sql);
+  foreach ($params as $param => $value) {
+      $this->db->bind($param, $value);
+  }
+
+  return $this->db->resultSet();
+}
+
+// Count total blogs for a specific filter
+public function getTotalFilteredBlogs($filters) {
+  $sql = 'SELECT COUNT(*) as total 
+          FROM blog b 
+          JOIN users u ON b.user_id = u.user_id 
+          WHERE b.status = "published"';
+
+  $params = $this->buildBlogFilterParams($filters);
+  $sql .= $this->buildBlogFilterConditions($filters);
+
+  $this->db->query($sql);
+  foreach ($params as $param => $value) {
+      $this->db->bind($param, $value);
+  }
+
+  $result = $this->db->single();
+  return $result->total;
+}
+
+// === Helper Methods for Blog Filters ===
+private function buildBlogFilterParams($filters) {
+  $params = [];
+
+  if (!empty($filters['title'])) {
+      $params[':title'] = '%' . $filters['title'] . '%';
+  }
+  if (!empty($filters['author'])) {
+      $params[':author'] = '%' . $filters['author'] . '%';
+  }
+  if (!empty($filters['category'])) {
+      $params[':category'] = '%' . $filters['category'] . '%';
+  }
+
+  return $params;
+}
+
+private function buildBlogFilterConditions($filters) {
+  $conditions = '';
+
+  if (!empty($filters['title'])) {
+      $conditions .= ' AND b.title LIKE :title';
+  }
+  if (!empty($filters['author'])) {
+      $conditions .= ' AND u.username LIKE :author';
+  }
+  if (!empty($filters['category'])) {
+      $conditions .= ' AND b.category LIKE :category';
+  }
+
+  return $conditions;
+}
+
+// Helper Method to get Approval Status for Caregivers or Consultants
+public function getApprovalStatus($userId, $role) {
+  if ($role === 'Caregiver') {
+      $this->db->query('SELECT approval_status FROM caregivers WHERE user_id = :user_id');
+  } elseif ($role === 'Consultant') {
+      $this->db->query('SELECT approval_status FROM consultants WHERE user_id = :user_id');
+  } else {
+      return 'unknown';
+  }
+
+  $this->db->bind(':user_id', $userId);
+  $result = $this->db->single();
+  
+  return $result ? $result->approval_status : 'unknown';
+}
+}
+
 ?>
