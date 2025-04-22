@@ -357,7 +357,7 @@ echo loadCSS($required_styles);
         }
         
         return unavailableDates;
-}
+    }
 
 
     function handleDateSelection(info, unavailableDates) {
