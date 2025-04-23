@@ -17,11 +17,11 @@ echo loadCSS($required_styles);
             <p>Consultant Session</p>
         </div>
         <?php
-         $consultantPic = !empty($data['session']->consultant_pic)
-                            ? URLROOT . '/public/images/profile_imgs/' . $data['session']->consultant_pic
+         $careseekerPic = !empty($data['session']->careseeker_pic)
+                            ? URLROOT . '/public/images/profile_imgs/' . $data['session']->careseeker_pic
                             : URLROOT . '/public/images/def_profile_pic2.jpg';
 
-                        $elderPic = !empty( $data['session']->elder_pic)
+                        $elderPic = !empty($data['session']->elder_pic)
                             ? URLROOT . '/public/images/profile_imgs/' . $data['session']->elder_pic
                             : URLROOT . '/public/images/def_profile_pic2.jpg';
                             ?>
@@ -30,14 +30,14 @@ echo loadCSS($required_styles);
         <div class="session-info-header">
             <div class="session-info-header-left">
                 <div class="session-info-header-left-left">
-                    <div class="session-info-circle image1"><img src="<?php echo  $consultantPic?>" alt="Profile" /></div>
-                    <div class="session-info-circle image1"><img src="<?php echo $elderPic?>" alt="Profile" /></div>
+                    <div class="session-info-circle image1"><img src="<?php echo $careseekerPic ?>" alt="Profile" /></div>
+                    <div class="session-info-circle image1"><img src="<?php echo $elderPic  ?>" alt="Profile" /></div>
                 </div>
                 <div class="session-info-header-left-right">
                     <div class="session-info-personal-info-profile">
                         <div class="session-info-personal-info-details">
                             <h2>Request ID #<?php echo $data['session']->request_id; ?></h2>
-                            <h2><?php echo $data['session']->consultant_name; ?></h2>
+                            <h2><?php echo $data['session']->careseeker_name; ?></h2>
                             <span class="tag <?php echo $data['session']->status; ?>"><?php echo $data['session']->status; ?></span>
                             <p class="consultant-rating">
                                 <span class="rating-stars" id="rating-stars"></span>
@@ -63,7 +63,7 @@ echo loadCSS($required_styles);
             <!-- Tab navigation -->
             <div class="session-files-tabs">
                 <button class="tab-link active" onclick="openTab(event, 'your-files')">Your Files</button>
-                <button class="tab-link" onclick="openTab(event, 'consultant-files')">Consultant Files</button>
+                <button class="tab-link" onclick="openTab(event, 'consultant-files')">Careseeker Files</button>
             </div>
 
             <!-- Your Files Tab Content -->
@@ -71,7 +71,7 @@ echo loadCSS($required_styles);
                 <!-- File Upload Section -->
                 <div class="file-upload-section">
                     <h3>Upload a File or Share a Link</h3>
-                    <form action="<?php echo URLROOT; ?>/careseeker/uploadSessionFile" method="POST" enctype="multipart/form-data" class="upload-form" id="upload-form">
+                    <form action="<?php echo URLROOT; ?>/consultant/uploadSessionFile" method="POST" enctype="multipart/form-data" class="upload-form" id="upload-form">
                         <input type="hidden" name="session_id" value="<?php echo $data['session_id']; ?>">
                         
                         <div class="form-row">
@@ -97,16 +97,14 @@ echo loadCSS($required_styles);
                                             <i class="fas fa-file"></i> <span id="file-label">Choose a file</span>
                                         </div>
                                     </div>
-                                    <div class="file-preview" ></div>
+                                    <div class="file-preview"></div>
                                 </div>
                             </div>
                             
                             <div class="form-group" id="link_input" style="display:none;">
                                 <label for="link">Enter URL:</label>
                                 <input type="url" name="link" id="link" placeholder="https://example.com">
-                                <div class="link-preview" ></div>
                             </div>
-                           
                         </div>
                         
                         <div class="upload-btn-container">
@@ -172,7 +170,7 @@ echo loadCSS($required_styles);
                                                 <i class="fas fa-download"></i> Download
                                             </a>
                                         <?php endif; ?>
-                                        <a href="<?php echo URLROOT; ?>/careseeker/deleteSessionFile/<?php echo $file->file_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this file?')">
+                                        <a href="<?php echo URLROOT; ?>/consultant/deleteSessionFile/<?php echo $file->file_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this file?')">
                                             <i class="fas fa-trash"></i> Delete
                                         </a>
                                     </div>
@@ -190,7 +188,7 @@ echo loadCSS($required_styles);
             <!-- Consultant Files Tab Content -->
             <div id="consultant-files" class="tab-content">
                 <div class="consultant-files-display">
-                    <h3>Files Shared by <?php echo $data['session']->consultant_name; ?></h3>
+                    <h3>Files Shared by <?php echo $data['session']->careseeker_name; ?></h3>
                     
                     <!-- Category Tabs -->
                     <div class="file-category-tabs">
@@ -248,7 +246,7 @@ echo loadCSS($required_styles);
                             <?php endforeach; ?>
                         <?php else : ?>
                             <div class="no-files-message">
-                                <p>The consultant hasn't shared any files yet.</p>
+                                <p>The careseeker hasn't shared any files yet.</p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -256,8 +254,8 @@ echo loadCSS($required_styles);
             </div>
         </div>
     </div>
-    <!-- Chat Popup Container - This div will be filled with AJAX -->
-    <div id="chat-popup-container" class="hidden"></div>
+     <!-- Chat Popup Container - This div will be filled with AJAX -->
+     <div id="chat-popup-container" class="hidden"></div>
 </page-body-container>
 
 <!-- Add the JavaScript for tab functionality and file input handling -->
@@ -294,6 +292,13 @@ function openTab(evt, tabName) {
     // Show the current tab and add active class to the button
     document.getElementById(tabName).classList.add("active");
     evt.currentTarget.classList.add("active");
+    
+    // Apply default filtering when switching tabs
+    if (tabName === 'your-files') {
+        setTimeout(() => filterCategory('all-yours'), 100);
+    } else if (tabName === 'consultant-files') {
+        setTimeout(() => filterCategory('all-consultant'), 100);
+    }
 }
 
 // Filter files by category
@@ -323,13 +328,31 @@ function filterCategory(category) {
     }
     
     // Update active class on category tabs
-    var categoryTabs = document.getElementsByClassName("category-tab");
-    for (var i = 0; i < categoryTabs.length; i++) {
-        categoryTabs[i].classList.remove("active");
+    var tabs = document.getElementsByClassName("category-tab");
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
     }
     
-    // Add active class to clicked tab
-    event.currentTarget.classList.add("active");
+    // Find and activate the correct tab
+    var activeTabName = category.split('-')[0];
+    var tabSection = category.includes('-yours') ? 'your-files' : 'consultant-files';
+    var tabContainer = document.getElementById(tabSection).querySelector('.file-category-tabs');
+    var targetTab;
+    
+    if (activeTabName === 'all') {
+        targetTab = tabContainer.querySelector('button:first-child');
+    } else {
+        for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].textContent.toLowerCase().includes(activeTabName.replace('_', ' '))) {
+                targetTab = tabs[i];
+                break;
+            }
+        }
+    }
+    
+    if (targetTab) {
+        targetTab.classList.add("active");
+    }
 }
 
 // File preview functionality with enhanced user experience
@@ -337,12 +360,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('file');
     const fileLabel = document.getElementById('file-label');
     const filePreview = document.querySelector('.file-preview');
-    const linkPreview = document.querySelector('.link-preview');
     const uploadForm = document.getElementById('upload-form');
     
     // Initially the preview is empty
     filePreview.textContent = '';
-    linkPreview.textContent = '';
     
     fileInput.addEventListener('change', function(e) {
         if (e.target.files.length > 0) {
@@ -368,43 +389,91 @@ document.addEventListener('DOMContentLoaded', function() {
                 filePreview.style.color = '#d9534f'; // Error color (red)
             }
         } else {
-            if (fileType !== 'link') {
-    // Only validate file selection if not a link
-    if (fileInput.files.length === 0) {
-        e.preventDefault(); // Stop form submission
-        filePreview.textContent = 'No file selected';
-        filePreview.style.color = '#d9534f'; // Error color (red)
-    }
-} else {
-    // Validate link if link type is selected
-    const linkInput = document.getElementById('link_input');
-    if (!linkInput.value) {
-        e.preventDefault();
-        // Add error message for link
-     // Assuming you have a linkPreview element
-        linkPreview.textContent = 'No link provided';
-        linkPreview.style.color = '#d9534f'; // Error color (red)
-    }
-}
+            // Validate link if link type is selected
+            const linkInput = document.getElementById('link');
+            if (!linkInput.value) {
+                e.preventDefault();
+                filePreview.textContent = 'No link added';
+                filePreview.style.color = '#d9534f';
+            }
         }
     });
     
     // Initialize file type toggle on page load
     toggleInputs();
-});
-
-// Initialize ratings display
-document.addEventListener('DOMContentLoaded', function() {
-    // This assumes you have a function in ratingStars.js to initialize the ratings
+    
+    // Initialize ratings display
     if (typeof initRatingStars === 'function') {
         initRatingStars();
     }
+    
+    // Initialize default category filtering
+    initializeFileCategories();
+    
+    // Fix scrolling issues
+    fixScrolling();
 });
+
+// Initialize default category filtering
+function initializeFileCategories() {
+    // Get the active tab on page load
+    const activeTab = document.querySelector('.tab-content.active');
+    
+    if (activeTab) {
+        const tabId = activeTab.id;
+        
+        // Apply default filtering based on active tab
+        if (tabId === 'your-files') {
+            filterCategory('all-yours');
+        } else if (tabId === 'consultant-files') {
+            filterCategory('all-consultant');
+        }
+    } else {
+        // If no active tab, default to 'your-files'
+        document.getElementById('your-files').classList.add('active');
+        document.querySelector('.tab-link').classList.add('active');
+        filterCategory('all-yours');
+    }
+}
+
+// Fix scrolling issues
+function fixScrolling() {
+    // Force the scroll containers to have enough height
+    const filesLists = document.querySelectorAll('.files-list');
+    filesLists.forEach(list => {
+        // Ensure parent containers have proper layout
+        const tabContent = list.closest('.tab-content');
+        if (tabContent) {
+            tabContent.style.minHeight = '500px';
+        }
+        
+        // Check if scrollbar should be visible
+        const fileItems = list.querySelectorAll('.file-item');
+        if (fileItems.length > 4) {  // Arbitrary number, adjust as needed
+            list.style.height = '400px'; // Force height to enable scrolling
+        } else {
+            // If few items, still ensure proper height
+            list.style.minHeight = '200px';
+        }
+    });
+    
+    // Add a small delay to ensure DOM is fully rendered
+    setTimeout(() => {
+        filesLists.forEach(list => {
+            // Force a reflow to properly calculate scrollbars
+            list.style.overflow = 'hidden';
+            setTimeout(() => {
+                list.style.overflowY = 'auto';
+            }, 10);
+        });
+    }, 300);
+}
 </script>
 <script>
     const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/chatPopup.js"></script>
+
 <!-- Include your rating stars script -->
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>

@@ -96,24 +96,23 @@ echo loadCSS($required_styles);
 
                 <div class="request-info-row">
                 <label>Requested Slot</label>
-                    <p>
-                        <?php
-                        if (!empty($data->time_slot)) {
-                            [$from, $to] = explode('-', $data->time_slot);
+                <p>
+    <?php
+    if (!empty($data->start_time) && !empty($data->end_time)) {
+        $fromTime = DateTime::createFromFormat('H:i:s', $data->start_time);
+        $toTime = DateTime::createFromFormat('H:i:s', $data->end_time);
 
-                            $fromTime = DateTime::createFromFormat('H:i', trim($from));
-                            $toTime = DateTime::createFromFormat('H:i', trim($to));
+        if ($fromTime && $toTime) {
+            echo "From " . $fromTime->format('g:i A') . " to " . $toTime->format('g:i A');
+        } else {
+            echo htmlspecialchars($data->start_time . ' - ' . $data->end_time); // fallback
+        }
+    } else {
+        echo "N/A";
+    }
+    ?>
+</p>
 
-                            if ($fromTime && $toTime) {
-                                echo "From " . $fromTime->format('g:i A') . " to " . $toTime->format('g:i A');
-                            } else {
-                                echo htmlspecialchars($data->time_slot); // fallback if format is unexpected
-                            }
-                        } else {
-                            echo "N/A";
-                        }
-                        ?>
-                    </p>
 
                 </div>
 
@@ -253,7 +252,8 @@ echo loadCSS($required_styles);
                 id: <?= $data->request_id ?>,
                 status: '<?= $data->status ?>',
                 appointmentDate: '<?= $data->appointment_date ?>',
-                timeSlot: '<?= $data->time_slot ?>',
+                startTime: '<?= $data->start_time ?>',
+                endTime: '<?= $data->end_time ?>',
                 paymentDetails: <?= $data->payment_details ?? 0 ?>
             };
 
@@ -339,29 +339,23 @@ echo loadCSS($required_styles);
         }
 
         function getStartDateTime(request) {
-            const date = new Date(request.appointmentDate);
-            
-            // Parse time slot for consultants
-            if (request.timeSlot) {
-                // Time slot format is expected to be like "9:00-10:00"
-                const timeSlotParts = request.timeSlot.split('-');
-                if (timeSlotParts.length >= 1) {
-                    const startTimeParts = timeSlotParts[0].trim().split(':');
-                    if (startTimeParts.length >= 2) {
-                        const hours = parseInt(startTimeParts[0], 10);
-                        const minutes = parseInt(startTimeParts[1], 10);
-                        
-                        // Set the appointment start time
-                        date.setHours(hours, minutes, 0);
-                        return date;
-                    }
-                }
-            }
-            
-            // Default time if time slot couldn't be parsed
-            date.setHours(9, 0, 0);
+    const date = new Date(request.appointmentDate);
+
+    if (request.startTime) {
+        const timeParts = request.startTime.split(':');
+        if (timeParts.length >= 2) {
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            date.setHours(hours, minutes, 0);
             return date;
         }
+    }
+
+    // Default fallback time
+    date.setHours(9, 0, 0);
+    return date;
+}
+
     });
 </script>
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>

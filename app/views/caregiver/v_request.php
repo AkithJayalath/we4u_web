@@ -40,7 +40,11 @@
         <div class="request-list">
             
     <?php if (empty($data['requests'])): ?>
-        <p class="no-requests">No requests found.</p>
+        <div class="no-requests">
+                <img src="/we4u/public/images/Empty-cuate.png" alr="No Request">
+                <p>No requests yet</p>
+
+            </div>
     <?php else: ?>
         <?php foreach ($data['requests'] as $request): ?>
             <div class="request-item">

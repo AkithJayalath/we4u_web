@@ -206,7 +206,7 @@ $data = [
     'error' => ''
 ];
 
-$this->view('careseeker/v_requestCaregiver', $data);
+$this->view('careseeker/v_requestCaregiver', $data); 
 
 }
 
@@ -693,14 +693,15 @@ public function requestConsultant($consultant_id) {
 
         // If all validations pass
         if (empty($data['error'])) {
-            $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
+           // $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
 
             $requestData = [
                 'careseeker_id' => $careseeker_id,
                 'elder_id' => $data['elder_profile'],
                 'consultant_id' => $consultant_id,
                 'appointment_date' => $data['appointment_date'],
-                'time_slot' => $formattedTimeSlot,
+                'from_time' => $data['from_time'],
+                'to_time' => $data['to_time'],
                 'expected_services' => $data['expected_services'],
                 'additional_notes' => $data['additional_notes'],
                 'total_amount' => $data['total_amount'],
@@ -1032,7 +1033,7 @@ public function viewConsultRequestInfo($requestId)
         
             // Optionally sort by created_at
             usort($mergedRequests, function($a, $b) {
-                return strtotime($b->created_at) - strtotime($a->created_at);
+                return strtotime($b->created_at) - strtotime($a->created_at); 
             });
         
             $data = [
@@ -1190,15 +1191,14 @@ public function cancelConsultRequest($requestId) {
 private function getAppointmentDateTime($request) {
     $date = new DateTime($request->appointment_date);
     
-    if (!empty($request->time_slot)) {
-        [$from, $to] = explode('-', $request->time_slot);
-        $fromTime = trim($from);
-        
-        // Set the appointment time
-        list($hours, $minutes) = explode(':', $fromTime);
-        $date->setTime((int)$hours, (int)$minutes, 0);
+    if (!empty($request->start_time)) {
+        // Use the start_time directly since it's now a TIME datatype
+        $timeComponents = explode(':', $request->start_time);
+        $hours = (int)$timeComponents[0];
+        $minutes = (int)$timeComponents[1];
+        $date->setTime($hours, $minutes, 0);
     } else {
-        // Default to 8:00 AM if no time slot is specified
+        // Default to 8:00 AM if no start time is specified
         $date->setTime(8, 0, 0);
     }
 
@@ -1264,10 +1264,143 @@ public function deleteRequest($requestId = null) {
         $this->view('careseeker/v_viewConsultants', $data);
       }
 
-      public function viewConsultantSession(){
-        $data=[];
-        $this->view('careseeker/v_viewConsultantSession', $data);
-      }
+      
+
+      public function viewMyConsultantSessions()
+{
+    
+    // Check if user is logged in as consultant
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Careseeker') {
+        redirect('users/login');
+    }
+   
+
+    // Get caregiver ID from session
+    $careseeker_id = $_SESSION['user_id'];
+    
+    // Get all requests for this consultant
+    $consultant_sessions = $this->careseekersModel->getAllConsultantSessions($careseeker_id);
+    $elderProfiles = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+    
+    $data = [
+        'sessions' => $consultant_sessions,
+        'elder_profiles' => $elderProfiles
+    ];
+    
+    
+    $this->view('careseeker/v_viewConsultants', $data);
+}
+
+
+//upload files for session
+public function uploadSessionFile() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check login and role
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Careseeker') {
+            redirect('users/login');
+        }
+
+        $session_id = $_POST['session_id'];
+        $file_type = $_POST['file_type'];
+        $uploaded_by = 'careseeker'; // Or 'careseeker' if you're in that controller
+
+        // Handle link upload
+        if ($file_type === 'link') {
+            $link = trim($_POST['link']);
+            if (!empty($link)) {
+                $this->careseekersModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $link);
+                flash('upload_success', 'Link shared successfully');
+            } else {
+                flash('upload_error', 'Link cannot be empty');
+            }
+        }
+
+        // Handle file upload
+        elseif (!empty($_FILES['file']['name'])) {
+            $file_name = time() . '_' . basename($_FILES['file']['name']);
+
+            // Define file system and public path
+            $target_dir = dirname(APPROOT) . '/public/documents/sessionDocuments/';
+            $public_path = 'documents/sessionDocuments/' . $file_name;
+
+            // Create directory if not exists
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $target_path = $target_dir . $file_name;
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+                $this->careseekersModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $public_path);
+                flash('upload_success', 'File uploaded successfully');
+            } else {
+                flash('upload_error', 'File upload failed');
+            }
+        }
+
+        redirect("careseeker/viewConsultantSession/$session_id");
+    }
+}
+
+
+public function deleteSessionFile($file_id) {
+    // You can add role-based security here if needed
+    if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+
+    // Load the file first to get session_id for redirection after delete
+    $file = $this->careseekersModel->getFileById($file_id); // See helper below
+
+    if (!$file) {
+        flash('upload_error', 'File not found');
+        redirect('pages/notfound'); // or wherever you prefer
+    }
+
+    if ($this->careseekersModel->deleteSessionFile($file_id)) {
+        flash('upload_success', 'File deleted successfully');
+    } else {
+        flash('upload_error', 'File deletion failed');
+    }
+
+    redirect('careseeker/viewConsultantSession/' . $file->session_id);
+}
+
+
+public function viewConsultantSession($session_id) {
+    // Get session details
+    $session = $this->careseekersModel->getAllConsultantSessionsById($session_id);
+    
+    // Check if session exists and belongs to the current user
+    if (!$session || $session->careseeker_id != $_SESSION['user_id']) {
+        flash('session_error', 'Unauthorized access or session not found');
+        redirect('careseeker/dashboard');
+    }
+    
+
+    
+    // Get files uploaded by careseeker
+    $your_files = $this->careseekersModel->getSessionFilesByUploader($session_id, 'careseeker');
+    
+    // Get files uploaded by consultant
+    $consultant_files = $this->careseekersModel->getSessionFilesByUploader($session_id, 'consultant');
+    
+    // Prepare data for view
+    $data = [
+        'session_id' => $session_id,
+        'session' => $session,
+        'your_files' => $your_files,
+        'consultant_files' => $consultant_files
+    ];
+    
+    // Load view
+    $this->view('careseeker/v_viewConsultantSession', $data);
+}
+
+
+
+
+
 
       public function getCaregiverSchedule($caregiverId) {
         // Prevent any PHP errors or warnings from being output
