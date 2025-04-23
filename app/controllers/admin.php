@@ -241,25 +241,36 @@ public function deleteblog($blog_id) {
 
 public function addblog() {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
+        // Initialize image path
         $imagePath = '';
+
+        // Handle file upload using the helper
         if (!empty($_FILES['image_path']['name'])) {
-            $imageName = basename($_FILES['image_path']['name']);
-            $imagePath = 'images/blogs/' . $imageName;
-            move_uploaded_file($_FILES['image_path']['tmp_name'], APPROOT . '/../public/' . $imagePath);
+            $imageName = time() . '_' . $_FILES['image_path']['name']; // Generate a unique name for the image
+            $imageTmpName = $_FILES['image_path']['tmp_name'];
+            $uploadLocation = '/images/blogs'; // Define the upload directory
+
+            // Use the uploadImage helper function
+            if (uploadImage($imageTmpName, $imageName, $uploadLocation)) {
+                $imagePath = $uploadLocation . '/' . $imageName;
+            } else {
+                $data['image_path_err'] = 'Failed to upload the image.';
+            }
         }
 
         $data = [
-            'user_id' => $_SESSION['user_id'], // Ensure session contains this
             'title' => trim($_POST['title']),
             'content' => trim($_POST['content']),
             'image_path' => $imagePath,
             'title_err' => '',
             'content_err' => '',
-            'image_path_err' => ''
+            'image_path_err' => $data['image_path_err'] ?? ''
         ];
 
+        // Validation
         if (empty($data['title'])) {
             $data['title_err'] = 'Please enter a blog title';
         }
@@ -267,17 +278,21 @@ public function addblog() {
             $data['content_err'] = 'Please enter blog content';
         }
 
-        if (empty($data['title_err']) && empty($data['content_err'])) {
+        // Check for errors
+        if (empty($data['title_err']) && empty($data['content_err']) && empty($data['image_path_err'])) {
+            // Add blog to the database
             if ($this->adminModel->addBlog($data)) {
                 flash('blog_message', 'Blog added successfully');
-                redirect('admin/blog');
+                redirect('admin/blogs');
             } else {
-                die('Something went wrong');
+                die('Something went wrong while adding the blog.');
             }
         } else {
+            // Load the view with errors
             $this->view('admin/v_add_blog', $data);
         }
     } else {
+        // Load the form
         $data = [
             'title' => '',
             'content' => '',
