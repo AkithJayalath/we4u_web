@@ -725,9 +725,6 @@ public function requestConsultant($consultant_id) {
 }
 
 
-
-
-
 public function deleteElderProfile($elderId) {
   // Check if the elder profile exists
   if ($this->careseekersModel->deleteElderProfile($elderId)) {
@@ -1307,6 +1304,51 @@ public function deleteRequest($requestId = null) {
         }
         exit;
     }
+
+
+    public function getConsultantAvailability($consultantId) {
+        // Prevent any PHP errors or warnings from being output
+        ob_start();
+        
+        try {
+            // Get consultant availability patterns
+            $availabilityPatterns = $this->scheduleModel->getAvailabilityPatterns($consultantId);
+            
+            // Get consultant availability instances
+            $availabilityInstances = $this->scheduleModel->getAvailabilityInstances($consultantId);
+            
+            // Get existing appointments (pending or accepted)
+            $existingAppointments = $this->scheduleModel->getActiveAppointments($consultantId);
+            
+            // Clear any output buffer to prevent PHP errors from being included in the response
+            ob_end_clean();
+            
+            // Prepare response data
+            $data = [
+                'availabilityPatterns' => $availabilityPatterns ? $availabilityPatterns : [],
+                'availabilityInstances' => $availabilityInstances ? $availabilityInstances : [],
+                'existingAppointments' => $existingAppointments ? $existingAppointments : []
+            ];
+            
+            // Set content type header and output JSON
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } catch (Exception $e) {
+            // Clear any output buffer
+            ob_end_clean();
+            
+            // Return error as JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'availabilityPatterns' => [],
+                'availabilityInstances' => [],
+                'existingAppointments' => []
+            ]);
+        }
+        exit;
+    }
+    
     
     
     

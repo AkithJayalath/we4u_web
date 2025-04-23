@@ -8,21 +8,41 @@
         }
 
         public function get_requests(){
-            $this->db->query('SELECT * FROM approvalrequest ORDER BY request_date DESC');
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             ORDER BY ar.request_date DESC');
             $results = $this->db->resultSet();
             return $results;
         }
 
-        public function get_accepted_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Approved" ORDER BY request_date DESC');
-            return $this->db->resultSet();
-        }
-        
-        public function get_rejected_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Declined" ORDER BY request_date DESC');
+        public function get_pending_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Pending" 
+                             ORDER BY ar.request_date DESC');
             return $this->db->resultSet();
         }
 
+        public function get_accepted_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Approved" 
+                             ORDER BY ar.request_date DESC');
+            return $this->db->resultSet();
+        }
+
+        public function get_rejected_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Declined" 
+                             ORDER BY ar.request_date DESC');
+            return $this->db->resultSet();
+        }
+        
           public function updateRequestStatus($data) {
               // First check if interview exists for this request
             //   $this->db->query('SELECT * FROM interviews WHERE request_id = :request_id');
@@ -98,10 +118,7 @@
             return $result;
         }
 
-        public function get_pending_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Pending" ORDER BY request_date DESC');
-            return $this->db->resultSet();
-        }
+
         
 
         public function get_requests_by_id($request_id){

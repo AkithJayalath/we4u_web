@@ -14,6 +14,7 @@ echo loadCSS($required_styles);
     <div class="request-caregiver">
         <div class="request-heading">
             <p>Send Care Request</p>
+            <div><?php echo $data['error'] ?></div>
         </div>
         
         <!-- Personal info section -->
@@ -90,6 +91,585 @@ echo loadCSS($required_styles);
                                 </div>
                             <?php endif; ?>
                         </div>
+
+                        <!-- Add this after the Elder Details section and before the current Date & Time Selection section -->
+<div class="form-section" id="calendar-section">
+    <div class="form-section-title">Consultant Availability</div>
+    <?php if (!empty($data['error']) && strpos($data['error'], 'booking') !== false): ?>
+        <div class="calander-field-error"><?php echo $data['error']?></div>
+    <?php endif; ?>
+    <div class="calendar-container">
+        <div class="mini-calendar">
+            <div id="mini-calendar"></div>
+        </div>
+        <div class="time-slots-display" id="time-slots-display">
+            <h3>Available Time Slots</h3>
+            <p class="select-date-message">Please select a date to view available time slots</p>
+            <p class="select-date-message">Unavailable slots are indicated in the calendar as red (fully booked dates) and grey (partially booked dates).</p>
+            <div class="time-slot-list" id="time-slot-list" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar 5.x Core and Required Packages -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+<script>
+    // Initialize mini calendar for consultant availability
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get consultant ID from the URL
+        const consultantId = <?php echo $data['consultant_id']; ?>;
+        
+        // Fetch consultant's availability data via AJAX
+        fetchConsultantAvailability(consultantId);
+        
+        // Make sure calendar section is visible
+        document.getElementById('calendar-section').classList.add('show');
+    });
+
+    function fetchConsultantAvailability(consultantId) {
+        // Define the URL with URLROOT
+        const url = `<?php echo URLROOT; ?>/careseeker/getConsultantAvailability/${consultantId}`;
+        
+        // AJAX call to get consultant's availability
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Availability data received:', data);
+                initializeCalendar(data);
+            })
+            .catch(error => {
+                console.error('Error fetching consultant availability:', error);
+                // Initialize with empty data as fallback
+                initializeCalendar({availabilityPatterns: [], availabilityInstances: [], existingAppointments: []});
+            });
+    }
+
+    function initializeCalendar(availabilityData) {
+        const calendarEl = document.getElementById('mini-calendar');
+        
+        // Process the availability data to mark available and unavailable dates
+        const processedDates = processAvailabilityDates(availabilityData);
+        
+        // Store the processed dates data for later use
+        window.processedDatesData = processedDates;
+        
+        // Initialize the calendar
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: ''
+            },
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            selectable: true,
+            unselectAuto: false,
+            dateClick: function(info) {
+                handleDateSelection(info, processedDates);
+            },
+            dayCellDidMount: function(info) {
+                const date = info.date;
+                const formattedDate = formatDate(date);
+                
+                // Check if date is in the past
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (date < today) {
+                    info.el.classList.add('fc-day-past');
+                    return;
+                }
+                
+                // Check if date is available
+                if (processedDates.availableDays.includes(formattedDate)) {
+                    info.el.classList.add('fc-day-available');
+                }
+                
+                // Check if date is fully booked
+                if (processedDates.fullyBookedDays.includes(formattedDate)) {
+                    info.el.classList.add('fc-day-unavailable');
+                }
+                
+                // Check if date is partially booked
+                if (processedDates.partiallyBookedDays[formattedDate]) {
+                    info.el.classList.add('fc-day-partially-unavailable');
+                }
+            }
+        });
+        
+        calendar.render();
+    }
+
+    function processAvailabilityDates(availabilityData) {
+        const processedDates = {
+            availableDays: [], // Days with availability
+            fullyBookedDays: [], // Completely booked days
+            partiallyBookedDays: {} // Partially booked days with specific time slots
+        };
+        
+        // Get today's date for comparison
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Process availability patterns (recurring availability)
+        if (availabilityData.availabilityPatterns && availabilityData.availabilityPatterns.length) {
+            availabilityData.availabilityPatterns.forEach(pattern => {
+                // Get pattern details
+                const dayOfWeek = parseInt(pattern.day_of_week);
+                const startDate = new Date(pattern.start_date);
+                const endDate = new Date(pattern.end_date);
+                
+                // Generate all dates that match this pattern's day of week within the date range
+                const currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    if (currentDate.getDay() === dayOfWeek && currentDate >= today) {
+                        const formattedDate = formatDate(currentDate);
+                        
+                        // Add to available days if not already there
+                        if (!processedDates.availableDays.includes(formattedDate)) {
+                            processedDates.availableDays.push(formattedDate);
+                        }
+                        
+                        // Initialize time slots for this date if not already done
+                        if (!processedDates.partiallyBookedDays[formattedDate]) {
+                            processedDates.partiallyBookedDays[formattedDate] = {
+                                availableSlots: [],
+                                bookedSlots: []
+                            };
+                        }
+                        
+                        // Add the time slot to available slots
+                        processedDates.partiallyBookedDays[formattedDate].availableSlots.push({
+                            start: pattern.start_time,
+                            end: pattern.end_time
+                        });
+                    }
+                    
+                    // Move to next day
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            });
+        }
+        
+        // Process specific availability instances
+        if (availabilityData.availabilityInstances && availabilityData.availabilityInstances.length) {
+            availabilityData.availabilityInstances.forEach(instance => {
+                const instanceDate = new Date(instance.available_date);
+                
+                // Skip past dates
+                if (instanceDate < today) return;
+                
+                const formattedDate = formatDate(instanceDate);
+                
+                // Add to available days if not already there
+                if (!processedDates.availableDays.includes(formattedDate)) {
+                    processedDates.availableDays.push(formattedDate);
+                }
+                
+                // Initialize time slots for this date if not already done
+                if (!processedDates.partiallyBookedDays[formattedDate]) {
+                    processedDates.partiallyBookedDays[formattedDate] = {
+                        availableSlots: [],
+                        bookedSlots: []
+                    };
+                }
+                
+                // Add the time slot to available slots
+                processedDates.partiallyBookedDays[formattedDate].availableSlots.push({
+                    start: instance.start_time,
+                    end: instance.end_time
+                });
+            });
+        }
+        
+        // Process existing appointments (booked slots)
+            if (availabilityData.existingAppointments && availabilityData.existingAppointments.length) {
+                availabilityData.existingAppointments.forEach(appointment => {
+                    const appointmentDate = new Date(appointment.appointment_date);
+                    const formattedDate = formatDate(appointmentDate);
+                    
+                    // Skip if the date is not available
+                    if (!processedDates.availableDays.includes(formattedDate)) return;
+                    
+                    // Initialize time slots for this date if not already done
+                    if (!processedDates.partiallyBookedDays[formattedDate]) {
+                        processedDates.partiallyBookedDays[formattedDate] = {
+                            availableSlots: [],
+                            bookedSlots: []
+                        };
+                    }
+                    
+                    // Parse the time_slot field (format: "11:00-12:00")
+                    if (appointment.time_slot) {
+                        const timeSlotParts = appointment.time_slot.split('-');
+                        if (timeSlotParts.length === 2) {
+                            const startTime = timeSlotParts[0].trim() + ':00'; // Add seconds for consistency
+                            const endTime = timeSlotParts[1].trim() + ':00';   // Add seconds for consistency
+                            
+                            // Add to booked slots
+                            processedDates.partiallyBookedDays[formattedDate].bookedSlots.push({
+                                start: startTime,
+                                end: endTime
+                            });
+                            
+                            // Check if all available slots for this date are now booked
+                            checkIfDateFullyBooked(processedDates, formattedDate);
+                        }
+                    }
+                });
+            }
+
+        
+        return processedDates;
+    }
+    
+    // Helper function to check if a date is fully booked
+    function checkIfDateFullyBooked(processedDates, date) {
+        const dateInfo = processedDates.partiallyBookedDays[date];
+        if (!dateInfo) return;
+        
+        // If there are no available slots, the date is not available
+        if (!dateInfo.availableSlots || dateInfo.availableSlots.length === 0) return;
+        
+        // If there are no booked slots, the date is not fully booked
+        if (!dateInfo.bookedSlots || dateInfo.bookedSlots.length === 0) return;
+        
+        // Check if all available slots are covered by booked slots
+        let allSlotsBooked = true;
+        
+        for (const availableSlot of dateInfo.availableSlots) {
+            let slotIsFullyBooked = false;
+            
+            for (const bookedSlot of dateInfo.bookedSlots) {
+                if (isSlotFullyBooked(availableSlot, bookedSlot)) {
+                    slotIsFullyBooked = true;
+                    break;
+                }
+            }
+            
+            if (!slotIsFullyBooked) {
+                allSlotsBooked = false;
+                break;
+            }
+        }
+        
+        if (allSlotsBooked) {
+            // Add to fully booked days if not already there
+            if (!processedDates.fullyBookedDays.includes(date)) {
+                processedDates.fullyBookedDays.push(date);
+            }
+            
+            // Remove from available days
+            const index = processedDates.availableDays.indexOf(date);
+            if (index > -1) {
+                processedDates.availableDays.splice(index, 1);
+            }
+        }
+    }
+    
+    // Helper function to check if a slot is fully booked
+    function isSlotFullyBooked(availableSlot, bookedSlot) {
+        const availableStart = convertTimeToMinutes(availableSlot.start);
+        const availableEnd = convertTimeToMinutes(availableSlot.end);
+        const bookedStart = convertTimeToMinutes(bookedSlot.start);
+        const bookedEnd = convertTimeToMinutes(bookedSlot.end);
+        
+        // A slot is fully booked if the booked time covers the entire available time
+        return (bookedStart <= availableStart && bookedEnd >= availableEnd);
+    }
+    
+    // Helper function to convert time string to minutes for comparison
+    function convertTimeToMinutes(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + (minutes || 0);
+    }
+
+    function handleDateSelection(info, processedDates) {
+        const selectedDate = info.date;
+        const formattedDate = formatDate(selectedDate);
+        
+        // Don't allow selection of past dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+            return;
+        }
+        
+        // Don't allow selection of fully booked dates
+        if (processedDates.fullyBookedDays.includes(formattedDate)) {
+            return;
+        }
+        
+        // Don't allow selection of unavailable dates
+        if (!processedDates.availableDays.includes(formattedDate)) {
+            return;
+        }
+        
+        // Remove previous selection
+        document.querySelectorAll('.fc-day-selected').forEach(el => {
+            el.classList.remove('fc-day-selected');
+        });
+        
+        // Add selected class
+        info.dayEl.classList.add('fc-day-selected');
+        
+        // Update form fields based on selection
+        document.getElementById('appointment-date').value = formattedDate;
+        
+        // Show available time slots for the selected date
+        showAvailableTimeSlots(formattedDate, processedDates);
+        
+        // Update the from-time dropdown options
+        updateFromTimeOptions(formattedDate, processedDates);
+    }
+
+    function showAvailableTimeSlots(selectedDate, processedDates) {
+        const timeSlotList = document.getElementById('time-slot-list');
+        const selectDateMessage = document.querySelector('.select-date-message');
+        
+        // Hide the message and show the time slot list
+        selectDateMessage.style.display = 'none';
+        timeSlotList.style.display = 'block';
+        
+        // Clear previous time slots
+        timeSlotList.innerHTML = '';
+        
+        // Get available and booked slots for this date
+        const dateInfo = processedDates.partiallyBookedDays[selectedDate];
+        
+        if (!dateInfo || !dateInfo.availableSlots || dateInfo.availableSlots.length === 0) {
+            // No available slots for this date
+            timeSlotList.innerHTML = '<div class="no-slots-message">No available time slots for this date.</div>';
+            return;
+        }
+        
+        // Create time slot elements for each available slot
+        dateInfo.availableSlots.forEach(slot => {
+            // Check if this slot is already fully booked
+            let isFullyBooked = false;
+            
+            if (dateInfo.bookedSlots && dateInfo.bookedSlots.length > 0) {
+                for (const bookedSlot of dateInfo.bookedSlots) {
+                    if (isSlotFullyBooked(slot, bookedSlot)) {
+                        isFullyBooked = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Format times for display (e.g., "8:00 AM - 12:00 PM")
+            const startTime = formatTimeForDisplay(slot.start);
+            const endTime = formatTimeForDisplay(slot.end);
+            
+            const slotElement = document.createElement('div');
+            slotElement.className = `time-slot-item ${isFullyBooked ? 'unavailable' : ''}`;
+            slotElement.innerHTML = `
+                <strong>${startTime} - ${endTime}</strong>
+                <div class="slot-status">${isFullyBooked ? 'Booked' : 'Available'}</div>
+            `;
+            
+            // Add click handler for available slots
+            if (!isFullyBooked) {
+                slotElement.addEventListener('click', function() {
+                    selectTimeSlot(slot, slotElement);
+                });
+            }
+            
+            timeSlotList.appendChild(slotElement);
+        });
+    }
+    
+    function updateFromTimeOptions(selectedDate, processedDates) {
+        const fromTimeSelect = document.getElementById('from-time');
+        const dateInfo = processedDates.partiallyBookedDays[selectedDate];
+        
+        // Clear existing options
+        fromTimeSelect.innerHTML = '<option value="" disabled selected>Select start time</option>';
+        
+        if (!dateInfo || !dateInfo.availableSlots || dateInfo.availableSlots.length === 0) {
+            return;
+        }
+        
+        // Get all available start times from the available slots
+        const availableStartTimes = new Set();
+        
+        dateInfo.availableSlots.forEach(slot => {
+            // Check if this slot is already fully booked
+            let isFullyBooked = false;
+            
+            if (dateInfo.bookedSlots && dateInfo.bookedSlots.length > 0) {
+                for (const bookedSlot of dateInfo.bookedSlots) {
+                    if (isSlotFullyBooked(slot, bookedSlot)) {
+                        isFullyBooked = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!isFullyBooked) {
+                // Convert time to hours for the dropdown (assuming HH:MM:SS format)
+                const startHour = parseInt(slot.start.split(':')[0]);
+                availableStartTimes.add(startHour);
+            }
+        });
+        
+        // Sort the available start times
+        const sortedStartTimes = Array.from(availableStartTimes).sort((a, b) => a - b);
+        
+        // Add options for each available start time
+        sortedStartTimes.forEach(hour => {
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            
+            const option = document.createElement('option');
+            option.value = hour;
+            option.textContent = `${displayHour}:00 ${ampm}`;
+            
+            fromTimeSelect.appendChild(option);
+        });
+        
+        // Trigger change event to update to-time options
+        fromTimeSelect.dispatchEvent(new Event('change'));
+    }
+    
+    function selectTimeSlot(slot, slotElement) {
+        // Remove selection from all slots
+        document.querySelectorAll('.time-slot-item').forEach(el => {
+            el.classList.remove('selected');
+        });
+        
+        // Add selection to clicked slot
+        slotElement.classList.add('selected');
+        
+        // Update the from-time and to-time dropdowns
+        const startHour = parseInt(slot.start.split(':')[0]);
+        const endHour = parseInt(slot.end.split(':')[0]);
+        
+        const fromTimeSelect = document.getElementById('from-time');
+        const toTimeSelect = document.getElementById('to-time');
+        
+        // Set the from-time value
+        fromTimeSelect.value = startHour;
+        
+        // Trigger change event to update to-time options
+        fromTimeSelect.dispatchEvent(new Event('change'));
+        
+        // Set the to-time value if it's within the available options
+        if (endHour > startHour) {
+            toTimeSelect.value = endHour;
+            
+            // Trigger change event to update payment calculation
+            toTimeSelect.dispatchEvent(new Event('change'));
+        }
+    }
+    
+    // Helper function to format time for display (e.g., "8:00 AM")
+    function formatTimeForDisplay(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const hour = hours % 12 || 12; // Convert 0 to 12 for 12 AM
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        return `${hour}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+    
+    // Helper function to format date as YYYY-MM-DD
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // Override the existing updateToTimeOptions function to respect available time slots
+    function updateToTimeOptions() {
+        const fromTime = parseInt(document.getElementById('from-time').value) || 8;
+        const toTimeSelect = document.getElementById('to-time');
+        const selectedDate = document.getElementById('appointment-date').value;
+        const processedDates = window.processedDatesData;
+        
+        // Clear existing options
+        toTimeSelect.innerHTML = '<option value="" disabled selected>Select end time</option>';
+        
+        if (!selectedDate || !processedDates || !processedDates.partiallyBookedDays[selectedDate]) {
+            // If no date is selected or no processed data is available, use default behavior
+            for (let i = fromTime + 1; i <= 22; i++) {
+                const hour = i;
+                const displayHour = hour > 12 ? hour - 12 : hour;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                
+                const option = document.createElement('option');
+                option.value = hour;
+                option.textContent = `${displayHour}:00 ${ampm}`;
+                
+                toTimeSelect.appendChild(option);
+            }
+            return;
+        }
+        
+        // Get the date info
+        const dateInfo = processedDates.partiallyBookedDays[selectedDate];
+        
+        // Find the maximum end time for the selected start time
+        let maxEndTime = 22; // Default max end time
+        
+        if (dateInfo.availableSlots && dateInfo.availableSlots.length > 0) {
+            // Find all available slots that include the selected start time
+            const relevantSlots = dateInfo.availableSlots.filter(slot => {
+                const slotStartHour = parseInt(slot.start.split(':')[0]);
+                const slotEndHour = parseInt(slot.end.split(':')[0]);
+                return slotStartHour <= fromTime && slotEndHour > fromTime;
+            });
+            
+            if (relevantSlots.length > 0) {
+                // Find the maximum end time from relevant slots
+                maxEndTime = Math.max(...relevantSlots.map(slot => parseInt(slot.end.split(':')[0])));
+            } else {
+                // No relevant slots found, use default behavior
+                maxEndTime = 22;
+            }
+            
+            // Check for booked slots that might limit the end time
+            if (dateInfo.bookedSlots && dateInfo.bookedSlots.length > 0) {
+                // Find booked slots that start after the selected start time
+                const relevantBookedSlots = dateInfo.bookedSlots.filter(slot => {
+                    const bookedStartHour = parseInt(slot.start.split(':')[0]);
+                    return bookedStartHour > fromTime && bookedStartHour < maxEndTime;
+                });
+                
+                if (relevantBookedSlots.length > 0) {
+                    // Find the minimum start time from relevant booked slots
+                    const minBookedStartTime = Math.min(...relevantBookedSlots.map(slot => parseInt(slot.start.split(':')[0])));
+                    maxEndTime = Math.min(maxEndTime, minBookedStartTime);
+                }
+            }
+        }
+        
+        // Add options for hours after the start time up to the max end time
+        for (let i = fromTime + 1; i <= maxEndTime; i++) {
+            const hour = i;
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            
+            const option = document.createElement('option');
+            option.value = hour;
+            option.textContent = `${displayHour}:00 ${ampm}`;
+            
+            toTimeSelect.appendChild(option);
+        }
+        
+        // Recalculate payment
+        calculatePayment();
+    }
+</script>
+   
+
 
                         <!-- Date and Time Selection -->
                         <div class="form-section">

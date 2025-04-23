@@ -1,8 +1,6 @@
 <?php 
     $required_styles = [
         'admin/userdetails',
-        // 'components/sidebar',
-        
     ];
     echo loadCSS($required_styles);
 ?>
@@ -10,93 +8,128 @@
 <?php require APPROOT.'/views/includes/header.php'; ?>
 <div>
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </div>
   <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
   <div class="ad-users-wrapper">
+  <div class="ad-users-header">
+          <h1>User Management</h1>
+      </div>
       <main class="ad-users-main-content">
           <!-- Stats cards section -->
-          <div class="ad-users-stats-container">
-              <div class="ad-users-stat-card">
-                  <div class="ad-users-stat-main">
-                      <div class="ad-users-stat-details">
-                          <h3>Session</h3>
-                          <div class="ad-users-stat-value">21,459</div>
-                          <div class="ad-users-stat-label">Total Users</div>
-                      </div>
-                      <div class="ad-users-stat-icon ad-users-blue">
-                          
-                      </div>
-                  </div>
-                  <div class="ad-users-stat-growth ad-users-positive">(+29%)</div>
-              </div>
+        <div class="ad-users-stats-container">
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>All Users</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['totalUsers']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
 
-              <div class="ad-users-stat-card">
-                  <div class="ad-users-stat-main">
-                      <div class="ad-users-stat-details">
-                          <h3>All Users</h3>
-                          <div class="ad-users-stat-value">4,567</div>
-                          <div class="ad-users-stat-label">Last week analytics</div>
-                      </div>
-                      <div class="ad-users-stat-icon ad-users-red">
-                          <i data-lucide="user-plus"></i>
-                      </div>
-                  </div>
-                  <div class="ad-users-stat-growth ad-users-positive">(+18%)</div>
-              </div>
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>Caregivers</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['caregivers']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-green">
+                        <i class="fas fa-user-nurse"></i>
+                    </div>
+                </div>
+            </div>
 
-              <div class="ad-users-stat-card">
-                  <div class="ad-users-stat-main">
-                      <div class="ad-users-stat-details">
-                          <h3>Active Users</h3>
-                          <div class="ad-users-stat-value">19,860</div>
-                          <div class="ad-users-stat-label">Last week analytics</div>
-                      </div>
-                      <div class="ad-users-stat-icon ad-users-green">
-                          <i data-lucide="user-check"></i>
-                      </div>
-                  </div>
-                  <div class="ad-users-stat-growth ad-users-negative">(-14%)</div>
-              </div>
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>Consultants</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['consultants']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-red">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                </div>
+            </div>
 
-              <div class="ad-users-stat-card">
-                  <div class="ad-users-stat-main">
-                      <div class="ad-users-stat-details">
-                          <h3>Pending Users</h3>
-                          <div class="ad-users-stat-value">237</div>
-                          <div class="ad-users-stat-label">Last week analytics</div>
-                      </div>
-                      <div class="ad-users-stat-icon ad-users-yellow">
-                          <i data-lucide="user-cog"></i>
-                      </div>
-                  </div>
-                  <div class="ad-users-stat-growth ad-users-positive">(+42%)</div>
-              </div>
-          </div>
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>Careseekers</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['careseekers']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-green">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>Pending Users</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['pendingUsers']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-yellow">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad-users-stat-card">
+                <div class="ad-users-stat-main">
+                    <div class="ad-users-stat-details">
+                        <h3>Rejected Users</h3>
+                        <div class="ad-users-stat-value"><?php echo number_format($data['rejectedUsers']); ?></div>
+                    </div>
+                    <div class="ad-users-stat-icon ad-users-red">
+                        <i class="fas fa-user-times"></i>
+                    </div>
+                </div>
+            </div>
+
+            <a href="<?php echo URLROOT; ?>/admin/user_detailes<?php echo $data['showFlagged'] ? '' : '?flagged=true'; ?>" class="ad-users-btn-flagged <?php echo $data['showFlagged'] ? 'active' : ''; ?>">
+                <div class="ad-users-stat-card">
+                    <div class="ad-users-stat-main">
+                        <div class="ad-users-stat-details">
+                            <h3>Flaged Users</h3>
+                            <p>
+                            <div class="ad-users-stat-value"><?php echo number_format($data['rejectedUsers']); ?> </div>
+                            </p>
+
+                        </div>
+                        <div class="ad-users-stat-icon ad-users-red">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
 
           <!-- Filters section -->
           <div class="ad-users-filters">
               <div class="ad-users-table-controls">
-                  <select class="ad-users-filter-select">
-                      <option value="">Select Role</option>
-                      <option value="admin">Admin</option>
-                      <option value="moderator">Moderator</option>
-                      <option value="user">Careseeker</option>
-                      <option value="caregiver">Caregiver</option>
-                      <option value="consultant">Consultant</option>
+                  <select id="role-filter" class="ad-users-filter-select">
+                      <option value="">All Roles</option>
+                      <option value="Admin">Admin</option>
+                      <option value="Moderator">Moderator</option>
+                      <option value="Careseeker">Careseeker</option>
+                      <option value="Caregiver">Caregiver</option>
+                      <option value="Consultant">Consultant</option>
                   </select>
-                  <select class="ad-users-entries-select">
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="50">50</option>
-                  </select>
-                  <div class="ad-users-search-wrapper">
-                      <i data-lucide="search" class="ad-users-search-icon"></i>
-                      <input type="search" class="ad-users-user-search" placeholder="Search User" />
-                  </div>
+                    <!-- Update the search wrapper to include the flagged button -->
+                    <div class="ad-users-search-wrapper">
+                        <i data-lucide="search" class="ad-users-search-icon"></i>
+                        <input type="search" id="user-search" class="ad-users-user-search" placeholder="Search by name or email" />
+                    </div>
               </div>
               <div class="ad-users-action-group">
-                  <button class="ad-users-btn-export">
+                  <button class="ad-users-btn-export" id="export-users">
                       <i data-lucide="download" class="ad-users-btn-icon"></i>
                       Export
                   </button>
@@ -114,17 +147,20 @@
               <table class="ad-users-users-table">
                   <thead>
                       <tr>
-                          <th>USER</th>
-                          <th>ROLE</th>
-                          <th>USERID</th>
-                          <th>EMAIL</th>
-                          <th>STATUS</th>
+                          <th class="sortable" data-sort="username">USER <i class="sort-icon" data-lucide="chevron-down"></i></th>
+                          <th class="sortable" data-sort="role">ROLE <i class="sort-icon" data-lucide="chevron-down"></i></th>
+                          <th class="sortable" data-sort="user_id">USERID <i class="sort-icon" data-lucide="chevron-down"></i></th>
+                          <th class="sortable" data-sort="email">EMAIL <i class="sort-icon" data-lucide="chevron-down"></i></th>
+                          <th class="sortable" data-sort="status">STATUS <i class="sort-icon" data-lucide="chevron-down"></i></th>
                       </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="users-table-body">
                     <?php foreach($data['users'] as $user):?>
-                        <!-- <span><?php echo $user->username; ?></span> -->
-                      <tr>
+                      <tr class="user-row" 
+                          data-username="<?php echo strtolower($user->username); ?>" 
+                          data-email="<?php echo strtolower($user->email); ?>"
+                          data-role="<?php echo $user->role; ?>"
+                          data-userid="<?php echo $user->user_id; ?>">
                           <td class="ad-users-user-cell">
                                 <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
                               
@@ -159,43 +195,151 @@
                               <span class="ad-users-status ad-users-active">Active</span>
                           </td>
                       </tr>
-
-                      
-                      <!-- More table rows... -->
                       <?php endforeach;?>
-
                   </tbody>
               </table>
 
-                <!--- pagination--->
-              <div class="ad-users-pagination">
-                  <button class="ad-users-page-btn">
-                      <i data-lucide="chevrons-left"></i>
-                  </button>
-                  <button class="ad-users-page-btn">
-                  <i data-lucide="chevron-left" style="color: #FF0000;"></i>
-
-
-                  </button>
-                  <button class="ad-users-page-btn">1</button>
-                  <button class="ad-users-page-btn">2</button>
-                  <button class="ad-users-page-btn ad-users-active">3</button>
-                  <button class="ad-users-page-btn">4</button>
-                  <button class="ad-users-page-btn">5</button>
-                  <button class="ad-users-page-btn">
-                      <i data-lucide="chevron-right"></i>
-                  </button>
-                  <button class="ad-users-page-btn" >
-                      <i data-lucide="chevrons-right"></i>
-                  </button>
+              <!-- No results message -->
+              <div id="no-results-message" style="display: none; text-align: center; padding: 20px; color: #666;">
+                  No users found matching your search criteria.
               </div>
+
           </div>
       </main>
   </div>
 </page-body-container>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
-    <script>
-      lucide.createIcons();
-    </script>
 
 <?php require APPROOT.'/views/includes/footer.php'; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
+    const userSearch = document.getElementById('user-search');
+    const roleFilter = document.getElementById('role-filter');
+    const tableBody = document.getElementById('users-table-body');
+    const noResultsMessage = document.getElementById('no-results-message');
+    const sortableHeaders = document.querySelectorAll('th.sortable');
+    
+    // Current sort state
+    let currentSort = {
+        column: null,
+        direction: 'asc'
+    };
+    
+    // Add event listener for search input
+    userSearch.addEventListener('input', filterUsers);
+    
+    // Add event listener for role filter
+    roleFilter.addEventListener('change', filterUsers);
+    
+    // Add event listeners for sortable headers
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const column = this.getAttribute('data-sort');
+            sortUsers(column);
+        });
+    });
+    
+    // Function to filter users based on search input and role filter
+    function filterUsers() {
+        const searchTerm = userSearch.value.toLowerCase().trim();
+        const selectedRole = roleFilter.value;
+        const rows = tableBody.querySelectorAll('tr.user-row');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const username = row.getAttribute('data-username').toLowerCase();
+            const email = row.getAttribute('data-email').toLowerCase();
+            const role = row.getAttribute('data-role');
+            
+            // Check if row matches search term and role filter
+            const matchesSearch = searchTerm === '' || 
+                                 username.includes(searchTerm) || 
+                                 email.includes(searchTerm);
+            
+            const matchesRole = selectedRole === '' || role === selectedRole;
+            
+            // Show or hide row based on filters
+            if (matchesSearch && matchesRole) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Show or hide no results message
+        if (visibleCount === 0) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+    
+    // Function to sort users
+    function sortUsers(column) {
+        const rows = Array.from(tableBody.querySelectorAll('tr.user-row'));
+        
+        // Determine sort direction
+        let direction = 'asc';
+        if (currentSort.column === column) {
+            direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        }
+        
+        // Update sort icons
+        updateSortIcons(column, direction);
+        
+        // Sort the rows
+        rows.sort((a, b) => {
+            let valueA = a.getAttribute('data-' + column).toLowerCase();
+            let valueB = b.getAttribute('data-' + column).toLowerCase();
+            
+            // Special handling for user_id (numeric sorting)
+            if (column === 'user_id') {
+                valueA = parseInt(a.getAttribute('data-userid'));
+                valueB = parseInt(b.getAttribute('data-userid'));
+                return direction === 'asc' ? valueA - valueB : valueB - valueA;
+            }
+            
+            // String comparison for other columns
+            if (direction === 'asc') {
+                return valueA.localeCompare(valueB);
+            } else {
+                return valueB.localeCompare(valueA);
+            }
+        });
+        
+        // Reorder the rows in the table
+        rows.forEach(row => {
+            tableBody.appendChild(row);
+        });
+        
+        // Update current sort state
+        currentSort.column = column;
+        currentSort.direction = direction;
+    }
+    
+    // Function to update sort icons
+    function updateSortIcons(activeColumn, direction) {
+        sortableHeaders.forEach(header => {
+            const column = header.getAttribute('data-sort');
+            const icon = header.querySelector('.sort-icon');
+            
+            if (column === activeColumn) {
+                // Set the active sort icon
+                icon.setAttribute('data-lucide', direction === 'asc' ? 'chevron-up' : 'chevron-down');
+            } else {
+                // Reset other sort icons
+                icon.setAttribute('data-lucide', 'chevron-down');
+            }
+        });
+        
+        // Refresh Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
+});
+
+</script>

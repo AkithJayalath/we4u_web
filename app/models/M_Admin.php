@@ -94,6 +94,105 @@ public function addAnnouncement($data) {
       }
       return false;
   }
+
+
+    public function getTotalUsersCount() {
+        $this->db->query('SELECT COUNT(*) as count FROM user');
+        $result = $this->db->single();
+        return $result->count;
+    }
+
+    public function getCaregiversCount() {
+        $this->db->query('SELECT COUNT(*) as count FROM user WHERE role = "Caregiver"');
+        $result = $this->db->single();
+        return $result->count;
+    }
+
+    public function getConsultantsCount() {
+        $this->db->query('SELECT COUNT(*) as count FROM user WHERE role = "Consultant"');
+        $result = $this->db->single();
+        return $result->count;
+    }
+
+    public function getCareseekerCount() {
+        $this->db->query('SELECT COUNT(*) as count FROM user WHERE role = "Careseeker"');
+        $result = $this->db->single();
+        return $result->count;
+    }
+
+    public function getPendingUsersCount() {
+        // Count pending caregivers
+        $this->db->query('SELECT COUNT(*) as count FROM caregiver 
+                        INNER JOIN user ON caregiver.caregiver_id = user.user_id 
+                        WHERE caregiver.is_approved = "pending"');
+        $pendingCaregivers = $this->db->single()->count;
+        
+        // Count pending consultants
+        $this->db->query('SELECT COUNT(*) as count FROM consultant 
+                        INNER JOIN user ON consultant.consultant_id = user.user_id 
+                        WHERE consultant.is_approved = "pending"');
+        $pendingConsultants = $this->db->single()->count;
+        
+        return $pendingCaregivers + $pendingConsultants;
+    }
+
+    public function getRejectedUsersCount() {
+        // Count rejected caregivers
+        $this->db->query('SELECT COUNT(*) as count FROM caregiver 
+                        INNER JOIN user ON caregiver.caregiver_id = user.user_id 
+                        WHERE caregiver.is_approved = "rejected"');
+        $rejectedCaregivers = $this->db->single()->count;
+        
+        // Count rejected consultants
+        $this->db->query('SELECT COUNT(*) as count FROM consultant 
+                        INNER JOIN user ON consultant.consultant_id = user.user_id 
+                        WHERE consultant.is_approved = "rejected"');
+        $rejectedConsultants = $this->db->single()->count;
+        
+        return $rejectedCaregivers + $rejectedConsultants;
+    }
+
+
+    public function getFlaggedUsersCount() {
+        // Count flagged caregivers (cancellation_flags > 5)
+        $this->db->query('SELECT COUNT(*) as count FROM caregiver 
+                         INNER JOIN user ON caregiver.caregiver_id = user.user_id 
+                         WHERE caregiver.cancellation_flags > 5');
+        $flaggedCaregivers = $this->db->single()->count;
+        
+        // Count flagged consultants (cancellation_flags > 5)
+        $this->db->query('SELECT COUNT(*) as count FROM consultant 
+                         INNER JOIN user ON consultant.consultant_id = user.user_id 
+                         WHERE consultant.cancellation_flags > 5');
+        $flaggedConsultants = $this->db->single()->count;
+        
+        return $flaggedCaregivers + $flaggedConsultants;
+    }
+    
+    public function getFlaggedUsers() {
+        // Get flagged caregivers
+        $this->db->query('SELECT user.user_id, user.username, user.email, user.role, caregiver.cancellation_flags 
+                         FROM caregiver 
+                         INNER JOIN user ON caregiver.caregiver_id = user.user_id 
+                         WHERE caregiver.cancellation_flags > 5');
+        $flaggedCaregivers = $this->db->resultSet();
+        
+        // Get flagged consultants
+        $this->db->query('SELECT user.user_id, user.username, user.email, user.role, consultant.cancellation_flags 
+                         FROM consultant 
+                         INNER JOIN user ON consultant.consultant_id = user.user_id 
+                         WHERE consultant.cancellation_flags > 5');
+        $flaggedConsultants = $this->db->resultSet();
+        
+        // Combine the results
+        return array_merge($flaggedCaregivers, $flaggedConsultants);
+    }
+    
+
+
+
+
+
 }
 ?>
 

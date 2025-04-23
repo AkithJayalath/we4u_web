@@ -19,7 +19,6 @@ class admin extends controller{
 
   public function index(){
     $data = [
-      'title' => 'Admin Dashboard'
     ];
     $this->view('admin/v_admin_dashboard', $data);
   }
@@ -144,13 +143,44 @@ public function viewCompletedJob($job_id) {
   }
 
 
-  public function user_detailes($page = 1){
-    $users = $this->adminModel->getAllUsers();
+public function user_detailes(){
+    // Check if flagged filter is applied
+    $showFlagged = isset($_GET['flagged']) && $_GET['flagged'] == 'true';
+    
+    // Get users based on filter
+    if ($showFlagged) {
+        $users = $this->adminModel->getFlaggedUsers();
+    } else {
+        $users = $this->adminModel->getAllUsers();
+    }
+    
+    // Get counts for stats cards
+    $totalUsers = $this->adminModel->getTotalUsersCount();
+    $caregivers = $this->adminModel->getCaregiversCount();
+    $consultants = $this->adminModel->getConsultantsCount();
+    $careseekers = $this->adminModel->getCareseekerCount();
+    $pendingUsers = $this->adminModel->getPendingUsersCount();
+    $rejectedUsers = $this->adminModel->getRejectedUsersCount();
+    $flaggedUsers = $this->adminModel->getFlaggedUsersCount();
+    
     $data = [
-      'users' => $users
+        'users' => $users,
+        'totalUsers' => $totalUsers,
+        'caregivers' => $caregivers,
+        'consultants' => $consultants,
+        'careseekers' => $careseekers,
+        'pendingUsers' => $pendingUsers,
+        'rejectedUsers' => $rejectedUsers,
+        'flaggedUsers' => $flaggedUsers,
+        'showFlagged' => $showFlagged
     ];
+    
     $this->view('admin/v_users', $data);
-  }
+}
+
+
+
+  
 
   public function blog(){
     $data = [
@@ -184,7 +214,6 @@ public function viewCompletedJob($job_id) {
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();
     $data = [
-        'title' => 'View Announcement',
         'announcements' => $announcements
     ];
     $this->view('admin/v_viewannouncements', $data);

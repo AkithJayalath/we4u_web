@@ -7,13 +7,6 @@
     echo loadCSS($required_styles);
 ?>
 
-
-
-<link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-
 <?php require APPROOT.'/views/includes/header.php'; ?>
 <div>
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>

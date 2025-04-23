@@ -14,12 +14,29 @@
 
 /* Main Layout */
 .ad-users-wrapper {
-  width: 100%;
-  min-height: 100vh;
-  background-color: var(--color-background-primary);
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
   padding: 20px;
-  box-sizing: border-box;
-  overflow-x: hidden;
+  background-color: var(--color-background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add dashboard-like header */
+.ad-users-header {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ad-users-header h1 {
+  font-size: 24px;
+  margin: 0;
 }
 
 .ad-users-main-content {
@@ -53,112 +70,91 @@
 }
 
 .ad-users-stat-details h3 {
-  color: var(--color-text-primary);
-  font-size: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 5px 0;
   font-weight: 500;
-  margin: 0 0 8px 0;
 }
 
 .ad-users-stat-value {
   font-size: 24px;
   font-weight: 600;
-  color: var(--color-text-accent);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .ad-users-stat-label {
-  color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .ad-users-stat-icon {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white; /* Text color for the icons */
 }
 
-.ad-users-stat-icon i {
-  width: 24px;
-  height: 24px;
+.ad-users-stat-icon svg {
+  width: 20px;
+  height: 20px;
   color: white;
 }
 
-.ad-users-stat-icon.ad-users-blue {
-  background: var(--color-btn-primary);
+.ad-users-blue {
+  background-color: #1a73e8; /* Original blue color */
 }
 
-.ad-users-stat-icon.ad-users-red {
-  background: var(--color-btn-cancel);
+.ad-users-red {
+  background-color: #ea4335; /* Original red color */
 }
 
-.ad-users-stat-icon.ad-users-green {
-  background: var(--color-calm-green);
+.ad-users-green {
+  background-color: #34a853; /* Original green color */
 }
 
-.ad-users-stat-icon.ad-users-yellow {
-  background: var(--color-status-pending);
+.ad-users-yellow {
+  background-color: #fbbc04; /* Original yellow color */
 }
 
-.ad-users-stat-growth {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.ad-users-stat-growth.ad-users-positive {
-  color: var(--color-status-accepted);
-}
-
-.ad-users-stat-growth.ad-users-negative {
-  color: var(--color-status-rejected);
-}
-
-/* Filters Section */
+/* Filters and Controls */
 .ad-users-filters {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
   gap: 15px;
-  width: 100%;
 }
 
 .ad-users-table-controls {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
-.ad-users-filter-select,
-.ad-users-entries-select {
-  padding: 10px;
+.ad-users-filter-select {
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  min-width: 120px;
-  background-color: var(--white);
+  background-color: white;
+  min-width: 150px;
+  max-width: 150px;
+  font-size: 14px;
 }
 
 .ad-users-search-wrapper {
-  position: relative;
-  min-width: 200px;
-}
-
-.ad-users-search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-secondary);
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
+  width: 300px;
+  margin-top: 16px;
 }
 
 .ad-users-user-search {
   width: 100%;
-  padding: 10px 10px 10px 35px;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 14px;
 }
@@ -168,73 +164,94 @@
   gap: 10px;
 }
 
-.ad-users-btn-export,
-.ad-users-btn-add {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
+.ad-users-btn-export, .ad-users-btn-add {
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.ad-users-btn-icon {
-  width: 18px;
-  height: 18px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
 }
 
 .ad-users-btn-export {
-  background: var(--color-trust-blue);
-  color: var(--white);
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
 }
 
 .ad-users-btn-add {
-  background: var(--color-btn-primary);
-  color: var(--white);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.ad-users-btn-icon {
+  width: 16px;
+  height: 16px;
 }
 
 /* Table Styles */
 .ad-users-table-container {
-  width: 100%;
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  background: white;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 600px; /* Set a max height for vertical scrolling */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .ad-users-users-table {
   width: 100%;
-  min-width: 800px;
   border-collapse: collapse;
-}
-
-.ad-users-users-table th,
-.ad-users-users-table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-  white-space: nowrap;
+  min-width: 800px; /* Ensure horizontal scrolling for small screens */
 }
 
 .ad-users-users-table th {
-  background-color: var(--color-background-secondary);
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  background-color: #f9fafb;
+  padding: 12px 20px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.ad-users-users-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.ad-users-users-table th.sortable:hover {
+  background-color: #f1f3f5;
+}
+
+.ad-users-users-table th .sort-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.ad-users-users-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
 }
 
 .ad-users-user-cell {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ad-users-user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -246,130 +263,125 @@
 
 .ad-users-user-name {
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: #333;
 }
 
 .ad-users-user-email {
-  color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .ad-users-status {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
   display: inline-block;
-}
-
-.ad-users-status.ad-users-active {
-  background: var(--color-calm-green);
-  color: var(--white);
-}
-
-.ad-users-status.ad-users-deactivated {
-  background: var(--color-btn-cancel);
-  color: var(--white);
-}
-
-/* Pagination */
-.ad-users-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  padding: 20px;
-  flex-wrap: wrap;
-}
-
-.ad-users-page-btn {
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  background: var(--white);
+  padding: 4px 8px;
   border-radius: 4px;
-  cursor: pointer;
-  min-width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.ad-users-page-btn:hover {
-  background: var(--color-background-secondary);
+.ad-users-active {
+  background-color: var(--success-bg);
+  color: var(--success-color);
 }
 
-.ad-users-page-btn.ad-users-active {
-  background: var(--color-btn-primary);
-  color: var(--white);
-  border-color: var(--color-btn-primary);
+.ad-users-inactive {
+  background-color: var(--danger-bg);
+  color: var(--danger-color);
 }
 
-/* Responsive Breakpoints */
-@media screen and (max-width: 1200px) {
+.ad-users-pending {
+  background-color: #fff8e1;
+  color: #f57c00;
+}
+
+/* No results message */
+#no-results-message {
+  padding: 30px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
   .ad-users-stats-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media screen and (max-width: 768px) {
-  .ad-users-wrapper {
-    padding: 10px;
-  }
-  
+@media (max-width: 768px) {
   .ad-users-stats-container {
     grid-template-columns: 1fr;
   }
   
   .ad-users-filters {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
   
   .ad-users-table-controls {
-    flex-direction: column;
     width: 100%;
   }
   
-  .ad-users-filter-select,
-  .ad-users-entries-select,
-  .ad-users-search-wrapper,
-  .ad-users-user-search {
+  .ad-users-search-wrapper {
     width: 100%;
-    min-width: unset;
   }
   
   .ad-users-action-group {
-    flex-direction: column;
     width: 100%;
-  }
-  
-  .ad-users-btn-export,
-  .ad-users-btn-add {
-    width: 100%;
-    justify-content: center;
+    justify-content: space-between;
   }
 }
 
-@media screen and (max-width: 480px) {
-  .ad-users-wrapper {
-    padding: 5px;
-  }
-  
-  .ad-users-stat-card {
-    padding: 15px;
-  }
-  
-  .ad-users-stat-value {
-    font-size: 20px;
-  }
-  
-  .ad-users-pagination {
-    padding: 15px 10px;
-  }
-  
-  .ad-users-page-btn {
-    min-width: 35px;
-    height: 35px;
-    padding: 6px 10px;
-  }
+
+/* Add this to your CSS file */
+.ad-users-btn-flagged {
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: white;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
+
+.ad-users-btn-flagged:hover {
+  background-color: #f5f5f5;
+}
+
+.ad-users-btn-flagged.active {
+  background-color: var(--red-bg);
+  color: #d32f2f;
+  border-color: #ffcdd2;
+}
+
+.ad-users-btn-flagged i {
+  font-size: 14px;
+}
+
+/* Make sure the table controls have proper spacing */
+.ad-users-table-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Add this to your CSS file */
+.flagged-notice {
+  background-color: #fff3e0;
+  color: #e65100;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.flagged-notice i {
+  font-size: 16px;
+}
+

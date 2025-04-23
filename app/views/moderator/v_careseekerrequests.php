@@ -1,8 +1,6 @@
 <?php 
     $required_styles = [
         'moderator/careseekerrequests',
-        // 'components/sidebar',
-        
     ];
     echo loadCSS($required_styles);
 ?>
@@ -11,55 +9,98 @@
 
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
 
-
 <page-body-container>
-  <!-- "m-c-r-" indentifies the moderator-careseeker-requests  -->
   <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
-    <div class="m-c-r-container">
-      <div class="m-c-r-search-section">
-        <input type="text" placeholder="Search By UserName Or ID" />
-        <button>Search</button>
+  
+  <div class="dashboard-container">
+    <!-- Dashboard-style header -->
+    <header class="dashboard-header">
+      <h1>Careseeker Requests</h1>
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Search By UserName Or Email" />
       </div>
+    </header>
 
-
-
-      <div class="m-c-r-table-container">
+    <!-- Main content area -->
+    <div class="request-content">
+      <div class="request-table-container">
         <h2>Request Information</h2>
-        <div class="m-c-r-table">
-          <div class="m-c-r-table-header">
-            <div class="m-c-r-table-cell">Request ID</div>
-            <div class="m-c-r-table-cell">Date</div>
-            <div class="m-c-r-table-cell">User ID</div>
-            <div class="m-c-r-table-cell">Status</div>
-            <div class="m-c-r-table-cell">Action</div>
+        <div class="request-table">
+          <div class="request-table-header">
+            <div class="request-table-cell">Request ID</div>
+            <div class="request-table-cell">Date</div>
+            <div class="request-table-cell">User Name</div>
+            <div class="request-table-cell">Status</div>
+            <div class="request-table-cell">Action</div>
           </div>
-          <div class="m-c-r-table-body">
-
-          <?php foreach($data['requests'] as $request) : ?>
-            <div class="m-c-r-table-row">
-              <div class="m-c-r-table-cell"><?php echo $request->request_id; ?></a></div>
-              <!-- <div class="m-c-r-table-cell"><?php echo $request->request_date; ?></div> -->
-              <div class="m-c-r-table-cell"><?php echo date_format(date_create($request->request_date), 'j M Y'); ?></div>
-              <div class="m-c-r-table-cell"><?php echo $request->user_id; ?></div>
-              <div class="m-c-r-table-cell status-<?php echo strtolower($request->status); ?>"><?php echo $request->status; ?></div>
-            <div class="m-c-r-table-cell">
-              <form action="<?php echo URLROOT; ?>/moderator/viewrequests" method="POST">
-                  <input type="hidden" name="request_id" value="<?php echo $request->request_id; ?>">
-                  <input type="hidden" name="user_id" value="<?php echo $request->user_id; ?>">
-                  <input type="hidden" name="request_type" value="<?php echo $request->request_type; ?>">
-                  <button type="submit" class="m-c-r-view-req-action-btn"> Details</button>
-              </form>
+          <div class="request-table-body" id="requestTableBody">
+            <?php foreach($data['requests'] as $request) : ?>
+              <div class="request-table-row" 
+                   data-username="<?php echo htmlspecialchars($request->username); ?>" 
+                   data-email="<?php echo htmlspecialchars($request->email); ?>"
+                   data-user-id="<?php echo $request->user_id; ?>">
+                <div class="request-table-cell"><?php echo $request->request_id; ?></div>
+                <div class="request-table-cell"><?php echo date_format(date_create($request->request_date), 'j M Y'); ?></div>
+                <div class="request-table-cell"><?php echo $request->username; ?></div>
+                <div class="request-table-cell status-<?php echo strtolower($request->status); ?>"><?php echo $request->status; ?></div>
+                <div class="request-table-cell">
+                  <form action="<?php echo URLROOT; ?>/moderator/viewrequests" method="POST">
+                    <input type="hidden" name="request_id" value="<?php echo $request->request_id; ?>">
+                    <input type="hidden" name="user_id" value="<?php echo $request->user_id; ?>">
+                    <input type="hidden" name="request_type" value="<?php echo $request->request_type; ?>">
+                    <button type="submit" class="request-action-btn">Details</button>
+                  </form>
+                </div>
               </div>
-            </div>
-      
-          <?php endforeach; ?>
-
+            <?php endforeach; ?>
           </div>
         </div>
       </div>
-
-
     </div>
+  </div>
 </page-body-container>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const requestRows = document.querySelectorAll('.request-table-row');
+    
+    // Add event listener for search input
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        // If search term is empty, show all rows
+        if (searchTerm === '') {
+            requestRows.forEach(row => {
+                row.style.display = '';
+            });
+            return;
+        }
+        
+        // Filter rows based on search term
+        requestRows.forEach(row => {
+            const username = row.getAttribute('data-username').toLowerCase();
+            const email = row.getAttribute('data-email').toLowerCase();
+            const userId = row.getAttribute('data-user-id').toLowerCase();
+            
+            // Check if search term matches username, email, or user ID
+            if (username.includes(searchTerm) || 
+                email.includes(searchTerm) || 
+                userId.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    
+    // Add event listener for search button click
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        // Trigger the input event on the search input
+        const event = new Event('input');
+        searchInput.dispatchEvent(event);
+    });
+});
+</script>
 
 <?php require APPROOT.'/views/includes/footer.php'?>

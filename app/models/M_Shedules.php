@@ -343,6 +343,123 @@ public function getConsultantBookingById($requestId) {
     return $this->db->single();
 }
 
+// for fetching availability detais for calander view
+public function getAvailabilityPatterns($consultantId) {
+    $this->db->query('SELECT * FROM co_availability_patterns WHERE consultant_id = :consultant_id AND is_active = 1');
+    $this->db->bind(':consultant_id', $consultantId);
+    return $this->db->resultSet();
+}
+
+public function getAvailabilityInstances($consultantId) {
+    $this->db->query('SELECT * FROM co_availability_instances WHERE consultant_id = :consultant_id AND available_date >= CURDATE()');
+    $this->db->bind(':consultant_id', $consultantId);
+    return $this->db->resultSet();
+}
+
+public function getActiveAppointments($consultantId) {
+    $this->db->query('SELECT * FROM consultantrequests WHERE consultant_id = :consultant_id AND (status = "pending" OR status = "accepted") AND appointment_date >= CURDATE()');
+    $this->db->bind(':consultant_id', $consultantId);
+    return $this->db->resultSet();
+}
+
+
+// check if consultant is available or not 
+public function isConsultantAvailable($consultantId, $date, $startTime, $endTime) {
+    // Convert string times like "9:00" to integers if needed
+    if (is_string($startTime) && strpos($startTime, ':') !== false) {
+        $startTime = (int)explode(':', $startTime)[0];
+    }
+    
+    if (is_string($endTime) && strpos($endTime, ':') !== false) {
+        $endTime = (int)explode(':', $endTime)[0];
+    }
+    
+    // First check if there's a specific availability instance for this date and time range
+    $instanceAvailable = $this->checkAvailabilityInstance($consultantId, $date, $startTime, $endTime);
+
+    if($instanceAvailable) {
+        return true;
+    }
+    
+    // If no specific instance, check if there's a pattern that covers this day and time
+    $patternAvailable = $this->checkAvailabilityPattern($consultantId, $date, $startTime, $endTime);
+    
+    // Return true if either instance or pattern availability exists
+    return $patternAvailable;
+}
+
+
+/**
+ * Check if there's a specific availability instance for the requested date and time
+ * 
+ * @param int $consultantId The consultant ID
+ * @param string $date The date in YYYY-MM-DD format
+ * @param int $startTime The start hour (e.g., 9 for 9:00 AM)
+ * @param int $endTime The end hour (e.g., 17 for 5:00 PM)
+ * @return bool True if an availability instance covers this time
+ */
+private function checkAvailabilityInstance($consultantId, $date, $startTime, $endTime) {
+    // Convert times to 24-hour format for comparison
+    $startTimeFormatted = sprintf('%02d:00:00', $startTime);
+    $endTimeFormatted = sprintf('%02d:00:00', $endTime);
+    
+    $this->db->query('SELECT COUNT(*) as count FROM co_availability_instances 
+                     WHERE consultant_id = :consultant_id 
+                     AND available_date = :date
+                     AND start_time <= :start_time 
+                     AND end_time >= :end_time');
+    
+    $this->db->bind(':consultant_id', $consultantId);
+    $this->db->bind(':date', $date);
+    $this->db->bind(':start_time', $startTimeFormatted);
+    $this->db->bind(':end_time', $endTimeFormatted);
+    
+    $result = $this->db->single();
+    
+    // If count > 0, there's an instance that covers this time range
+    return ($result->count > 0);
+}
+
+/**
+ * Check if there's an availability pattern that covers the requested day and time
+ * 
+ * @param int $consultantId The consultant ID
+ * @param string $date The date in YYYY-MM-DD format
+ * @param int $startTime The start hour (e.g., 9 for 9:00 AM)
+ * @param int $endTime The end hour (e.g., 17 for 5:00 PM)
+ * @return bool True if an availability pattern covers this time
+ */
+private function checkAvailabilityPattern($consultantId, $date, $startTime, $endTime) {
+    // Convert times to 24-hour format for comparison
+    $startTimeFormatted = sprintf('%02d:00:00', $startTime);
+    $endTimeFormatted = sprintf('%02d:00:00', $endTime);
+    
+    // Get the day of week (0 = Sunday, 1 = Monday, etc.)
+    $dayOfWeek = date('w', strtotime($date));
+    
+    $this->db->query('SELECT COUNT(*) as count FROM co_availability_patterns 
+                     WHERE consultant_id = :consultant_id 
+                     AND day_of_week = :day_of_week
+                     AND start_date <= :date 
+                     AND end_date >= :date
+                     AND start_time <= :start_time 
+                     AND end_time >= :end_time
+                     AND is_active = 1');
+    
+    $this->db->bind(':consultant_id', $consultantId);
+    $this->db->bind(':day_of_week', $dayOfWeek);
+    $this->db->bind(':date', $date);
+    $this->db->bind(':start_time', $startTimeFormatted);
+    $this->db->bind(':end_time', $endTimeFormatted);
+    
+    $result = $this->db->single();
+    
+    // If count > 0, there's a pattern that covers this time range
+    return ($result->count > 0);
+}
+
+
+
 
 
 }
