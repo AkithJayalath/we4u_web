@@ -665,7 +665,6 @@ public function requestConsultant($consultant_id) {
             // Format times for database queries
             $startTime = $data['from_time'] . ':00';
             $endTime = $data['to_time'] . ':00';
-            $timeSlot = $data['from_time'] . '-' . $data['to_time'];
             
             // Check if consultant is available at this time
             $isAvailable = $this->scheduleModel->isConsultantAvailable(
@@ -674,7 +673,9 @@ public function requestConsultant($consultant_id) {
                 $startTime, 
                 $endTime
             );
-            
+
+
+
             if (!$isAvailable) {
                 $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
             } else {
@@ -682,11 +683,12 @@ public function requestConsultant($consultant_id) {
                 $hasBookings = $this->scheduleModel->hasExistingBookings(
                     $consultant_id, 
                     $data['appointment_date'], 
-                    $timeSlot
+                    $startTime,
+                    $endTime
                 );
                 
                 if ($hasBookings) {
-                    $data['error'] = 'This time slot is already booked. Please select a different time.';
+                    $data['error'] = 'This time slot is already booked. Please select a different time slot.';
                 }
             }
         }

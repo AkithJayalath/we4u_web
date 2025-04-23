@@ -643,11 +643,6 @@ input.is-invalid {
     opacity: 0.7;
 }
 
-.time-slot-item.selected {
-    border-left-color: #2196F3;
-    background-color: #e3f2fd;
-}
-
 /* Style for unavailable dates */
 .fc-day-unavailable {
     background-color:rgb(0, 0, 0) !important;
