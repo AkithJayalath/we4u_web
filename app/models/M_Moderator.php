@@ -131,13 +131,13 @@
             return $result;
         }
 
-        public function get_documents_by_id($user_id,$request_id){
-            $this->db->query('SELECT * FROM document WHERE user_id = :user_id and request_id = :request_id');
+        public function get_documents_by_id($user_id, $request_id) {
+            $this->db->query('SELECT * FROM document WHERE user_id = :user_id AND request_id = :request_id');
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':request_id', $request_id);
-            $result = $this->db->resultSet();
-            return $result;
+            return $this->db->resultSet();
         }
+        
 
         public function get_inteviews(){
             $this->db->query('SELECT *FROM interviews ORDER BY request_date ASC, interview_time ASC');
