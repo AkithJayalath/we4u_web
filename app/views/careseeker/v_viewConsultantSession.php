@@ -51,7 +51,7 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
                 <div class="session-info-buttons">
-                    <button class="session-send-button">
+                <button class="session-send-button" id="open-chat-btn" data-session-id="<?php echo $data['session_id']; ?>" data-user-id="<?php echo $_SESSION['user_id']; ?>">
                         <i class="fas fa-comments"></i> Chat
                     </button>
                 </div>
@@ -256,6 +256,8 @@ echo loadCSS($required_styles);
             </div>
         </div>
     </div>
+    <!-- Chat Popup Container - This div will be filled with AJAX -->
+    <div id="chat-popup-container" class="hidden"></div>
 </page-body-container>
 
 <!-- Add the JavaScript for tab functionality and file input handling -->
@@ -399,7 +401,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
+<script>
+    const URLROOT = '<?php echo URLROOT; ?>';
+</script>
+<script src="<?php echo URLROOT; ?>/js/chatPopup.js"></script>
 <!-- Include your rating stars script -->
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
 <?php require APPROOT . '/views/includes/footer.php' ?>

@@ -570,14 +570,15 @@ public function requestConsultant($consultant_id) {
 
         // If all validations pass
         if (empty($data['error'])) {
-            $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
+           // $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
 
             $requestData = [
                 'careseeker_id' => $careseeker_id,
                 'elder_id' => $data['elder_profile'],
                 'consultant_id' => $consultant_id,
                 'appointment_date' => $data['appointment_date'],
-                'time_slot' => $formattedTimeSlot,
+                'from_time' => $data['from_time'],
+                'to_time' => $data['to_time'],
                 'expected_services' => $data['expected_services'],
                 'additional_notes' => $data['additional_notes'],
                 'total_amount' => $data['total_amount'],
@@ -1070,15 +1071,14 @@ public function cancelConsultRequest($requestId) {
 private function getAppointmentDateTime($request) {
     $date = new DateTime($request->appointment_date);
     
-    if (!empty($request->time_slot)) {
-        [$from, $to] = explode('-', $request->time_slot);
-        $fromTime = trim($from);
-        
-        // Set the appointment time
-        list($hours, $minutes) = explode(':', $fromTime);
-        $date->setTime((int)$hours, (int)$minutes, 0);
+    if (!empty($request->start_time)) {
+        // Use the start_time directly since it's now a TIME datatype
+        $timeComponents = explode(':', $request->start_time);
+        $hours = (int)$timeComponents[0];
+        $minutes = (int)$timeComponents[1];
+        $date->setTime($hours, $minutes, 0);
     } else {
-        // Default to 8:00 AM if no time slot is specified
+        // Default to 8:00 AM if no start time is specified
         $date->setTime(8, 0, 0);
     }
 

@@ -314,7 +314,7 @@ class M_Consultant {
     public function getConsultantById($id) {
         $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
                         FROM consultant c
-                        JOIN user  ON c.consultant_id = u.user_id
+                        JOIN user u ON c.consultant_id = u.user_id
                         WHERE c.consultant_id = :id");
         $this->db->bind(':id', $id);
         return $this->db->single();
@@ -478,7 +478,8 @@ public function getAllConsultantSessions($consultant_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS careseeker_name,
                         u.profile_picture AS careseeker_pic,
@@ -501,7 +502,8 @@ public function getAllConsultantSessionsById($session_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS careseeker_name,
                         u.profile_picture AS careseeker_pic,
@@ -583,7 +585,95 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
 }
 
 
+public function getChatBySessionId($session_id) {
+    $this->db->query("SELECT * FROM sessionchats WHERE session_id = :session_id");
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->single();
+}
 
+public function createChat($session_id) {
+    $this->db->query("INSERT INTO sessionchats (session_id) VALUES (:session_id)");
+    $this->db->bind(':session_id', $session_id);
+    
+    if ($this->db->execute()) {
+        return $this->db->lastInsertId();
+    } else {
+        return false;
+    }
+}
+
+public function saveMessage($chat_id, $sender_id, $message_text) {
+    $this->db->query("INSERT INTO sessionchatmessages (chat_id, sender_id, message_text) 
+                      VALUES (:chat_id, :sender_id, :message_text)");
+    $this->db->bind(':chat_id', $chat_id);
+    $this->db->bind(':sender_id', $sender_id);
+    $this->db->bind(':message_text', $message_text);
+    
+    if ($this->db->execute()) {
+        return $this->db->lastInsertId();
+    } else {
+        return false;
+    }
+}
+
+public function getMessageById($message_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM sessionchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.message_id = :message_id");
+    $this->db->bind(':message_id', $message_id);
+    return $this->db->single();
+}
+
+public function getMessagesByChatId($chat_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM sessionchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.chat_id = :chat_id
+                      ORDER BY cm.created_at ASC");
+    $this->db->bind(':chat_id', $chat_id);
+    return $this->db->resultSet();
+}
+
+public function getNewMessages($chat_id, $last_message_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM sessionchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.chat_id = :chat_id AND cm.message_id > :last_message_id
+                      ORDER BY cm.created_at ASC");
+    $this->db->bind(':chat_id', $chat_id);
+    $this->db->bind(':last_message_id', $last_message_id);
+    return $this->db->resultSet();
+}
+
+public function getOrCreateChatForSession($session_id) {
+    // Check if a chat already exists for this session
+    $chat = $this->getChatBySessionId($session_id);
+    
+    if ($chat) {
+        return $chat->chat_id;
+    } else {
+        // Create a new chat for this session
+        return $this->createChat($session_id);
+    }
+}
+
+
+public function getSessionById($session_id) {
+    $this->db->query("SELECT * FROM consultantsessions WHERE session_id = :session_id");
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->single();
+}
+ 
+
+public function getCareseekerById($id) {
+    $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
+                    FROM careseeker c
+                    JOIN user u ON c.careseeker_id = u.user_id
+                    WHERE c.careseeker_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
 
 
 
