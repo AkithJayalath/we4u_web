@@ -1030,7 +1030,6 @@ public function viewConsultRequestInfo($requestId)
                 $req->service_category = 'Consultation';
             }
     
-    
             $mergedRequests = array_merge($careRequests, $consultRequests);
         
             // Optionally sort by created_at

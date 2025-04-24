@@ -101,9 +101,9 @@ public function getPaymentMethod($email) {
 public function addPaymentMethod($data) {
     $this->db->query('INSERT INTO payment_method (email, mobile_number, account_holder_name, 
                       bank_name, branch_name, account_number, payment_type_st, payment_type_lt, 
-                      advance_amount, created_at) 
+                      advance_amount, created_at, user_id) 
                       VALUES (:email, :mobile, :holder, :bank, :branch, :account, :st_type, 
-                      :lt_type, :advance, NOW())');
+                      :lt_type, :advance, NOW() , :user_id)');
 
     $this->db->bind(':email', $data['email']);
     $this->db->bind(':mobile', $data['mobile_number']);
@@ -114,6 +114,7 @@ public function addPaymentMethod($data) {
     $this->db->bind(':st_type', $data['payment_type_st']);
     $this->db->bind(':lt_type', $data['payment_type_lt']);
     $this->db->bind(':advance', $data['advance_amount']);
+    $this->db->bind(':user_id', $data['user_id']);
 
     return $this->db->execute();
 }

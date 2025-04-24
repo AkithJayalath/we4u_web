@@ -309,7 +309,9 @@
               'account_holder_name_err' => '',
               'bank_name_err' => '',
               'branch_name_err' => '',
+              'user_id' => $_SESSION['user_id'],
               'account_number_err' => ''
+
           ];
   
           // Validate mobile number

@@ -59,13 +59,13 @@ echo loadCSS($required_styles);
                 <?php endif; ?>   
  <?php
 // Determine button state: delete or cancel
-$disabledStatuses = ['cancelled', 'rejected', 'completed'];
-$isDeleteButton = in_array(strtolower($data->status), $disabledStatuses);
+$disabledStatuses = ['completed'];
+$isRate = in_array(strtolower($data->status), $disabledStatuses);
 
 // Calculate if cancel button should be disabled (for the cancel functionality only)
 $isDisabled = false;
 
-if (!$isDeleteButton) {
+if (!$isRate) {
     $currentDateTime = new DateTime(); // Current date and time
 
     // Combine appointment_date and start_time into one DateTime
@@ -88,9 +88,9 @@ if (!$isDeleteButton) {
 
 
 // Button class and text based on state
-$buttonClass = $isDeleteButton ? "request-delete-button" : "request-cancel-button";
-$buttonText = $isDeleteButton ? "Delete Request" : "Cancel";
-$buttonAction = $isDeleteButton 
+$buttonClass = $isRate ? "request-delete-button" : "request-cancel-button";
+$buttonText = $isRate ? "Rate" : "Cancel";
+$buttonAction = $isRate 
     ? "window.location.href='".URLROOT."/careseeker/deleteConsultRequest/".$data->request_id."'"
     : ($isDisabled 
         ? "alert('Cannot cancel an appointment that has already started')" 
@@ -99,7 +99,7 @@ $buttonAction = $isDeleteButton
 
 <!-- Replace the original cancel button with this code -->
 <button class="<?= $buttonClass ?>" 
-        <?= (!$isDeleteButton && $isDisabled) ? 'disabled' : '' ?> 
+        <?= (!$isRate && $isDisabled) ? 'disabled' : '' ?> 
         onclick="<?= $buttonAction ?>">
     <?= $buttonText ?>
 </button>
