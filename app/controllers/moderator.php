@@ -376,7 +376,8 @@
 
               $data = [
                     'request' => $request,
-                    'caregiver' => $caregiver_data,                    'documents' => $documents
+                    'caregiver' => $caregiver_data,                    
+                    'documents' => $documents
                   ];
               $this->view('moderator/v_caregiver_req', $data);
           }

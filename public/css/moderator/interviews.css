@@ -1,132 +1,159 @@
-.m-i-container {
-  max-width: 1200px;
-  min-width: 90%;
-  margin: 2rem auto;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 32px;
-  padding-bottom: 10px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Main container styling */
+.interview-main-container {
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
+  padding: 20px;
+  background-color: var(--color-background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.m-i-search-section {
+/* Header styling */
+.interview-header {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex;
-  align-items: top;
-  margin-bottom: 32px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #f0f2f5;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.m-i-search-section button {
-  height: 50px;
-  font-size: small;
-  padding: 0 20px;
-  background-color: var(--color-btn-primary);
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.interview-header h1 {
+  font-size: 24px;
   font-weight: 600;
-  transition: background-color 0.3s ease;
-  margin-left: 10px;
+  margin: 0;
+  color: #333333;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.m-i-search-section button:hover {
-  background-color: var(--color-btn-primary-hover);
+/* Search styling */
+.interview-search-wrapper {
+  display: flex;
+  align-items: center;
+  min-width: 400px;
+  position: relative;
 }
 
-
-.m-i-search-section input[type="text"] {
-  width: 70%;
-  font-size: 1rem;
+.interview-search-wrapper input {
+  width: 100%;
+  padding: 10px 15px;
+  padding-right: 40px; /* Add space for the button */
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 14px;
   transition: all 0.3s ease;
-  height: 50px;
-  margin-right: 0;
 }
 
-.m-i-search-section input[type="text"]:focus {
+.interview-search-wrapper input:focus {
   outline: none;
-  border-color: #3182ce;
+  border-color: var(--color-btn-primary);
   box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
-
-.m-i-table-container {
-  background: #fafbfc;
-  padding: 24px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-}
-
-.m-i-table-container h2 {
-  font-size: 1.8rem;
-  color: #1a237e;
-  margin-bottom: 24px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.m-i-table {
-  width: 100%;
-  background: var(--white);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-}
-
-.m-i-table-header {
+.interview-search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 14px;
   display: flex;
-  background: #f8fafc;
-  font-weight: 600;
-  color: var(--color-table-header);
-  padding: 16px;
-  border-bottom: 2px solid #f0f2f5;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
 }
 
-.m-i-table-body {
-  max-height: calc(100vh - 300px);
+.interview-search-btn:hover {
+  color: var(--color-btn-primary);
+}
+
+/* Content styling */
+.interview-content {
+  margin-top: 20px;
+}
+
+/* Table container styling */
+.interview-table-container {
+  background: var(--white);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.interview-table-container h2 {
+  font-size: 18px;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Table styling using actual HTML table */
+.interview-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #f0f2f5;
+}
+
+.interview-table thead {
+  background-color: #f9fafb;
+}
+
+.interview-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.interview-table tbody {
+  max-height: calc(100vh - 350px);
   overflow-y: auto;
 }
 
-.m-i-table-row {
-  display: flex;
-  padding: 16px;
+.interview-table tr {
   border-bottom: 1px solid #f0f2f5;
   transition: background-color 0.2s ease;
 }
 
-.m-i-table-row:hover {
-  background-color: var(--color-table-row-hover);
+.interview-table tr:hover {
+  background-color: #f9fafb;
 }
 
-.m-i-table-cell {
-  flex: 1;
-  padding: 8px 16px;
-  color: #1f2937;
+.interview-table td {
+  padding: 16px;
+  color: var(--color-text-primary);
+  vertical-align: middle;
 }
 
-.m-i-table-cell:last-child {
-  text-transform: capitalize;
-}
-
-.m-i-table-cell:nth-child(2) {
+/* Status styling */
+.interview-table td.status-pending {
+  color: var(--color-status-pending);
   font-weight: 600;
 }
 
-.m-i-table-cell.status-Pending {
-color: var(--color-status-pending);
-text-shadow: 2px 2px 4px rgba(33, 150, 243, 0.5);
+.interview-table td.status-done {
+  color: var(--color-status-rejected);
+  font-weight: 600;
 }
 
-
-.m-i-table-cell.status-Done{
-color: var(--color-status-rejected);
-text-shadow: 2px 2px 4px rgba(255, 82, 82, 0.5);
-}
-
-.m-i-view-req-action-btn {
+/* Action button styling */
+.interview-action-btn {
   background: var(--color-btn-primary);
   color: var(--white);
   border: none;
@@ -135,68 +162,9 @@ text-shadow: 2px 2px 4px rgba(255, 82, 82, 0.5);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
-.m-i-view-req-action-btn:hover {
-  background: var(--color-btn-primary-hover);
+.interview-action-btn:hover {
+  background-color: var(--color-btn-primary-hover);
   transform: translateY(-1px);
-}
-
-
-
-@media (max-width: 768px) {
-    .m-i-container {
-        margin: 1rem;
-        padding: 20px;
-        min-width: none;
-        margin-top: 100px;
-    }
-
-    .m-i-search-section {
-        flex-direction: row;
-        gap: 10px;
-    }
-
-    .m-i-search-section input[type="text"] {
-        width: 70%;
-    }
-
-    .m-i-search-section button {
-        width: auto;
-        margin-left: 10px;
-    }
-
-    .m-i-table-container {
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .m-i-table-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .m-i-table {
-        min-width: 600px;
-        width: 100%;
-    }
-
-    .m-i-table-header,
-    .m-i-table-row {
-        display: flex;
-        width: 100%;
-    }
-}
-@media (max-width: 480px) {
-  .m-i-table-header,
-  .m-i-table-row {
-    font-size: 0.875rem;
-  }
-  
-  .m-i-table-cell {
-    padding: 8px;
-  }
 }

@@ -211,42 +211,41 @@ $this->view('careseeker/v_requestCaregiver', $data);
 }
 
 public function showConsultantRequestForm($consultant_id){
-    // Check if user is logged in
-    if (!isset($_SESSION['user_id'])) {
-     redirect('users/login');
- }
- 
- // Get the careseeker_id from the session
- $careseeker_id = $_SESSION['user_id'];
- 
- // Get the elder profiles for the careseeker
- $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
- $careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
- $consultantProfile = $this->careseekersModel->showConsultantProfile($consultant_id);
- 
- $dob = new DateTime($consultantProfile->date_of_birth);
-     $today = new DateTime();
-     $age = $today->diff($dob)->y;
- 
- $data = [
-     'elders' => $elders,
-     'careseeker' => $careseekerProfile,
-     'consultant' => $consultantProfile,
-     'age' => $age,
-     'consultant_id' => $consultant_id,
-     'elder_profile' => '',
-     'from_time' => '',
-     'to_time' => '',
-     'expected_services' => '',
-     'additional_notes' => '',
-     'error' => ''
- ];
- 
- $this->view('careseeker/v_requestConsultant', $data);
- 
- }
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+        redirect('users/login');
+    }
+    
+    // Get the careseeker_id from the session
+    $careseeker_id = $_SESSION['user_id'];
+    
+    // Get the elder profiles for the careseeker
+    $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+    $careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
+    $consultantProfile = $this->careseekersModel->showConsultantProfile($consultant_id);
+    
+    $dob = new DateTime($consultantProfile->date_of_birth);
+        $today = new DateTime();
+        $age = $today->diff($dob)->y;
+    
+    $data = [
+        'elders' => $elders,
+        'careseeker' => $careseekerProfile,
+        'consultant' => $consultantProfile,
+        'age' => $age,
+        'consultant_id' => $consultant_id,
+        'elder_profile' => '',
+        'from_time' => '',
+        'to_time' => '',
+        'expected_services' => '',
+        'additional_notes' => '',
+        'error' => ''
+    ];
+    
+    $this->view('careseeker/v_requestConsultant', $data);
+}
 
- public function calculateAge($dob) {
+public function calculateAge($dob) {
     $birthDate = new DateTime($dob);
     $today = new DateTime('today');
     $age = $birthDate->diff($today)->y; 
@@ -509,6 +508,99 @@ public function requestCaregiver($caregiver_id) {
 
 
 
+// public function requestConsultant($consultant_id) {
+//     if (!isset($_SESSION['user_id'])) {
+//         redirect('users/login');
+//     }
+
+//     $careseeker_id = $_SESSION['user_id'];
+//     $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
+
+//     // Check if consultant exists
+//     $consultant = $this->careseekersModel->showConsultantProfile($consultant_id);
+//     if (!$consultant) {
+//         flash('request_error', 'Consultant not found', 'alert alert-danger');
+//         redirect('careseeker/viewConsultantRequests');
+//     }
+
+//     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+//         $data = [
+//             'elders' => $elders,
+//             'consultant' => $consultant,
+//             'consultant_id' => $consultant_id,
+//             'careseeker_id' => $careseeker_id,
+//             'age'=> $this->calculateAge($consultant->date_of_birth),
+//             'elder_profile' => isset($_POST['elder_profile']) ? trim($_POST['elder_profile']) : '',
+//             'appointment_date' => isset($_POST['appointment_date']) ? trim($_POST['appointment_date']) : '',
+//             'from_time' => isset($_POST['from_time']) ? trim($_POST['from_time']) : '',
+//             'to_time' => isset($_POST['to_time']) ? trim($_POST['to_time']) : '',
+//             'total_amount' => isset($_POST['total_amount']) ? trim($_POST['total_amount']) : '',
+//             'expected_services' => isset($_POST['expected_services']) ? trim($_POST['expected_services']) : '',
+//             'additional_notes' => isset($_POST['additional_notes']) ? trim($_POST['additional_notes']) : '',
+//             'error' => ''
+//         ];
+
+//         // Validations
+//         if (empty($data['elder_profile'])) {
+//             $data['error'] = 'Please select an elder profile';
+//         } elseif (empty($data['appointment_date'])) {
+//             $data['error'] = 'Please select an appointment date';
+//         } else {
+//             // Check if appointment date is at least tomorrow
+//             $appointment_date = new DateTime($data['appointment_date']);
+//             $tomorrow = new DateTime();
+//             $tomorrow->modify('+1 day');
+//             if ($appointment_date < $tomorrow) {
+//                 $data['error'] = 'Appointment date must be at least tomorrow';
+//             }
+//         }
+
+//         if (empty($data['error']) && (empty($data['from_time']) || empty($data['to_time']))) {
+//             $data['error'] = 'Please select both start and end times';
+//         } elseif (empty($data['error']) && $data['from_time'] >= $data['to_time']) {
+//             $data['error'] = 'End time must be after start time';
+//         }
+
+//         if (empty($data['error']) && (empty($data['total_amount']) || !is_numeric($data['total_amount']) || $data['total_amount'] <= 0)) {
+//             $data['error'] = 'Invalid payment amount';
+//         }
+
+//         // If all validations pass
+//         if (empty($data['error'])) {
+//             $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
+
+//             $requestData = [
+//                 'careseeker_id' => $careseeker_id,
+//                 'elder_id' => $data['elder_profile'],
+//                 'consultant_id' => $consultant_id,
+//                 'appointment_date' => $data['appointment_date'],
+//                 'time_slot' => $formattedTimeSlot,
+//                 'expected_services' => $data['expected_services'],
+//                 'additional_notes' => $data['additional_notes'],
+//                 'total_amount' => $data['total_amount'],
+//                 'status' => 'pending'
+//             ];
+
+//             if ($this->careseekersModel->sendConsultantRequest($requestData)) {
+//                 flash('request_success', 'Consultant request sent successfully');
+//                 redirect('careseeker/viewRequests');
+//             } else {
+//                 $data['error'] = 'Failed to send request. Please try again.';
+//                 $this->view('careseeker/v_requestConsultant', $data);
+//             }
+//         } else {
+//             $data['careseeker'] = $this->careseekersModel->showCareseekerProfile($careseeker_id);
+//             $this->view('careseeker/v_requestConsultant', $data);
+//         }
+//     } else {
+//         // Not a POST request, redirect to form
+//         redirect('careseeker/showConsultantRequestForm/' . $consultant_id);
+//     }
+// }
+
+
 public function requestConsultant($consultant_id) {
     if (!isset($_SESSION['user_id'])) {
         redirect('users/login');
@@ -568,6 +660,39 @@ public function requestConsultant($consultant_id) {
             $data['error'] = 'Invalid payment amount';
         }
 
+        // If basic validations pass, check consultant availability
+        if (empty($data['error'])) {
+            // Format times for database queries
+            $startTime = $data['from_time'] . ':00';
+            $endTime = $data['to_time'] . ':00';
+            
+            // Check if consultant is available at this time
+            $isAvailable = $this->scheduleModel->isConsultantAvailable(
+                $consultant_id, 
+                $data['appointment_date'], 
+                $startTime, 
+                $endTime
+            );
+
+
+
+            if (!$isAvailable) {
+                $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
+            } else {
+                // Check if there are existing bookings for this time slot
+                $hasBookings = $this->scheduleModel->hasExistingBookings(
+                    $consultant_id, 
+                    $data['appointment_date'], 
+                    $startTime,
+                    $endTime
+                );
+                
+                if ($hasBookings) {
+                    $data['error'] = 'This time slot is already booked. Please select a different time slot.';
+                }
+            }
+        }
+
         // If all validations pass
         if (empty($data['error'])) {
            // $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
@@ -601,9 +726,6 @@ public function requestConsultant($consultant_id) {
         redirect('careseeker/showConsultantRequestForm/' . $consultant_id);
     }
 }
-
-
-
 
 
 public function deleteElderProfile($elderId) {
@@ -1317,6 +1439,51 @@ public function viewConsultantSession($session_id) {
         }
         exit;
     }
+
+
+    public function getConsultantAvailability($consultantId) {
+        // Prevent any PHP errors or warnings from being output
+        ob_start();
+        
+        try {
+            // Get consultant availability patterns
+            $availabilityPatterns = $this->scheduleModel->getAvailabilityPatterns($consultantId);
+            
+            // Get consultant availability instances
+            $availabilityInstances = $this->scheduleModel->getAvailabilityInstances($consultantId);
+            
+            // Get existing appointments (pending or accepted)
+            $existingAppointments = $this->scheduleModel->getActiveAppointments($consultantId);
+            
+            // Clear any output buffer to prevent PHP errors from being included in the response
+            ob_end_clean();
+            
+            // Prepare response data
+            $data = [
+                'availabilityPatterns' => $availabilityPatterns ? $availabilityPatterns : [],
+                'availabilityInstances' => $availabilityInstances ? $availabilityInstances : [],
+                'existingAppointments' => $existingAppointments ? $existingAppointments : []
+            ];
+            
+            // Set content type header and output JSON
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        } catch (Exception $e) {
+            // Clear any output buffer
+            ob_end_clean();
+            
+            // Return error as JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'availabilityPatterns' => [],
+                'availabilityInstances' => [],
+                'existingAppointments' => []
+            ]);
+        }
+        exit;
+    }
+    
     
     
     
