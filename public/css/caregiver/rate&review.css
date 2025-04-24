@@ -346,3 +346,34 @@
         padding: 4px 6px;
     }
 }
+
+.review-actions-icons {
+    position: absolute; /* Position the actions absolutely within the card */
+    bottom: 10px; /* Align to the bottom */
+    right: 10px; /* Align to the right */
+    display: flex;
+    gap: 10px; /* Add spacing between the buttons */
+}
+
+.edit-btn-pen, .delete-btn-trash {
+    background-color: transparent; /* Remove background */
+    border: none; /* Remove border */
+    color: #007bff; /* Default color for icons */
+    font-size: 16px; /* Icon size */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.edit-btn-pen:hover {
+    color: #28a745; /* Green for edit on hover */
+}
+
+.delete-btn-trash:hover {
+    color: #dc3545; /* Red for delete on hover */
+}
+
+.edit-btn-pen i, .delete-btn-trash i {
+    font-size: 20px; /* Adjust icon size */
+}

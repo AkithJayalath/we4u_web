@@ -12,7 +12,6 @@
             <button class="add-review-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/addReview/<?php echo $data['caregiver_id']; ?>/Caregiver'">
                 Add Review
             </button>
-
         </div>
 
         <div class="review">
@@ -35,18 +34,24 @@
                         <?php endfor; ?>
                     </div>
                     
+                    <!-- Edit and Delete Buttons -->
+                    <div class="review-actions-icons">
+                        <button class="edit-btn-pen" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/editReview/<?php echo $review->review_id; ?>'">
+                            <i class="fa-solid fa-pen-to-square"></i> 
+                        </button>
+                        <button class="delete-btn-trash" onclick="if(confirm('Are you sure you want to delete this review?')) { window.location.href='<?php echo URLROOT; ?>/careseeker/deleteReview/<?php echo $review->review_id; ?>'; }">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             <?php endforeach; ?>
             <?php else : ?>
             <div class="no-reviews">
-                <img src="/we4u/public/images/Empty-cuate.png" alr="No Request">
+                <img src="/we4u/public/images/Empty-cuate.png" alt="No Request">
                 <p>No reviews yet</p>
             </div>
             <?php endif; ?>
-                
-
         </div>
     </div>
-
 </page-body-container>
 <?php require APPROOT.'/views/includes/footer.php';?>

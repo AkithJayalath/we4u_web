@@ -795,40 +795,39 @@ public function addReview($reviewed_user_id, $role) {
         $this->view('careseeker/v_addReview', $data);
     }
 }
-  public function editreview($review_id) {
+  public function editReview($review_id) {
     $review = $this->careseekersModel->getReviewById($review_id);
 
     // Ensure the logged-in user is the reviewer
     if ($review->reviewer_id != $_SESSION['user_id']) {
+        flash('review_message', 'You are not authorized to edit this review.');
         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
         $data = [
             'review_id' => $review_id,
-            'rating' => trim($_POST['rating']),
             'review_text' => trim($_POST['review_text']),
-            'rating_err' => '',
-            'review_text_err' => ''
+            'rating' => trim($_POST['rating']),
+            'review_text_err' => '',
+            'rating_err' => ''
         ];
 
-        // Validate rating
-        if (empty($data['rating'])) {
-            $data['rating_err'] = 'Please provide a rating.';
-        }
-
-        // Validate review text
+        // Validate input
         if (empty($data['review_text'])) {
-            $data['review_text_err'] = 'Please provide a review.';
+            $data['review_text_err'] = 'Please enter a review.';
+        }
+        if (empty($data['rating'])) {
+            $data['rating_err'] = 'Please select a rating.';
         }
 
-        // Check for errors
-        if (empty($data['rating_err']) && empty($data['review_text_err'])) {
-            if ($this->careseekersModel->editReview($data)) {
+        if (empty($data['review_text_err']) && empty($data['rating_err'])) {
+            if ($this->careseekerModel->updateReview($data)) {
                 flash('review_message', 'Review updated successfully');
-                redirect('careseeker/viewrateandreview');
+                redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
             } else {
                 die('Something went wrong');
             }
@@ -838,20 +837,35 @@ public function addReview($reviewed_user_id, $role) {
     } else {
         $data = [
             'review_id' => $review_id,
-            'rating' => $review->rating,
             'review_text' => $review->review_text,
-            'rating_err' => '',
-            'review_text_err' => ''
+            'rating' => $review->rating
         ];
         $this->view('careseeker/v_editreview', $data);
     }
 }
 
-public function deletereview($review_id) {
+// public function deletereview($review_id) {
+//     $review = $this->careseekersModel->getReviewById($review_id);
+
+//     // Ensure the logged-in user is the reviewer
+//     if ($review->reviewer_id != $_SESSION['user_id']) {
+//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+//     }
+
+//     if ($this->careseekerModel->deleteReview($review_id)) {
+//         flash('review_message', 'Review deleted successfully');
+//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+//     } else {
+//         die('Something went wrong');
+//     }
+// }
+
+public function deleteReview($review_id) {
     $review = $this->careseekersModel->getReviewById($review_id);
 
     // Ensure the logged-in user is the reviewer
     if ($review->reviewer_id != $_SESSION['user_id']) {
+        flash('review_message', 'You are not authorized to delete this review.');
         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
     }
 
