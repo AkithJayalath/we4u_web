@@ -7,18 +7,6 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-/**
- * Send an email using PHPMailer
- * 
- * @param string|array $to Recipient email address(es)
- * @param string $subject Email subject
- * @param string $message Email message (HTML)
- * @param string $plainText Plain text version of the message (optional)
- * @param array $attachments Array of file paths to attach (optional)
- * @param array $cc Array of CC email addresses (optional)
- * @param array $bcc Array of BCC email addresses (optional)
- * @return array ['success' => bool, 'message' => string]
- */
 function sendEmail($to, $subject, $message, $plainText = '', $attachments = [], $cc = [], $bcc = []) {
     // Load email configuration
     $configFile = APPROOT . '/config/mail_config.php';

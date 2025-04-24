@@ -149,10 +149,9 @@ public function deletePaymentMethod($email) {
 
 public function submitReview($data) 
 {
-    $this->db->query('INSERT INTO review (review_id, reviewer_id, reviewed_user_id, review_role, review_text, review_date)
-    VALUES (:review_id, :reviewer_id, :reviewed_user_id, :review_role, :review_text, NOW())'); 
+    $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, review_text, review_date)
+    VALUES (:reviewer_id, :reviewed_user_id, :review_role, :review_text, NOW())'); 
     
-    $this->db->bind(':review_id', $data['review_id']);
     $this->db->bind(':reviewer_id', $data['reviewer_id']);
     $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
     $this->db->bind(':review_role', 'caregiver');
@@ -486,6 +485,21 @@ public function getPaymentHistory($caregiverId){
     WHERE cp.caregiver_id = :caregiverId
    
     ORDER BY cp.payment_date DESC');
+
+    $this->db->bind(':caregiverId', $caregiverId);
+
+    return $this->db->resultSet();
+}
+
+public function getCaregivingHistory($caregiverId){
+    $this->db->query('SELECT cr.*,u.username,u.profile_picture
+    FROM carerequests cr
+    JOIN user u ON cr.requester_id = u.user_id
+    
+    WHERE cr.caregiver_id = :caregiverId
+    AND cr.status ="accepted" OR cr.status ="cancelled"
+   
+    ORDER BY cr.created_at DESC');
 
     $this->db->bind(':caregiverId', $caregiverId);
 

@@ -31,5 +31,9 @@
     require_once 'libraries/PHPMailer/src/PHPMailer.php';
     require_once 'libraries/PHPMailer/src/SMTP.php';
 
+    // Load the PDF library
+    require_once 'libraries/dompdf/vendor/autoload.php';
+    require_once 'helpers/pdf_helper.php';
+
 
 ?>

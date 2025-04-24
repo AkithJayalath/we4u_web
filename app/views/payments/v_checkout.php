@@ -92,7 +92,7 @@
                 <input type="hidden" name="amount" value="<?= $data['amount'] ?>"> 
                 <input type="hidden" name="description" value="Elderly Care Visit">
                 <div class="btn">
-                    <button class="proceed-btn" type="submit">Proceed to Payment</button>
+                    <button class="proceed-btn" type="submit">Proceed to Payment</button> 
 
                 </div>
             </form>
@@ -120,6 +120,7 @@
         
     </div>
 </div>
+
 
 </page-body-container>
 <?php require APPROOT.'/views/includes/footer.php';?>

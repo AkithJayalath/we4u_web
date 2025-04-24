@@ -49,7 +49,6 @@
     public function viewannouncement() {
       $announcements = $this->adminModel->getAnnouncements();
       $data = [
-          'title' => 'View Announcement',
           'announcements' => $announcements
       ];
       $this->view('admin/v_viewannouncements', $data);
