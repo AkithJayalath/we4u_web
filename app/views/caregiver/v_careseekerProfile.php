@@ -66,9 +66,7 @@
                     <button class="caregiver-chat-button">
                     <i class="fas fa-comments"></i> Chat
                     </button>
-                    <button class="caregiver-review-button" onClick="openRejectModal()">
-                        <i class="fas fa-comment"></i> Review 
-                    </button>
+                    
                 </div>
             </div>
         </div>

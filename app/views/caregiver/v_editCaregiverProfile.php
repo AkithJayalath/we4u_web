@@ -368,6 +368,8 @@
         updateSelectedItems();
     }
 
+    
+
     // Modal functions
     function handleAdd(event) {
         event.preventDefault();
