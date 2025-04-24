@@ -266,11 +266,14 @@
           'reviewed_user_id' => $_POST['reviewed_user_id'],
           
           'review_text' => trim($_POST['review_text']),
-          'review_text_err' => ''
+          'review_role' => 'Careseeker',
+          'review_text_error' => ''
         ];
 
         if(empty($data['review_text'])){
-          $data['review_text_err'] = 'Please leave a review';
+          $data['review_text_error'] = 'Please leave a review';
+          echo json_encode(['error' => 'Please leave a review']);
+            return;
         }
 
         if(empty($data['review_text_error'])){
@@ -287,10 +290,23 @@
     
 
     public function caregivingHistory(){ 
-      $this->view('caregiver/v_cghistory');
+
+        $caregiverId = $_SESSION['user_id'];
+        $history = $this->caregiversModel->getCaregivingHistory($caregiverId);
+
+        $data = [
+          'history' => $history
+        ];
+
+        $this->view('caregiver/v_cghistory', $data);
+
+      }
+
+      
+      
   
       
-    }
+    
 
     public function addPaymentMethod() {
       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
