@@ -4,19 +4,19 @@
             <div class="elder-info">
                 <?php
                 // Determine which image to display
-                $careseekerprofilePic  = !empty($data['careseeker']->profile_picture)
-                    ? URLROOT . '/public/images/profile_imgs/' . $data['careseeker']->profile_picture
+                $caregiver_pic = !empty($data['caregiver']->profile_picture)
+                    ? URLROOT . '/public/images/profile_imgs/' . $data['caregiver']->profile_picture
                     : URLROOT . '/public/images/def_profile_pic2.jpg';
-
                 ?>
-                <img src="<?php echo $careseekerprofilePic ?>" alt="Elder Profile" class="elder-pic">
+                <img src="<?php echo $caregiver_pic ?>" alt="Caregiver Profile" class="elder-pic">
                 <div>
-                    <h3><?php echo $data['careseeker']->username ?></h3>
+                    <h3><?php echo $data['caregiver']->username ?></h3>
+                    <p>For: <?php echo $data['elder']->first_name ?></p>
                 </div>
             </div>
         </div>
         <div class="chat-popup-controls">
-            <button id="minimize-chat" class="minimize-btn"><i class="fas fa-minus"></i></button>
+            <!-- Minimize button removed -->
             <button id="close-chat" class="close-btn"><i class="fas fa-times"></i></button>
         </div>
     </div>

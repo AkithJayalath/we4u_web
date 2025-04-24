@@ -136,6 +136,7 @@ echo loadCSS($required_styles);
                         onclick="<?= $buttonAction ?>">
                         <?= $buttonText ?>
                     </button>
+                    
                 </div>
 
             </div>
@@ -202,6 +203,7 @@ echo loadCSS($required_styles);
                 <div class="request-info-row">
                     <label>Service Provider ID</label>
                     <p>#<?= $data->caregiver_id ?></p>
+                        <a href="<?= URLROOT ?>/careseeker/viewCaregiverProfile/<?= $data->caregiver_id ?>" class="view-elder-profile-link">( View Profile )</a>
                 </div>
                 <div class="request-info-row">
                     <label>Service Provider Name</label>
@@ -274,8 +276,16 @@ echo loadCSS($required_styles);
         </div>
     </div>
 
+
+<!-- Floating Chat Button -->
+<?php if (strtolower($data->status) === 'accepted' || strtolower($data->status) === 'pending'): ?>
+    <div class="floating-chat-button" data-request-id="<?php echo $data->request_id; ?>" data-user-id="<?php echo $_SESSION['user_id']; ?>">
+        <i class="fas fa-comments"></i>
+        <span class="message-badge hidden">0</span>
+    </div>
+<?php endif; ?>
 </page-body-container>
-</style>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -496,6 +506,9 @@ echo loadCSS($required_styles);
         }
     });
 </script>
-
+<script>
+    const URLROOT = '<?php echo URLROOT; ?>';
+</script>
+<script src="<?php echo URLROOT; ?>/js/caregiverChatPopup.js">
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js">
     <?php require APPROOT . '/views/includes/footer.php' ?>

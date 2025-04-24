@@ -354,7 +354,7 @@ public function getAllRegions() {
 public function getCaregiverById($id) {
     $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
                     FROM caregiver c
-                    JOIN user  ON c.caregiver_id = u.user_id
+                    JOIN user u ON c.caregiver_id = u.user_id
                     WHERE c.caregiver_id = :id");
     $this->db->bind(':id', $id);
     return $this->db->single();
@@ -505,6 +505,131 @@ public function getCaregivingHistory($caregiverId){
 
     return $this->db->resultSet();
 }
+
+
+// for chat
+ // Get chat by request, caregiver, careseeker and elder IDs
+ public function getChatByRequestInfo($request_id, $caregiver_id, $careseeker_id, $elder_id) {
+    $this->db->query("SELECT * FROM caregiverchats 
+                      WHERE request_id = :request_id 
+                      AND caregiver_id = :caregiver_id 
+                      AND careseeker_id = :careseeker_id 
+                      AND elder_id = :elder_id");
+    
+    $this->db->bind(':request_id', $request_id);
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    $this->db->bind(':elder_id', $elder_id);
+    
+    return $this->db->single();
+}
+
+// Create a new chat
+public function createChat($request_id, $caregiver_id, $careseeker_id, $elder_id) {
+    $this->db->query("INSERT INTO caregiverchats (request_id, caregiver_id, careseeker_id, elder_id) 
+                      VALUES (:request_id, :caregiver_id, :careseeker_id, :elder_id)");
+    
+    $this->db->bind(':request_id', $request_id);
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    $this->db->bind(':careseeker_id', $careseeker_id);
+    $this->db->bind(':elder_id', $elder_id);
+    
+    if ($this->db->execute()) {
+        return $this->db->lastInsertId();
+    } else {
+        return false;
+    }
+}
+
+// Get or create chat for a request
+public function getOrCreateChatForRequest($request_id, $caregiver_id, $careseeker_id, $elder_id) {
+    // Check if a chat already exists
+    $chat = $this->getChatByRequestInfo($request_id, $caregiver_id, $careseeker_id, $elder_id);
+    
+    if ($chat) {
+        return $chat->chat_id;
+    } else {
+        // Create a new chat
+        return $this->createChat($request_id, $caregiver_id, $careseeker_id, $elder_id);
+    }
+}
+
+// Save message
+public function saveMessage($chat_id, $sender_id, $message_text) {
+    $this->db->query("INSERT INTO caregiverchatmessages (chat_id, sender_id, message_text) 
+                      VALUES (:chat_id, :sender_id, :message_text)");
+    
+    $this->db->bind(':chat_id', $chat_id);
+    $this->db->bind(':sender_id', $sender_id);
+    $this->db->bind(':message_text', $message_text);
+    
+    if ($this->db->execute()) {
+        return $this->db->lastInsertId();
+    } else {
+        return false;
+    }
+}
+
+// Get message by ID with sender details
+public function getMessageById($message_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM caregiverchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.message_id = :message_id");
+    
+    $this->db->bind(':message_id', $message_id);
+    return $this->db->single();
+}
+
+// Get all messages for a chat
+public function getMessagesByChatId($chat_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM caregiverchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.chat_id = :chat_id
+                      ORDER BY cm.created_at ASC");
+    
+    $this->db->bind(':chat_id', $chat_id);
+    return $this->db->resultSet();
+}
+
+// Get new messages since last check
+public function getNewMessages($chat_id, $last_message_id) {
+    $this->db->query("SELECT cm.*, u.username, u.profile_picture 
+                      FROM caregiverchatmessages cm
+                      JOIN user u ON cm.sender_id = u.user_id
+                      WHERE cm.chat_id = :chat_id AND cm.message_id > :last_message_id
+                      ORDER BY cm.created_at ASC");
+    
+    $this->db->bind(':chat_id', $chat_id);
+    $this->db->bind(':last_message_id', $last_message_id);
+    return $this->db->resultSet();
+}
+
+
+
+
+// Get elder profile details
+public function getElderProfileByIdChat($id) {
+    $this->db->query("SELECT e.*, CONCAT_WS(' ', e.first_name, e.middle_name, e.last_name) AS elder_full_name , u.username, u.profile_picture 
+                    FROM elderprofile e
+                    JOIN user u ON e.careseeker_id = u.user_id
+                    WHERE e.elder_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
+
+// Get careseeker details
+public function getCareseekerById($id) {
+    $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
+                    FROM careseeker c
+                    JOIN user u ON c.careseeker_id = u.user_id
+                    WHERE c.careseeker_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
+
+
 
 
 
