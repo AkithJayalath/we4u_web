@@ -14,7 +14,7 @@
   <main class="a-b-e-main-content">
       <div class="a-b-e-stat-card">
         <h2>Edit Blog Post</h2>
-        <form class="a-b-e-form" action="<?php echo URLROOT; ?>/admin/addblog" method="POST" enctype="multipart/form-data">
+        <form class="a-b-e-form" action="<?php echo URLROOT; ?>/admin/editBlog/<?php echo $data['blog_id']; ?>" method="POST" enctype="multipart/form-data">
   <div class="a-b-e-form-group">
     <label for="title">Blog Title</label>
     <input
@@ -41,6 +41,7 @@
         class="a-b-e-input"
       />
     </div>
+    <input type="hidden" name="existing_image_path" value="<?php echo $data['image_path']; ?>">
     <span class="error"><?php echo $data['image_path_err']; ?></span>
   </div>
 
@@ -58,11 +59,10 @@
 
   <div class="a-b-e-form-buttons">
     <button type="button" class="a-b-e-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/admin/blog'">Cancel</button>
-    <button type="submit" class="a-b-e-btn-save">Create Blog</button>
+    <button type="submit" class="a-b-e-btn-save">Save Changes</button>
   </div>
 </form>
 
       </div>
     </main>
 </page-body-container>
-

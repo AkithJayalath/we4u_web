@@ -1,6 +1,6 @@
 <?php 
     function uploadImage($img,$img_name,$location){
-        $target= PUBROOT.$location.'/'.$img_name;
+        $target= PUBROOT.'/'.$location.'/'.$img_name;
         var_dump($target);
 
         return move_uploaded_file($img,$target);

@@ -3,6 +3,8 @@ function renderRating(ratingValue) {
     const ratingStarsContainer = document.getElementById('rating-stars');
     ratingStarsContainer.innerHTML = ''; // Clear previous stars
 
+    console.log('Rating Value:', ratingValue); // Debugging: Check the rating value
+
     // Generate stars based on the rating value
     for (let i = 1; i <= maxStars; i++) {
         const star = document.createElement('i');

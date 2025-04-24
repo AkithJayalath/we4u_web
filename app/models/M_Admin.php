@@ -95,12 +95,14 @@ public function addAnnouncement($data) {
 
   // Add a new blog
   public function addBlog($data) {
-    $this->db->query("INSERT INTO blogs (user_id, title, content, image_path) 
-                      VALUES (:user_id, :title, :content, :image_path)");
+    $this->db->query("INSERT INTO blogs (user_id, title, content, image_path,created_at,updated_at) 
+                      VALUES (:user_id, :title, :content, :image_path,:created_at,:updated_at)");
     $this->db->bind(':user_id', $data['user_id']);
     $this->db->bind(':title', $data['title']);
     $this->db->bind(':content', $data['content']);
     $this->db->bind(':image_path', $data['image_path']);
+    $this->db->bind(':created_at', date('Y-m-d H:i:s'));
+    $this->db->bind(':updated_at', date('Y-m-d H:i:s'));
     return $this->db->execute();
 }
 

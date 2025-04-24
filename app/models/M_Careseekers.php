@@ -202,6 +202,7 @@ class M_Careseekers{
     
 
 
+
 }
 
 public function sendCareRequest($data) {
@@ -344,13 +345,15 @@ public function getReviews($caregiver_id) {
     return $this->db->resultSet();
 }
 
-public function getAvgRating($caregiver_id) {
+
+public function getAvgRating($user_id, $role) {
     $this->db->query('SELECT AVG(r.rating) AS avg_rating
                       FROM review r
-                      WHERE r.reviewed_user_id = :caregiver_id 
-                      AND r.review_role = "Caregiver"');
+                      WHERE r.reviewed_user_id = :user_id
+                      AND r.review_role = :role');
 
-    $this->db->bind(':caregiver_id', $caregiver_id);
+    $this->db->bind(':user_id', $user_id);
+    $this->db->bind(':role', $role);
     $result = $this->db->single();
     return round($result->avg_rating ?? 0, 1);
 }
@@ -415,9 +418,40 @@ public function showConsultantProfile($consultant_id) {
     return $this->db->single();
 }
 
+public function addReview($data) {
+    $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, rating, review_text, review_date) 
+                      VALUES (:reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_TIMESTAMP)');
+    $this->db->bind(':reviewer_id', $data['reviewer_id']);
+    $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
+    $this->db->bind(':review_role', $data['review_role']);
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_text', $data['review_text']);
+    return $this->db->execute();
+}
 
+public function getReviewById($review_id) {
+    $this->db->query('SELECT * FROM review WHERE review_id = :review_id');
+    $this->db->bind(':review_id', $review_id);
+    return $this->db->single();
+}
 
+public function editReview($data) {
+    $this->db->query('UPDATE review SET 
+                      rating = :rating,
+                      review_text = :review_text,
+                      review_date = CURRENT_TIMESTAMP
+                      WHERE review_id = :review_id');
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_text', $data['review_text']);
+    $this->db->bind(':review_id', $data['review_id']);
+    return $this->db->execute();
+}
 
+public function deleteReview($review_id) {
+    $this->db->query('DELETE FROM review WHERE review_id = :review_id');
+    $this->db->bind(':review_id', $review_id);
+    return $this->db->execute();
+}
 
 }
 

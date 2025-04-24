@@ -153,6 +153,9 @@ echo loadCSS($required_styles);
                     <div class="caregiver-header-with-icon">
                         <h3>Rating & reviews</h3>
                     </div>
+                    <button class="caregiver-review-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/viewCaregiverReviews/<?= $data['profile']->caregiver_id ?>'">
+                        Review
+                    </button>
                 </div>
                 <div class="rating-section-content">
                     <!-- ratings.js -->

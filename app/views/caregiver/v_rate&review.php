@@ -8,8 +8,11 @@
     <?php require APPROOT.'/views/includes/components/sidebar.php';?>
     <div class="container">
         <div class="header">
-                <h2>Ratings and Reviews<h2> 
-               
+            <h2>Ratings and Reviews</h2>
+            <button class="add-review-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/addReview/<?php echo $data['caregiver_id']; ?>/Caregiver'">
+                Add Review
+            </button>
+
         </div>
 
         <div class="review">
@@ -38,7 +41,6 @@
             <div class="no-reviews">
                 <img src="/we4u/public/images/Empty-cuate.png" alr="No Request">
                 <p>No reviews yet</p>
-
             </div>
             <?php endif; ?>
                 

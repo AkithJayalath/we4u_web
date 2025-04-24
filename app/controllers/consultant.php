@@ -1,4 +1,4 @@
-  <?php
+<?php
   class consultant extends Controller {
     
       private $consultantModel;
@@ -413,61 +413,69 @@ public function viewConsultantProfile($id = null) {
     $this->view('consultant/v_viewRequests', $data);
 }
 
+// Fetch detailed information about a specific consultation request
 public function viewreqinfo($requestId){
-       
     $consultRequest = $this->consultantModel->getFullConsultRequestInfo($requestId);
 
     if (!$consultRequest) {
+        // Redirect if the request is not found
         flash('request_not_found', 'Request not found');
         redirect('consultant/viewRequests');
     }
 
+    // Load the view with the consultation request details
     $this->view('consultant/v_viewRequestInfo', $consultRequest);
-    }
+}
 
-
+// Accept a consultation request
 public function acceptRequest($request_id) {
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      // Get caregiver_id from session
-      $consultantId = $_SESSION['user_id'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Get consultant ID from session
+        $consultantId = $_SESSION['user_id'];
 
-      // Verify request belongs to this caregiver
-      $request = $this->consultantModel->getRequestById($request_id);
-      if (!$request || $request->consultant_id != $consultantId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
-          redirect('consultant/viewRequests');
-          return;
-      }
+        // Verify the request belongs to the logged-in consultant
+        $request = $this->consultantModel->getRequestById($request_id);
+        if (!$request || $request->consultant_id != $consultantId) {
+            // Unauthorized access handling
+            flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+            redirect('consultant/viewRequests');
+            return;
+        }
 
-      // Update status
-      if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
-          flash('request_message', 'Request has been accepted.');
-      } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
-      }
-      redirect('consultant/viewRequests');
-  }
+        // Update the request status to 'accepted'
+        if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
+            flash('request_message', 'Request has been accepted.');
+        } else {
+            flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+        }
+        redirect('consultant/viewRequests');
+    }
 }
 
+// Reject a consultation request
 public function rejectRequest($request_id) {
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $consultantId = $_SESSION['user_id'];
-      $request = $this->consultantModel->getRequestById($request_id);
-      if (!$request || $request->consultant_id != $consultantId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
-          redirect('consultant/viewRequests');
-          return;
-      }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Get consultant ID from session
+        $consultantId = $_SESSION['user_id'];
 
-      if ($this->consultantModel->updateRequestStatus($request_id, 'rejected')) {
-          flash('request_message', 'Request has been rejected.');
-      } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
-      }
-      redirect('consultant/viewRequests');
-  }
+        // Verify the request belongs to the logged-in consultant
+        $request = $this->consultantModel->getRequestById($request_id);
+        if (!$request || $request->consultant_id != $consultantId) {
+            // Unauthorized access handling
+            flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+            redirect('consultant/viewRequests');
+            return;
+        }
+
+        // Update the request status to 'rejected'
+        if ($this->consultantModel->updateRequestStatus($request_id, 'rejected')) {
+            flash('request_message', 'Request has been rejected.');
+        } else {
+            flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+        }
+        redirect('consultant/viewRequests');
+    }
 }
-
 
 public function viewCareseeker($elder_id){
     $elderProfile=$this->consultantModel->getElderProfileById($elder_id);
