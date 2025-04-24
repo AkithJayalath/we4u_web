@@ -493,7 +493,7 @@
 
    public function viewpayments(){
     
-
+    $data=[];
     
     
    
@@ -1018,6 +1018,10 @@ private function getStartDateTime($request) {
         // Load the calendar edit view
         $this->view('calendar/v_editcgcalander', $data);
     }
-  
+
+
+
+
+    
   }
 ?>
