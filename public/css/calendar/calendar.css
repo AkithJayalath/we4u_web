@@ -136,6 +136,10 @@
     background-color: #28a745;
 }
 
+.status-indicator.status-accepted{ 
+    background-color: #28a745;
+}
+
 
 .status-indicator.status-pending {
     background-color: #ffc107;

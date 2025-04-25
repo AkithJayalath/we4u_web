@@ -7,7 +7,7 @@
 @import url('components/footer_styles.css');
 @import url('components/topnavbar_styles.css');
 @import url('components/form_styles.css');
-@import url('moderator/careseekerrequests.css'); 
+/* @import url('moderator/careseekerrequests.css');  */
  @import url('components/userProfile_styles.css');
  @import url('components/homepage_styles.css');
 
@@ -114,14 +114,6 @@ page-body-container{
     overflow: visible;
     margin-bottom: 10px;
 }
-/* @media(max-width: 768px){
-    page-body-container{
-        display: block;
-        position: relative;
-        z-index: 1;
-    }
-} */
-
 container{
     padding-top: 100px;
     display: flex;
@@ -129,9 +121,6 @@ container{
     gap: 20px;
 }
 
-
-
-/* Body */
 body {
     
     font-family: Arial, sans-serif;
@@ -140,9 +129,7 @@ body {
     
 }
 
-/* Add this div class to container the content of each page */
 .top-container {
-    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -151,12 +138,7 @@ body {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-
-
 }
-
-
-
 
 .sign-up-btn {
     padding: 12px 24px;
@@ -166,12 +148,6 @@ body {
     font-weight: bold;
     text-decoration: none;
 }
-
-
-
-
-
-/* tags */
 .tag {
     display: inline-flex; /* Use flex for easy centering */
     justify-content: center; /* Horizontally center text */
@@ -181,7 +157,6 @@ body {
     border-radius: 12px;
     font-weight: 500;
     margin: 0.2em;
-
     /* Define a fixed size for uniformity */
     width: 100px; /* Adjust this value as needed */
     height: 30px; /* Adjust this value as needed */

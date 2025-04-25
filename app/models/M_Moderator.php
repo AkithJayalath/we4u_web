@@ -258,7 +258,8 @@ public function getCaregiverPayments() {
         JOIN
             user u ON cp.caregiver_id = u.user_id
         WHERE 
-            cr.status = "completed" 
+            cr.status = "completed" AND
+            cr.is_paid = 1
         ORDER BY 
             cp.payment_date DESC
     ');
@@ -306,7 +307,7 @@ public function getConsultantPayments() {
         JOIN
             user u ON cp.consultant_id = u.user_id
         WHERE 
-            cr.status = "completed" 
+            cr.status = "completed" AND cr.is_paid = 1
         ORDER BY 
             cp.payment_date DESC
     ');

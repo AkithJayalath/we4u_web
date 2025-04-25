@@ -810,11 +810,13 @@ public function editAvailability(){
                 } elseif ($data['start_time'] >= $data['end_time']) {
                     $error = 'End time must be after start time';
                 } elseif (empty($data['start_date'])) {
-                    $error = 'Please select a start date for this pattern';
+                    $error = 'Please select a start date for the pattern';
                 } elseif (empty($data['end_date'])) {
-                    $error = 'Please select an end date for this pattern';
+                    $error = 'Please select an end date for the pattern';
                 } elseif ($data['start_date'] > $data['end_date']) {
                     $error = 'End date must be after start date';
+                } elseif (strtotime($data['start_date']) <= strtotime(date('Y-m-d'))) {
+                    $error = 'Start date must be at least tomorrow';
                 } else {
                     // Check if the time slot is already defined for this day
                     if ($this->sheduleModel->isTimeSlotAvailableForPattern(
@@ -853,6 +855,8 @@ public function editAvailability(){
                     $error = 'Please select an end time';
                 } elseif ($data['start_time'] >= $data['end_time']) {
                     $error = 'End time must be after start time';
+                } elseif (strtotime($data['available_date']) <= strtotime(date('Y-m-d'))) {
+                    $error = 'Start date must be at least tomorrow';
                 } else {
                     // Check if the time slot is already defined for this date
                     if ($this->sheduleModel->isTimeSlotAvailableForInstance(
@@ -911,7 +915,7 @@ public function editAvailability(){
         }
         
         // Redirect to prevent form resubmission
-        redirect('consultant/manageAvailability');
+        redirect('consultant/editAvailability');
     }
     
     // Get all availability data for the consultant
@@ -934,7 +938,6 @@ public function viewAppointments() {
     if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
         redirect('users/login');
     }
-    
 
     // Get consultant ID from session
     $consultantId = $_SESSION['user_id'];
@@ -943,11 +946,13 @@ public function viewAppointments() {
     $bookings = $this->sheduleModel->getConsultantBookings($consultantId);
     
     $data = [
-        'bookings' => $bookings
+        'bookings' => $bookings,
+        'consultant_id' => $consultantId
     ];
     
     $this->view('calendar/v_consultantAppointments', $data);
 }
+
 
   
 

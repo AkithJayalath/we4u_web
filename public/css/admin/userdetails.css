@@ -302,36 +302,66 @@
   font-size: 16px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .ad-users-stats-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Add hover effects to stat cards similar to admin_dashboard.css */
+.ad-users-stat-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@media (max-width: 768px) {
-  .ad-users-stats-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .ad-users-filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .ad-users-table-controls {
-    width: 100%;
-  }
-  
-  .ad-users-search-wrapper {
-    width: 100%;
-  }
-  
-  .ad-users-action-group {
-    width: 100%;
-    justify-content: space-between;
-  }
+.ad-users-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
+
+/* Add hover effect to table rows */
+.ad-users-users-table tr:not(thead tr):hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  transition: background-color 0.2s ease;
+}
+
+/* Add hover effects to buttons */
+.ad-users-btn-export:hover {
+  background-color: #f5f5f5;
+  border-color: #c8c8c8;
+}
+
+.ad-users-btn-add:hover {
+  background-color: #0030a0; /* Darker shade of primary color */
+}
+
+/* Add hover effect to user cell links */
+.ad-users-user-cell a:hover .ad-users-user-name {
+  color: var(--primary-color);
+  transition: color 0.2s ease;
+}
+
+/* Add hover effect to status indicators */
+.ad-users-status {
+  transition: transform 0.2s ease;
+}
+
+.ad-users-status:hover {
+  transform: scale(1.05);
+}
+
+/* Add hover effect to sortable headers */
+.ad-users-users-table th.sortable:hover {
+  background-color: #eaeaea;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Add hover effect to flagged button */
+.ad-users-btn-flagged:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 
 
 /* Add this to your CSS file */

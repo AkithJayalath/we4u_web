@@ -550,20 +550,19 @@ class careseeker extends controller
                 'error' => ''
             ];
 
-            // Validations
-            if (empty($data['elder_profile'])) {
-                $data['error'] = 'Please select an elder profile';
-            } elseif (empty($data['appointment_date'])) {
-                $data['error'] = 'Please select an appointment date';
-            } else {
-                // Check if appointment date is at least tomorrow
-                $appointment_date = new DateTime($data['appointment_date']);
-                $tomorrow = new DateTime();
-                $tomorrow->modify('+1 day');
-                if ($appointment_date < $tomorrow) {
-                    $data['error'] = 'Appointment date must be at least tomorrow';
-                }
+        // Validations
+        if (empty($data['elder_profile'])) {
+            $data['error'] = 'Please select an elder profile';
+        } elseif (empty($data['appointment_date'])) {
+            $data['error'] = 'Please select an appointment date';
+        } else {
+            // Check if appointment date is at least tomorrow
+            $appointment_date = new DateTime($data['appointment_date']);
+            $today = new DateTime();
+            if ($appointment_date < $today) {
+                $data['error'] = 'Appointment must be at least tomorrow. Please select a different time slot';
             }
+        }
 
             if (empty($data['error']) && (empty($data['from_time']) || empty($data['to_time']))) {
                 $data['error'] = 'Please select both start and end times';

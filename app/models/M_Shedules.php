@@ -321,16 +321,19 @@ public function getConsultantBookings($consultantId) {
     // Get today's date in YYYY-MM-DD format
     $today = date('Y-m-d');
     
-    $this->db->query('SELECT request_id, elder_id, appointment_date, time_slot, status 
-                     FROM consultantrequests 
-                     WHERE consultant_id = :consultant_id 
-                     AND appointment_date >= :today
-                     AND status != "cancelled"
-                     ORDER BY appointment_date, time_slot');
+    $this->db->query('SELECT request_id, elder_id, consultant_id, appointment_date, 
+                      start_time, end_time, status, expected_services 
+                      FROM consultantrequests 
+                      WHERE consultant_id = :consultant_id 
+                      AND appointment_date >= :today
+                      AND (status = "pending" OR status = "accepted")
+                      ORDER BY appointment_date, start_time');
     $this->db->bind(':consultant_id', $consultantId);
     $this->db->bind(':today', $today);
     return $this->db->resultSet();
 }
+
+
 
 
 // Get a specific booking by request ID

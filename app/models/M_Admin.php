@@ -187,12 +187,218 @@ public function addAnnouncement($data) {
         // Combine the results
         return array_merge($flaggedCaregivers, $flaggedConsultants);
     }
+
+
+    // things for admin dashboard
+    public function getCompletedJobsCount() {
+        // Count completed jobs from both carerequests and consultantrequests
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests WHERE status = 'completed') +
+                         (SELECT COUNT(*) FROM consultantrequests WHERE status = 'completed') as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
     
+    public function getRejectedJobsCount() {
+        // Count rejected jobs from both carerequests and consultantrequests
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests WHERE status = 'rejected') +
+                         (SELECT COUNT(*) FROM consultantrequests WHERE status = 'rejected') as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
+    
+    public function getPendingJobsCount() {
+        // Count pending jobs from both carerequests and consultantrequests
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests WHERE status = 'pending') +
+                         (SELECT COUNT(*) FROM consultantrequests WHERE status = 'pending') as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
+    
+    public function getCancelledJobsCount() {
+        // Count cancelled jobs from both carerequests and consultantrequests
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests WHERE status = 'cancelled') +
+                         (SELECT COUNT(*) FROM consultantrequests WHERE status = 'cancelled') as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
+    
+    public function getLastWeekCompletedCount() {
+        // Count completed jobs from last week from both tables
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests 
+                          WHERE status = 'completed' 
+                          AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) +
+                         (SELECT COUNT(*) FROM consultantrequests 
+                          WHERE status = 'completed' 
+                          AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
+    
+    public function getLastMonthCompletedCount() {
+        // Count completed jobs from last month from both tables
+        $this->db->query("SELECT 
+                         (SELECT COUNT(*) FROM carerequests 
+                          WHERE status = 'completed' 
+                          AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) +
+                         (SELECT COUNT(*) FROM consultantrequests 
+                          WHERE status = 'completed' 
+                          AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as count");
+        $result = $this->db->single();
+        return $result->count;
+    }
+     
+         // getting all request details
+         public function getAllCareRequests() {
+            $this->db->query('
+                SELECT cr.*, 
+                       cg_user.username AS provider_name,
+                       cs_user.username AS careseeker_name,
+                       "Caregiving" AS service_category
+                FROM carerequests cr
+                LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+                LEFT JOIN user cg_user ON cg.caregiver_id = cg_user.user_id
+                LEFT JOIN user cs_user ON cr.requester_id = cs_user.user_id
+                ORDER BY cr.created_at DESC
+            ');
+            
+            return $this->db->resultSet();
+        }
+        
+        public function getAllConsultRequests() {
+            $this->db->query('
+                SELECT cr.*, 
+                       cons_user.username AS provider_name,
+                       cs_user.username AS careseeker_name,
+                       "Consultation" AS service_category
+                FROM consultantrequests cr
+                LEFT JOIN consultant cons ON cr.consultant_id = cons.consultant_id
+                LEFT JOIN user cons_user ON cons.consultant_id = cons_user.user_id
+                LEFT JOIN user cs_user ON cr.requester_id = cs_user.user_id
+                ORDER BY cr.created_at DESC
+            ');
+            
+            return $this->db->resultSet();
+        }
+    
+    public function getActiveUsersCount() {
+        // Count active users
+        $this->db->query("SELECT COUNT(*) as count FROM user");
+        $result = $this->db->single();
+        return $result->count;
+    }
+
+    /**
+ * Get all payment details for caregivers and consultants
+ * 
+ * @return array Payment records with provider details
+ */
+public function getAllPayments() {
+    // Get caregiver payments
+    $this->db->query("SELECT 
+                     cr.request_id, 
+                     cr.caregiver_id as provider_id,
+                     u.username as provider_name,
+                     cr.payment_details,
+                     cr.is_paid,
+                     cr.fine_amount,
+                     cr.refund_amount,
+                     cr.status,
+                     cr.created_at,
+                     'Caregiving' as service_type,
+                     ROUND(cr.payment_details * 0.08) as we4u_commission
+                     FROM carerequests cr
+                     JOIN user u ON cr.caregiver_id = u.user_id
+                     WHERE cr.is_paid = 1 AND cr.status = 'completed'");
+    
+    $caregiverPayments = $this->db->resultSet();
+    
+    // Get consultant payments
+    $this->db->query("SELECT 
+                     cr.request_id, 
+                     cr.consultant_id as provider_id,
+                     u.username as provider_name,
+                     cr.payment_details,
+                     cr.is_paid,
+                     cr.fine_amount,
+                     cr.refund_amount,
+                     cr.status,
+                     cr.created_at,
+                     'Consultation' as service_type,
+                     ROUND(cr.payment_details * 0.08) as we4u_commission
+                     FROM consultantrequests cr
+                     JOIN user u ON cr.consultant_id = u.user_id
+                     WHERE cr.is_paid = 1 AND cr.status = 'completed'");
+    
+    $consultantPayments = $this->db->resultSet();
+    
+    // Combine both result sets
+    $allPayments = array_merge($caregiverPayments, $consultantPayments);
+    
+    // Sort by created_at (newest first)
+    usort($allPayments, function($a, $b) {
+        return strtotime($b->created_at) - strtotime($a->created_at);
+    });
+    
+    return $allPayments;
+}
+
+public function getTotalUserEarnings() {
+    $this->db->query("SELECT 
+                     (SELECT COALESCE(SUM(payment_details - (payment_details * 0.08)), 0) FROM carerequests WHERE is_paid = 1 AND status ='completed' ) +
+                     (SELECT COALESCE(SUM(payment_details - (payment_details * 0.08)), 0) FROM consultantrequests WHERE is_paid = 1 AND status ='completed' ) as total");
+    $result = $this->db->single();
+    return $result->total;
+}
 
 
+    public function getTotalWE4UEarnings() {
+        $this->db->query("SELECT 
+                        (SELECT COALESCE(SUM(payment_details * 0.08), 0) FROM carerequests WHERE is_paid = 1 AND status ='completed' ) +
+                        (SELECT COALESCE(SUM(payment_details * 0.08), 0) FROM consultantrequests WHERE is_paid = 1 AND status = 'completed') as total");
+        $result = $this->db->single();
+        return $result->total;
+    }
 
 
+    public function getLastMonthUserEarnings() {
+        $this->db->query("SELECT 
+                        (SELECT COALESCE(SUM(payment_details - (payment_details * 0.08)), 0) FROM carerequests 
+                        WHERE is_paid = 1 AND status ='completed'
+                        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) +
+                        (SELECT COALESCE(SUM(payment_details - (payment_details * 0.08)), 0) FROM consultantrequests 
+                        WHERE is_paid = 1 AND status = 'completed'
+                        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as total");
+        $result = $this->db->single();
+        return $result->total;
+    }
 
+    public function getLastMonthWE4UEarnings() {
+        $this->db->query("SELECT 
+                        (SELECT COALESCE(SUM(payment_details * 0.08), 0) FROM carerequests 
+                        WHERE is_paid = 1 AND status ='completed'
+                        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) +
+                        (SELECT COALESCE(SUM(payment_details * 0.08), 0) FROM consultantrequests 
+                        WHERE is_paid = 1 AND status = 'completed'
+                        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as total");
+        $result = $this->db->single();
+        return $result->total;
+    }
+
+    public function getTotalFineAmount() {
+        $this->db->query("SELECT 
+                        (SELECT COALESCE(SUM(fine_amount), 0) FROM carerequests WHERE fine_amount > 0) +
+                        (SELECT COALESCE(SUM(fine_amount), 0) FROM consultantrequests WHERE fine_amount > 0) as total");
+        $result = $this->db->single();
+        return $result->total;
+    }
+
+    
+    
 }
 ?>
 

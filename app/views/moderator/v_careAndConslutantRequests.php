@@ -41,8 +41,7 @@
         <tr>
           <td>
             <?php
-            $prefix = ($request->service_category === 'Caregiving') ? 'CG' : (($request->service_category === 'Consultation') ? 'CT' : '');
-            echo '#' . $prefix . $request->request_id;
+            echo $request->request_id;
             ?>
           </td>
           <td><?php echo date_format(date_create($request->created_at ?? $request->request_date), 'j M Y'); ?></td>

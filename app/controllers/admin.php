@@ -11,17 +11,78 @@ class admin extends controller{
     //     redirect('pages/permissonerror');
     //   }
     $this->adminModel = $this->model('M_Admin');
-
-//   }
-
-
   }
 
   public function index(){
+    // Get counts for stats cards
+    $completedJobs = $this->adminModel->getCompletedJobsCount();
+    $rejectedJobs = $this->adminModel->getRejectedJobsCount();
+    $pendingJobs = $this->adminModel->getPendingJobsCount();
+    $cancelledJobs = $this->adminModel->getCancelledJobsCount();
+    $lastWeekCompleted = $this->adminModel->getLastWeekCompletedCount();
+    $lastMonthCompleted = $this->adminModel->getLastMonthCompletedCount();
+    
+    // Get caregiver requests from model
+    $careRequests = $this->adminModel->getAllCareRequests();
+        
+    // Add service_type manually to each caregiving request
+    foreach ($careRequests as &$req) {
+        $req->service_category = 'Caregiving';
+    }
+
+    // Get consultant requests from model
+    $consultRequests = $this->adminModel->getAllConsultRequests();
+    foreach ($consultRequests as &$req) {
+        $req->service_category = 'Consultation';
+    }
+
+    // Merge both types of requests
+    $mergedRequests = array_merge($careRequests, $consultRequests);
+
+    // Sort by created_at/request_date (newest first)
+    usort($mergedRequests, function($a, $b) {
+        $dateA = isset($a->created_at) ? $a->created_at : $a->request_date;
+        $dateB = isset($b->created_at) ? $b->created_at : $b->request_date;
+        return strtotime($dateB) - strtotime($dateA); 
+    });
+
     $data = [
+        'completedJobs' => $completedJobs,
+        'rejectedJobs' => $rejectedJobs,
+        'pendingJobs' => $pendingJobs,
+        'cancelledJobs' => $cancelledJobs,
+        'lastWeekCompleted' => $lastWeekCompleted,
+        'lastMonthCompleted' => $lastMonthCompleted,
+        'Requests' => $mergedRequests
     ];
+    
     $this->view('admin/v_admin_dashboard', $data);
-  }
+}
+
+public function payments() {
+    // Get payment statistics
+    $totalUserEarnings = $this->adminModel->getTotalUserEarnings();
+    $totalWE4UEarnings = $this->adminModel->getTotalWE4UEarnings();
+    $lastMonthUserEarnings = $this->adminModel->getLastMonthUserEarnings();
+    $lastMonthWE4UEarnings = $this->adminModel->getLastMonthWE4UEarnings();
+    $totalFineAmount = $this->adminModel->getTotalFineAmount();
+    
+    // Get all payment records
+    $payments = $this->adminModel->getAllPayments();
+    
+    $data = [
+        'totalUserEarnings' => $totalUserEarnings,
+        'totalWE4UEarnings' => $totalWE4UEarnings,
+        'lastMonthUserEarnings' => $lastMonthUserEarnings,
+        'lastMonthWE4UEarnings' => $lastMonthWE4UEarnings,
+        'totalFineAmount' => $totalFineAmount,
+        'payments' => $payments
+    ];
+    
+    $this->view('admin/v_payments', $data);
+}
+
+
 
   public function jobsCompleted() {
     $data = [

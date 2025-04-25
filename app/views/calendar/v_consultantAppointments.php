@@ -18,12 +18,9 @@ echo loadCSS($required_styles);
     <div class="container">
         <div class="header">
             <h2>My Appointments</h2>
-            <a href="<?php echo URLROOT; ?>/consultant/editAvailability"
-
-            
-            class="edit-calendar-btn">
-            <i class="fas fa-edit"></i> Edit Availability
-        </a>
+            <a href="<?php echo URLROOT; ?>/consultant/editAvailability" class="edit-calendar-btn">
+                <i class="fas fa-edit"></i> Edit Availability
+            </a>
         </div>
         
         <div class="calendar-wrapper">
@@ -87,50 +84,77 @@ echo loadCSS($required_styles);
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Debug: Log the consultant ID
+    console.log('Consultant ID:', <?php echo json_encode($data['consultant_id']); ?>);
+    
     // Convert PHP data to JavaScript
-    const bookings = <?php echo json_encode($data['bookings'] ?? []); ?>;
+    const bookingsData = <?php echo json_encode($data['bookings'] ?? []); ?>;
+    
+    // Debug: Log the raw bookings data
+    console.log('Raw bookings data:', bookingsData);
     
     // Process events for the calendar
     const events = [];
     
     // Process bookings
-    if (bookings && bookings.length) {
-        bookings.forEach(booking => {
-            // Parse time slot (expected format "HH:MM-HH:MM")
-            let startTime = '09:00:00';
-            let endTime = '10:00:00';
+    if (bookingsData && bookingsData.length > 0) {
+        console.log('Processing ' + bookingsData.length + ' bookings');
+        
+        bookingsData.forEach(function(booking) {
+            console.log('Processing booking:', booking);
             
-            if (booking.time_slot && booking.time_slot.includes('-')) {
-                const timeParts = booking.time_slot.split('-');
-                if (timeParts.length === 2) {
-                    startTime = timeParts[0].trim() + ':00';
-                    endTime = timeParts[1].trim() + ':00';
-                }
+            // Ensure start_time and end_time have proper format (add seconds if needed)
+            let startTime = booking.start_time;
+            if (startTime && !startTime.includes(':')) {
+                startTime = startTime + ':00';
             }
+            
+            let endTime = booking.end_time;
+            if (endTime && !endTime.includes(':')) {
+                endTime = endTime + ':00';
+            }
+            
+            // Create a time slot string for display
+            let timeSlot = startTime + ' - ' + endTime;
+            
+            // Format the event start and end times
+            let eventStart = booking.appointment_date + 'T' + startTime;
+            let eventEnd = booking.appointment_date + 'T' + endTime;
+            
+            console.log('Event time:', eventStart, 'to', eventEnd);
             
             // Determine status color
             let statusColor = getStatusColor(booking.status);
             let textColor = booking.status === 'pending' ? '#333' : '#fff';
             
-            events.push({
+            // Create the event object
+            const event = {
                 id: 'booking_' + booking.request_id,
-                title: 'Appointment: ' + booking.time_slot,
-                start: booking.appointment_date + 'T' + startTime,
-                end: booking.appointment_date + 'T' + endTime,
+                title: 'Appointment: ' + timeSlot,
+                start: eventStart,
+                end: eventEnd,
                 backgroundColor: statusColor,
                 borderColor: statusColor,
                 textColor: textColor,
+                className: 'status-' + booking.status,
                 extendedProps: {
                     requestId: booking.request_id,
                     date: booking.appointment_date,
-                    timeSlot: booking.time_slot,
+                    timeSlot: timeSlot,
                     status: booking.status,
                     elderId: booking.elder_id
                 }
-            });
+            };
+            
+            console.log('Created event:', event);
+            events.push(event);
         });
+    } else {
+        console.log('No bookings found or bookings array is empty');
     }
-
+    
+    console.log('Final events for calendar:', events);
+    
     // Helper function to get color based on status
     function getStatusColor(status) {
         switch(status) {
@@ -144,9 +168,15 @@ document.addEventListener('DOMContentLoaded', function() {
             default:
                 return '#007bff'; // Blue
         }
-    }    
+    }
+    
     // Initialize calendar with FullCalendar 5.x
     const calendarEl = document.getElementById('calendar');
+    if (!calendarEl) {
+        console.error('Calendar element not found!');
+        return;
+    }
+    
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
             left: 'prev,next today',
@@ -156,16 +186,26 @@ document.addEventListener('DOMContentLoaded', function() {
         initialView: 'dayGridMonth',
         editable: false,
         selectable: false,
-        dayMaxEvents: false, // Show all events without the "+more" link
+        dayMaxEvents: true, // Show all events without the "+more" link
         height: 'auto', // Adjust height automatically to fit all events
         events: events,
         eventClick: function(info) {
             // Handle event click to view details
+            console.log('Event clicked:', info.event);
             showEventDetails(info.event);
+        },
+        // Debug: Log when events are rendered
+        eventDidMount: function(info) {
+            console.log('Event mounted:', info.event.title);
+        },
+        // Debug: Log when calendar is fully rendered
+        datesSet: function() {
+            console.log('Calendar dates set, events should be visible now');
         }
     });
     
     calendar.render();
+    console.log('Calendar rendered');
     
     // Function to show event details
     function showEventDetails(event) {
@@ -192,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add the appropriate status class
         if (event.extendedProps.status === 'accepted' || event.extendedProps.status === 'approved') {
-            statusElement.classList.add('status-approved');
+            statusElement.classList.add('status-accepted');
         } else if (event.extendedProps.status === 'pending') {
             statusElement.classList.add('status-pending');
         } else {
@@ -203,9 +243,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewRequestLink = document.getElementById('view-request-link');
         viewRequestLink.href = '<?php echo URLROOT; ?>/consultant/viewreqinfo/' + event.extendedProps.requestId;
     }
-});
-
-// Helper function to capitalize first letter
+    
+    // Helper function to capitalize first letter
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -215,42 +254,74 @@ document.addEventListener('DOMContentLoaded', function() {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
     }
+});
+
+
 </script>
 
+<style>
+/* Status colors for events */
+.fc-event.status-accepted {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #fff !important;
+}
 
+.fc-event.status-pending {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #333 !important;
+}
 
-<style>/* Status colors for events */
-    .fc-event.status-approved {
-        background-color: #28a745 !important;
-        border-color: #28a745 !important;
-        color: #fff !important;
-    }
+.fc-event.status-rejected, .fc-event.status-cancelled {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+}
 
-    .fc-event.status-pending {
-        background-color: #ffc107 !important;
-        border-color: #ffc107 !important;
-        color: #333 !important;
-    }
+/* Status indicator in details panel */
+.status-indicator.status-accepted {
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
 
-    .fc-event.status-rejected, .fc-event.status-cancelled {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-        color: #fff !important;
-    }
+.status-indicator.status-pending {
+    background-color: #ffc107;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
 
-    /* Status indicator in details panel */
-    .status-indicator.status-approved {
-        background-color: #28a745;
-        color: white;
-    }
+.status-indicator.status-unavailable {
+    background-color: #dc3545;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
 
-    .status-indicator.status-pending {
-        background-color: #ffc107;
-        color: #333;
-    }
+/* Status dots in legend */
+.status-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 6px;
+}
 
-    .status-indicator.status-rejected, .status-indicator.status-cancelled {
-        background-color: #dc3545;
-        color: white;
-    }
-</style
+.confirmed-dot {
+    background-color: #28a745;
+}
+
+.pending-dot {
+    background-color: #ffc107;
+}
+
+/* Make sure calendar is visible */
+#calendar {
+    min-height: 500px;
+    border: 1px solid #ddd;
+    background-color: white;
+}
+</style>

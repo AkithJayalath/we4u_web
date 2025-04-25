@@ -15,7 +15,7 @@
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
   <div class="ad-users-wrapper">
   <div class="ad-users-header">
-          <h1>User Management</h1>
+          <h1>User Details</h1>
       </div>
       <main class="ad-users-main-content">
           <!-- Stats cards section -->
@@ -98,7 +98,7 @@
                         <div class="ad-users-stat-details">
                             <h3>Flaged Users</h3>
                             <p>
-                            <div class="ad-users-stat-value"><?php echo number_format($data['rejectedUsers']); ?> </div>
+                            <div class="ad-users-stat-value"><?php echo number_format($data['flaggedUsers']); ?> </div>
                             </p>
 
                         </div>
@@ -320,25 +320,6 @@
     }
     
     // Function to update sort icons
-    function updateSortIcons(activeColumn, direction) {
-        sortableHeaders.forEach(header => {
-            const column = header.getAttribute('data-sort');
-            const icon = header.querySelector('.sort-icon');
-            
-            if (column === activeColumn) {
-                // Set the active sort icon
-                icon.setAttribute('data-lucide', direction === 'asc' ? 'chevron-up' : 'chevron-down');
-            } else {
-                // Reset other sort icons
-                icon.setAttribute('data-lucide', 'chevron-down');
-            }
-        });
-        
-        // Refresh Lucide icons
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    }
 
 });
 

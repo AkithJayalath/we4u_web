@@ -16,7 +16,7 @@
   <div class="dashboard-container">
     <!-- Dashboard-style header -->
     <header class="dashboard-header">
-      <h1>Announcement Management</h1>
+      <h1>Announcements</h1>
       <button class="export-btn" onclick="window.location.href='<?php echo URLROOT; ?>/operator/addannouncement'">
         <i class="fas fa-plus"></i> Add Announcement
       </button>
