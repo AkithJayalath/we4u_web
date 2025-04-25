@@ -140,10 +140,8 @@
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
       $data = [
-        
         'email' => trim($_POST['email']),
         'password' => trim($_POST['password']),
-
         'email_err' => '',
         'password_err' => '',
       ];
@@ -174,10 +172,15 @@
         $loggedUser = $this->usersModel->login($data['email'], $data['password']);
 
         if($loggedUser){
-          // user is authenticated
-          // can create user sesstions
-           // Check if user is a Caregiver or Consultant and needs approval
-           if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
+          // Check if user is deactivated
+          if($loggedUser->is_deactive == 1){
+            $data['email_err'] = 'Your account has been deactivated. Please contact support for assistance.';
+            $this->view('users/v_login', $data);
+            return;
+          }
+          
+          // Check if user is a Caregiver or Consultant and needs approval
+          if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
             $approvalStatus = $this->usersModel->getApprovalStatus($loggedUser->user_id, $loggedUser->role);
 
             if ($approvalStatus === 'pending') {
@@ -191,41 +194,34 @@
                 $this->view('users/v_login', $data);
                 return;
             }
-        }
-        // If approved or no approval required, create session
-         $this->createUserSession($loggedUser);
+          }
           
+          // If approved and not deactivated, create session
+          $this->createUserSession($loggedUser);
         }
         else{
           $data['password_err'] = 'Password Incorrect';
-
-          // load view with erros
+          // load view with errors
           $this->view('users/v_login', $data);
-
         }
       }
       else {
         // load view with error
         $this->view('users/v_login', $data);
-        
       }
-
     }
     else {
       // initial form 
       $data = [
-        
         'email' => '',
         'password' => '',
-
         'email_err' => '',
         'password_err' => '',
       ];
       // load the view
-    $this->view('users/v_login', $data);
+      $this->view('users/v_login', $data);
     }
-
-  }
+}
 
   public function createUserSession($user){
     
@@ -334,8 +330,9 @@
 
             $data = [
                 'user_id' => $userId,
-                'profile_picture' => $_FILES['profile_picture'],
-                'profile_picture_name' => time().'_'.$_FILES['profile_picture']['name'],
+                'profile_picture' => $currentProfilePicture, // Set this for view display purposes
+                'profile_picture_upload' => $_FILES['profile_picture'],
+                'profile_picture_name' => !empty($_FILES['profile_picture']['name']) ? time().'_'.$_FILES['profile_picture']['name'] : $currentProfilePicture,
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
                 'date_of_birth' => trim($_POST['date_of_birth']),
@@ -347,7 +344,7 @@
                 
                 // Error fields
                 'username_err' => '',
-                'profile_picture_err' =>'',
+                'profile_picture_err' => '',
                 'email_err' => '',
                 'dob_err' => '',
                 'password_err' => '',
@@ -356,31 +353,6 @@
                 'contact_info_err' => '',
                 'gender_err' => ''
             ];
-
-            // Handle profile picture upload/update
-            if (!empty($data['profile_picture']['name'])) { // Only process if a new image is uploaded
-                $profileImagePath = '/images/profile_imgs/' . $data['profile_picture_name'];
-                
-                if (!empty($currentProfilePicture)) {
-                    // Update existing profile picture by deleting the old one
-                    $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
-                    if (updateImage($oldImagePath, $data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
-                        // Successfully updated
-                    } else {
-                        $data['profile_picture_err'] = 'Failed to update profile picture.';
-                    }
-                } else {
-                    // Upload a new profile picture
-                    if (uploadImage($data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs')) {
-                        // Successfully uploaded
-                    } else {
-                        $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
-                    }
-                }
-            } else {
-                // No new profile picture uploaded, retain the old one
-                $data['profile_picture_name'] = $currentProfilePicture;
-            }
 
             // Validation
             // Validate username
@@ -437,8 +409,39 @@
             }
 
             // Check if there are no errors
-            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err']) && empty($data['profile_picture_err'])) {
+            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && 
+                empty($data['password_err']) && empty($data['confirm_password_err']) && 
+                empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err'])) {
                 
+                // Only process image upload if validation passes
+                if (!empty($data['profile_picture_upload']['name'])) {
+                    if (!empty($currentProfilePicture)) {
+                        // Update existing profile picture by deleting the old one
+                        $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
+                        if (!updateImage($oldImagePath, $data['profile_picture_upload']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
+                            $data['profile_picture_err'] = 'Failed to update profile picture.';
+                            // Keep the current image for display
+                            $data['profile_picture'] = $currentProfilePicture;
+                            $this->view('careseeker/v_edit', $data);
+                            return;
+                        }
+                    } else {
+                        // Upload a new profile picture
+                        if (!uploadImage($data['profile_picture_upload']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
+                            $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
+                            // Keep the current image for display
+                            $data['profile_picture'] = $currentProfilePicture;
+                            $this->view('careseeker/v_edit', $data);
+                            return;
+                        }
+                    }
+                    // Update the display profile picture with the new name
+                    $data['profile_picture'] = $data['profile_picture_name'];
+                } else {
+                    // No new profile picture uploaded, retain the old one
+                    $data['profile_picture_name'] = $currentProfilePicture;
+                }
+
                 // Hash new password if entered
                 if (!empty($data['password'])) {
                     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -454,6 +457,9 @@
                     die('Something went wrong. Please try again.');
                 }
             } else {
+                // If validation errors occur, make sure we're showing the current profile picture
+                $data['profile_picture'] = $currentProfilePicture;
+                
                 // Load view with errors
                 $this->view('careseeker/v_edit', $data);
             }
@@ -463,8 +469,8 @@
                 'user_id' => $userId,
                 'username' => $profileData[0]->username,
                 'email' => $profileData[0]->email,
-                'profile_picture' => $profileData[0]->profile_picture,
-                'profile_picture_name' => '',
+                'profile_picture' => $profileData[0]->profile_picture, // This is what displays in the view
+                'profile_picture_name' => $profileData[0]->profile_picture, // This is for database update
                 'date_of_birth' => $profileData[0]->date_of_birth,
                 'address' => $profileData[0]->address,
                 'contact_info' => $profileData[0]->contact_info,
@@ -486,7 +492,6 @@
         redirect('users/login');
     }
 }
-
 
 public function deleteUser() {
   if ($this->isLoggedIn()) {

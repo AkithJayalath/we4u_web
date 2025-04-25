@@ -20,7 +20,7 @@
             <img src="<?php echo !empty($elder->profile_picture)   ? URLROOT . '/images/profile_imgs/' . $elder->profile_picture 
                         : URLROOT . '/images/def_profile_pic.jpg'; ?>"  alt="Elder Image">
             <div>
-                <h4><?php echo htmlspecialchars($elder->first_name . ' ' . $elder->last_name); ?></h4>
+                <h4><?php echo htmlspecialchars($elder->first_name . ' ' . $elder->middle_name . ' ' . $elder->last_name); ?></h4>
                 <p><?php echo htmlspecialchars($elder->relationship_to_careseeker); ?></p>
             </div>
             <form action="<?php echo URLROOT; ?>/careseeker/viewElderProfile" method="POST">
