@@ -13,7 +13,7 @@
                 <div class="sort">
                     <select id="sort-by">
                         <option value="default">Sort by</option>
-                        <option value="rating">Rating</option>
+                        <option value="status">Status</option>
                         <option value="date">Date</option>
                         <option value="payment">Payment</option>
                     </select>
@@ -21,120 +21,116 @@
         </div>
 
         <div class="history-list">
-                <!-- First Entry -->
+        <?php if (empty($data['history'])): ?>
+            <div class="no-history">
+                <img src="<?php echo URLROOT; ?>/public/images/Empty-cuate.png" alt="No History">
+                <p>You don't have any caregiving history yet.</p>
+            </div>
+        <?php else: ?>
+        <?php foreach ($data['history'] as $entry): ?>
                 <div class="history-entry">
                     <div class="service-info">
-                        <p class="s-id"><strong>Service ID:</strong> #123321</p>
-                        <p><strong>Care Giver:</strong> Nirmi Kaumada <span class="id">CG125875</span></p>
-                        <p><strong>Care Seeker:</strong> Tanuri Mandini <span class="id">CS123456</span> </p>
-                        <p><strong>From:</strong> 12th Jan <strong>To:</strong> 18th Jan </p>
-                        <p><strong>Request Accepted Date:</strong> 08th Aug 2024</p>
-                        <p><strong>Status:</strong> <span class="status completed">Completed</span></p>
-                        <p><strong>Completed Date & Time:</strong> 18th Jan 6:00PM</p>
+                        <p class="s-id"><strong>Service ID:</strong> #<?php echo $entry->request_id; ?></p>
+                        <p><strong>Care Seeker:</strong> <?php echo ucfirst($entry->username); ?> <span class="id">CS<?php echo $entry->requester_id; ?></span> </p>
+                        <p><strong>Service Type:</strong> <?php echo ucfirst($entry->duration_type);; ?></p>
+
+                        <p><strong>Service Date:</strong> 
+                            <?php 
+                            $start_date = new DateTime($entry->start_date);
+                            $end_date = new DateTime($entry->end_date);
+                            
+                            if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                                
+                                echo $start_date->format('jS M Y');
+                            } else {
+                                echo $start_date->format('jS M') . ' - ' . $end_date->format('jS M Y'); 
+                            }
+                            ?> 
+                        </p>
+                        <p><strong>Request Accepted Date:</strong> 
+                            <?php 
+                            $start_date = new DateTime($entry->updated_at);
+                            echo $start_date->format('jS M Y'); 
+                            ?>                            
+                        
+                        </p>
+                        <p><strong>Status:</strong> <?php
+                            $current_date = new DateTime();
+                            $end_date = new DateTime($entry->end_date);
+
+                            if($entry->status == 'accepted'){
+                                if($end_date > $current_date){
+                                    $badge = 'ongoing';
+                                }
+                                else{
+                                    $badge = 'completed';
+                                }
+                            }else{
+                                $badge = 'Request ' . $entry->status;
+                            }
+
+                            $badgeClass = strtolower(str_replace(' ', '-', $badge));
+                           
+
+                            ?><span class="status <?php echo $badgeClass; ?>"> <?php echo ($badge); ?></span></p>
                         
                     </div>
                     <div class="payment-info">
                     
-                        <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
-                        <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
-                        <p><strong>Total Payment:</strong> Rs.10,000</p>
-                        <p><strong>Paid Amount:</strong> Rs.0</p>
+                    <?php 
+                            $profilePic = !empty($entry->profile_picture) ? URLROOT . '/public/images/profile_imgs/' . $entry->profile_picture : URLROOT . '/public/images/def_profile_pic.jpg';
+                        ?>
+                        <img src="<?php echo $profilePic; ?>" alt="Profile Picture" class="profile-pic">
+                        <p><strong>Total Payment:</strong> Rs.<?php echo number_format($entry->payment_details ?? 0); ?>  </p>
+                        <p><strong>Paid Amount:</strong>
+                        <?php
+                            if($entry->is_paid==1){
+                                $paid_amount = $entry->payment_details;
+                            }
+                            else{
+                                $paid_amount = 0;
+                            }
+                            
+                        ?>
+                         Rs.<?php echo number_format($paid_amount); ?></p>
+
+                         <?php if($entry->status == 'cancelled'): ?>
+                            <p><strong>Refund Amount:</strong> Rs.<?php echo number_format($entry->refund_amount); ?></p>
+                            <?php endif; ?>
                         
                         <div class="btn-class">
-                            <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Caregivers/viewCareseeker'">View Profile</button>
+                            <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Caregivers/viewCareseeker/<?php echo $entry->elder_id; ?>'">View Profile</button>
+
+                        <?php
+                        $current_date = new DateTime();
+                        $end_date = new DateTime($entry->end_date);
+                        
+                        $status = '';
+                        if($entry->status == 'accepted'){
+                            if($end_date > $current_date){
+                                $status = 'ongoing';
+                            } else {
+                                $status = 'completed';
+                            }
+                        }
+                        
+                        if($status == 'ongoing' || $status == 'completed'): 
+                        ?>
                             <button class="review-careseeker-btn" onClick="openRejectModal()">Add Review</button>
+                        <?php endif; ?>
                         </div>
                     </div>
                     
                 </div>
 
-                <div class="history-entry">
-                    <div class="service-info">
-                        <p class="s-id"><strong>Service ID:</strong> #123321</p>
-                        <p><strong>Care Giver:</strong> Nirmi Kaumada <span class="id">CG125875</span></p>
-                        <p><strong>Care Seeker:</strong> Tanuri Mandini <span class="id">CS123456</span> </p>
-                        <p><strong>From:</strong> 12th Jan <strong>To:</strong> 18th Jan </p>
-                        <p><strong>Request Accepted Date:</strong> 08th Aug 2024</p>
-                        <p><strong>Status:</strong> <span class="status ongoing">On Going</span></p>
-                        <p><strong>Completed Date & Time:</strong> 18th Jan 6:00PM</p>
-                        
-                    </div>
-                    <div class="payment-info">
-                        <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
-                        <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
-                        <p><strong>Total Payment:</strong> Rs.10,000</p>
-                        <p><strong>Paid Amount:</strong> Rs.0</p>
-                        
-                        <button class="view-profile-btn">View Profile</button>
-                    </div>
+        <?php endforeach; ?>        
                     
                 </div>
 
-                <div class="history-entry">
-                    <div class="service-info">
-                        <p class="s-id"><strong>Service ID:</strong> #123321</p>
-                        <p><strong>Care Giver:</strong> Nirmi Kaumada <span class="id">CG125875</span></p>
-                        <p><strong>Care Seeker:</strong> Tanuri Mandini <span class="id">CS123456</span> </p>
-                        <p><strong>From:</strong> 12th Jan <strong>To:</strong> 18th Jan </p>
-                        <p><strong>Request Accepted Date:</strong> 08th Aug 2024</p>
-                        <p><strong>Status:</strong> <span class="status completed">Completed</span> <span class="status ongoing">On Going</span></p>
-                        <p><strong>Date & Time to Complete:</strong> 18th Jan 6:00PM</p>
-                        
-                    </div>
-                    <div class="payment-info">
-                        <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
-                        <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
-                        <p><strong>Total Payment:</strong> Rs.10,000</p>
-                        <p><strong>Paid Amount:</strong> Rs.0</p>
-                        
-                        <button class="view-profile-btn">View Profile</button>
-                    </div>
-                    
-                </div>
+         <?php endif; ?>       
 
-                <div class="history-entry">
-                    <div class="service-info">
-                        <p class="s-id"><strong>Service ID:</strong> #123321</p>
-                        <p><strong>Care Giver:</strong> Nirmi Kaumada <span class="id">CG125875</span></p>
-                        <p><strong>Care Seeker:</strong> Tanuri Mandini <span class="id">CS123456</span> </p>
-                        <p><strong>From:</strong> 12th Jan <strong>To:</strong> 18th Jan </p>
-                        <p><strong>Request Accepted Date:</strong> 08th Aug 2024</p>
-                        <p><strong>Status:</strong> <span class="status completed">Completed</span> <span class="status ongoing">On Going</span></p>
-                        <p><strong>Completed Date & Time:</strong> 18th Jan 6:00PM</p>
-                        
-                    </div>
-                    <div class="payment-info">
-                        <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
-                        <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
-                        <p><strong>Total Payment:</strong> Rs.10,000</p>
-                        <p><strong>Paid Amount:</strong> Rs.0</p>
-                        
-                        <button class="view-profile-btn">View Profile</button>
-                    </div>
-                    
-                </div>
 
-                <div class="history-entry">
-                    <div class="service-info">
-                        <p class="s-id"><strong>Service ID:</strong> #123321</p>
-                        <p><strong>Care Giver:</strong> Nirmi Kaumada <span class="id">CG125875</span></p>
-                        <p><strong>Care Seeker:</strong> Tanuri Mandini <span class="id">CS123456</span> </p>
-                        <p><strong>From:</strong> 12th Jan <strong>To:</strong> 18th Jan </p>
-                        <p><strong>Request Accepted Date:</strong> 08th Aug 2024</p>
-                        <p><strong>Status:</strong> <span class="status completed">Completed</span> <span class="status ongoing">On Going</span></p>
-                        <p><strong>Completed Date & Time:</strong> 18th Jan 6:00PM</p>
-                        
-                    </div>
-                    <div class="payment-info">
-                        <img src="/we4u/public/images/def_profile_pic.jpg" alt="Profile Picture" class="profile-pic">
-                        <p><strong>Reviews for this session:</strong> <a href="#" class="reviews-link">View Reviews</a></p>
-                        <p><strong>Total Payment:</strong> Rs.10,000</p>
-                        <p><strong>Paid Amount:</strong> Rs.0</p>
-                        
-                        <button class="view-profile-btn">View Profile</button>
-                    </div>
-                    
-                </div>
+               
     </div>
 </div>
 
@@ -152,7 +148,7 @@
                 <textarea id="rejectReason" placeholder="Write a review for this careseeker" rows="4" cols="50"></textarea>
 
                 <div class="modal-buttons">
-                    <button class="btn-submit" onclick="submitRejection()">Submit</button>
+                    <button class="btn-submit" onclick="submitReview()">Submit</button>
                     <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
                 </div>
             </form>
@@ -164,18 +160,46 @@
 <?php require APPROOT.'/views/includes/footer.php';?>
 <script>
     // Function to handle the Submit button
-function submitRejection() {
-    const review = document.getElementById('rejectReason').value.trim();
+function submitReview() {
+    const reviewText = document.getElementById('review_text').value.trim();
+    const reviewedUserId = document.getElementById('reviewed_user_id').value;
 
-    if (review === '') {
+    if (reviewText === '') {
         // Alert if the textarea is empty
         alert('Please write a review before submitting.');
-    } else {
-        // Show a success message if a review is provided
-        alert(`Thank you for your review: "${review}"`);
-        closeRejectModal(); // Close the modal after submission
-    }
+        return;
+    } 
+    // Perform the AJAX request to submit the review
+    const formData = new FormData();
+    formData.append('review_text', reviewText);
+    formData.append('reviewed_user_id', reviewedUserId);
+
+    fetch('<?php echo URLROOT; ?>/caregivers/submitReview', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Handle success, e.g., show a success message
+            alert(`Thank you for your review!`);
+            closeRejectModal(); 
+            location.reload();
+        }
+    
+        else {
+            alert('Error: ' + (data.error || 'Failed to submit review'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting the review.');
+    });
 }
+
+
+    
+
 
 // Function to handle the Cancel button
 function closeRejectModal() {

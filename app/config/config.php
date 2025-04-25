@@ -18,4 +18,8 @@
 
     define('DEBUG_MODE', true);
 
+
+    // Encryption Key
+    define('ENCRYPTION_KEY', 'YTBhM2M5ZjczYTY0MzlkZDI0NGFiODU1ZWYwOGYzN2MyODY3ODNkMGVmMmQ5ZWYxODI5YmVhNzJhNzFkZjM3YQ==');
+
 ?>
