@@ -274,7 +274,7 @@ class careseeker extends controller
         // First, check if caregiver exists
         $caregiver = $this->careseekersModel->showCaregiverProfile($caregiver_id);
         if (!$caregiver) {
-            flash('request_error', 'Caregiver not found', 'alert alert-danger');
+            flash('error', 'Caregiver not found');
             redirect('careseeker/ViewRequests');
         }
 
@@ -471,7 +471,7 @@ class careseeker extends controller
                 // execute the query and get the resulting data 
                 $result = $this->careseekersModel->sendCareRequest($requestData);
                 if ($result['success']) {
-                    flash('request_success', 'Care request sent successfully');
+                    flash('success', 'Care request sent successfully');
                     // update sheduling table for caregiver
                     // first check duration type if if that is a short term then
                     if ($data['duration_type'] === 'short-term') {
@@ -527,7 +527,7 @@ class careseeker extends controller
         // Check if consultant exists
         $consultant = $this->careseekersModel->showConsultantProfile($consultant_id);
         if (!$consultant) {
-            flash('request_error', 'Consultant not found', 'alert alert-danger');
+            flash('error', 'Consultant not found');
             redirect('careseeker/viewConsultantRequests');
         }
 
@@ -593,7 +593,7 @@ class careseeker extends controller
                 ];
 
                 if ($this->careseekersModel->sendConsultantRequest($requestData)) {
-                    flash('request_success', 'Consultant request sent successfully');
+                    flash('success', 'Consultant request sent successfully');
                     redirect('careseeker/viewRequests');
                 } else {
                     $data['error'] = 'Failed to send request. Please try again.';
@@ -887,7 +887,7 @@ class careseeker extends controller
         $careRequest = $this->careseekersModel->getFullCareRequestInfo($requestId);
 
         if (!$careRequest) {
-            flash('request_not_found', 'Request not found');
+            flash('error', 'Request not found');
             redirect('careseeker/viewRequests');
         }
 
@@ -900,7 +900,7 @@ class careseeker extends controller
         $consultRequest = $this->careseekersModel->getFullConsultRequestInfo($requestId);
 
         if (!$consultRequest) {
-            flash('request_not_found', 'Request not found');
+            flash('error', 'Request not found');
             redirect('careseeker/viewRequests');
         }
 
@@ -951,7 +951,7 @@ class careseeker extends controller
         $request = $this->careseekersModel->getRequestById($requestId);
 
         if (!$request) {
-            flash('request_error', 'Invalid request or service.');
+            flash('error', 'Invalid request or service.');
             redirect('careseeker/viewRequests');
             return;
         }
@@ -986,7 +986,7 @@ class careseeker extends controller
         }
 
         if (!$canCancel) {
-            flash('request_error', 'Request cannot be cancelled at this stage.');
+            flash('error', 'Request cannot be cancelled at this stage.');
             redirect('careseeker/viewRequests');
             return;
         }
@@ -994,12 +994,12 @@ class careseeker extends controller
         $this->careseekersModel->cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
 
         if (!$request->is_paid && $fineAmount > 0) {
-            flash('request_warning', 'Request cancelled. Please proceed to pay the fine to complete cancellation.');
+            flash('warning', 'Request cancelled. Please proceed to pay the fine to complete cancellation.');
             redirect('payment/payFine/' . $requestId);
             return;
         }
 
-        flash('request_success', 'Request cancelled successfully.');
+        flash('success', 'Request cancelled successfully.');
         redirect('careseeker/viewRequests');
     }
 
@@ -1035,7 +1035,7 @@ class careseeker extends controller
         $request = $this->careseekersModel->getConsultantRequestById($requestId);
 
         if (!$request) {
-            flash('request_error', 'Invalid consultation request.');
+            flash('error', 'Invalid consultation request.');
             redirect('careseeker/viewRequests');
             return;
         }
@@ -1071,7 +1071,7 @@ class careseeker extends controller
         }
 
         if (!$canCancel) {
-            flash('request_error', 'Consultation cannot be cancelled at this stage.');
+            flash('error', 'Consultation cannot be cancelled at this stage.');
             redirect('careseeker/viewRequests');
             return;
         }
@@ -1079,12 +1079,12 @@ class careseeker extends controller
         $this->careseekersModel->cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
 
         if (!$request->is_paid && $fineAmount > 0) {
-            flash('request_warning', 'Consultation cancelled. Please proceed to pay the cancellation fee to complete this process.');
+            flash('warning', 'Consultation cancelled. Please proceed to pay the cancellation fee to complete this process.');
             redirect('payment/payConsultFine/' . $requestId);
             return;
         }
 
-        flash('request_success', 'Consultation request cancelled successfully.');
+        flash('success', 'Consultation request cancelled successfully.');
         redirect('careseeker/viewRequests');
     }
 
@@ -1116,35 +1116,35 @@ class careseeker extends controller
 
         // Check if user is a careseeker
         if ($_SESSION['user_role'] !== 'Careseeker') {
-            flash('delete_error', 'You do not have permission to delete requests', 'alert alert-danger');
+            flash('error', 'You do not have permission to delete requests', 'alert alert-danger');
             redirect('pages/index');
         }
 
         // If no request ID provided, redirect back
         if (!$requestId) {
-            flash('delete_error', 'No request specified', 'alert alert-danger');
+            flash('error', 'No request specified', 'alert alert-danger');
             redirect('careseeker/viewRequests');
         }
 
         // Verify the request belongs to this careseeker
         $request = $this->careseekersModel->getRequestById($requestId);
         if (!$request || $request->requester_id != $_SESSION['user_id']) {
-            flash('delete_error', 'You do not have permission to delete this request', 'alert alert-danger');
+            flash('error', 'You do not have permission to delete this request', 'alert alert-danger');
             redirect('careseeker/dashboard');
         }
 
         // Check if the request is in a deletable state (cancelled, rejected, or completed)
         $deletableStates = ['cancelled', 'rejected', 'completed'];
         if (!in_array(strtolower($request->status), $deletableStates)) {
-            flash('delete_error', 'Only cancelled, rejected, or completed requests can be deleted', 'alert alert-danger');
+            flash('warning', 'Only cancelled, rejected, or completed requests can be deleted', 'alert alert-danger');
             redirect('careseeker/viewRequestInfo/' . $requestId);
         }
 
         // Delete the request
         if ($this->careseekersModel->deleteRequest($requestId)) {
-            flash('request_success', 'Request successfully deleted', 'alert alert-success');
+            flash('success', 'Request successfully deleted', 'alert alert-success');
         } else {
-            flash('request_error', 'Failed to delete request. Please try again.', 'alert alert-danger');
+            flash('error', 'Failed to delete request. Please try again.', 'alert alert-danger');
         }
 
         // Redirect to dashboard
@@ -1214,9 +1214,9 @@ class careseeker extends controller
                 $link = trim($_POST['link']);
                 if (!empty($link)) {
                     $this->careseekersModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $link);
-                    flash('upload_success', 'Link shared successfully');
+                    flash('success', 'Link shared successfully');
                 } else {
-                    flash('upload_error', 'Link cannot be empty');
+                    flash('error', 'Link cannot be empty');
                 }
             }
 
@@ -1237,9 +1237,9 @@ class careseeker extends controller
 
                 if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
                     $this->careseekersModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $public_path);
-                    flash('upload_success', 'File uploaded successfully');
+                    flash('success', 'File uploaded successfully');
                 } else {
-                    flash('upload_error', 'File upload failed');
+                    flash('error', 'File upload failed');
                 }
             }
 
@@ -1259,14 +1259,14 @@ class careseeker extends controller
         $file = $this->careseekersModel->getFileById($file_id); // See helper below
 
         if (!$file) {
-            flash('upload_error', 'File not found');
+            flash('error', 'File not found');
             redirect('pages/notfound'); // or wherever you prefer
         }
 
         if ($this->careseekersModel->deleteSessionFile($file_id)) {
-            flash('upload_success', 'File deleted successfully');
+            flash('success', 'File deleted successfully');
         } else {
-            flash('upload_error', 'File deletion failed');
+            flash('error', 'File deletion failed');
         }
 
         redirect('careseeker/viewConsultantSession/' . $file->session_id);
@@ -1280,7 +1280,7 @@ class careseeker extends controller
 
         // Check if session exists and belongs to the current user
         if (!$session || $session->careseeker_id != $_SESSION['user_id']) {
-            flash('session_error', 'Unauthorized access or session not found');
+            flash('error', 'Unauthorized access or session not found');
             redirect('careseeker/dashboard');
         }
 
