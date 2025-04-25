@@ -1,6 +1,7 @@
 <?php
 $required_styles = [
     'calendar/calendar',
+    'calendar/consultant_calander',
 ];
 echo loadCSS($required_styles);
 ?>
@@ -18,12 +19,10 @@ echo loadCSS($required_styles);
     <div class="container">
         <div class="header">
             <h2>My Availability</h2>
+            <button id="add-availability-btn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Availability
+            </button>
         </div>
-        
-        <div class="flash-message-container">
-            <?php flash('availability_message'); ?>
-        </div>
-        
         <div class="calendar-wrapper">
             <!-- Calendar on the left -->
             <div class="calendar-container">
@@ -34,6 +33,7 @@ echo loadCSS($required_styles);
             <div class="event-details-container">
                 <div class="event-details-header">
                     <h3>Availability Details</h3>
+
                     <div class="status-legend">
                         <div class="status-item">
                             <span class="status-label">Recurring</span>
@@ -45,6 +45,13 @@ echo loadCSS($required_styles);
                         </div>
                     </div>
                 </div>
+
+                <div class="empty-state">
+                <p>
+                    Make Sure that you are selecting the correct availability because it canot changed once set. And you can only set availability for future dates.
+                </p>
+                </div>
+                
 
                 <!-- Error container for displaying validation errors -->
                 <div class="event-details-content" id="error-container" style="display:<?php echo isset($data['error']) ? 'block' : 'none'; ?>;">
@@ -75,7 +82,7 @@ echo loadCSS($required_styles);
                     </div>
                     
                     <!-- Recurring availability pattern form -->
-                    <form id="pattern-form" action="<?php echo URLROOT; ?>/consultant/manageAvailability" method="POST">
+                    <form id="pattern-form" action="<?php echo URLROOT; ?>/consultant/editAvailability" method="POST">
                         <input type="hidden" name="availability_type" value="pattern">
                         
                         <div class="form-group">
@@ -96,7 +103,7 @@ echo loadCSS($required_styles);
                             <div class="form-group half">
                                 <label for="start_time">Start Hour:</label>
                                 <select id="start_time" name="start_time" class="form-control">
-                                    <?php for($i = 0; $i < 24; $i++): ?>
+                                    <?php for($i = 8; $i <= 21; $i++): ?>
                                         <option value="<?php echo sprintf('%02d:00:00', $i); ?>">
                                             <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i))); ?>
                                         </option>
@@ -106,9 +113,9 @@ echo loadCSS($required_styles);
                             <div class="form-group half">
                                 <label for="end_time">End Hour:</label>
                                 <select id="end_time" name="end_time" class="form-control">
-                                    <?php for($i = 1; $i <= 24; $i++): ?>
-                                        <option value="<?php echo sprintf('%02d:00:00', $i % 24); ?>">
-                                            <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i % 24))); ?>
+                                    <?php for($i = 9; $i <= 22; $i++): ?>
+                                        <option value="<?php echo sprintf('%02d:00:00', $i); ?>">
+                                            <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i))); ?>
                                         </option>
                                     <?php endfor; ?>
                                 </select>
@@ -118,7 +125,7 @@ echo loadCSS($required_styles);
                         <div class="form-group">
                             <label for="pattern_start_date">Start Date:</label>
                             <input type="date" id="pattern_start_date" name="pattern_start_date" class="form-control" onchange="updateEndDate()">
-                            <small class="form-text text-muted">When this pattern begins</small>
+                            <!-- <small class="form-text text-muted">When this pattern begins</small> -->
                         </div>
                         
                         <input type="hidden" id="pattern_end_date" name="pattern_end_date">
@@ -127,7 +134,7 @@ echo loadCSS($required_styles);
                             <div id="end_date_display" class="form-control-static">
                                 (Will be set to one month after start date)
                             </div>
-                            <small class="form-text text-muted">Automatically set to one month after start date</small>
+                            <!-- <small class="form-text text-muted">Automatically set to one month after start date</small> -->
                         </div>
                         
                         <div class="form-actions">
@@ -138,7 +145,7 @@ echo loadCSS($required_styles);
                     </form>
                     
                     <!-- Specific date availability form -->
-                    <form id="instance-form" action="<?php echo URLROOT; ?>/consultant/manageAvailability" method="POST" style="display:none;">
+                    <form id="instance-form" action="<?php echo URLROOT; ?>/consultant/editAvailability" method="POST" style="display:none;">
                         <input type="hidden" name="availability_type" value="instance">
                         
                         <div class="form-group">
@@ -150,7 +157,7 @@ echo loadCSS($required_styles);
                             <div class="form-group half">
                                 <label for="instance_start_time">Start Hour:</label>
                                 <select id="instance_start_time" name="instance_start_time" class="form-control">
-                                    <?php for($i = 0; $i < 24; $i++): ?>
+                                    <?php for($i = 8; $i <= 21; $i++): ?>
                                         <option value="<?php echo sprintf('%02d:00:00', $i); ?>">
                                             <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i))); ?>
                                         </option>
@@ -160,9 +167,9 @@ echo loadCSS($required_styles);
                             <div class="form-group half">
                                 <label for="instance_end_time">End Hour:</label>
                                 <select id="instance_end_time" name="instance_end_time" class="form-control">
-                                    <?php for($i = 1; $i <= 24; $i++): ?>
-                                        <option value="<?php echo sprintf('%02d:00:00', $i % 24); ?>">
-                                            <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i % 24))); ?>
+                                    <?php for($i = 9; $i <= 22; $i++): ?>
+                                        <option value="<?php echo sprintf('%02d:00:00', $i); ?>">
+                                            <?php echo date('h:00 A', strtotime(sprintf('%02d:00:00', $i))); ?>
                                         </option>
                                     <?php endfor; ?>
                                 </select>
@@ -215,355 +222,72 @@ echo loadCSS($required_styles);
 
 <?php require APPROOT . '/views/includes/footer.php'; ?>
 
-<style>
-/* Additional styles for the consultant availability view */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.section-header h4 {
-    margin: 0;
-    color: #013CC6;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    color: #888;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 0;
-}
-
-.close-btn:hover {
-    color: #333;
-}
-
-.toggle-buttons {
-    display: flex;
-    margin-bottom: 15px;
-}
-
-.toggle-btn {
-    flex: 1;
-    padding: 8px 12px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.toggle-btn:first-child {
-    border-radius: 4px 0 0 4px;
-}
-
-.toggle-btn:last-child {
-    border-radius: 0 4px 4px 0;
-}
-
-.toggle-btn.active {
-    background-color: #013CC6;
-    color: white;
-    border-color: #013CC6;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.form-group.half {
-    flex: 1;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.form-control-static {
-    padding: 8px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #666;
-}
-
-.form-actions {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    border: none;
-}
-
-.btn-primary {
-    background-color: #013CC6;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 30px 0;
-    color: #888;
-}
-
-.empty-state i {
-    font-size: 36px;
-    margin-bottom: 10px;
-    color: #ccc;
-}
-
-.detail-card {
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.detail-row {
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-.detail-row:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.detail-label {
-    font-weight: 600;
-    color: #555;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.status-legend {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.status-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.status-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.confirmed-dot {
-    background-color: #28a745;
-}
-
-.pending-dot {
-    background-color: #ffc107;
-}
-
-/* Calendar event styling */
-.fc-event.recurring-availability {
-    background-color: #28a745 !important;
-    border-color: #28a745 !important;
-    color: white !important;
-}
-
-.fc-event.specific-availability {
-    background-color: #ffc107 !important;
-    border-color: #ffc107 !important;
-    color: #333 !important;
-}
-
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.error-message i {
-    font-size: 18px;
-}
-
-.info-message {
-    background-color: #e2f0fd;
-    color: #0c5460;
-    padding: 15px;
-    border-radius: 4px;
-    margin-top: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.info-message i {
-    font-size: 18px;
-}
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Convert PHP data to JavaScript
-    const availabilityPatterns = <?php echo json_encode($data['availabilityPatterns'] ?? []); ?>;
-    const availabilityInstances = <?php echo json_encode($data['availabilityInstances'] ?? []); ?>;
-    
-    // Process events for the calendar
-    const events = [];
-    
-    // Day of week names for display
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    
-    // Process recurring patterns
-    if (availabilityPatterns && availabilityPatterns.length) {
-        availabilityPatterns.forEach(pattern => {
-            // For each pattern, create events for all occurrences within the valid date range
-            const startDate = new Date(pattern.start_date);
-            const endDate = new Date(pattern.end_date);
-            
-            // Find the first occurrence of this day of week on or after the start date
-            let currentDate = new Date(startDate);
-            while (currentDate.getDay() != pattern.day_of_week) {
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            // Create events for each occurrence
-            while (currentDate <= endDate) {
-                const formattedDate = formatDate(currentDate);
-                
-                events.push({
-                    id: 'pattern_' + pattern.id + '_' + formattedDate,
-                    title: 'Available: ' + formatTime12Hour(pattern.start_time) + ' - ' + formatTime12Hour(pattern.end_time),
-                    start: formattedDate + 'T' + pattern.start_time,
-                    end: formattedDate + 'T' + pattern.end_time,
-                    backgroundColor: '#28a745',
-                    borderColor: '#28a745',
-                    textColor: '#fff',
-                    extendedProps: {
-                        eventType: 'pattern',
-                        dayOfWeek: pattern.day_of_week,
-                        dayName: dayNames[pattern.day_of_week],
-                        startTime: pattern.start_time,
-                        endTime: pattern.end_time,
-                        patternId: pattern.id,
-                        startDate: pattern.start_date,
-                        endDate: pattern.end_date
-                    },
-                    classNames: ['recurring-availability']
-                });
-                
-                // Move to the next occurrence (7 days later)
-                currentDate.setDate(currentDate.getDate() + 7);
-            }
-        });
+    // Helper function to format date as YYYY-MM-DD
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
-    
-    // Process specific date instances
-    if (availabilityInstances && availabilityInstances.length) {
-        availabilityInstances.forEach(instance => {
-            events.push({
-                id: 'instance_' + instance.id,
-                title: 'Available: ' + formatTime12Hour(instance.start_time) + ' - ' + formatTime12Hour(instance.end_time),
-                start: instance.available_date + 'T' + instance.start_time,
-                end: instance.available_date + 'T' + instance.end_time,
-                backgroundColor: '#ffc107',
-                borderColor: '#ffc107',
-                textColor: '#333',
-                extendedProps: {
-                    eventType: 'instance',
-                    date: instance.available_date,
-                    startTime: instance.start_time,
-                    endTime: instance.end_time,
-                    instanceId: instance.id
-                },
-                classNames: ['specific-availability']
-            });
-        });
+
+    // Format date as "Month Day, Year"
+    function formatDateLong(date) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
     }
-    
-    // Initialize calendar with FullCalendar 5.x
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        initialView: 'dayGridMonth',
-        editable: false,
-        selectable: true,
-        dayMaxEvents: false, // Show all events without the "+more" link
-        height: 'auto', // Adjust height automatically to fit all events
-        events: events,
-        dateClick: function(info) {
-            // Handle date click to set specific date availability
-            handleDateClick(info.date);
-        },
-        eventClick: function(info) {
-            // Handle event click to view details
-            showEventDetails(info.event);
+
+    // Format time as "h:mm AM/PM"
+    function formatTime12Hour(timeString) {
+        // Parse the time string (HH:MM:SS)
+        const [hours, minutes] = timeString.split(':');
+        const hour = parseInt(hours, 10);
+        const minute = parseInt(minutes, 10);
+        
+        // Convert to 12-hour format
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12; // Convert 0 to 12 for 12 AM
+        
+        return `${hour12}:${String(minute).padStart(2, '0')} ${period}`;
+    }
+
+    // Function to toggle between pattern and instance forms
+    window.toggleAvailabilityType = function(type) {
+        const patternBtn = document.getElementById('pattern-btn');
+        const instanceBtn = document.getElementById('instance-btn');
+        const patternForm = document.getElementById('pattern-form');
+        const instanceForm = document.getElementById('instance-form');
+        
+        if (type === 'pattern') {
+            patternBtn.classList.add('active');
+            instanceBtn.classList.remove('active');
+            patternForm.style.display = 'block';
+            instanceForm.style.display = 'none';
+            
+            // Set minimum dates for pattern form
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const formattedToday = formatDate(tomorrow);
+            document.getElementById('pattern_start_date').min = formattedToday;
+            
+            // Update end date
+            updateEndDate();
+        } else {
+            patternBtn.classList.remove('active');
+            instanceBtn.classList.add('active');
+            patternForm.style.display = 'none';
+            instanceForm.style.display = 'block';
+            
+            // Set minimum date for instance form
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const formattedToday = formatDate(tomorrow);
+            document.getElementById('instance_date').min = formattedToday;
         }
-    });
-    
-    calendar.render();
-    
-    // Add event listener for the "Add Availability" button
-    document.getElementById('add-availability-btn').addEventListener('click', function() {
-        // Hide other panels and show the form
-        document.getElementById('no-date-selected').style.display = 'none';
-        document.getElementById('event-details').style.display = 'none';
-        document.getElementById('error-container').style.display = 'none';
-        document.getElementById('set-availability-form').style.display = 'block';
-        
-        // Default to pattern form
-        toggleAvailabilityType('pattern');
-        
-        // Set default dates
-        const today = new Date();
-        const formattedToday = formatDate(today);
-        document.getElementById('pattern_start_date').value = formattedToday;
-        
-        // Calculate and set end date (one month from today)
-        updateEndDate();
-    });
-    
+    };
+
     // Function to update end date based on start date
     window.updateEndDate = function() {
         const startDateInput = document.getElementById('pattern_start_date');
@@ -586,160 +310,287 @@ document.addEventListener('DOMContentLoaded', function() {
             endDateDisplay.textContent = formatDateLong(endDate);
         } else {
             endDateDisplay.textContent = "(Will be set to one month after start date)";
+            endDateInput.value = '';
         }
     };
-    
-    // Function to handle date click
-    function handleDateClick(date) {
-        // Format the date as YYYY-MM-DD
-        const formattedDate = formatDate(date);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Convert PHP data to JavaScript
+        const availabilityPatterns = <?php echo json_encode($data['availabilityPatterns'] ?? []); ?>;
+        const availabilityInstances = <?php echo json_encode($data['availabilityInstances'] ?? []); ?>;
         
-        // Don't allow selecting dates in the past
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // Process events for the calendar
+        const events = [];
         
-        if (date < today) {
-            // Show error message
+        // Day of week names for display
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        // Process recurring patterns
+        if (availabilityPatterns && availabilityPatterns.length) {
+            availabilityPatterns.forEach(pattern => {
+                // For each pattern, create events for all occurrences within the valid date range
+                const startDate = new Date(pattern.start_date);
+                const endDate = new Date(pattern.end_date);
+                
+                // Find the first occurrence of this day of week on or after the start date
+                let currentDate = new Date(startDate);
+                while (currentDate.getDay() != pattern.day_of_week) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                // Create events for each occurrence
+                while (currentDate <= endDate) {
+                    const formattedDate = formatDate(currentDate);
+                    
+                    events.push({
+                        id: 'pattern_' + pattern.id + '_' + formattedDate,
+                        title: 'Available: ' + formatTime12Hour(pattern.start_time) + ' - ' + formatTime12Hour(pattern.end_time),
+                        start: formattedDate + 'T' + pattern.start_time,
+                        end: formattedDate + 'T' + pattern.end_time,
+                        backgroundColor: '#28a745',
+                        borderColor: '#28a745',
+                        textColor: '#fff',
+                        extendedProps: {
+                            eventType: 'pattern',
+                            dayOfWeek: pattern.day_of_week,
+                            dayName: dayNames[pattern.day_of_week],
+                            startTime: pattern.start_time,
+                            endTime: pattern.end_time,
+                            patternId: pattern.id,
+                            startDate: pattern.start_date,
+                            endDate: pattern.end_date
+                        },
+                        classNames: ['recurring-availability']
+                    });
+                    
+                    // Move to the next occurrence (7 days later)
+                    currentDate.setDate(currentDate.getDate() + 7);
+                }
+            });
+        }
+        
+        // Process specific date instances
+        if (availabilityInstances && availabilityInstances.length) {
+            availabilityInstances.forEach(instance => {
+                events.push({
+                    id: 'instance_' + instance.id,
+                    title: 'Available: ' + formatTime12Hour(instance.start_time) + ' - ' + formatTime12Hour(instance.end_time),
+                    start: instance.available_date + 'T' + instance.start_time,
+                    end: instance.available_date + 'T' + instance.end_time,
+                    backgroundColor: '#ffc107',
+                    borderColor: '#ffc107',
+                    textColor: '#333',
+                    extendedProps: {
+                        eventType: 'instance',
+                        date: instance.available_date,
+                        startTime: instance.start_time,
+                        endTime: instance.end_time,
+                        instanceId: instance.id
+                    },
+                    classNames: ['specific-availability']
+                });
+            });
+        }
+        
+        // Initialize calendar with FullCalendar 5.x
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            initialView: 'dayGridMonth',
+            editable: false,
+            selectable: true,
+            dayMaxEvents: false, // Show all events without the "+more" link
+            height: 'auto', // Adjust height automatically to fit all events
+            events: events,
+            dateClick: function(info) {
+                // Handle date click to set specific date availability
+                handleDateClick(info.date);
+            },
+            eventClick: function(info) {
+                // Handle event click to view details
+                showEventDetails(info.event);
+            }
+        });
+        
+        calendar.render();
+        
+        // Add event listener for the "Add Availability" button
+        document.getElementById('add-availability-btn').addEventListener('click', function() {
+            // Hide other panels and show the form
             document.getElementById('no-date-selected').style.display = 'none';
-            document.getElementById('set-availability-form').style.display = 'none';
             document.getElementById('event-details').style.display = 'none';
+            document.getElementById('error-container').style.display = 'none';
+            document.getElementById('set-availability-form').style.display = 'block';
             
-            // Show error message in the error container
-            const errorContainer = document.getElementById('error-container');
-            errorContainer.style.display = 'block';
-            errorContainer.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> You cannot set availability for past dates.</div>';
-            return;
-        }
-        
-        // Hide error container if it was shown
-        document.getElementById('error-container').style.display = 'none';
-        
-        // Hide event details and show the form
-        document.getElementById('event-details').style.display = 'none';
-        document.getElementById('no-date-selected').style.display = 'none';
-        document.getElementById('set-availability-form').style.display = 'block';
-        
-        // Switch to the instance form
-        toggleAvailabilityType('instance');
-        
-        // Set the selected date in the form
-        document.getElementById('instance_date').value = formattedDate;
-        
-        // Focus on the start time input
-        setTimeout(() => {
-            document.getElementById('instance_start_time').focus();
-        }, 100);
-    }
-    
-    // Function to show event details
-    function showEventDetails(event) {
-        // Hide the form and show event details
-        document.getElementById('set-availability-form').style.display = 'none';
-        document.getElementById('no-date-selected').style.display = 'none';
-        document.getElementById('event-details').style.display = 'block';
-        document.getElementById('error-container').style.display = 'none';
-        
-        // Set event type
-        const eventType = event.extendedProps.eventType === 'pattern' ? 'Recurring Availability' : 'Specific Date Availability';
-        document.getElementById('event-type').textContent = eventType;
-        
-        // Show/hide appropriate rows
-        if (event.extendedProps.eventType === 'pattern') {
-            document.getElementById('day-of-week-row').style.display = 'block';
-            document.getElementById('date-row').style.display = 'none';
-            document.getElementById('date-range-row').style.display = 'block';
+            // Default to pattern form
+            toggleAvailabilityType('pattern');
             
-            // Set day of week
-            document.getElementById('event-day').textContent = event.extendedProps.dayName;
-            
-            // Set date range
-            const startDate = new Date(event.extendedProps.startDate);
-            const endDate = new Date(event.extendedProps.endDate);
-            document.getElementById('event-date-range').textContent = 
-                formatDateLong(startDate) + ' - ' + formatDateLong(endDate);
-        } else {
-            document.getElementById('day-of-week-row').style.display = 'none';
-            document.getElementById('date-row').style.display = 'block';
-            document.getElementById('date-range-row').style.display = 'none';
-            
-            // Set date
-            const eventDate = new Date(event.extendedProps.date);
-            document.getElementById('event-date').textContent = formatDateLong(eventDate);
-        }
-        
-        // Set time
-        document.getElementById('event-time').textContent = 
-            formatTime12Hour(event.extendedProps.startTime) + ' - ' + formatTime12Hour(event.extendedProps.endTime);
-    }
-    
-    // Function to toggle between pattern and instance forms
-    window.toggleAvailabilityType = function(type) {
-        const patternBtn = document.getElementById('pattern-btn');
-        const instanceBtn = document.getElementById('instance-btn');
-        const patternForm = document.getElementById('pattern-form');
-        const instanceForm = document.getElementById('instance-form');
-        
-        if (type === 'pattern') {
-            patternBtn.classList.add('active');
-            instanceBtn.classList.remove('active');
-            patternForm.style.display = 'block';
-            instanceForm.style.display = 'none';
-            
-            // Set minimum dates for pattern form
+            // Set default dates
             const today = new Date();
             const formattedToday = formatDate(today);
-            document.getElementById('pattern_start_date').min = formattedToday;
+            document.getElementById('pattern_start_date').value = formattedToday;
             
-            // Update end date
+            // Calculate and set end date (one month from today)
             updateEndDate();
-        } else {
-            patternBtn.classList.remove('active');
-            instanceBtn.classList.add('active');
-            patternForm.style.display = 'none';
-            instanceForm.style.display = 'block';
+        });
+        
+        // Function to handle date click
+        function handleDateClick(date) {
+            // Format the date as YYYY-MM-DD
+            const formattedDate = formatDate(date);
             
-            // Set minimum date for instance form
+            // Don't allow selecting dates in the past
             const today = new Date();
-            const formattedToday = formatDate(today);
-            document.getElementById('instance_date').min = formattedToday;
+            today.setHours(0, 0, 0, 0);
+            
+            if (date < today) {
+                // Show error message
+                document.getElementById('no-date-selected').style.display = 'none';
+                document.getElementById('set-availability-form').style.display = 'none';
+                document.getElementById('event-details').style.display = 'none';
+                
+                // Show error message in the error container
+                const errorContainer = document.getElementById('error-container');
+                errorContainer.style.display = 'block';
+                errorContainer.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> You cannot set availability for past dates.</div>';
+                return;
+            }
+            
+            // Hide error container if it was shown
+            document.getElementById('error-container').style.display = 'none';
+            
+            // Hide event details and show the form
+            document.getElementById('event-details').style.display = 'none';
+            document.getElementById('no-date-selected').style.display = 'none';
+            document.getElementById('set-availability-form').style.display = 'block';
+            
+            // Switch to the instance form
+            toggleAvailabilityType('instance');
+            
+            // Set the selected date in the form
+            document.getElementById('instance_date').value = formattedDate;
+            
+            // Focus on the start time input
+            setTimeout(() => {
+                document.getElementById('instance_start_time').focus();
+            }, 100);
         }
-    }
-    
-    // Set minimum dates on page load
-    const today = new Date();
-    const formattedToday = formatDate(today);
-    document.getElementById('pattern_start_date').min = formattedToday;
-    document.getElementById('instance_date').min = formattedToday;
-    
-    // Initialize end date
-    updateEndDate();
-});
-
-// Helper function to format date as YYYY-MM-DD
-function formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-// Format date as "Month Day, Year"
-function formatDateLong(date) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-}
-
-// Format time as "h:mm AM/PM"
-function formatTime12Hour(timeString) {
-    // Parse the time string (HH:MM:SS)
-    const [hours, minutes] = timeString.split(':');
-    const hour = parseInt(hours, 10);
-    const minute = parseInt(minutes, 10);
-    
-    // Convert to 12-hour format
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12; // Convert 0 to 12 for 12 AM
-    
-    return `${hour12}:${String(minute).padStart(2, '0')} ${period}`;
-}
+        
+        // Function to show event details
+        function showEventDetails(event) {
+            // Hide the form and show event details
+            document.getElementById('set-availability-form').style.display = 'none';
+            document.getElementById('no-date-selected').style.display = 'none';
+            document.getElementById('event-details').style.display = 'block';
+            document.getElementById('error-container').style.display = 'none';
+            
+            // Set event type
+            const eventType = event.extendedProps.eventType === 'pattern' ? 'Recurring Availability' : 'Specific Date Availability';
+            document.getElementById('event-type').textContent = eventType;
+            
+            // Show/hide appropriate rows
+            if (event.extendedProps.eventType === 'pattern') {
+                document.getElementById('day-of-week-row').style.display = 'block';
+                document.getElementById('date-row').style.display = 'none';
+                document.getElementById('date-range-row').style.display = 'block';
+                
+                // Set day of week
+                document.getElementById('event-day').textContent = event.extendedProps.dayName;
+                
+                // Set date range
+                const startDate = new Date(event.extendedProps.startDate);
+                const endDate = new Date(event.extendedProps.endDate);
+                document.getElementById('event-date-range').textContent = 
+                    formatDateLong(startDate) + ' - ' + formatDateLong(endDate);
+            } else {
+                document.getElementById('day-of-week-row').style.display = 'none';
+                document.getElementById('date-row').style.display = 'block';
+                document.getElementById('date-range-row').style.display = 'none';
+                
+                // Set date
+                const eventDate = new Date(event.extendedProps.date);
+                document.getElementById('event-date').textContent = formatDateLong(eventDate);
+            }
+            
+            // Set time
+            document.getElementById('event-time').textContent = 
+                formatTime12Hour(event.extendedProps.startTime) + ' - ' + formatTime12Hour(event.extendedProps.endTime);
+        }
+        
+        // Add validation for time selection
+        function validateTimeSelection() {
+            // For pattern form
+            const startTime = document.getElementById('start_time');
+            const endTime = document.getElementById('end_time');
+            
+            startTime.addEventListener('change', function() {
+                const startHour = parseInt(this.value.split(':')[0]);
+                
+                // Reset end time options
+                // Reset end time options
+                while (endTime.options.length > 0) {
+                    endTime.remove(0);
+                }
+                
+                // Add only valid end times (must be after start time)
+                for (let i = startHour + 1; i <= 22; i++) {
+                    const option = document.createElement('option');
+                    option.value = `${String(i).padStart(2, '0')}:00:00`;
+                    option.text = formatTime12Hour(`${String(i).padStart(2, '0')}:00:00`);
+                    endTime.add(option);
+                }
+                
+                // Select the first option
+                if (endTime.options.length > 0) {
+                    endTime.selectedIndex = 0;
+                }
+            });
+            
+            // For instance form
+            const instanceStartTime = document.getElementById('instance_start_time');
+            const instanceEndTime = document.getElementById('instance_end_time');
+            
+            instanceStartTime.addEventListener('change', function() {
+                const startHour = parseInt(this.value.split(':')[0]);
+                
+                // Reset end time options
+                while (instanceEndTime.options.length > 0) {
+                    instanceEndTime.remove(0);
+                }
+                
+                // Add only valid end times (must be after start time)
+                for (let i = startHour + 1; i <= 22; i++) {
+                    const option = document.createElement('option');
+                    option.value = `${String(i).padStart(2, '0')}:00:00`;
+                    option.text = formatTime12Hour(`${String(i).padStart(2, '0')}:00:00`);
+                    instanceEndTime.add(option);
+                }
+                
+                // Select the first option
+                if (instanceEndTime.options.length > 0) {
+                    instanceEndTime.selectedIndex = 0;
+                }
+            });
+        }
+        
+        // Call the validation function
+        validateTimeSelection();
+        
+        // Set minimum dates on page load
+        const today = new Date();
+        const formattedToday = formatDate(today);
+        document.getElementById('pattern_start_date').min = formattedToday;
+        document.getElementById('instance_date').min = formattedToday;
+        
+        // Initialize end date
+        updateEndDate();
+        
+        // Trigger initial validation to ensure end time options are properly set
+        document.getElementById('start_time').dispatchEvent(new Event('change'));
+        document.getElementById('instance_start_time').dispatchEvent(new Event('change'));
+    });
 </script>

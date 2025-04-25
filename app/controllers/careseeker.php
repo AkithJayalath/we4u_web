@@ -254,7 +254,7 @@ public function calculateAge($dob) {
 }
 
 public function requestCaregiver($caregiver_id) {
-    if (!isset($_SESSION['user_id'])) {
+    if (!isset($_SESSION['userrequestConsultant_id'])) {
         redirect('users/login');
     }
     
@@ -643,10 +643,9 @@ public function requestConsultant($consultant_id) {
         } else {
             // Check if appointment date is at least tomorrow
             $appointment_date = new DateTime($data['appointment_date']);
-            $tomorrow = new DateTime();
-            $tomorrow->modify('+1 day');
-            if ($appointment_date < $tomorrow) {
-                $data['error'] = 'Appointment date must be at least tomorrow';
+            $today = new DateTime();
+            if ($appointment_date < $today) {
+                $data['error'] = 'Appointment must be at least tomorrow. Please select a different time slot';
             }
         }
 
