@@ -17,12 +17,20 @@
         <div class="review">
             <?php if(!empty($data['reviews'])) : ?>
             <?php foreach ($data['reviews'] as $review) : ?>
-                <div class="review-card">
+                <div class="review-card" 
+                     style="cursor: <?php echo ($review->reviewer_id == $_SESSION['user_id']) ? 'pointer' : 'default'; ?>;" 
+                     onclick="<?php echo ($review->reviewer_id == $_SESSION['user_id']) ? "window.location.href='" . URLROOT . "/careseeker/editReview/" . $review->review_id . "'" : ''; ?>">
                     <div class="user-details">
                         <img src="<?php echo !empty($review->profile_picture) ? URLROOT . '/images/profile_imgs/'. $review->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                         <h3 class="name"><?php echo $review->username; ?></h3>
                         <div class="review-date">
-                            <span><?php echo date('d M Y', strtotime($review->review_date)); ?></span>
+                            <span>
+                                <?php 
+                                echo !empty($review->updated_date) 
+                                    ? date('d M Y', strtotime($review->updated_date)) 
+                                    : date('d M Y', strtotime($review->review_date)); 
+                                ?>
+                            </span>
                         </div>
                     </div>
                     <p class="review-cont">
@@ -32,16 +40,6 @@
                         <?php for($i=1; $i<=5; $i++) : ?>
                             <i class="fa-solid fa-star <?php echo ($i <= $review->rating) ? 'active' : ''; ?>"></i>
                         <?php endfor; ?>
-                    </div>
-                    
-                    <!-- Edit and Delete Buttons -->
-                    <div class="review-actions-icons">
-                        <button class="edit-btn-pen" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/editReview/<?php echo $review->review_id; ?>'">
-                            <i class="fa-solid fa-pen-to-square"></i> 
-                        </button>
-                        <button class="delete-btn-trash" onclick="if(confirm('Are you sure you want to delete this review?')) { window.location.href='<?php echo URLROOT; ?>/careseeker/deleteReview/<?php echo $review->review_id; ?>'; }">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
                     </div>
                 </div>
             <?php endforeach; ?>

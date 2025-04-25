@@ -122,12 +122,12 @@ echo loadCSS($required_styles);
                         <div>
                             <h4>Payment details</h4>
                             <?php if ($data['profile']->caregiver_type === 'both') : ?>
-                                <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
-                                <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+                                <p>Per Session (Short Term): Rs. <?= isset($data['profile']->price_per_session) ? htmlspecialchars($data['profile']->price_per_session) : 'Not specified' ?></p>
+                                <p>Per Day (Long Term): Rs. <?= isset($data['profile']->price_per_day) ? htmlspecialchars($data['profile']->price_per_day) : 'Not specified' ?></p>
                             <?php elseif ($data['profile']->caregiver_type === 'short') : ?>
-                                <p>Per Session (Short Term): Rs. <?= htmlspecialchars($data['profile']->price_per_session) ?></p>
+                                <p>Per Session (Short Term): Rs. <?= isset($data['profile']->price_per_session) ? htmlspecialchars($data['profile']->price_per_session) : 'Not specified' ?></p>
                             <?php elseif ($data['profile']->caregiver_type === 'long') : ?>
-                                <p>Per Day (Long Term): Rs. <?= htmlspecialchars($data['profile']->price_per_day) ?></p>
+                                <p>Per Day (Long Term): Rs. <?= isset($data['profile']->price_per_day) ? htmlspecialchars($data['profile']->price_per_day) : 'Not specified' ?></p>
                             <?php endif; ?>
                         </div>
                     </div>

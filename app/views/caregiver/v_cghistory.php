@@ -18,7 +18,6 @@
                         <option value="payment">Payment</option>
                     </select>
                 </div>
-         
         </div>
 
         <div class="history-list">

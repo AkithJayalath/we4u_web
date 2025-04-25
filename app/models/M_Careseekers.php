@@ -334,12 +334,12 @@ public function getFullConsultRequestInfo($requestId)
 
 //to view caregiver profile
 public function getReviews($caregiver_id) {
-    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
+    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date, r.updated_date
                       FROM review r
                       JOIN user u ON r.reviewer_id = u.user_id
                       WHERE r.reviewed_user_id = :caregiver_id
                       AND r.review_role = "Caregiver"
-                      ORDER BY r.review_date DESC');
+                      ORDER BY COALESCE(r.updated_date,r.review_date) DESC');
 
     $this->db->bind(':caregiver_id', $caregiver_id);
     return $this->db->resultSet();
@@ -419,8 +419,8 @@ public function showConsultantProfile($consultant_id) {
 }
 
 public function addReview($data) {
-    $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, rating, review_text, review_date) 
-                      VALUES (:reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_TIMESTAMP)');
+    $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, rating, review_text, review_date,updated_date) 
+                      VALUES (:reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     $this->db->bind(':reviewer_id', $data['reviewer_id']);
     $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
     $this->db->bind(':review_role', $data['review_role']);
@@ -439,7 +439,7 @@ public function editReview($data) {
     $this->db->query('UPDATE review SET 
                       rating = :rating,
                       review_text = :review_text,
-                      review_date = CURRENT_TIMESTAMP
+                      updated_date = CURRENT_TIMESTAMP
                       WHERE review_id = :review_id');
     $this->db->bind(':rating', $data['rating']);
     $this->db->bind(':review_text', $data['review_text']);
@@ -450,6 +450,18 @@ public function editReview($data) {
 public function deleteReview($review_id) {
     $this->db->query('DELETE FROM review WHERE review_id = :review_id');
     $this->db->bind(':review_id', $review_id);
+    return $this->db->execute();
+}
+
+public function updateReview($data) {
+    $this->db->query("UPDATE review 
+                      SET review_text = :review_text, 
+                          rating = :rating, 
+                          updated_date = CURRENT_TIMESTAMP 
+                      WHERE review_id = :review_id");
+    $this->db->bind(':review_text', $data['review_text']);
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_id', $data['review_id']);
     return $this->db->execute();
 }
 

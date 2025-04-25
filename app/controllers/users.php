@@ -704,7 +704,7 @@ public function viewblog($blogId = null) {
   }
   
   // Get blog details using the model
-  $blog = $this->userModel->getBlogById($blogId);
+  $blog = $this->usersModel->getBlogById($blogId);
   
   // Check if blog exists
   if (!$blog) {

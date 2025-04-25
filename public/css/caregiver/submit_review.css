@@ -4,7 +4,7 @@
 }
 
 .a-a-a-stat-card {
-    background: #fff;
+    background:  #f1eded;
     border-radius: 10px;
     padding: 30px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -15,9 +15,10 @@
 }
 
 .a-a-a-stat-card h2 {
-    color: #013CC6;
-    text-align: center;
-    margin-bottom: 30px;
+    font-size: 1.8rem;
+    color: #1a237e;
+    margin-bottom: 24px;
+    font-weight: 600;
 }
 
 .a-a-a-form {
@@ -66,23 +67,25 @@
 }
 
 .a-a-a-btn-save,
-.a-a-a-btn-cancel {
+.a-a-a-btn-cancel,
+.a-a-a-btn-delete {
     width: 200px;
-    padding: 12px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
     transition: background-color 0.3s;
 }
 
 .a-a-a-btn-save {
-    background-color: #013CC6;
     color: white;
+    background-color: #08DCC1;
 }
 
 .a-a-a-btn-save:hover {
-    background-color: #0132a3;
+    background-color: #06b5a1;
 }
 
 .a-a-a-btn-cancel {
@@ -93,3 +96,12 @@
 .a-a-a-btn-cancel:hover {
     background-color: #e0e0e0;
 }
+
+.a-a-a-btn-delete{
+    color: white;
+    background-color: rgb(255, 38, 38);
+}
+.a-a-a-btn-delete:hover {
+    background-color: rgb(218, 33, 33);
+}
+

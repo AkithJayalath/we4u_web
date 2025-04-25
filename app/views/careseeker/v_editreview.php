@@ -14,7 +14,7 @@
     <main class="a-a-a-main-content">
         <div class="a-a-a-stat-card">
             <h2>Edit Your Review</h2>
-            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/consultant/editreview/<?php echo $data['review_id']; ?>" method="POST">
+            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/careseeker/editReview/<?php echo $data['review_id']; ?>" method="POST">
                 <div class="a-a-a-form-group">
                     <label for="rating">Rating</label>
                     <div class="star-rating">
@@ -31,7 +31,7 @@
                     <label for="review">Review Content</label>
                     <textarea
                         id="review"
-                        name="review"
+                        name="review_text"
                         class="a-a-a-input <?php echo (!empty($data['review_err'])) ? 'is-invalid' : ''; ?>"
                         rows="10"
                         placeholder="Share your experience..."
@@ -42,7 +42,7 @@
 
                 <div class="a-a-a-form-buttons">
                     <button type="button" class="a-a-a-btn-delete" onclick="confirmDelete()">Delete Review</button>
-                    <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/consultant/rateandreview'">Cancel</button>
+                    <button type="button" class="a-a-a-btn-cancel" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/viewCaregiverReviews/'">Cancel</button>
                     <button type="button" class="a-a-a-btn-save">Update Review</button>
                 </div>
             </form>
@@ -77,7 +77,7 @@
     // Delete confirmation handler
     function confirmDelete() {
         if (confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
-            window.location.href = '<?php echo URLROOT; ?>/consultant/deletereview/<?php echo $data['review_id']; ?>';
+            window.location.href = '<?php echo URLROOT; ?>/careseeker/deletereview/<?php echo $data['review_id']; ?>';
         }
     }
 

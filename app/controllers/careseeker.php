@@ -730,7 +730,12 @@ public function viewConsultRequestInfo($requestId)
         $this->view('careseeker/v_viewConsultantSession', $data);
       }
 
-public function viewCaregiverReviews($caregiver_id) {
+public function viewCaregiverReviews($caregiver_id = null) {
+    if ($caregiver_id === null) {
+        flash('review_message', 'Caregiver ID is required.');
+        redirect('careseeker/showElderProfiles'); // Redirect to a fallback page
+    }
+
     // Fetch reviews for the caregiver
     $reviews = $this->careseekersModel->getReviews($caregiver_id);
     error_log("Reviews for caregiver with ID $caregiver_id: " . json_encode($reviews));
@@ -745,6 +750,7 @@ public function viewCaregiverReviews($caregiver_id) {
     // Load the appropriate view
     $this->view('caregiver/v_rate&review', $data);
 }
+
 public function addReview($reviewed_user_id, $role) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -812,8 +818,10 @@ public function addReview($reviewed_user_id, $role) {
             'review_id' => $review_id,
             'review_text' => trim($_POST['review_text']),
             'rating' => trim($_POST['rating']),
+            'updated_at' => date('Y-m-d H:i:s'), // Update the updated_at field
             'review_text_err' => '',
-            'rating_err' => ''
+            'rating_err' => '',
+            'review_err' => '' // Initialize review_err
         ];
 
         // Validate input
@@ -825,11 +833,12 @@ public function addReview($reviewed_user_id, $role) {
         }
 
         if (empty($data['review_text_err']) && empty($data['rating_err'])) {
-            if ($this->careseekerModel->updateReview($data)) {
+            if ($this->careseekersModel->updateReview($data)) {
                 flash('review_message', 'Review updated successfully');
                 redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
             } else {
-                die('Something went wrong');
+                $data['review_err'] = 'Something went wrong while updating the review.';
+                $this->view('careseeker/v_editreview', $data);
             }
         } else {
             $this->view('careseeker/v_editreview', $data);
@@ -838,7 +847,10 @@ public function addReview($reviewed_user_id, $role) {
         $data = [
             'review_id' => $review_id,
             'review_text' => $review->review_text,
-            'rating' => $review->rating
+            'rating' => $review->rating,
+            'review_text_err' => '',
+            'rating_err' => '',
+            'review_err' => '' // Initialize review_err
         ];
         $this->view('careseeker/v_editreview', $data);
     }
@@ -869,7 +881,7 @@ public function deleteReview($review_id) {
         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
     }
 
-    if ($this->careseekerModel->deleteReview($review_id)) {
+    if ($this->careseekersModel->deleteReview($review_id)) {
         flash('review_message', 'Review deleted successfully');
         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
     } else {
