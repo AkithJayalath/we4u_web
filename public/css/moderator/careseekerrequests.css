@@ -116,7 +116,7 @@
   font-weight: 600;
 }
 
-.request-table-cell.status-approved {
+.request-table-cell.status-accepted {
   color: var(--color-status-accepted);
   font-weight: 600;
 }

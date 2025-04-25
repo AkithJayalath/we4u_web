@@ -269,3 +269,13 @@ CREATE TABLE `care_payments` (
 );
 
 
+alter table consultant_payments
+add COLUM we4u_earn decimal(10,2);
+
+alter table consultant_payments
+add COLUM is_paid boolean;
+
+alter table care_payments
+add COLUM we4u_earn decimal(10,2);
+
+

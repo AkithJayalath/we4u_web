@@ -334,11 +334,29 @@
                   'active' => false
               ],
               [
+                'title' => 'Jobs',
+                'url' => URLROOT . '/moderator/caregiverAndConsultantRequests',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-480q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm0-80q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-280Zm-60 160v-320h120v320H420Z"/></svg>',
+                'active' => false
+            ],[
+                'title' => 'Care Payments',
+                'url' => URLROOT . '/moderator/caregiverPayments',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h400q33 0 56.5 23.5T760-720v320q0 33-23.5 56.5T680-320H280Zm80-80h240q25 0 42.5-17.5T660-460q0-51-33.5-84.5T560-578q-33 0-66.5 33.5T460-460q0 25 17.5 42.5T500-400h-40q-33 0-56.5-23.5T380-480q0-72 49-121t131-49q72 0 121 49t49 121q0 33-23.5 56.5T650-400h30v-320H280v320h80Zm-80 160h400q66 0 113-47t47-113v-320q0-66-47-113t-113-47H280q-66 0-113 47t-47 113v320q0 66 47 113t113 47Zm0-80v-400 400Z"/></svg>',
+                'active' => false
+            ],
+            [
+                'title' => 'Consult Payments',
+                'url' => URLROOT . '/moderator/consultantPayments',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M280-240q-33 0-56.5-23.5T200-320v-480q0-33 23.5-56.5T280-880h400q33 0 56.5 23.5T760-800v480q0 33-23.5 56.5T680-240H280Zm0-80h400v-480H280v480Zm200 160q-17 0-28.5-11.5T440-200v-40h80v40q0 17-11.5 28.5T480-160Zm-160-80v-480 480Z"/></svg>',
+                'active' => false
+            ],
+              [
                   'title' => 'Announcements',
                   'url' => URLROOT . '/operator/viewannouncement',
                   'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/></svg>',
                   'active' => false
               ],
+              
               [
                 'title' => 'My Profile',
                 'url' => URLROOT . '/users/viewProfile',

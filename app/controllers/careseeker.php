@@ -909,36 +909,38 @@ class careseeker extends controller
 
 
 
-    public function viewRequests()
-    {
+      
+      public function viewRequests(){
+       
+            $careRequests = $this->careseekersModel->getAllCareRequestsByUser($_SESSION['user_id']);
+            
+            // Add service_type manually to each caregiving request
+            foreach ($careRequests as &$req) {
+                $req->service_category = 'Caregiving';
+            }
+        
+            
+            $consultRequests = $this->careseekersModel->getAllConsultRequestsByUser($_SESSION['user_id']);
+            foreach ($consultRequests as &$req) {
+                $req->service_category = 'Consultation';
+            }
+    
+            $mergedRequests = array_merge($careRequests, $consultRequests);
+        
+            // Optionally sort by created_at
+            usort($mergedRequests, function($a, $b) {
+                return strtotime($b->created_at) - strtotime($a->created_at); 
+            });
+        
+            $data = [
+                'requests' => $mergedRequests
+            ];
+        
+            $this->view('careseeker/v_viewRequests', $data);
+        
+        
+      }
 
-        $careRequests = $this->careseekersModel->getAllCareRequestsByUser($_SESSION['user_id']);
-
-        // Add service_type manually to each caregiving request
-        foreach ($careRequests as &$req) {
-            $req->service_category = 'Caregiving';
-        }
-
-
-        $consultRequests = $this->careseekersModel->getAllConsultRequestsByUser($_SESSION['user_id']);
-        foreach ($consultRequests as &$req) {
-            $req->service_category = 'Consultation';
-        }
-
-
-        $mergedRequests = array_merge($careRequests, $consultRequests);
-
-        // Optionally sort by created_at
-        usort($mergedRequests, function ($a, $b) {
-            return strtotime($b->created_at) - strtotime($a->created_at);
-        });
-
-        $data = [
-            'requests' => $mergedRequests
-        ];
-
-        $this->view('careseeker/v_viewRequests', $data);
-    }
 
     // Cancel Caregiving Request
 

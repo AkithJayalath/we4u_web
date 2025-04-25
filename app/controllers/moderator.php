@@ -394,6 +394,159 @@
         }
       }
 
+
+      public function caregiverAndConsultantRequests() {
+        // Get caregiver requests from model
+        $careRequests = $this->moderatorModel->getAllCareRequests();
+        
+        // Add service_type manually to each caregiving request
+        foreach ($careRequests as &$req) {
+            $req->service_category = 'Caregiving';
+        }
+        
+        // Get consultant requests from model
+        $consultRequests = $this->moderatorModel->getAllConsultRequests();
+        foreach ($consultRequests as &$req) {
+            $req->service_category = 'Consultation';
+        }
+    
+        // Merge both types of requests
+        $mergedRequests = array_merge($careRequests, $consultRequests);
+        
+        // Sort by created_at/request_date (newest first)
+        usort($mergedRequests, function($a, $b) {
+            $dateA = isset($a->created_at) ? $a->created_at : $a->request_date;
+            $dateB = isset($b->created_at) ? $b->created_at : $b->request_date;
+            return strtotime($dateB) - strtotime($dateA); 
+        });
+        
+        $data = [
+            'requests' => $mergedRequests
+        ];
+        
+        $this->view('moderator/v_careAndConslutantRequests', $data);
+    }
+
+//  Display the payments page for caregivers
+public function caregiverPayments() {
+  // Get all caregiver payments
+  $caregiverPayments = $this->moderatorModel->getCaregiverPayments();
+  
+  // Calculate We4U earnings (8% of payment amount) for each payment
+  foreach ($caregiverPayments as &$payment) {
+      // Calculate We4U earnings (8% of the total amount)
+      $we4u_commission_rate = 0.08; // 8%
+      $we4u_earn = $payment->amount * $we4u_commission_rate;
+      
+      // Round to 2 decimal places for currency
+      $we4u_earn = round($we4u_earn, 2);
+      
+      // Calculate the actual payment amount to caregiver (92% of total)
+      $caregiver_payment = $payment->amount - $we4u_earn;
+      
+      // Update the payment object with these calculated values
+      $payment->we4u_earn = $we4u_earn;
+      $payment->caregiver_payment = $caregiver_payment;
+  }
+  
+  $data = [
+      'caregiverPayments' => $caregiverPayments
+  ];
+  
+  $this->view('moderator/v_payments', $data);
+}
+
+public function markCaregiversAsPaid() {
+  // Check if form is submitted
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Get form data
+      $care_request_id = $_POST['care_request_id'];
+      $caregiver_id = $_POST['caregiver_id'];
+      
+      // Validate the data
+      if (empty($care_request_id) || empty($caregiver_id)) {
+          flash('payment_error', 'Invalid payment information', 'alert alert-danger');
+          redirect('moderator/payments');
+          return;
+      }
+      
+      // Call the model function to mark payment as paid
+      if ($this->moderatorModel->markPaymentAsPaid($care_request_id, $caregiver_id)) {
+          flash('payment_success', 'Payment marked as paid successfully', 'alert alert-success');
+      } else {
+          flash('payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
+      }
+      
+      // Redirect back to payments page
+      redirect('moderator/caregiverPayments');
+  } else {
+      // If not POST request, redirect to payments page
+      redirect('moderator/caregiverPayments');
+  }
+}
+
+public function consultantPayments() {
+  // Get all consultant payments
+  $consultantPayments = $this->moderatorModel->getConsultantPayments();
+  
+  // Calculate We4U earnings (8% of payment amount) for each payment
+  foreach ($consultantPayments as &$payment) {
+      // Calculate We4U earnings (8% of the total amount)
+      $we4u_commission_rate = 0.08; // 8%
+      $we4u_earn = $payment->amount * $we4u_commission_rate;
+      
+      // Round to 2 decimal places for currency
+      $we4u_earn = round($we4u_earn, 2);
+      
+      // Calculate the actual payment amount to consultant (92% of total)
+      $consultant_payment = $payment->amount - $we4u_earn;
+      
+      // Update the payment object with these calculated values
+      $payment->we4u_earn = $we4u_earn;
+      $payment->consultant_payment = $consultant_payment;
+  }
+  
+  $data = [
+      'consultantPayments' => $consultantPayments
+  ];
+  
+  $this->view('moderator/v_consultant_payments', $data);
+}
+
+public function markConsultantAsPaid() {
+  // Check if form is submitted
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Get form data
+      $payment_id = $_POST['payment_id'];
+      $consultant_id = $_POST['consultant_id'];
+      
+      // Validate the data
+      if (empty($payment_id) || empty($consultant_id)) {
+          flash('consultant_payment_error', 'Invalid payment information', 'alert alert-danger');
+          redirect('moderator/consultantPayments');
+          return;
+      }
+      
+      // Call the model function to mark payment as paid
+      if ($this->moderatorModel->markConsultantPaymentAsPaid($payment_id, $consultant_id)) {
+          flash('consultant_payment_success', 'Payment marked as paid successfully', 'alert alert-success');
+      } else {
+          flash('consultant_payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
+      }
+      
+      // Redirect back to payments page
+      redirect('moderator/consultantPayments');
+  } else {
+      // If not POST request, redirect to payments page
+      redirect('moderator/consultantPayments');
+  }
+}
+
+
+
+
+    
+
       
 }
 ?>
