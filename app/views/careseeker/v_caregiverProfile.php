@@ -37,9 +37,7 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="caregiver-personal-info-right">
-                <button class="caregiver-chat-button">
-                    <i class="fas fa-comments"></i> Chat
-                </button>
+           
                 <button class="caregiver-send-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/showCaregiverRequestForm/<?= $data['profile']->caregiver_id ?>'">
                     <i class="fas fa-paper-plane"></i> Send Request
                 </button>
@@ -163,6 +161,9 @@ echo loadCSS($required_styles);
             </div>
         </div>
     </div>
+    <!-- Container for the chat popup -->
+<div id="chat-popup-container" class="hidden"></div>
+
 </page-body-container>
 
 <script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
@@ -183,5 +184,9 @@ echo loadCSS($required_styles);
     const reviewsData = <?php echo json_encode($data['reviews']); ?>;
     addReviewsForConsultant(reviewsData);
 </script>
+<script>
+    const URLROOT = '<?php echo URLROOT; ?>';
+</script>
+<script src="<?php echo URLROOT; ?>/js/caregiverChatPopup.js"></script>
 
 <?php require APPROOT . '/views/includes/footer.php' ?>

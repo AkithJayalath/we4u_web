@@ -13,5 +13,8 @@
             <title><?php echo SITENAME?></title>  
 
     </head>
-    <!-- testing commit -->
+    
+<!--  flash message  -->
+    <?php echo FlashHelper::render(); ?>
+    
     

@@ -37,9 +37,7 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="caregiver-personal-info-right">
-                <button class="caregiver-chat-button">
-                    <i class="fas fa-comments"></i> Chat
-                </button>
+                
                 <button class="caregiver-send-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/showConsultantRequestForm/<?= $data['profile']->consultant_id ?>'">
     <i class="fas fa-paper-plane"></i> Send Request
 </button>

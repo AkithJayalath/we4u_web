@@ -131,7 +131,7 @@ $elder_id = $data['elder_id'];
                     <!-- Submit and Cancel Buttons -->
                     <div class="save-cancel">
                     <button type="submit" class="save-btn">Save</button>
-                    <a href="<?php echo URLROOT; ?>/users/viewCareseekerProfile" class="cancel-button">Cancel</a>
+                    <a href="<?php echo URLROOT; ?>/careseeker/viewElderProfile" class="cancel-button">Cancel</a>
                 </div>
                 </form>
             </div>

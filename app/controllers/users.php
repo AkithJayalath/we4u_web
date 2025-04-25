@@ -140,10 +140,8 @@
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
       $data = [
-        
         'email' => trim($_POST['email']),
         'password' => trim($_POST['password']),
-
         'email_err' => '',
         'password_err' => '',
       ];
@@ -174,10 +172,15 @@
         $loggedUser = $this->usersModel->login($data['email'], $data['password']);
 
         if($loggedUser){
-          // user is authenticated
-          // can create user sesstions
-           // Check if user is a Caregiver or Consultant and needs approval
-           if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
+          // Check if user is deactivated
+          if($loggedUser->is_deactive == 1){
+            $data['email_err'] = 'Your account has been deactivated. Please contact support for assistance.';
+            $this->view('users/v_login', $data);
+            return;
+          }
+          
+          // Check if user is a Caregiver or Consultant and needs approval
+          if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
             $approvalStatus = $this->usersModel->getApprovalStatus($loggedUser->user_id, $loggedUser->role);
 
             if ($approvalStatus === 'pending') {
@@ -191,43 +194,37 @@
                 $this->view('users/v_login', $data);
                 return;
             }
-        }
-        // If approved or no approval required, create session
-         $this->createUserSession($loggedUser);
+          }
           
+          // If approved and not deactivated, create session
+          $this->createUserSession($loggedUser);
         }
         else{
           $data['password_err'] = 'Password Incorrect';
-
-          // load view with erros
+          // load view with errors
           $this->view('users/v_login', $data);
-
         }
       }
       else {
         // load view with error
         $this->view('users/v_login', $data);
-        
       }
-
     }
     else {
       // initial form 
       $data = [
-        
         'email' => '',
         'password' => '',
-
         'email_err' => '',
         'password_err' => '',
       ];
       // load the view
-    $this->view('users/v_login', $data);
+      $this->view('users/v_login', $data);
     }
-
-  }
+}
 
   public function createUserSession($user){
+    flash('success', 'Logged in successfully');
     
     $_SESSION ['user_id']=$user->user_id;
     $_SESSION ['user_profile_picture'] = $user->profile_picture;
@@ -257,6 +254,7 @@
               break;
       }
     }
+    
 
    
     
@@ -334,8 +332,9 @@
 
             $data = [
                 'user_id' => $userId,
-                'profile_picture' => $_FILES['profile_picture'],
-                'profile_picture_name' => time().'_'.$_FILES['profile_picture']['name'],
+                'profile_picture' => $currentProfilePicture, // Set this for view display purposes
+                'profile_picture_upload' => $_FILES['profile_picture'],
+                'profile_picture_name' => !empty($_FILES['profile_picture']['name']) ? time().'_'.$_FILES['profile_picture']['name'] : $currentProfilePicture,
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
                 'date_of_birth' => trim($_POST['date_of_birth']),
@@ -347,7 +346,7 @@
                 
                 // Error fields
                 'username_err' => '',
-                'profile_picture_err' =>'',
+                'profile_picture_err' => '',
                 'email_err' => '',
                 'dob_err' => '',
                 'password_err' => '',
@@ -356,31 +355,6 @@
                 'contact_info_err' => '',
                 'gender_err' => ''
             ];
-
-            // Handle profile picture upload/update
-            if (!empty($data['profile_picture']['name'])) { // Only process if a new image is uploaded
-                $profileImagePath = '/images/profile_imgs/' . $data['profile_picture_name'];
-                
-                if (!empty($currentProfilePicture)) {
-                    // Update existing profile picture by deleting the old one
-                    $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
-                    if (updateImage($oldImagePath, $data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
-                        // Successfully updated
-                    } else {
-                        $data['profile_picture_err'] = 'Failed to update profile picture.';
-                    }
-                } else {
-                    // Upload a new profile picture
-                    if (uploadImage($data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs')) {
-                        // Successfully uploaded
-                    } else {
-                        $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
-                    }
-                }
-            } else {
-                // No new profile picture uploaded, retain the old one
-                $data['profile_picture_name'] = $currentProfilePicture;
-            }
 
             // Validation
             // Validate username
@@ -437,8 +411,39 @@
             }
 
             // Check if there are no errors
-            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err']) && empty($data['profile_picture_err'])) {
+            if (empty($data['username_err']) && empty($data['email_err']) && empty($data['dob_err']) && 
+                empty($data['password_err']) && empty($data['confirm_password_err']) && 
+                empty($data['gender_err']) && empty($data['address_err']) && empty($data['contact_info_err'])) {
                 
+                // Only process image upload if validation passes
+                if (!empty($data['profile_picture_upload']['name'])) {
+                    if (!empty($currentProfilePicture)) {
+                        // Update existing profile picture by deleting the old one
+                        $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
+                        if (!updateImage($oldImagePath, $data['profile_picture_upload']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
+                            $data['profile_picture_err'] = 'Failed to update profile picture.';
+                            // Keep the current image for display
+                            $data['profile_picture'] = $currentProfilePicture;
+                            $this->view('careseeker/v_edit', $data);
+                            return;
+                        }
+                    } else {
+                        // Upload a new profile picture
+                        if (!uploadImage($data['profile_picture_upload']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
+                            $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
+                            // Keep the current image for display
+                            $data['profile_picture'] = $currentProfilePicture;
+                            $this->view('careseeker/v_edit', $data);
+                            return;
+                        }
+                    }
+                    // Update the display profile picture with the new name
+                    $data['profile_picture'] = $data['profile_picture_name'];
+                } else {
+                    // No new profile picture uploaded, retain the old one
+                    $data['profile_picture_name'] = $currentProfilePicture;
+                }
+
                 // Hash new password if entered
                 if (!empty($data['password'])) {
                     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -454,6 +459,9 @@
                     die('Something went wrong. Please try again.');
                 }
             } else {
+                // If validation errors occur, make sure we're showing the current profile picture
+                $data['profile_picture'] = $currentProfilePicture;
+                
                 // Load view with errors
                 $this->view('careseeker/v_edit', $data);
             }
@@ -463,8 +471,8 @@
                 'user_id' => $userId,
                 'username' => $profileData[0]->username,
                 'email' => $profileData[0]->email,
-                'profile_picture' => $profileData[0]->profile_picture,
-                'profile_picture_name' => '',
+                'profile_picture' => $profileData[0]->profile_picture, // This is what displays in the view
+                'profile_picture_name' => $profileData[0]->profile_picture, // This is for database update
                 'date_of_birth' => $profileData[0]->date_of_birth,
                 'address' => $profileData[0]->address,
                 'contact_info' => $profileData[0]->contact_info,
@@ -486,7 +494,6 @@
         redirect('users/login');
     }
 }
-
 
 public function deleteUser() {
   if ($this->isLoggedIn()) {
@@ -632,6 +639,201 @@ public function viewCaregiverProfile($id = null) {
   ];
   
   $this->view('careseeker/viewCaregivers', $data);
+}
+
+
+
+// Password Reset
+
+
+
+public function sendResetCode() {
+  // Check for POST
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process form
+      $email = trim($_POST['email']);
+      
+      // Check if email exists in the database
+      if($this->usersModel->findUserByEmail($email)) {
+          // Generate a random 5-digit code
+          $resetCode = sprintf("%05d", rand(0, 99999));
+          
+          // Store the code in the database with an expiration time (1 hour from now)
+          $expiryTime = date('Y-m-d H:i:s', time() + 3600); // 1 hour from now
+          
+          if($this->usersModel->storeResetCode($email, $resetCode, $expiryTime)) {
+              // Send the code by email
+              $emailBody = '<h1>Password Reset Code</h1>
+                  <p>You requested a password reset. Use the following code to reset your password:</p>
+                  <h2>' . $resetCode . '</h2>
+                  <p>This code will expire in 1 hour.</p>
+                  <p>If you did not request this reset, please ignore this email.</p>';
+              
+              $result = $this->sendEmail(
+                  $email,
+                  'Password Reset Code - We4u',
+                  $emailBody
+              );
+              
+              if($result) {
+                  // Redirect to verify code page
+                  flash('reset_message', 'Reset code sent to your email');
+                  redirect('users/verifyResetCode/' . urlencode($email));
+              } else {
+                  // Email sending failed
+                  flash('reset_error', 'Failed to send reset code, please try again', 'alert alert-danger');
+                  redirect('users/login');
+              }
+          } else {
+              flash('reset_error', 'Something went wrong, please try again', 'alert alert-danger');
+              redirect('users/login');
+          }
+      } else {
+          // Email doesn't exist
+          flash('reset_error', 'No account found with that email', 'alert alert-danger');
+          redirect('users/login');
+      }
+  } else {
+      // Redirect to login page if accessed directly
+      redirect('users/login');
+  }
+}
+
+public function verifyResetCode($email = '') {
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process verification form
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      
+      $data = [
+          'email' => trim($_POST['email']),
+          'code' => trim($_POST['code']),
+          'code_err' => ''
+      ];
+      
+      // Validate code
+      if(empty($data['code'])) {
+          $data['code_err'] = 'Please enter the verification code';
+      } elseif(strlen($data['code']) != 5 || !is_numeric($data['code'])) {
+          $data['code_err'] = 'Invalid code format';
+      }
+      
+      // Check if code is valid
+      if(empty($data['code_err'])) {
+          $codeData = $this->usersModel->verifyResetCode($data['email'], $data['code']);
+          
+          if($codeData) {
+              // Check if code is expired
+              $currentTime = date('Y-m-d H:i:s');
+              if($currentTime > $codeData->expiry_time) {
+                  $data['code_err'] = 'This code has expired. Please request a new one.';
+              } else {
+                  // Code is valid, redirect to reset password page
+                  // Store code verification in session to prevent direct access to reset page
+                  $_SESSION['reset_verified'] = true;
+                  $_SESSION['reset_email'] = $data['email'];
+                  
+                  redirect('users/resetPassword');
+                  return;
+              }
+          } else {
+              $data['code_err'] = 'Invalid verification code';
+          }
+      }
+      
+      $this->view('users/v_verifyCode', $data);
+  } else {
+      // Initial form load
+      $data = [
+          'email' => urldecode($email),
+          'code' => '',
+          'code_err' => ''
+      ];
+      
+      $this->view('users/v_verifyCode', $data);
+  }
+}
+
+public function resetPassword() {
+  // Check if user is verified
+  if(!isset($_SESSION['reset_verified']) || $_SESSION['reset_verified'] !== true) {
+      redirect('users/login');
+  }
+  
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process form
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      
+      $data = [
+          'email' => $_SESSION['reset_email'],
+          'password' => trim($_POST['password']),
+          'confirm_password' => trim($_POST['confirm_password']),
+          'password_err' => '',
+          'confirm_password_err' => ''
+      ];
+      
+      // Validate password
+      if(empty($data['password'])) {
+          $data['password_err'] = 'Please enter a password';
+      } elseif(strlen($data['password']) < 6) {
+          $data['password_err'] = 'Password must be at least 6 characters';
+      }
+      
+      // Validate confirm password
+      if(empty($data['confirm_password'])) {
+          $data['confirm_password_err'] = 'Please confirm password';
+      } elseif($data['password'] != $data['confirm_password']) {
+          $data['confirm_password_err'] = 'Passwords do not match';
+      }
+      
+      // If no errors
+      if(empty($data['password_err']) && empty($data['confirm_password_err'])) {
+          // Hash password
+          $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+          
+          // Update password
+          if($this->usersModel->updatePassword($data['email'], $data['password'])) {
+              // Remove verification from session
+              unset($_SESSION['reset_verified']);
+              unset($_SESSION['reset_email']);
+              
+              // Invalidate used reset codes
+              $this->usersModel->invalidateResetCodes($data['email']);
+              
+              flash('password_success', 'Your password has been updated successfully');
+              redirect('users/login');
+          } else {
+              flash('password_error', 'Something went wrong, please try again', 'alert alert-danger');
+              $this->view('users/v_reset_password', $data);
+          }
+      } else {
+          // Load view with errors
+          $this->view('users/v_resetPassword', $data);
+      }
+  } else {
+      // Initial form load
+      $data = [
+          'email' => $_SESSION['reset_email'],
+          'password' => '',
+          'confirm_password' => '',
+          'password_err' => '',
+          'confirm_password_err' => ''
+      ];
+      
+      $this->view('users/v_resetPassword', $data);
+  }
+}
+
+// Send email helper method
+private function sendEmail($to, $subject, $body) {
+  // This is a wrapper for your existing sendEmail function
+  $result = sendEmail($to, $subject, $body);
+  
+  if ($result['success']) {
+      return true;
+  } else {
+      error_log($result['message']);
+      return false;
+  }
 }
 
 
