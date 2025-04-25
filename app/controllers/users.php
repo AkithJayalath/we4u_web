@@ -224,6 +224,7 @@
 }
 
   public function createUserSession($user){
+    flash('success', 'Logged in successfully');
     
     $_SESSION ['user_id']=$user->user_id;
     $_SESSION ['user_profile_picture'] = $user->profile_picture;
@@ -253,6 +254,7 @@
               break;
       }
     }
+    
 
    
     
