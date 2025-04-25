@@ -11,7 +11,9 @@
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
 </div>
 
-<container>
+<page-body-container>
+  <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
+
   <div class="a-b-page-wrapper">
     <div class="a-b-header">
       <!-- No Create Blog button for users -->
@@ -43,6 +45,6 @@
       <button onclick="window.location.href='<?php echo URLROOT; ?>/users/blogs?page=<?php echo $data['nextPage'] ?? 1; ?>'">See More</button>
     </div>
   </div>
-</container>
+</page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php'; ?>

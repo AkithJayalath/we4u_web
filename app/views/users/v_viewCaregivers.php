@@ -1,7 +1,6 @@
 <?php 
     $required_styles = [
         'careseeker/viewCaregivers',
-        // 'components/sidebar',
     ];
     echo loadCSS($required_styles);
 ?>
@@ -16,29 +15,41 @@
        <div class="filter-sort-bar">
         <form method="GET" action="<?php echo URLROOT; ?>/users/viewCaregivers" id="filter-form">
             <div class="filters">
-                <label for="username-filter">Username:</label>
-                <input type="text" id="username-filter" class="live-search" name="username" placeholder="Search by name" value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
-              <label for="region-filter">Region:</label>
-              <select id="region-filter" name="region">
-                <option value="">All</option>
-                <?php 
-                // Get all unique regions from the database
-                $regions = $data['regions'] ?? [];
-                foreach($regions as $region): ?>
-                    <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
-                        <?php echo $region; ?>
-                    </option>
-                <?php endforeach; ?>
-              </select>
+              <div class="filter-group">
+                <label for="username-filter">Username</label>
+                <input type="search" 
+                       id="username-filter" 
+                       class="live-search"
+                       name="username" 
+                       placeholder="Search by name" 
+                       value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
+              </div>
 
-              <label for="type-filter">Type:</label>
-              <select id="type-filter" name="type">
-                <option value="">All</option>
-                <option value="Short Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Short Term' ? 'selected' : ''; ?>>Short Term</option>
-                <option value="Long Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Long Term' ? 'selected' : ''; ?>>Long Term</option>
-              </select>
+              <div class="filter-group">
+                <label for="region-filter">Region</label>
+                <select id="region-filter" name="region">
+                  <option value="">All</option>
+                  <?php 
+                  $regions = $data['regions'] ?? [];
+                  foreach($regions as $region): ?>
+                      <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
+                          <?php echo $region; ?>
+                      </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
 
-              <label for="speciality-filter">Speciality:</label>
+              <div class="filter-group">
+                <label for="type-filter">Type</label>
+                <select id="type-filter" name="type">
+                  <option value="">All</option>
+                  <option value="Short Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Short Term' ? 'selected' : ''; ?>>Short Term</option>
+                  <option value="Long Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Long Term' ? 'selected' : ''; ?>>Long Term</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="speciality-filter">Speciality</label>
                 <select id="speciality-filter" name="speciality">
                     <option value="">All</option>
                     <?php 
@@ -50,32 +61,53 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <!-- Calendar -->
-                <label for="date-filter">Date:</label>
-                <input type="date" id="date-filter" name="date" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>" />
+              </div>
 
-                <!-- Availability Selector -->
-                <label for="availability-filter">Availability:</label>
-                <select id="availability-filter" name="availability">
-                <option value="">All</option>
-                <option value="morning" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'morning') ? 'selected' : ''; ?>>Morning</option>
-                <option value="afternoon" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'afternoon') ? 'selected' : ''; ?>>Afternoon</option>
-                <option value="overnight" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'overnight') ? 'selected' : ''; ?>>Overnight</option>
-                <option value="day" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'day') ? 'selected' : ''; ?>>Day</option>
+              <div class="filter-group">
+                <label for="skills-filter">Skills</label>
+                <select id="skills-filter" name="skills" multiple>
+                    <option value="">All</option>
+                    <?php 
+                    $skills = $data['skills'] ?? [];
+                    foreach ($skills as $skill): ?>
+                        <option value="<?php echo htmlspecialchars($skill); ?>" 
+                                <?php echo (isset($_GET['skills']) && in_array($skill, (array)$_GET['skills'])) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($skill); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="date-filter">Date</label>
+                <input type="date" id="date-filter" name="date" placeholder="dd/mm/yyyy" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>" />
+              </div>
+
+              <div class="filter-group">
+                <label for="availability-filter">Availability</label>
+                <select id="availability-filter" name="availability">
+                  <option value="">All</option>
+                  <option value="morning" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'morning') ? 'selected' : ''; ?>>Morning</option>
+                  <option value="afternoon" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'afternoon') ? 'selected' : ''; ?>>Afternoon</option>
+                  <option value="overnight" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'overnight') ? 'selected' : ''; ?>>Overnight</option>
+                  <option value="day" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'day') ? 'selected' : ''; ?>>Day</option>
+                </select>
+              </div>
             </div>
 
             <div class="sort-options">
-              <label for="sort-by">Sort by:</label>
-              <select id="sort-by" name="sort">
-                <option value="">Select</option>
-                <option value="rating" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'rating' ? 'selected' : ''; ?>>Rating</option>
-                <option value="price-asc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-asc' ? 'selected' : ''; ?>>Price: Low to High</option>
-                <option value="price-desc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-desc' ? 'selected' : ''; ?>>Price: High to Low</option>
-              </select>
-            </div>
+              <div class="filter-group">
+                <label for="sort-by">Sort by</label>
+                <select id="sort-by" name="sort">
+                  <option value="">Select</option>
+                  <option value="rating" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'rating' ? 'selected' : ''; ?>>Rating</option>
+                  <option value="price-asc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-asc' ? 'selected' : ''; ?>>Price: Low to High</option>
+                  <option value="price-desc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-desc' ? 'selected' : ''; ?>>Price: High to Low</option>
+                </select>
+              </div>
 
-            <button type="submit" id="apply-filters" class="apply-button">Apply</button>
+              <button type="submit" id="apply-filters" class="apply-button">Apply</button>
+            </div>
         </form>
       </div>
     </div>
@@ -126,7 +158,24 @@
                 <span class="caregiver-personal-info-tag">Verified</span>
                 <?php endif; ?>
                 <p class="consultant-rating">
-                    <span class="rating-stars"><?php echo $ratingStars; ?></span>
+                    <?php 
+                    $rating = $caregiver->rating ?? 0;
+                    $decimal = $rating - floor($rating);
+                    
+                    for ($i = 1; $i <= 5; $i++) : 
+                        if ($i <= floor($rating)) {
+                            // Full star
+                            echo '<i class="fa-solid fa-star active"></i>';
+                        } elseif ($i == ceil($rating) && $decimal >= 0.5) {
+                            // Half star
+                            echo '<i class="fa-solid fa-star-half-stroke active"></i>';
+                        } else {
+                            // Empty star
+                            echo '<i class="fa-regular fa-star"></i>';
+                        }
+                    endfor; 
+                    ?>
+                    <span class="rating-value">(<?php echo number_format($rating, 1); ?>)</span>
                 </p>
                 <p><?php echo htmlspecialchars($caregiver->gender); ?></p>
                 <p>Rs <?php echo htmlspecialchars($caregiver->payment_rate ?? 0); ?> per day</p>
@@ -172,6 +221,7 @@
         
         // Build the query string for pagination links
         $queryParams = [];
+        if(!empty($_GET['username'])) $queryParams['username'] = $_GET['username'];
         if(!empty($_GET['region'])) $queryParams['region'] = $_GET['region'];
         if(!empty($_GET['type'])) $queryParams['type'] = $_GET['type'];
         if(!empty($_GET['speciality'])) $queryParams['speciality'] = $_GET['speciality'];

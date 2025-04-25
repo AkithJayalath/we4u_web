@@ -520,3 +520,25 @@
 .caregiver-review-button:hover {
   background-color: #0056b3;
 }
+
+.caregiver-personal-info-details .consultant-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.caregiver-personal-info-details .consultant-rating i {
+    color: #ddd;
+    font-size: 1.2rem;
+}
+
+.caregiver-personal-info-details .consultant-rating i.active {
+    color: #FFD700;
+}
+
+.caregiver-personal-info-details .consultant-rating .rating-value {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}

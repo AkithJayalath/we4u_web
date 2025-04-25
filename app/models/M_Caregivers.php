@@ -234,62 +234,58 @@ public function updateCaregiverProfile($data){
 
 
 public function getCaregivers($region = '', $type = '', $speciality = '', $sortBy = '', $page = 1, $perPage = 8) {
-    // Build the SQL query with JOIN between users and caregivers tables
-    $sql = "SELECT c.*, u.username, u.profile_picture, u.gender, u.date_of_birth
-            FROM caregiver c
-            JOIN user u ON c.caregiver_id = u.user_id
-            WHERE u.role = 'Caregiver' AND c.is_approved = 'approved'";
+    $offset = ($page - 1) * $perPage;
     
-    // Add filters if provided
+    $query = "SELECT c.*, u.username, u.email, u.profile_picture, u.gender, 
+              (SELECT AVG(rating) FROM review WHERE reviewed_user_id = c.caregiver_id AND review_role = 'caregiver') as rating
+              FROM caregiver c 
+              JOIN user u ON c.caregiver_id = u.user_id";
+    
     $params = [];
     
     if (!empty($region)) {
-        $sql .= " AND c.available_region LIKE :region";
-        $params[':region'] = "%$region%"; // Using LIKE for comma-separated values
+        $query .= " AND c.available_region LIKE :region";
+        $params[':region'] = "%$region%";
     }
     
     if (!empty($type)) {
-        $sql .= " AND c.caregiver_type = :type";
+        $query .= " AND c.caregiver_type = :type";
         $params[':type'] = $type;
     }
     
     if (!empty($speciality)) {
-        $sql .= " AND c.specialty LIKE :speciality";
-        $params[':speciality'] = "%$speciality%"; // Using LIKE for comma-separated values
+        $query .= " AND c.specialty LIKE :speciality";
+        $params[':speciality'] = "%$speciality%";
     }
     
     // Add sorting
-    // if (!empty($sortBy)) {
-    //     switch ($sortBy) {
-    //         case 'rating':
-    //             $sql .= " ORDER BY c.rating DESC";
-    //             break;
-    //         case 'price-asc':
-    //             $sql .= " ORDER BY c.payment_rate ASC";
-    //             break;
-    //         case 'price-desc':
-    //             $sql .= " ORDER BY c.payment_rate DESC";
-    //             break;
-    //         default:
-    //             $sql .= " ORDER BY c.rating DESC"; // Default sort
-    //             break;
-    //     }
-    // } else {
-    //     $sql .= " ORDER BY c.rating DESC"; // Default sort
-    // }
+    if (!empty($sortBy)) {
+        switch ($sortBy) {
+            case 'rating':
+                $query .= " ORDER BY rating DESC";
+                break;
+            case 'price-asc':
+                $query .= " ORDER BY c.payment_rate ASC";
+                break;
+            case 'price-desc':
+                $query .= " ORDER BY c.payment_rate DESC";
+                break;
+            default:
+                $query .= " ORDER BY c.caregiver_id ASC";
+        }
+    } else {
+        $query .= " ORDER BY c.caregiver_id ASC";
+    }
     
-    // Add pagination
-    $offset = ($page - 1) * $perPage;
-    $sql .= " LIMIT :offset, :limit";
-    $params[':offset'] = $offset;
+    $query .= " LIMIT :limit OFFSET :offset";
     $params[':limit'] = $perPage;
+    $params[':offset'] = $offset;
     
-    // Prepare and execute query
-    $this->db->query($sql);
+    $this->db->query($query);
     
-    // Bind parameters
-    foreach ($params as $param => $value) {
-        $this->db->bind($param, $value);
+    // Bind all parameters
+    foreach ($params as $key => $value) {
+        $this->db->bind($key, $value);
     }
     
     return $this->db->resultSet();

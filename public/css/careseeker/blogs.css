@@ -1,8 +1,12 @@
     /* Container styles */
     .a-b-page-wrapper {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px;
+      max-width: 1300px;
+      margin: 0 20px 0 auto;
+      padding: 20px 5px 20px 20px;
+      background-color: #f1eded;
+      min-height: 100vh;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .a-b-header {
@@ -14,14 +18,16 @@
     }
 
     .a-b-create-blog button {
-      padding: 12px 24px;
-      background: #4CAF50;
+      width: 200px;
+      padding: 12px 20px;
+      background-color: #08DCC1;
       color: white;
       border: none;
-      border-radius: 4px;
-      font-size: 1rem;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background-color 0.3s ease;
     }
 
     .a-b-blogs-container {
@@ -29,6 +35,7 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 24px;
       margin-bottom: 32px;
+      padding: 20px;
     }
 
     /* Blog post styles */
@@ -37,6 +44,7 @@
       border-radius: 8px;
       overflow: hidden;
       transition: transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .a-b-blog-post img {
@@ -96,7 +104,7 @@
     }
 
     .a-b-create-blog button:hover {
-      background: var(--color-btn-update-hover);
+      background-color: #06b5a1;
     }
 
     .a-b-read-more a:hover {

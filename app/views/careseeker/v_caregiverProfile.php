@@ -25,9 +25,19 @@ echo loadCSS($required_styles);
                             <h2><?php echo $data['profile']->username; ?></h2>
                             <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
                             <p class="consultant-rating">
-                                <?php for ($i = 1; $i <= 5; $i++) : ?>
-                                    <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
-                                <?php endfor; ?>
+                                <?php 
+                                $rating = $data['rating'];
+                                for ($i = 1; $i <= 5; $i++) : 
+                                    if ($i <= floor($rating)) {
+                                        echo '<i class="fa-solid fa-star active"></i>';
+                                    } elseif ($i - 0.5 <= $rating) {
+                                        echo '<i class="fa-solid fa-star-half-stroke active"></i>';
+                                    } else {
+                                        echo '<i class="fa-regular fa-star"></i>';
+                                    }
+                                endfor; 
+                                ?>
+                                <span class="rating-value">(<?php echo number_format($data['rating'], 1); ?>)</span>
                             </p>
                             <p><?php echo $data['age']; ?> Years</p>
                             <p><?php echo $data['profile']->gender; ?></p>
