@@ -121,6 +121,11 @@
   font-weight: 600;
 }
 
+.request-table-cell.status-approved {
+  color: var(--color-status-accepted);
+  font-weight: 600;
+}
+
 .request-table-cell.status-declined {
   color: var(--color-status-rejected);
   font-weight: 600;

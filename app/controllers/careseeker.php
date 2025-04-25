@@ -561,6 +561,37 @@ class careseeker extends controller
             $today = new DateTime();
             if ($appointment_date < $today) {
                 $data['error'] = 'Appointment must be at least tomorrow. Please select a different time slot';
+            }        // If basic validations pass, check consultant availability
+            if (empty($data['error'])) {
+                // Format times for database queries
+                $startTime = $data['from_time'] . ':00';
+                $endTime = $data['to_time'] . ':00';
+                
+                // Check if consultant is available at this time
+                $isAvailable = $this->scheduleModel->isConsultantAvailable(
+                    $consultant_id, 
+                    $data['appointment_date'], 
+                    $startTime, 
+                    $endTime
+                );
+    
+    
+    
+                if (!$isAvailable) {
+                    $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
+                } else {
+                    // Check if there are existing bookings for this time slot
+                    $hasBookings = $this->scheduleModel->hasExistingBookings(
+                        $consultant_id, 
+                        $data['appointment_date'], 
+                        $startTime,
+                        $endTime
+                    );
+                    
+                    if ($hasBookings) {
+                        $data['error'] = 'This time slot is already booked. Please select a different time slot.';
+                    }
+                }
             }
         }
 
@@ -572,6 +603,38 @@ class careseeker extends controller
 
             if (empty($data['error']) && (empty($data['total_amount']) || !is_numeric($data['total_amount']) || $data['total_amount'] <= 0)) {
                 $data['error'] = 'Invalid payment amount';
+            }
+
+            if (empty($data['error'])) {
+                // Format times for database queries
+                $startTime = $data['from_time'] . ':00';
+                $endTime = $data['to_time'] . ':00';
+                
+                // Check if consultant is available at this time
+                $isAvailable = $this->scheduleModel->isConsultantAvailable(
+                    $consultant_id, 
+                    $data['appointment_date'], 
+                    $startTime, 
+                    $endTime
+                );
+    
+    
+    
+                if (!$isAvailable) {
+                    $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
+                } else {
+                    // Check if there are existing bookings for this time slot
+                    $hasBookings = $this->scheduleModel->hasExistingBookings(
+                        $consultant_id, 
+                        $data['appointment_date'], 
+                        $startTime,
+                        $endTime
+                    );
+                    
+                    if ($hasBookings) {
+                        $data['error'] = 'This time slot is already booked. Please select a different time slot.';
+                    }
+                }
             }
 
             // If all validations pass

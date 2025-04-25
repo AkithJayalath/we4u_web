@@ -32,13 +32,6 @@ function sendEmail($to, $subject, $message, $plainText = '', $attachments = [], 
         $mail->SMTPSecure = $config['encryption'];
         $mail->Port = $config['port'];
         
-        // IMPORTANT: Add these lines to improve deliverability
-        $mail->XMailer = 'We4u Mailer';                      // Custom X-Mailer header
-        $mail->CharSet = 'UTF-8';                            // Specify character set
-        $mail->Encoding = 'base64';                          // Use base64 encoding
-        $mail->Priority = 1;                                 // Set high priority
-        $mail->addCustomHeader('List-Unsubscribe', '<mailto:' . $config['from_email'] . '?subject=Unsubscribe>'); // Add unsubscribe header
-        
         // If you have a physical address, include it in compliance with anti-spam laws
         $mail->addCustomHeader('X-Organization', 'We4u Elder Care');        
         // Set sender
@@ -96,6 +89,8 @@ function sendEmail($to, $subject, $message, $plainText = '', $attachments = [], 
             'success' => true,
             'message' => 'Email sent successfully'
         ];
+
+        flash('success', 'Email sent successfully');
         
     } catch (Exception $e) {
         return [
@@ -103,39 +98,4 @@ function sendEmail($to, $subject, $message, $plainText = '', $attachments = [], 
             'message' => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}"
         ];
     }
-}
-
-/**
- * Send a notification email with a predefined template
- * 
- * @param string $to Recipient email address
- * @param string $templateName Name of the email template to use
- * @param array $data Data to populate the template with
- * @return array ['success' => bool, 'message' => string]
- */
-function sendTemplatedEmail($to, $templateName, $data = []) {
-    // Define the path to email templates
-    $templatePath = APPROOT . '/views/emails/' . $templateName . '.php';
-    
-    // Check if template exists
-    if (!file_exists($templatePath)) {
-        return [
-            'success' => false,
-            'message' => "Email template '{$templateName}' not found"
-        ];
-    }
-    
-    // Extract data to make variables available in the template
-    extract($data);
-    
-    // Start output buffering to capture the template content
-    ob_start();
-    include $templatePath;
-    $message = ob_get_clean();
-    
-    // Get the subject from the data or use a default
-    $subject = $data['subject'] ?? 'Notification from We4u';
-    
-    // Send the email
-    return sendEmail($to, $subject, $message);
 }

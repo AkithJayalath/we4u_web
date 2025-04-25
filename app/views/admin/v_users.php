@@ -129,10 +129,6 @@
                     </div>
               </div>
               <div class="ad-users-action-group">
-                  <button class="ad-users-btn-export" id="export-users">
-                      <i data-lucide="download" class="ad-users-btn-icon"></i>
-                      Export
-                  </button>
                   <a href="<?php echo URLROOT; ?>/admin/adduser">
                     <button class="ad-users-btn-add">
                         <i data-lucide="plus" class="ad-users-btn-icon"></i>
@@ -192,7 +188,12 @@
                           ?></td>
                           <td><?php echo $user->email; ?></td>
                           <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
+                            
+                              <?php if(isset($user->is_deactive) && $user->is_deactive == 1): ?>
+                                  <span class="ad-users-status ad-users-inactive">Inactive</span>
+                              <?php else: ?>
+                                  <span class="ad-users-status ad-users-active">Active</span>
+                              <?php endif; ?>
                           </td>
                       </tr>
                       <?php endforeach;?>

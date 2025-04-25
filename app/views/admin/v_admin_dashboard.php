@@ -109,7 +109,7 @@
                         <input type="search" id="job-search" class="ad-dashboard-job-search" placeholder="Search by name" />
                     </div>
               </div>
-              <div class="ad-dashboard-action-group">
+              <!-- <div class="ad-dashboard-action-group">
                   <button class="ad-dashboard-btn-export" id="export-jobs">
                       <i data-lucide="download" class="ad-dashboard-btn-icon"></i>
                       Export
@@ -118,7 +118,7 @@
                       <i data-lucide="refresh-cw" class="ad-dashboard-btn-icon"></i>
                       Refresh Data
                   </button>
-              </div>
+              </div> -->
           </div>
 
           <!-- Table section with horizontal scroll -->

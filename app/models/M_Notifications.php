@@ -96,7 +96,7 @@ class M_Notifications {
             
             case 'appointment':
                 return $this->getAppointmentDetails($relatedId);
-                
+            
             default:
                 return null;
         }
