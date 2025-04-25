@@ -636,6 +636,201 @@ public function viewCaregiverProfile($id = null) {
 
 
 
+// Password Reset
+
+
+
+public function sendResetCode() {
+  // Check for POST
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process form
+      $email = trim($_POST['email']);
+      
+      // Check if email exists in the database
+      if($this->usersModel->findUserByEmail($email)) {
+          // Generate a random 5-digit code
+          $resetCode = sprintf("%05d", rand(0, 99999));
+          
+          // Store the code in the database with an expiration time (1 hour from now)
+          $expiryTime = date('Y-m-d H:i:s', time() + 3600); // 1 hour from now
+          
+          if($this->usersModel->storeResetCode($email, $resetCode, $expiryTime)) {
+              // Send the code by email
+              $emailBody = '<h1>Password Reset Code</h1>
+                  <p>You requested a password reset. Use the following code to reset your password:</p>
+                  <h2>' . $resetCode . '</h2>
+                  <p>This code will expire in 1 hour.</p>
+                  <p>If you did not request this reset, please ignore this email.</p>';
+              
+              $result = $this->sendEmail(
+                  $email,
+                  'Password Reset Code - We4u',
+                  $emailBody
+              );
+              
+              if($result) {
+                  // Redirect to verify code page
+                  flash('reset_message', 'Reset code sent to your email');
+                  redirect('users/verifyResetCode/' . urlencode($email));
+              } else {
+                  // Email sending failed
+                  flash('reset_error', 'Failed to send reset code, please try again', 'alert alert-danger');
+                  redirect('users/login');
+              }
+          } else {
+              flash('reset_error', 'Something went wrong, please try again', 'alert alert-danger');
+              redirect('users/login');
+          }
+      } else {
+          // Email doesn't exist
+          flash('reset_error', 'No account found with that email', 'alert alert-danger');
+          redirect('users/login');
+      }
+  } else {
+      // Redirect to login page if accessed directly
+      redirect('users/login');
+  }
+}
+
+public function verifyResetCode($email = '') {
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process verification form
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      
+      $data = [
+          'email' => trim($_POST['email']),
+          'code' => trim($_POST['code']),
+          'code_err' => ''
+      ];
+      
+      // Validate code
+      if(empty($data['code'])) {
+          $data['code_err'] = 'Please enter the verification code';
+      } elseif(strlen($data['code']) != 5 || !is_numeric($data['code'])) {
+          $data['code_err'] = 'Invalid code format';
+      }
+      
+      // Check if code is valid
+      if(empty($data['code_err'])) {
+          $codeData = $this->usersModel->verifyResetCode($data['email'], $data['code']);
+          
+          if($codeData) {
+              // Check if code is expired
+              $currentTime = date('Y-m-d H:i:s');
+              if($currentTime > $codeData->expiry_time) {
+                  $data['code_err'] = 'This code has expired. Please request a new one.';
+              } else {
+                  // Code is valid, redirect to reset password page
+                  // Store code verification in session to prevent direct access to reset page
+                  $_SESSION['reset_verified'] = true;
+                  $_SESSION['reset_email'] = $data['email'];
+                  
+                  redirect('users/resetPassword');
+                  return;
+              }
+          } else {
+              $data['code_err'] = 'Invalid verification code';
+          }
+      }
+      
+      $this->view('users/v_verifyCode', $data);
+  } else {
+      // Initial form load
+      $data = [
+          'email' => urldecode($email),
+          'code' => '',
+          'code_err' => ''
+      ];
+      
+      $this->view('users/v_verifyCode', $data);
+  }
+}
+
+public function resetPassword() {
+  // Check if user is verified
+  if(!isset($_SESSION['reset_verified']) || $_SESSION['reset_verified'] !== true) {
+      redirect('users/login');
+  }
+  
+  if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Process form
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      
+      $data = [
+          'email' => $_SESSION['reset_email'],
+          'password' => trim($_POST['password']),
+          'confirm_password' => trim($_POST['confirm_password']),
+          'password_err' => '',
+          'confirm_password_err' => ''
+      ];
+      
+      // Validate password
+      if(empty($data['password'])) {
+          $data['password_err'] = 'Please enter a password';
+      } elseif(strlen($data['password']) < 6) {
+          $data['password_err'] = 'Password must be at least 6 characters';
+      }
+      
+      // Validate confirm password
+      if(empty($data['confirm_password'])) {
+          $data['confirm_password_err'] = 'Please confirm password';
+      } elseif($data['password'] != $data['confirm_password']) {
+          $data['confirm_password_err'] = 'Passwords do not match';
+      }
+      
+      // If no errors
+      if(empty($data['password_err']) && empty($data['confirm_password_err'])) {
+          // Hash password
+          $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+          
+          // Update password
+          if($this->usersModel->updatePassword($data['email'], $data['password'])) {
+              // Remove verification from session
+              unset($_SESSION['reset_verified']);
+              unset($_SESSION['reset_email']);
+              
+              // Invalidate used reset codes
+              $this->usersModel->invalidateResetCodes($data['email']);
+              
+              flash('password_success', 'Your password has been updated successfully');
+              redirect('users/login');
+          } else {
+              flash('password_error', 'Something went wrong, please try again', 'alert alert-danger');
+              $this->view('users/v_reset_password', $data);
+          }
+      } else {
+          // Load view with errors
+          $this->view('users/v_resetPassword', $data);
+      }
+  } else {
+      // Initial form load
+      $data = [
+          'email' => $_SESSION['reset_email'],
+          'password' => '',
+          'confirm_password' => '',
+          'password_err' => '',
+          'confirm_password_err' => ''
+      ];
+      
+      $this->view('users/v_resetPassword', $data);
+  }
+}
+
+// Send email helper method
+private function sendEmail($to, $subject, $body) {
+  // This is a wrapper for your existing sendEmail function
+  $result = sendEmail($to, $subject, $body);
+  
+  if ($result['success']) {
+      return true;
+  } else {
+      error_log($result['message']);
+      return false;
+  }
+}
+
+
+
 
 
 
