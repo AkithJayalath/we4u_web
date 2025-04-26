@@ -300,7 +300,7 @@
   }
 
   public function viewProfile(){
-    if($this->isLoggedIn() && $_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){
+    if($this->isLoggedIn() && ($_SESSION['user_role'] == 'Admin')){
       $userId= $_SESSION['user_id'];
       $profileData=$this->usersModel->getCareseekerProfile($userId);
       $data =[

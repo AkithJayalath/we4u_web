@@ -385,203 +385,23 @@ public function sendWelcomeEmail() {
     
     $result = sendEmail(
         $email,
-        'Welcome to We4u',
-        '<h1>Welcome to We4u!</h1><p>ammo hutto kohomada ithin</p>'
+        'Congratulations! Your Caregiver Application is Approved',
+        '<h1>Welcome to We4u!</h1><p>Your request to become a Caregiver has been successfully accepted by our moderators. Congratulations!</p><p>Log into your account to explore more features and start your journey with us.</p><p>Thank you for choosing We4u.</p>'
     );
+
+    // $result = sendEmail(
+    //     $email,
+    //     'Update on Your Consultant Application',
+    //     '<h1>We4u Application Status</h1><p>We regret to inform you that your request to become a Consultant has been rejected.</p><p><strong>Reason for rejection:</strong> ' . htmlspecialchars($reason) . '</p><p>If you believe this decision was made in error or if you would like to reapply with additional information, please contact our support team.</p><p>Thank you for your interest in We4u.</p>'
+    // );
     
     if ($result['success']) {
-        // Email sent successfully
+        flash('success', 'Email sent successfully');
         return true;
     } else {
-        // Log the error
-        error_log($result['message']);
         return false;
     }
 }
-
-// In your controller
-public function downloadPdf() {
-    $content = '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Invoice</title>
-    <style>
-        @page {
-            size: A4;
-            margin: 2cm;
-        }
-        
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12pt;
-            line-height: 1.3;
-            color: #000000;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 10px 20px;
-            box-sizing: border-box;
-        }
-        
-        .header {
-            width: 100%;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dddddd;
-            padding-bottom: 10px;
-        }
-        
-        .brand {
-            float: left;
-            font-size: 18pt;
-            font-weight: bold;
-        }
-        
-        .date {
-            float: right;
-        }
-        
-        .supplier-section {
-            text-align: left;
-            margin-bottom: 30px;
-        }
-        
-        .supplier-title {
-            font-size: 18pt;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .supplier-info {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .supplier-info p {
-            margin: 3px 0;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        thead tr {
-            background-color: #f0f0f0;
-        }
-        
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border: none;
-        }
-        
-        td {
-            border-bottom: 1px solid #eeeeee;
-        }
-        
-        .total-section {
-            text-align: right;
-            margin: 20px 0;
-        }
-        
-        .total {
-            display: inline-block;
-            background-color: #6c5ce7;
-            color: white;
-            padding: 8px 20px;
-            min-width: 150px;
-            text-align: center;
-        }
-        
-        .footer-separator {
-            border-top: 1px solid #dddddd;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="brand">Brand</div>
-            <div class="date">Date</div>
-        </div>
-        
-        <div class="supplier-section">
-            <div class="supplier-title">Supplier Company INC</div>
-            <div class="supplier-info">
-                <p>Number: 23456789</p>
-                <p>VAT: 23456789</p>
-                <p>6522 Abshire Mills</p>
-                <p>Port Orfolurt, 05820</p>
-                <p>United States</p>
-            </div>
-        </div>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Bank</th>
-                    <th>Bank Holder Name</th>
-                    <th>Phone Number</th>
-                    <th>Account Number</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1.</td>
-                    <td>Bank of America</td>
-                    <td>John Smith</td>
-                    <td>+1-555-123-4567</td>
-                    <td>123456789</td>
-                    <td>$180.00</td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Chase Bank</td>
-                    <td>Sarah Johnson</td>
-                    <td>+1-555-234-5678</td>
-                    <td>987654321</td>
-                    <td>$144.00</td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Wells Fargo</td>
-                    <td>Michael Brown</td>
-                    <td>+1-555-345-6789</td>
-                    <td>456789123</td>
-                    <td>$60.00</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="total-section">
-            <div class="total">Total: $384.00</div>
-        </div>
-        
-        <div class="footer-separator"></div>
-    </div>
-</body>
-</html>';
-    
-    generate_pdf('We4U Invoice', $content, 'we4u_invoice.pdf', 'download');
-}
-
-
-
-
-   
   
 }// Only one closing brace needed here for the class
 

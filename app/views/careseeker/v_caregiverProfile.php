@@ -38,9 +38,11 @@ echo loadCSS($required_styles);
 
             <div class="caregiver-personal-info-right">
            
+            <?php if ($_SESSION['user_role'] == 'Careseeker') : ?>
                 <button class="caregiver-send-button" onclick="window.location.href='<?= URLROOT ?>/careseeker/showCaregiverRequestForm/<?= $data['profile']->caregiver_id ?>'">
                     <i class="fas fa-paper-plane"></i> Send Request
                 </button>
+            <?php endif; ?>
 
             </div>
         </div>

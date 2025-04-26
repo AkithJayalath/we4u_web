@@ -20,10 +20,6 @@ echo loadCSS($required_styles);
             <h2>Change My Availability</h2>
         </div>
         
-        <div class="flash-message-container">
-            <?php flash('calendar_message'); ?>
-        </div>
-        
         <div class="calendar-wrapper">
             <!-- Calendar on the left -->
             <div class="calendar-container">

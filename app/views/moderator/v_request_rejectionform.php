@@ -31,6 +31,7 @@
             <input type="hidden" name="request_id" value="<?php echo $data['request']->request_id; ?>">
             <input type="hidden" name="user_id" value="<?php echo $data['request']->user_id; ?>">
             <input type="hidden" name="role" value="<?php echo $data['request']->role; ?>">
+            <input type="hidden" name="email" value="<?php echo $data['request']->email; ?>">
             <div class="form-group">
                 <label>Rejection Reason</label>
                 <textarea name="comment" required></textarea>

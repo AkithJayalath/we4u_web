@@ -93,111 +93,6 @@
           $this->view('moderator/v_interview', $data);
     }
 
-      // public function submitInterview() {
-      //     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-      //         // Collect form data
-      //         $data = [
-      //             'request_id' => $_POST['request_id'],
-      //             'request_date' => $_POST['request_date'],
-      //             'interview_time' => $_POST['interview_time'],
-      //             'service' => $_POST['service'],
-      //             'platform' => $_POST['platform'],
-      //             'meeting_link' => $_POST['meeting_link'],
-      //             'provider_id' => $_POST['provider_id'],
-      //             'provider_name' => $_POST['provider_name'],
-      //             'provider_email' => $_POST['provider_email']
-      //         ];
-
-      //         // Check if this is an edit operation
-      //         $existingInterview = $this->moderatorModel->checkInterviewExists($data['request_id']);
-
-      //         if($existingInterview) {
-      //             // Update existing interview
-      //             if($this->moderatorModel->updateInterview($data)) {
-      //                 redirect('moderator/requests');
-      //             }
-      //         } else {
-      //             // Schedule new interview
-      //             if($this->moderatorModel->scheduleInterview($data)) {
-      //                 redirect('moderator/requests');
-      //             }
-      //         }
-      //     }
-      // }
-        
-
-    // public function submitInterview() {
-    //     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         // data for Validation
-    //         $validationData = [
-    //             'request_date' => $_POST['request_date'],
-    //             'interview_time' => $_POST['interview_time'],
-    //             'meeting_link' => $_POST['meeting_link']
-    //         ];
-
-    //         $errors = [];
-
-    //         // Validate date and time
-    //         $currentDateTime = new DateTime('now');
-    //         $selectedDateTime = new DateTime($validationData['request_date'] . ' ' . $validationData['interview_time']);
-
-    //         if ($selectedDateTime <= $currentDateTime) {
-    //             $errors['time-err-message'] = 'Interview cannot be scheduled in the past';
-    //         }
-
-    //         // Validate meeting link
-    //         if (!filter_var($validationData['meeting_link'], FILTER_VALIDATE_URL)) {
-    //             $errors['link-err-message'] = 'Please enter a valid meeting link';
-    //         }
-
-    //         if (!empty($errors)) {
-    //             // If there are errors, we carete the viewData to view the data with errors
-    //             $request = $this->moderatorModel->get_requests_by_id($_POST['request_id']);
-    //             $viewData = [
-    //                 'request' => $request,
-    //                 'interview' => (object)[
-    //                     'request_date' => $_POST['request_date'],
-    //                     'interview_time' => $_POST['interview_time'],
-    //                     'platform' => $_POST['platform'],
-    //                     'meeting_link' => $_POST['meeting_link'],
-    //                     'provider_id' => $_POST['provider_id'],
-    //                     'provider_name' => $_POST['provider_name'],
-    //                     'provider_email' => $_POST['provider_email'],
-    //                     'status' => 'Pending'
-    //                 ],
-    //                 'time-err-message' => $errors['time-err-message'] ?? '',
-    //                 'link-err-message' => $errors['link-err-message'] ?? ''
-    //             ];
-    //             $this->view('moderator/v_interview', $viewData);
-    //             return;
-    //         }
-
-    //         // If no errors, prepare data
-    //         $data = [
-    //             'request_id' => $_POST['request_id'],
-    //             'request_date' => $_POST['request_date'],
-    //             'interview_time' => $_POST['interview_time'],
-    //             'platform' => $_POST['platform'],
-    //             'service' => $_POST['service'],
-    //             'meeting_link' => $_POST['meeting_link'],
-    //             'provider_id' => $_POST['provider_id'],
-    //             'provider_name' => $_POST['provider_name'],
-    //             'provider_email' => $_POST['provider_email']
-    //         ];
-
-    //         // Check if interview exists or not and update/create accordingly
-    //         $interview = $this->moderatorModel->checkInterviewExists($data['request_id']);
-    //         if($interview) {
-    //             if($this->moderatorModel->updateInterview($data)) {
-    //                 redirect('moderator/careseekerrequests');
-    //             }
-    //         } else {
-    //             if($this->moderatorModel->scheduleInterview($data)) {
-    //                 redirect('moderator/careseekerrequests');
-    //             }
-    //         }
-    //     }
-    // }
 
     public function submitInterview() {
       if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -284,22 +179,53 @@
           $interview = $this->moderatorModel->checkInterviewExists($data['request_id']);
           if($interview) {
               if($this->moderatorModel->updateInterview($data)) {
+                  // Send email to provider
+                  $this->sendInterviewEmail($data['provider_email'], $data['service'], $data['request_date'], $data['interview_time'], $data['platform'], $data['meeting_link']);
                   redirect('moderator/careseekerrequests');
               }
           } else {
               if($this->moderatorModel->scheduleInterview($data)) {
+                // Send email to provider
+                $this->sendInterviewEmail($data['provider_email'], $data['service'], $data['request_date'], $data['interview_time'], $data['platform'], $data['meeting_link']);
                   redirect('moderator/careseekerrequests');
               }
           }
       }
   }
+
+  public function sendInterviewEmail($email, $service, $date, $time, $platform, $meeting_link) {
+    // Format date for better readability
+    $formatted_date = date('l, F j, Y', strtotime($date));
+    $formatted_time = date('g:i A', strtotime($time));
+    
+    $result = sendEmail(
+        $email,
+        'Your We4u Interview Appointment',
+        '<h1>Interview Scheduled for ' . htmlspecialchars($service) . ' Position</h1>
+        <p>Dear Applicant,</p>
+        <p>We are pleased to inform you that your interview for the ' . htmlspecialchars($service) . ' position at We4u has been scheduled.</p>
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p><strong>Interview Details:</strong></p>
+            <p><strong>Date:</strong> ' . htmlspecialchars($formatted_date) . '</p>
+            <p><strong>Time:</strong> ' . htmlspecialchars($formatted_time) . '</p>
+            <p><strong>Platform:</strong> ' . htmlspecialchars($platform) . '</p>
+            <p><strong>Meeting Link:</strong> <a href="' . htmlspecialchars($meeting_link) . '">' . htmlspecialchars($meeting_link) . '</a></p>
+        </div>
+        <p>Please ensure you join the meeting a few minutes before the scheduled time. Have your identification documents ready for verification purposes.</p>
+        <p>We look forward to meeting you!</p>
+        <p>Best regards,<br>The We4u Team</p>'
+    );
+    
+    if ($result['success']) {
+        flash('success', 'Interview notification email sent successfully');
+        return true;
+    } else {
+        flash('error', 'Failed to send interview notification email');
+        return false;
+    }
+}
+
   
-    
-    
-
-
-
-
        // reject the request -->
       public function rejectRequest() {
           if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -310,12 +236,17 @@
                   'comment' => $_POST['comment'],
                   'status' => 'Declined',
                   'interview_status' => 'Done',
-                  'is_approved' => 'rejected'
+                  'is_approved' => 'rejected',
+                  'user_email' => $_POST['email']
               ];
               
               if($this->moderatorModel->updateRequestStatus($data)) {
                 // Return success response that will trigger modal
                 $_SESSION['reject_success'] = true;
+                // Send rejection email to the user
+                $email = $_POST['email'];
+                $reason = $_POST['comment'];
+                $this->sendRejectionEmail($email, $reason);
                 redirect('moderator/careseekerrequests');
               } else {
                 $_SESSION['reject_error'] = true;
@@ -323,6 +254,21 @@
               }
           }
       }
+
+      public function sendRejectionEmail($email, $reason) {
+        $result = sendEmail(
+            $email,
+            'Update on Your Consultant Application',
+            '<h1>We4u Application Status</h1><p>We regret to inform you that your request to become a Consultant has been rejected.</p><p><strong>Reason for rejection:</strong> ' . htmlspecialchars($reason) . '</p><p>If you believe this decision was made in error or if you would like to reapply with additional information, please contact our support team.</p><p>Thank you for your interest in We4u.</p>'
+        );       
+
+        if ($result['success']) {
+            flash('success', 'Email sent successfully');
+            return true;
+        } else {
+            return false;
+        }
+    }
 
       public function approve($request_id) {
         $request = $this->moderatorModel->get_requests_by_id($request_id);
@@ -332,13 +278,35 @@
             'is_approved' => 'approved',
             'comment' => 'Application approved by moderator',
             'role' => $request->role,
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
+            'user_email' => $request->email,
         ];
         
         if($this->moderatorModel->updateRequestStatus($data)) {
+          // send Email to the user
+          $this->sendAcceptionEmail($data['user_email']);
             redirect('moderator/careseekerrequests');
         }
     }
+
+    public function sendAcceptionEmail($email) {
+      $result = sendEmail(
+        $email,
+        'Your Consultant Application is Approved',
+        '<p>Dear Applicant,</p>
+        <p>Congratulations! Your application to become a Consultant at We4u has been approved.</p>
+        <p>You can now log in to your account and start using our platform.</p>
+        <p>Thank you for joining We4u.</p>
+        <p>Regards,<br>The We4u Team</p>'
+      );       
+
+      if ($result['success']) {
+          flash('success', 'Email sent successfully');
+          return true;
+      } else {
+          return false;
+      }
+  }
     
 
       public function deleteInterview($request_id) {
@@ -427,63 +395,63 @@
         $this->view('moderator/v_careAndConslutantRequests', $data);
     }
 
-//  Display the payments page for caregivers
-public function caregiverPayments() {
-  // Get all caregiver payments
-  $caregiverPayments = $this->moderatorModel->getCaregiverPayments();
-  
-  // Calculate We4U earnings (8% of payment amount) for each payment
-  foreach ($caregiverPayments as &$payment) {
-      // Calculate We4U earnings (8% of the total amount)
-      $we4u_commission_rate = 0.08; // 8%
-      $we4u_earn = $payment->amount * $we4u_commission_rate;
-      
-      // Round to 2 decimal places for currency
-      $we4u_earn = round($we4u_earn, 2);
-      
-      // Calculate the actual payment amount to caregiver (92% of total)
-      $caregiver_payment = $payment->amount - $we4u_earn;
-      
-      // Update the payment object with these calculated values
-      $payment->we4u_earn = $we4u_earn;
-      $payment->caregiver_payment = $caregiver_payment;
+  //  Display the payments page for caregivers
+  public function caregiverPayments() {
+    // Get all caregiver payments
+    $caregiverPayments = $this->moderatorModel->getCaregiverPayments();
+    
+    // Calculate We4U earnings (8% of payment amount) for each payment
+    foreach ($caregiverPayments as &$payment) {
+        // Calculate We4U earnings (8% of the total amount)
+        $we4u_commission_rate = 0.08; // 8%
+        $we4u_earn = $payment->amount * $we4u_commission_rate;
+        
+        // Round to 2 decimal places for currency
+        $we4u_earn = round($we4u_earn, 2);
+        
+        // Calculate the actual payment amount to caregiver (92% of total)
+        $caregiver_payment = $payment->amount - $we4u_earn;
+        
+        // Update the payment object with these calculated values
+        $payment->we4u_earn = $we4u_earn;
+        $payment->caregiver_payment = $caregiver_payment;
+    }
+    
+    $data = [
+        'caregiverPayments' => $caregiverPayments
+    ];
+    
+    $this->view('moderator/v_payments', $data);
   }
-  
-  $data = [
-      'caregiverPayments' => $caregiverPayments
-  ];
-  
-  $this->view('moderator/v_payments', $data);
-}
 
-public function markCaregiversAsPaid() {
-  // Check if form is submitted
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Get form data
-      $care_request_id = $_POST['care_request_id'];
-      $caregiver_id = $_POST['caregiver_id'];
-      
-      // Validate the data
-      if (empty($care_request_id) || empty($caregiver_id)) {
-          flash('payment_error', 'Invalid payment information', 'alert alert-danger');
-          redirect('moderator/payments');
-          return;
-      }
-      
-      // Call the model function to mark payment as paid
-      if ($this->moderatorModel->markPaymentAsPaid($care_request_id, $caregiver_id)) {
-          flash('payment_success', 'Payment marked as paid successfully', 'alert alert-success');
-      } else {
-          flash('payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
-      }
-      
-      // Redirect back to payments page
-      redirect('moderator/caregiverPayments');
-  } else {
-      // If not POST request, redirect to payments page
-      redirect('moderator/caregiverPayments');
+  public function markCaregiversAsPaid() {
+    // Check if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Get form data
+        $care_request_id = $_POST['care_request_id'];
+        $caregiver_id = $_POST['caregiver_id'];
+        
+        // Validate the data
+        if (empty($care_request_id) || empty($caregiver_id)) {
+            flash('payment_error', 'Invalid payment information', 'alert alert-danger');
+            redirect('moderator/payments');
+            return;
+        }
+        
+        // Call the model function to mark payment as paid
+        if ($this->moderatorModel->markPaymentAsPaid($care_request_id, $caregiver_id)) {
+            flash('payment_success', 'Payment marked as paid successfully', 'alert alert-success');
+        } else {
+            flash('payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
+        }
+        
+        // Redirect back to payments page
+        redirect('moderator/caregiverPayments');
+    } else {
+        // If not POST request, redirect to payments page
+        redirect('moderator/caregiverPayments');
+    }
   }
-}
 
 public function consultantPayments() {
   // Get all consultant payments

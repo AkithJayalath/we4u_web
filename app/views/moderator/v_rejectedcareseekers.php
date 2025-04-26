@@ -10,6 +10,7 @@
 
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
+    <!-- <?php echo $_SESSION['user_role']; ?> -->
     
     <div class="dashboard-container">
         <!-- Dashboard-style header -->

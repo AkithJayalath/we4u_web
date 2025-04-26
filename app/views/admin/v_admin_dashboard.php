@@ -16,6 +16,7 @@
   <div class="ad-dashboard-wrapper">
   <div class="ad-dashboard-header">
           <h1>Dashboard Overview</h1>
+          <!-- <?php echo $_SESSION['user_role'] ?> -->
       </div>
       <main class="ad-dashboard-main-content">
           <!-- Stats cards section -->
@@ -109,7 +110,7 @@
                         <input type="search" id="job-search" class="ad-dashboard-job-search" placeholder="Search by name" />
                     </div>
               </div>
-              <div class="ad-dashboard-action-group">
+              <!-- <div class="ad-dashboard-action-group">
                   <button class="ad-dashboard-btn-export" id="export-jobs">
                       <i data-lucide="download" class="ad-dashboard-btn-icon"></i>
                       Export
@@ -118,7 +119,7 @@
                       <i data-lucide="refresh-cw" class="ad-dashboard-btn-icon"></i>
                       Refresh Data
                   </button>
-              </div>
+              </div> -->
           </div>
 
           <!-- Table section with horizontal scroll -->

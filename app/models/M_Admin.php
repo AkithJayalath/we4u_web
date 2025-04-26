@@ -7,7 +7,7 @@ class M_Admin {
   }
 
   public function getAllUsers() {
-    $this->db->query('SELECT user_id, username, email, role, profile_picture, created_at 
+    $this->db->query('SELECT user_id, username, email, role, profile_picture, created_at, is_deactive
                       FROM user 
                       ORDER BY created_at DESC');
     return $this->db->resultSet();

@@ -147,6 +147,39 @@
     background-color: #7d7b7b; /* Darker color when hovering */
 }
 
+.notification-actions-all {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.mark-all-read-btn {
+    background-color: #0B63F8;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.mark-all-read-btn:hover {
+    background-color: #0850c9;
+}
+
+.announcement-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: #ff9800;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .notification-container {
