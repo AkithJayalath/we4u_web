@@ -196,5 +196,86 @@ CREATE VIEW careseeker_profile AS
 SELECT * FROM user JOIN careseeker ON user.user_id =careseeker.careseeker_id;
 
 
+CREATE TABLE cg_shedules(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    caregiver_id INT NOT NULL,
+    sheduled_date DATE NOT NULL,
+    status ENUM('approved', 'pending', 'unavailable') NOT NULL,
+    shift ENUM('morning', 'evening', 'overnight', 'fullday') NOT NULL,
+    request_id INT,
+    FOREIGN KEY (caregiver_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES care_requests(id)
+);
+
+CREATE TABLE cg_long_shedules(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    caregiver_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    status ENUM('approved', 'pending', 'unavailable') NOT NULL,
+    request_id INT,
+    FOREIGN KEY (caregiver_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES care_requests(id)
+);
+
+
+CREATE TABLE co_availability_patterns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    consultant_id INT NOT NULL,
+    day_of_week TINYINT NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL, 
+    FOREIGN KEY (consultant_id) REFERENCES consultant(consultant_id)
+);
+
+-- Table for actual availability instances
+CREATE TABLE co_availability_instances (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    consultant_id INT NOT NULL,
+    available_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    FOREIGN KEY (consultant_id) REFERENCES consultant(consultant_id)
+);
+
+
+
+
+
+
+
+CREATE TABLE `care_payments` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `care_request_id` int(11) NOT NULL,
+  `payer_id` int(11) NOT NULL,
+  `caregiver_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) DEFAULT 'Stripe',
+  `payment_date` datetime DEFAULT current_timestamp(),
+  `is_refunded` tinyint(1) DEFAULT 0,
+  `refund_reason` text DEFAULT NULL,
+  `refund_date` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`payment_id`),
+  KEY `fk_care_request_id` (`care_request_id`),
+  KEY `fk_payer_id` (`payer_id`),
+  KEY `fk_caregiver_id` (`caregiver_id`),
+  CONSTRAINT `fk_care_request_id` FOREIGN KEY (`care_request_id`) REFERENCES `carerequest` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_payer_id` FOREIGN KEY (`payer_id`) REFERENCES `careseeker` (`careseeker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_caregiver_id` FOREIGN KEY (`caregiver_id`) REFERENCES `caregiver` (`caregiver_id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+alter table consultant_payments
+add COLUM we4u_earn decimal(10,2);
+
+alter table consultant_payments
+add COLUM is_paid boolean;
+
+alter table care_payments
+add COLUM we4u_earn decimal(10,2);
 
 

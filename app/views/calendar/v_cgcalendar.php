@@ -18,6 +18,9 @@ echo loadCSS($required_styles);
     <div class="container">
         <div class="header">
             <h2>My Calendar</h2>
+            <a href="<?php echo URLROOT; ?>/caregivers/editMyCalendar" class="edit-calendar-btn">
+            <i class="fas fa-edit"></i> Edit Availability
+            </a>
         </div>
         
         <div class="calendar-wrapper">
@@ -32,12 +35,16 @@ echo loadCSS($required_styles);
                     <h3>Event Details</h3>
                     <div class="status-legend">
                         <div class="status-item">
-                            <span class="status-label">Confirmed</span>
+                            <span class="status-label">Approved</span>
                             <span class="status-dot confirmed-dot"></span>
                         </div>
                         <div class="status-item">
                             <span class="status-label">Pending</span>
                             <span class="status-dot pending-dot"></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Unavailable</span>
+                            <span class="status-dot unavailable-dot"></span>
                         </div>
                     </div>
                 </div>
@@ -101,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Process events
     const events = [];
     
+    // Track fully booked days
+    const fullyBookedDays = new Set();
+    
     // Process short schedules
     if (shortSchedules && shortSchedules.length) {
         shortSchedules.forEach(schedule => {
@@ -109,6 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let endTime = '';
             let shiftName = '';
             let nextDay = false;
+            
+            // Check if this is a full day booking
+            if (schedule.shift === 'fullday') {
+                fullyBookedDays.add(schedule.sheduled_date);
+            }
             
             switch(schedule.shift) {
                 case 'morning':
@@ -129,9 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
                 case 'fullday':
                     startTime = '08:00:00';
-                    endTime = '23:59:00';
-                    shiftName = 'Full Day Shift (8:00 AM - 8:00 AM next day)';
-                    // nextDay = true;
+                    endTime = '07:00:00';
+                    shiftName = 'Full Day Shift (8:00 AM - 7:00 AM next day)';
+                    nextDay = true;
                     break;
                 default:
                     startTime = '08:00:00';
@@ -139,20 +154,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     shiftName = 'Default Shift (8:00 AM - 4:00 PM)';
             }
             
+            // Determine if this is an unavailability entry
+            const isUnavailable = schedule.status === 'unavailable';
+            
             // Create event
             const event = {
                 id: 'short_' + schedule.id,
-                title: 'Shift: ' + capitalizeFirstLetter(schedule.shift),
+                title: isUnavailable ? 'Unavailable: ' + capitalizeFirstLetter(schedule.shift) : 'Shift: ' + capitalizeFirstLetter(schedule.shift),
                 start: schedule.sheduled_date + 'T' + startTime,
-                backgroundColor: getStatusColor(schedule.status),
-                borderColor: getStatusColor(schedule.status),
+                backgroundColor: isUnavailable ? '#dc3545' : getStatusColor(schedule.status),
+                borderColor: isUnavailable ? '#dc3545' : getStatusColor(schedule.status),
                 textColor: '#fff',
                 extendedProps: {
                     eventType: 'short',
                     status: schedule.status,
-                    shift: shiftName
+                    shift: shiftName,
+                    isUnavailable: isUnavailable,
+                    scheduleId: schedule.id,
+                    requestId: schedule.request_id
                 },
-                classNames: ['status-' + schedule.status]
+                classNames: [isUnavailable ? 'unavailable-event' : 'status-' + schedule.status]
             };
             
             // Handle end time for overnight shifts
@@ -175,19 +196,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Process long schedules
     if (longSchedules && longSchedules.length) {
         longSchedules.forEach(schedule => {
+            // Determine if this is an unavailability entry
+            const isUnavailable = schedule.status === 'unavailable';
+            
+            // Add all dates in this range to fully booked days
+            const startDate = new Date(schedule.start_date);
+            const endDate = new Date(schedule.end_date);
+            
+            // Loop through all dates in the range
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                fullyBookedDays.add(formatDate(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
             events.push({
                 id: 'long_' + schedule.id,
-                title: 'Long-term Booking',
+                title: isUnavailable ? 'Unavailable' : 'Long-term Booking',
                 start: schedule.start_date + 'T00:00:00',
                 end: schedule.end_date + 'T24:00:00',
-                backgroundColor: getStatusColor(schedule.status),
-                borderColor: getStatusColor(schedule.status),
+                backgroundColor: isUnavailable ? '#dc3545' : getStatusColor(schedule.status),
+                borderColor: isUnavailable ? '#dc3545' : getStatusColor(schedule.status),
                 textColor: '#fff',
                 extendedProps: {
                     eventType: 'long',
-                    status: schedule.status
+                    status: schedule.status,
+                    isUnavailable: isUnavailable,
+                    scheduleId: schedule.id,
+                    requestId: schedule.request_id
                 },
-                classNames: ['status-' + schedule.status]
+                classNames: [isUnavailable ? 'unavailable-event' : 'status-' + schedule.status]
             });
         });
     }
@@ -209,17 +247,24 @@ document.addEventListener('DOMContentLoaded', function() {
             showEventDetails(info.event);
         },
         eventDidMount: function(info) {
-        // Check if this is a long-term event
-        if (info.event.extendedProps.eventType === 'long') {
-            info.el.style.height = 'auto';
-            info.el.style.minHeight = '30px';
-            info.el.style.paddingTop = '6px';
-            info.el.style.paddingBottom = '6px';
-            info.el.style.fontSize = '0.9em';
-            info.el.style.fontWeight = 'bold';
+            // Check if this is a long-term event
+            if (info.event.extendedProps.eventType === 'long') {
+                info.el.style.height = 'auto';
+                info.el.style.minHeight = '30px';
+                info.el.style.paddingTop = '6px';
+                info.el.style.paddingBottom = '6px';
+                info.el.style.fontSize = '0.9em';
+                info.el.style.fontWeight = 'bold';
+            }
+        },
+        // Add custom rendering for fully booked days
+        dayCellDidMount: function(info) {
+            const formattedDate = formatDate(info.date);
+            if (fullyBookedDays.has(formattedDate)) {
+                // Add a class to fully booked days
+                info.el.classList.add('fully-booked-day');
+            }
         }
-    
-    }
     });
     
     calendar.render();
@@ -240,8 +285,9 @@ function formatDate(date) {
 
 function getStatusColor(status) {
     switch(status) {
-        case 'yes': return '#28a745'; // Green
+        case 'approved': return '#28a745'; // Green
         case 'pending': return '#ffc107';   // Yellow
+        case 'unavailable': return '#dc3545'; // Red
         default: return '#007bff';          // Blue
     }
 }
@@ -273,12 +319,12 @@ function showEventDetails(event) {
     
     // Set status with appropriate class
     const statusElement = document.getElementById('event-status');
-    statusElement.textContent = capitalizeFirstLetter(event.extendedProps.status);
+    statusElement.textContent = event.extendedProps.isUnavailable ? 'Unavailable' : capitalizeFirstLetter(event.extendedProps.status);
     
     // Remove any existing status classes
     statusElement.className = 'status-indicator';
     // Add the appropriate status class
-    statusElement.classList.add('status-' + event.extendedProps.status);
+    statusElement.classList.add(event.extendedProps.isUnavailable ? 'status-unavailable' : 'status-' + event.extendedProps.status);
     
     // Show/hide shift details
     if (event.extendedProps.eventType === 'short') {
@@ -313,6 +359,18 @@ function showEventDetails(event) {
         
         document.getElementById('event-duration').textContent = durationText;
     }
+    
+    // Show/hide request ID and view request button
+    if (event.extendedProps.requestId) {
+        document.getElementById('request-id-row').style.display = 'block';
+        document.getElementById('request-id').textContent = event.extendedProps.requestId;
+        document.getElementById('view-request-btn').style.display = 'inline-block';
+        // Store the request ID for the view request button
+        document.getElementById('view-request-btn').setAttribute('data-request-id', event.extendedProps.requestId);
+    } else {
+        document.getElementById('request-id-row').style.display = 'none';
+        document.getElementById('view-request-btn').style.display = 'none';
+    }
 }
 
 // Format date as "Month Day, Year"
@@ -327,11 +385,11 @@ function formatTime(date) {
     return date.toLocaleTimeString('en-US', options);
 }
 
-
-const viewRequestBtn = document.getElementById('view-request-btn');
-viewRequestBtn.onclick = function() {
-    console.log("hello");
-    const requestType = event.extendedProps.eventType === 'short' ? 'shortTerm' : 'longTerm';
-    window.location.href = `<?php echo URLROOT; ?>/careseeker/viewRequest/${requestId}?type=${requestType}`;
-};
+// View request button handler
+document.getElementById('view-request-btn').addEventListener('click', function() {
+    const requestId = this.getAttribute('data-request-id');
+    if (requestId) {
+        window.location.href = `<?php echo URLROOT; ?>/caregivers/viewreqinfo/${requestId}`;
+    }
+});
 </script>

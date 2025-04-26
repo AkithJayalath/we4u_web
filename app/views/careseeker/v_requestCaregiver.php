@@ -14,6 +14,7 @@ echo loadCSS($required_styles);
     <div class="request-caregiver">
         <div class="request-heading">
             <p>Send Care Request</p>
+            <!-- <p>Username: <?php echo $data['error']; ?></p> -->
         </div>
 
 
@@ -90,127 +91,31 @@ echo loadCSS($required_styles);
                             <?php endif; ?>
                         </div>
 
-                        <!-- Add this after the "Elder Details" section -->
-<div class="form-section" id="calendar-section">
-    <div class="form-section-title">Caregiver Availability</div>
-    <div class="calendar-container">
-        <div class="mini-calendar">
-            <div id="mini-calendar"></div>
-        </div>
-        <div class="time-slots-display" id="time-slots-display">
-            <h3>Available Time Slots</h3>
-            <p class="select-date-message">Please select a date to view available time slots</p>
-            <div class="time-slot-list" id="time-slot-list" style="display: none;"></div>
-        </div>
-    </div>
-</div>
+                        <div class="form-section" id="calendar-section">
+                            <div class="form-section-title">Caregiver Availability</div>
+                            <?php if (!empty($data['error']) && strpos($data['error'], 'booking') !== false): ?>
+                                <div class="calander-field-error"><?php echo $data['error']?></div>
+                            <?php endif; ?>
+                            <div class="calendar-container">
+                                <div class="mini-calendar">
+                                    <div id="mini-calendar"></div>
+                                </div>
+                                <div class="time-slots-display" id="time-slots-display">
+                                    <h3>Available Time Slots</h3>
+                                    <p class="select-date-message">Please select a date to view available time slots</p>
+                                    <p class="select-date-message">Unavailable slots are indicated in the calendar as red (fully booked dates) and grey (partially booked dates). Make sure the date range you are choosing does not overlap with existing bookings</p>
+                                    <div class="time-slot-list" id="time-slot-list" style="display: none;"></div>
+                                </div>
 
-<!-- FullCalendar 5.x Core and Required Packages -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+                            </div>
+                        </div>
 
-<style>
-    /* Calendar container with side-by-side layout */
-    .calendar-container {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-    
-    /* Mini calendar styles */
-    .mini-calendar {
-        flex: 1;
-        max-width: 60%;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    /* Time slots display */
-    .time-slots-display {
-        flex: 1;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        background-color: #f9f9f9;
-    }
-    
-    .time-slots-display h3 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        color: #333;
-    }
-    
-    .select-date-message {
-        color: #666;
-        font-style: italic;
-    }
-    
-    /* Time slot list */
-    .time-slot-list {
-        margin-top: 15px;
-    }
-    
-    .time-slot-item {
-        padding: 10px;
-        margin-bottom: 8px;
-        border-radius: 4px;
-        background-color: #fff;
-        border-left: 4px solid #4CAF50;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .time-slot-item.unavailable {
-        border-left-color: #f44336;
-        background-color:rgb(255, 3, 3);
-        opacity: 0.7;
-    }
-    
-    .time-slot-item.selected {
-        border-left-color: #2196F3;
-        background-color: #e3f2fd;
-    }
-    
-    /* Style for unavailable dates */
-    .fc-day-unavailable {
-        background-color:rgb(0, 0, 0) !important;
-        cursor: not-allowed !important;
-    }
-    
-    /* Style for selected date */
-    .fc-day-selected {
-        background-color: #e3f2fd !important;
-        border: 2px solid #2196F3 !important;
-    }
-    
-    #calendar-section.show {
-        opacity: 1;
-        transform: translateY(0);
-        height: auto;
-        overflow: visible;
-        margin-bottom: 20px;
-        padding: 15px;
-    }
+                        <!-- FullCalendar 5.x Core and Required Packages -->
+                        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+                        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 
-    /* Style for partially unavailable dates */
-    .fc-day-partially-unavailable {
-    background-color:rgb(161, 191, 170) !important; /* Light orange color */
-    cursor: pointer !important;
-    }
-
-    .fc-day-unavailable {
-    background-color:rgb(255, 95, 95) !important; /* Light red color */
-    cursor: not-allowed !important;
-    }
-
-    .fc-day-past, .fc-day-today {
-    background-color: #f5f5f5 !important; /* Light gray color */
-    cursor: not-allowed !important;
-    opacity: 0.7;
-    }
-
-</style>
-
+                        
+<!-- script for mini-calander -->
 <script>
     // Initialize mini calendar for caregiver availability
     document.addEventListener('DOMContentLoaded', function() {
@@ -357,7 +262,7 @@ echo loadCSS($required_styles);
         }
         
         return unavailableDates;
-}
+    }
 
 
     function handleDateSelection(info, unavailableDates) {
@@ -727,6 +632,7 @@ echo loadCSS($required_styles);
 </script>
 
 
+
                         <!-- Duration Type Selection -->
                         <div class="form-section">
                             <div class="form-section-title">Care Duration</div>
@@ -870,110 +776,6 @@ echo loadCSS($required_styles);
         </div>
     </div>
 </page-body-container>
-
-<style>
-    /* Add styles for the error message display */
-    .error-alert {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 12px 15px;
-        margin-bottom: 20px;
-        border: 1px solid #f5c6cb;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-    }
-
-    .error-alert i {
-        margin-right: 10px;
-        font-size: 16px;
-    }
-
-    .field-error {
-        color: #dc3545;
-        font-size: 13px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    select.is-invalid,
-    input.is-invalid {
-        border-color: #dc3545;
-    }
-
-    /* Rest of the styles remain the same */
-    .time-slot-checkboxes label.disabled-option {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background-color: #f0f0f0;
-        border-color: #ddd;
-    }
-
-    .time-slot-checkboxes label.disabled-option:hover {
-        background-color: #f0f0f0;
-        border-color: #ddd;
-    }
-
-    .time-slot-checkboxes input[type="checkbox"]:disabled+span {
-        color: #999;
-    }
-
-    #long-term-fields,
-    #short-term-fields,
-    #time-slots-section {
-        transition: all 0.4s ease-in-out;
-        opacity: 0;
-        transform: translateY(-20px);
-        height: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-    }
-
-    #long-term-fields.show,
-    #short-term-fields.show,
-    #time-slots-section.show {
-        opacity: 1;
-        transform: translateY(0);
-        height: auto;
-        overflow: visible;
-        margin-bottom: 20px;
-        padding: 15px;
-    }
-
-    /* Style for the time slot checkboxes to make them stand out more */
-    .time-slot-checkboxes label {
-        display: block;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .time-slot-checkboxes label:hover {
-        background-color: #f5f5f5;
-        border-color: #ccc;
-    }
-
-    .time-slot-checkboxes label.selected {
-        background-color: #e6f7ff;
-        border-color: #1890ff;
-    }
-
-    .time-slot-checkboxes label.disabled-option {
-        opacity: 0.5;
-        pointer-events: none;
-        background-color: #f0f0f0;
-    }
-
-    .duration-type-option label.disabled-option {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-</style>
 
 <!-- The rest of your JavaScript remains the same -->
 <script>

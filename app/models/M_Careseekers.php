@@ -254,17 +254,21 @@ public function getCaregiverById($caregiverId) {
 
 
 public function sendConsultantRequest($data) {
+    // to convert time to correct format
+    $startTime = sprintf('%02d:00:00', $data['from_time']);
+    $endTime = sprintf('%02d:00:00', $data['to_time']);
     $this->db->query('INSERT INTO consultantrequests 
-    (requester_id, elder_id, consultant_id, appointment_date, time_slot, expected_services, additional_notes, payment_details, status) 
+    (requester_id, elder_id, consultant_id, appointment_date, start_time,end_time, expected_services, additional_notes, payment_details, status) 
     VALUES 
-    (:careseeker_id, :elder_id, :consultant_id, :appointment_date, :time_slot, :expected_services, :additional_notes, :payment_amount, :status)');
+    (:careseeker_id, :elder_id, :consultant_id, :appointment_date, :start_time,:end_time, :expected_services, :additional_notes, :payment_amount, :status)');
 
     // Bind values
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
     $this->db->bind(':elder_id', $data['elder_id']);
     $this->db->bind(':consultant_id', $data['consultant_id']);
     $this->db->bind(':appointment_date', $data['appointment_date']);
-    $this->db->bind(':time_slot', $data['time_slot']);
+    $this->db->bind(':start_time', $startTime);
+    $this->db->bind(':end_time', $endTime);
     $this->db->bind(':expected_services', $data['expected_services']);
     $this->db->bind(':additional_notes', $data['additional_notes']);
     $this->db->bind(':payment_amount', $data['total_amount']);
@@ -519,7 +523,8 @@ public function getAllConsultantSessions($careseeker_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS consultant_name,
                         u.profile_picture AS consultant_pic,
@@ -542,7 +547,8 @@ public function getAllConsultantSessionsById($session_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS consultant_name,
                         u.profile_picture AS consultant_pic,
@@ -622,9 +628,6 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
     $this->db->bind(':uploaded_by', $uploaded_by);
     return $this->db->resultSet();
 }
-
-
-//commit session
 
 
 

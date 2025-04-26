@@ -314,7 +314,7 @@ class M_Consultant {
     public function getConsultantById($id) {
         $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
                         FROM consultant c
-                        JOIN user  ON c.consultant_id = u.user_id
+                        JOIN user u ON c.consultant_id = u.user_id
                         WHERE c.consultant_id = :id");
         $this->db->bind(':id', $id);
         return $this->db->single();
@@ -478,7 +478,8 @@ public function getAllConsultantSessions($consultant_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS careseeker_name,
                         u.profile_picture AS careseeker_pic,
@@ -501,7 +502,8 @@ public function getAllConsultantSessionsById($session_id) {
     $this->db->query("SELECT 
                         cs.*, 
                         cr.appointment_date, 
-                        cr.time_slot, 
+                        cr.start_time,
+                        cr.end_time, 
                         cr.status,
                         u.username AS careseeker_name,
                         u.profile_picture AS careseeker_pic,
@@ -584,6 +586,21 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
 
 
 
+public function getSessionById($session_id) {
+    $this->db->query("SELECT * FROM consultantsessions WHERE session_id = :session_id");
+    $this->db->bind(':session_id', $session_id);
+    return $this->db->single();
+}
+ 
+
+public function getCareseekerById($id) {
+    $this->db->query("SELECT c.*, u.username, u.profile_picture, u.gender, u.email, u.date_of_birth 
+                    FROM careseeker c
+                    JOIN user u ON c.careseeker_id = u.user_id
+                    WHERE c.careseeker_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
 
 
 

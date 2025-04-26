@@ -106,29 +106,7 @@
         white-space: nowrap; /* Prevent tags from breaking into multiple lines */
        
     }
-    
-   
-    
-    @media (max-width: 768px) {
-        .caregiver-tags-section {
-            grid-template-columns: repeat(2, 1fr); /* Ensure two columns even on medium screens */
-           
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .caregiver-tags-section {
-            grid-template-columns: 1fr; /* Single column layout for small screens */
-        }
-    }
-
-    
-    
-    
-    
-    
-    
-    
+     
       .caregivers-read-more {
         flex: 0.2;
         display: flex;
@@ -181,27 +159,6 @@
       .caregivers-see-more button:hover {
         background: var(--color-btn-upload-hover);
       }
-  
-      /* Media Queries */    @media (max-width: 768px) {
-        .caregivers-wrapper {
-          padding: 16px;
-        }
-    
-        .caregivers-container {
-          gap: 16px;
-        }
-      }
-  
-      @media (max-width: 480px) {
-    
-        .caregivers-post {
-          margin: 0 auto;
-          max-width: 100%;
-        }
-      }
-  
-    
-  
    
     .a-b-action-buttons i {
       width: 16px;
@@ -209,10 +166,6 @@
     }
   
     
-  
-
-
-
 
     .caregiver-personal-info-tag {
         display: inline-block;
@@ -258,32 +211,6 @@
       border-radius: 5px; /* Slight rounding for a smoother look */
   }
     
-
-   
-
-    @media (max-width: 1068px) {
-        .caregivers-container {
-            grid-template-columns: repeat(3, 1fr); /* Two columns for medium screens */
-        }
-    }
-    @media (max-width: 768px) {
-        .caregivers-container {
-            grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
-        }
-    }
-
-    
-    @media (max-width: 480px) {
-        .caregivers-container {
-            grid-template-columns: 1fr; /* Single column for smaller screens */
-        }
-    }
-
-
-
-
-
-
 
     .filter-sort-bar {
   display: flex;
@@ -356,26 +283,6 @@
   background: #007acc;
 }
 
-/* Ensure responsiveness for smaller screens */
-@media (max-width: 768px) {
-  .filter-sort-bar {
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    justify-content: center; /* Center elements */
-    gap: 10px;
-  }
-
-  .filters, .sort-options {
-    flex-wrap: wrap; /* Wrap groups for small screens */
-    justify-content: center;
-  }
-
-  .apply-button {
-    width: 100%; /* Full-width button for small screens */
-    margin-top: 10px;
-  }
-}
-
-/* Add this to your existing CSS file for careseeker/viewCaregivers */
 
 .pagination {
   display: flex;

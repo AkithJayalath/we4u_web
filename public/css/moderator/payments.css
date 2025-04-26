@@ -1,0 +1,299 @@
+/* ==========================================================================
+   Payments Page Styling
+   ========================================================================== */
+
+/* Main container for the payments page */
+.request-container {
+    font-family: 'Poppins', sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: var(--color-background-primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* ==========================================================================
+     Header Section
+     ========================================================================== */
+  
+  /* Header styling with search bar */
+  .request-header {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Page title styling */
+  .request-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #333333;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* ==========================================================================
+     Search Section
+     ========================================================================== */
+  
+  /* Search input container */
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    min-width: 400px;
+    position: relative;
+  }
+  
+  /* Search input styling */
+  .search-wrapper input {
+    width: 100%;
+    padding: 10px 15px 10px 40px; /* Extra padding for search icon */
+    font-size: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+  }
+  
+  /* Search input focus state */
+  .search-wrapper input:focus {
+    outline: none;
+    border-color: var(--color-btn-primary);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+  }
+  
+  /* Search input placeholder */
+  .search-wrapper input::placeholder {
+    color: #a0aec0;
+  }
+  
+  /* ==========================================================================
+     Table Container
+     ========================================================================== */
+  
+  /* Container for the table */
+  .request-table-container {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Section title */
+  .request-table-container h2 {
+    font-size: 18px;
+    color: var(--color-text-primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* ==========================================================================
+     Table Styling
+     ========================================================================== */
+  
+  /* Main table styling */
+  .request-table {
+    width: 100%;
+    background: var(--white);
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #f0f2f5;
+    overflow: hidden;
+  }
+  
+  /* Table header cells */
+  .request-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f9fafb;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  
+  /* Table body for scrolling */
+  .request-table tbody {
+    display: block;
+    max-height: 60vh; /* Adjust this value as needed */
+    overflow-y: auto;
+  }
+  
+  /* Make table header and rows display as table for proper layout */
+  .request-table thead, 
+  .request-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Table data cells */
+  .request-table td {
+    padding: 16px;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid #f0f2f5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Row hover effect */
+  .request-table tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* ==========================================================================
+     Table Column Widths
+     ========================================================================== */
+  
+  /* Request ID column */
+  .request-table th:nth-child(1),
+  .request-table td:nth-child(1) {
+    width: 8%;
+  }
+  
+  /* Caregiver Name column */
+  .request-table th:nth-child(2),
+  .request-table td:nth-child(2) {
+    width: 12%;
+  }
+  
+  /* Bank Name column */
+  .request-table th:nth-child(3),
+  .request-table td:nth-child(3) {
+    width: 10%;
+  }
+  
+  /* Account Number column */
+  .request-table th:nth-child(4),
+  .request-table td:nth-child(4) {
+    width: 12%;
+  }
+  
+  /* Account Holder column */
+  .request-table th:nth-child(5),
+  .request-table td:nth-child(5) {
+    width: 12%;
+  }
+  
+  /* Phone Number column */
+  .request-table th:nth-child(6),
+  .request-table td:nth-child(6) {
+    width: 12%;
+  }
+  
+  /* Amount column */
+  .request-table th:nth-child(7),
+  .request-table td:nth-child(7) {
+    width: 10%;
+  }
+  
+  /* We4U Earnings column */
+  .request-table th:nth-child(8),
+  .request-table td:nth-child(8) {
+    width: 10%;
+  }
+  
+  /* Action column */
+  .request-table th:nth-child(9),
+  .request-table td:nth-child(9) {
+    width: 14%;
+    text-align: center;
+  }
+  
+  /* ==========================================================================
+     Status Styling
+     ========================================================================== */
+  
+  /* Pending status */
+  .request-table td.status-pending {
+    color: var(--color-status-pending);
+    font-weight: 600;
+  }
+  
+  /* Accepted/Approved status */
+  .request-table td.status-accepted,
+  .request-table td.status-approved {
+    color: var(--color-status-accepted);
+    font-weight: 600;
+  }
+  
+  /* Cancelled/Rejected status */
+  .request-table td.status-cancelled,
+  .request-table td.status-rejected,
+  .request-table td.status-declined {
+    color: var(--color-status-rejected);
+    font-weight: 600;
+  }
+  
+  /* ==========================================================================
+     Button Styling
+     ========================================================================== */
+  
+  /* Action button styling */
+  .payment-action-btn {
+    background: var(--color-btn-primary);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  /* Button hover effect */
+  .payment-action-btn:hover {
+    background-color: var(--color-btn-primary-hover);
+    transform: translateY(-1px);
+  }
+  
+  /* ==========================================================================
+     No Results Message
+     ========================================================================== */
+  
+  /* Styling for no results message */
+  .no-results-message {
+    padding: 20px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    margin-top: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border: 1px dashed #e2e8f0;
+  }
+
+  /* Paid status indicator */
+.payment-status-paid {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-status-accepted, #38a169);
+    font-weight: 500;
+    padding: 6px 12px;
+    background-color: rgba(56, 161, 105, 0.1);
+    border-radius: 6px;
+  }
+  
+  .payment-status-paid svg {
+    color: var(--color-status-accepted, #38a169);
+  }

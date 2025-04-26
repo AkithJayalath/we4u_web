@@ -13,29 +13,30 @@
                 'active' => false
             ],
             [
-                'title' => 'Add User',
-                'url' => URLROOT . '/admin/adduser',
-                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Z"/></svg>',
-                'active' => false
-            ],
-            [
                 'title' => 'User Details',
                 'url' => URLROOT . '/admin/user_detailes',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM80-160v-112q0-33 17-62t47-44q51-26 115-44t141-18q77 0 141 18t115 44q30 15 47 44t17 62v112H80Z"/></svg>',
                 'active' => false
             ],
             [
+                'title' => 'Payments',
+                'url' => URLROOT . '/admin/payments',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>',
+                'active' => false
+            ],
+            [
+                'title' => 'Add User',
+                'url' => URLROOT . '/admin/adduser',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Z"/></svg>',
+                'active' => false
+            ],
+
+            [
                 'title' => 'Blog',
                 'url' => URLROOT . '/admin/blog',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>',
                 'active' => false
             ],
-            [
-                'title' => 'Completed Jobs',
-                'url' => URLROOT . '/admin/jobsCompleted',
-                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>',
-                'active' => false
-            ],            
             [
                 'title' => 'Announcements',
                 'url' => URLROOT . '/admin/viewannouncement',
@@ -334,11 +335,29 @@
                   'active' => false
               ],
               [
+                'title' => 'Jobs',
+                'url' => URLROOT . '/moderator/caregiverAndConsultantRequests',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-480q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm0-80q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-280Zm-60 160v-320h120v320H420Z"/></svg>',
+                'active' => false
+            ],[
+                'title' => 'Care Payments',
+                'url' => URLROOT . '/moderator/caregiverPayments',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h400q33 0 56.5 23.5T760-720v320q0 33-23.5 56.5T680-320H280Zm80-80h240q25 0 42.5-17.5T660-460q0-51-33.5-84.5T560-578q-33 0-66.5 33.5T460-460q0 25 17.5 42.5T500-400h-40q-33 0-56.5-23.5T380-480q0-72 49-121t131-49q72 0 121 49t49 121q0 33-23.5 56.5T650-400h30v-320H280v320h80Zm-80 160h400q66 0 113-47t47-113v-320q0-66-47-113t-113-47H280q-66 0-113 47t-47 113v320q0 66 47 113t113 47Zm0-80v-400 400Z"/></svg>',
+                'active' => false
+            ],
+            [
+                'title' => 'Consult Payments',
+                'url' => URLROOT . '/moderator/consultantPayments',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M280-240q-33 0-56.5-23.5T200-320v-480q0-33 23.5-56.5T280-880h400q33 0 56.5 23.5T760-800v480q0 33-23.5 56.5T680-240H280Zm0-80h400v-480H280v480Zm200 160q-17 0-28.5-11.5T440-200v-40h80v40q0 17-11.5 28.5T480-160Zm-160-80v-480 480Z"/></svg>',
+                'active' => false
+            ],
+              [
                   'title' => 'Announcements',
                   'url' => URLROOT . '/operator/viewannouncement',
                   'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/></svg>',
                   'active' => false
               ],
+              
               [
                 'title' => 'My Profile',
                 'url' => URLROOT . '/users/viewProfile',

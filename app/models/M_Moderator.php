@@ -8,21 +8,41 @@
         }
 
         public function get_requests(){
-            $this->db->query('SELECT * FROM approvalrequest ORDER BY request_date DESC');
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             ORDER BY ar.request_date DESC');
             $results = $this->db->resultSet();
             return $results;
         }
 
-        public function get_accepted_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Approved" ORDER BY request_date DESC');
-            return $this->db->resultSet();
-        }
-        
-        public function get_rejected_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Declined" ORDER BY request_date DESC');
+        public function get_pending_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Pending" 
+                             ORDER BY ar.request_date DESC');
             return $this->db->resultSet();
         }
 
+        public function get_accepted_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Approved" 
+                             ORDER BY ar.request_date DESC');
+            return $this->db->resultSet();
+        }
+
+        public function get_rejected_requests() {
+            $this->db->query('SELECT ar.*, u.email, u.username 
+                             FROM approvalrequest ar 
+                             JOIN user u ON ar.user_id = u.user_id 
+                             WHERE ar.status = "Declined" 
+                             ORDER BY ar.request_date DESC');
+            return $this->db->resultSet();
+        }
+        
           public function updateRequestStatus($data) {
               // First check if interview exists for this request
             //   $this->db->query('SELECT * FROM interviews WHERE request_id = :request_id');
@@ -98,10 +118,7 @@
             return $result;
         }
 
-        public function get_pending_requests() {
-            $this->db->query('SELECT * FROM approvalrequest WHERE status = "Pending" ORDER BY request_date DESC');
-            return $this->db->resultSet();
-        }
+
         
 
         public function get_requests_by_id($request_id){
@@ -114,13 +131,13 @@
             return $result;
         }
 
-        public function get_documents_by_id($user_id,$request_id){
-            $this->db->query('SELECT * FROM document WHERE user_id = :user_id and request_id = :request_id');
+        public function get_documents_by_id($user_id, $request_id) {
+            $this->db->query('SELECT * FROM document WHERE user_id = :user_id AND request_id = :request_id');
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':request_id', $request_id);
-            $result = $this->db->resultSet();
-            return $result;
+            return $this->db->resultSet();
         }
+        
 
         public function get_inteviews(){
             $this->db->query('SELECT *FROM interviews ORDER BY request_date ASC, interview_time ASC');
@@ -181,6 +198,143 @@
             $this->db->bind(':request_id', $request_id);
             return $this->db->execute();
         }
+
+
+        // getting all request details
+        public function getAllCareRequests() {
+            $this->db->query('
+                SELECT cr.*, 
+                       cg_user.username AS provider_name,
+                       cs_user.username AS careseeker_name,
+                       "Caregiving" AS service_category
+                FROM carerequests cr
+                LEFT JOIN caregiver cg ON cr.caregiver_id = cg.caregiver_id
+                LEFT JOIN user cg_user ON cg.caregiver_id = cg_user.user_id
+                LEFT JOIN user cs_user ON cr.requester_id = cs_user.user_id
+                ORDER BY cr.created_at DESC
+            ');
+            
+            return $this->db->resultSet();
+        }
+        
+        public function getAllConsultRequests() {
+            $this->db->query('
+                SELECT cr.*, 
+                       cons_user.username AS provider_name,
+                       cs_user.username AS careseeker_name,
+                       "Consultation" AS service_category
+                FROM consultantrequests cr
+                LEFT JOIN consultant cons ON cr.consultant_id = cons.consultant_id
+                LEFT JOIN user cons_user ON cons.consultant_id = cons_user.user_id
+                LEFT JOIN user cs_user ON cr.requester_id = cs_user.user_id
+                ORDER BY cr.created_at DESC
+            ');
+            
+            return $this->db->resultSet();
+        }
+
+public function getCaregiverPayments() {
+    $this->db->query('
+        SELECT 
+            cp.care_request_id,
+            cp.caregiver_id,
+            cp.amount,
+            cp.payment_date,
+            cp.is_paid,
+            cp.we4u_earn,
+            pm.account_holder_name,
+            pm.bank_name,
+            pm.branch_name,
+            pm.account_number,
+            pm.mobile_number,
+            u.username as caregiver_name,
+            cr.status as request_status
+        FROM 
+            care_payments cp
+        JOIN 
+            carerequests cr ON cp.care_request_id = cr.request_id
+        JOIN 
+            payment_method pm ON cp.caregiver_id = pm.user_id
+        JOIN
+            user u ON cp.caregiver_id = u.user_id
+        WHERE 
+            cr.status = "completed" AND
+            cr.is_paid = 1
+        ORDER BY 
+            cp.payment_date DESC
+    ');
+    
+    return $this->db->resultSet();
+}
+
+public function markPaymentAsPaid($care_request_id, $caregiver_id) {
+    $this->db->query('
+        UPDATE care_payments 
+        SET is_paid = 1
+        WHERE care_request_id = :care_request_id 
+        AND caregiver_id = :caregiver_id
+    ');
+    
+    $this->db->bind(':care_request_id', $care_request_id);
+    $this->db->bind(':caregiver_id', $caregiver_id);
+    
+    // Execute the query
+    return $this->db->execute();
+}
+
+public function getConsultantPayments() {
+    $this->db->query('
+        SELECT 
+            cp.consultant_request_id,
+            cp.consultant_id,
+            cp.amount,
+            cp.payment_date,
+            cp.is_paid,
+            cp.we4u_earn,
+            pm.account_holder_name,
+            pm.bank_name,
+            pm.branch_name,
+            pm.account_number,
+            pm.mobile_number,
+            u.username as consultant_name,
+            cr.status as request_status
+        FROM 
+            consultant_payments cp
+        JOIN 
+            consultantrequests cr ON cp.consultant_request_id = cr.request_id
+        JOIN 
+            payment_method pm ON cp.consultant_id = pm.user_id
+        JOIN
+            user u ON cp.consultant_id = u.user_id
+        WHERE 
+            cr.status = "completed" AND cr.is_paid = 1
+        ORDER BY 
+            cp.payment_date DESC
+    ');
+    
+    return $this->db->resultSet();
+}
+
+public function markConsultantPaymentAsPaid($payment_id, $consultant_id) {
+    $this->db->query('
+        UPDATE consultant_payments 
+        SET is_paid = 1
+        WHERE consultant_request_id = :payment_id 
+        AND consultant_id = :consultant_id
+    ');
+    
+    $this->db->bind(':payment_id', $payment_id);
+    $this->db->bind(':consultant_id', $consultant_id);
+    
+    // Execute the query
+    return $this->db->execute();
+}
+
+
+        
+        
+        
+        
         
         
     }

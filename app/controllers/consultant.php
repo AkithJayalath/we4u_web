@@ -3,10 +3,12 @@
     
       private $consultantModel;
       private $caregiversModel;
+      private $sheduleModel;
 
       public function __construct() {
           $this->consultantModel = $this->model('M_Consultant');
           $this->caregiversModel = $this->model('M_Caregivers'); 
+          $this->sheduleModel = $this->model('M_Shedules');
       }
       
 
@@ -246,8 +248,12 @@ public function acceptRequest($request_id) {
 
       // Update status
       if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
-          $this->createOrReuseConsultantSession($request_id);
+          $session_id=$this->createOrReuseConsultantSession($request_id);
+          if ($session_id) {
+            // Create or get chat for this session
+            $chat_id = $this->consultantModel->getOrCreateChatForSession($session_id);
           flash('request_message', 'Request has been accepted and session is now active.');
+          }
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
       }
@@ -339,21 +345,17 @@ public function cancelRequest($requestId, $flag = false) {
 private function getStartDateTime($request) {
     $date = new DateTime($request->appointment_date);
     
-    // Parse time slot (expected format "HH:MM-HH:MM")
-    if (isset($request->time_slot) && !empty($request->time_slot)) {
-        $timeSlotParts = explode('-', $request->time_slot);
-        if (count($timeSlotParts) >= 1) {
-            $startTimeParts = explode(':', trim($timeSlotParts[0]));
-            if (count($startTimeParts) >= 2) {
-                $hours = (int)$startTimeParts[0];
-                $minutes = (int)$startTimeParts[1];
-                $date->setTime($hours, $minutes, 0);
-                return $date;
-            }
-        }
+    // Use start_time directly instead of parsing time_slot
+    if (isset($request->start_time) && !empty($request->start_time)) {
+        // Parse the TIME datatype value (format typically "HH:MM:SS")
+        $startTimeParts = explode(':', $request->start_time);
+        $hours = (int)$startTimeParts[0];
+        $minutes = (int)$startTimeParts[1];
+        $date->setTime($hours, $minutes, 0);
+        return $date;
     }
     
-    // Default time if time slot couldn't be parsed
+    // Default time if start_time is not available
     $date->setTime(9, 0, 0);
     return $date;
 }
@@ -623,7 +625,7 @@ public function deletereview($review_id) {
 
     // Call model function to handle session logic
     $session_id = $this->consultantModel->handleConsultantSession($consultant_id, $elder_id, $careseeker_id, $request_id);
-
+    return $session_id;
     // Redirect to the session view or wherever you want
     redirect('consultant/viewSession/' . $session_id);
 }
@@ -758,6 +760,201 @@ public function viewConsultantSession($session_id) {
     // Load view
     $this->view('consultant/v_viewConsultantSession', $data);
 }
+
+
+
+
+
+  // Add this method to the consultant controller
+public function editAvailability(){
+    // Check if user is logged in as consultant
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
+        redirect('users/login');
+    }
+    
+    // Get consultant ID from session
+    $consultantId = $_SESSION['user_id'];
+    
+    // Initialize the schedules model
+    $this->sheduleModel = $this->model('M_Shedules');
+    
+    // Initialize error variable
+    $error = '';
+    
+    // Process form submission
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        
+        // Check which form was submitted
+        if (isset($_POST['availability_type'])) {
+            if ($_POST['availability_type'] == 'pattern') {
+                // Recurring availability pattern
+                $data = [
+                    'consultant_id' => $consultantId,
+                    'day_of_week' => trim($_POST['day_of_week']),
+                    'start_time' => trim($_POST['start_time']),
+                    'end_time' => trim($_POST['end_time']),
+                    'is_active' => true,
+                    'start_date' => trim($_POST['pattern_start_date']),
+                    'end_date' => trim($_POST['pattern_end_date'])
+                ];
+                
+                // Validate the data
+                if (empty($data['day_of_week'])) {
+                    $error = 'Please select a day of the week';
+                } elseif (empty($data['start_time'])) {
+                    $error = 'Please select a start time';
+                } elseif (empty($data['end_time'])) {
+                    $error = 'Please select an end time';
+                } elseif ($data['start_time'] >= $data['end_time']) {
+                    $error = 'End time must be after start time';
+                } elseif (empty($data['start_date'])) {
+                    $error = 'Please select a start date for the pattern';
+                } elseif (empty($data['end_date'])) {
+                    $error = 'Please select an end date for the pattern';
+                } elseif ($data['start_date'] > $data['end_date']) {
+                    $error = 'End date must be after start date';
+                } elseif (strtotime($data['start_date']) <= strtotime(date('Y-m-d'))) {
+                    $error = 'Start date must be at least tomorrow';
+                } else {
+                    // Check if the time slot is already defined for this day
+                    if ($this->sheduleModel->isTimeSlotAvailableForPattern(
+                        $data['consultant_id'], 
+                        $data['day_of_week'], 
+                        $data['start_time'], 
+                        $data['end_time'],
+                        $data['start_date'],
+                        $data['end_date']
+                    )) {
+                        // Time slot is available, create the pattern
+                        if ($this->sheduleModel->createAvailabilityPattern($data)) {
+                            flash('availability_message', 'Recurring availability pattern added successfully', 'alert alert-success');
+                        } else {
+                            $error = 'Something went wrong while saving your availability pattern';
+                        }
+                    } else {
+                        $error = 'This time slot overlaps with an existing pattern for the selected day';
+                    }
+                }
+            } elseif ($_POST['availability_type'] == 'instance') {
+                // Specific date availability instance
+                $data = [
+                    'consultant_id' => $consultantId,
+                    'available_date' => trim($_POST['instance_date']),
+                    'start_time' => trim($_POST['instance_start_time']),
+                    'end_time' => trim($_POST['instance_end_time'])
+                ];
+                
+                // Validate the data
+                if (empty($data['available_date'])) {
+                    $error = 'Please select a date';
+                } elseif (empty($data['start_time'])) {
+                    $error = 'Please select a start time';
+                } elseif (empty($data['end_time'])) {
+                    $error = 'Please select an end time';
+                } elseif ($data['start_time'] >= $data['end_time']) {
+                    $error = 'End time must be after start time';
+                } elseif (strtotime($data['available_date']) <= strtotime(date('Y-m-d'))) {
+                    $error = 'Start date must be at least tomorrow';
+                } else {
+                    // Check if the time slot is already defined for this date
+                    if ($this->sheduleModel->isTimeSlotAvailableForInstance(
+                        $data['consultant_id'], 
+                        $data['available_date'], 
+                        $data['start_time'], 
+                        $data['end_time']
+                    )) {
+                        // Time slot is available, create the instance
+                        if ($this->sheduleModel->createAvailabilityInstance($data)) {
+                            flash('availability_message', 'Specific date availability added successfully', 'alert alert-success');
+                        } else {
+                            $error = 'Something went wrong while saving your availability';
+                        }
+                    } else {
+                        $error = 'This time slot overlaps with an existing availability for the selected date';
+                    }
+                }
+            }
+        } elseif (isset($_POST['delete_availability'])) {
+            // Delete availability
+            $availabilityId = trim($_POST['availability_id']);
+            $availabilityType = trim($_POST['availability_type']);
+            
+            if ($availabilityType == 'pattern') {
+                if ($this->sheduleModel->deleteAvailabilityPattern($availabilityId, $consultantId)) {
+                    flash('availability_message', 'Recurring availability pattern removed successfully', 'alert alert-success');
+                } else {
+                    $error = 'Failed to remove availability pattern';
+                }
+            } else {
+                if ($this->sheduleModel->deleteAvailabilityInstance($availabilityId, $consultantId)) {
+                    flash('availability_message', 'Specific date availability removed successfully', 'alert alert-success');
+                } else {
+                    $error = 'Failed to remove availability';
+                }
+            }
+        }
+        
+        // If there's an error, don't redirect, pass the error to the view
+        if (!empty($error)) {
+            // Get all availability data for the consultant
+            $availabilityPatterns = $this->sheduleModel->getAllAvailabilityPatternsForConsultant($consultantId);
+            $availabilityInstances = $this->sheduleModel->getAllAvailabilityInstancesForConsultant($consultantId);
+            
+            // Prepare data for the view with error
+            $data = [
+                'availabilityPatterns' => $availabilityPatterns,
+                'availabilityInstances' => $availabilityInstances,
+                'error' => $error
+            ];
+            
+            // Load the availability management view with error
+            $this->view('calendar/v_consultantAvailability', $data);
+            return;
+        }
+        
+        // Redirect to prevent form resubmission
+        redirect('consultant/editAvailability');
+    }
+    
+    // Get all availability data for the consultant
+    $availabilityPatterns = $this->sheduleModel->getAllAvailabilityPatternsForConsultant($consultantId);
+    $availabilityInstances = $this->sheduleModel->getAllAvailabilityInstancesForConsultant($consultantId);
+    
+    // Prepare data for the view
+    $data = [
+        'availabilityPatterns' => $availabilityPatterns,
+        'availabilityInstances' => $availabilityInstances,
+        'error' => $error
+    ];
+    
+    // Load the availability management view
+    $this->view('calendar/v_consultantAvailability', $data);
+}
+
+public function viewAppointments() {
+    // Check if user is logged in as consultant
+    if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Consultant') {
+        redirect('users/login');
+    }
+
+    // Get consultant ID from session
+    $consultantId = $_SESSION['user_id'];
+    
+    // Get all bookings for this consultant
+    $bookings = $this->sheduleModel->getConsultantBookings($consultantId);
+    
+    $data = [
+        'bookings' => $bookings,
+        'consultant_id' => $consultantId
+    ];
+    
+    $this->view('calendar/v_consultantAppointments', $data);
+}
+
+
+  
 
 
 }

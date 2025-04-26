@@ -64,44 +64,38 @@ echo loadCSS($required_styles);
                 <?php endif; ?>
  <?php
 // Determine button state: delete or cancel
-$disabledStatuses = ['cancelled', 'rejected', 'completed'];
-$isDeleteButton = in_array(strtolower($data->status), $disabledStatuses);
+$disabledStatuses = ['completed'];
+$isRate = in_array(strtolower($data->status), $disabledStatuses);
 
 // Calculate if cancel button should be disabled (for the cancel functionality only)
 $isDisabled = false;
 
-if (!$isDeleteButton) {
+if (!$isRate) {
     $currentDateTime = new DateTime(); // Current date and time
-    
-    // Create appointment datetime
-    $appointmentDate = new DateTime($data->appointment_date);
-    
-    // Extract time from the time_slot
-    if (!empty($data->time_slot)) {
-        [$from, $to] = explode('-', $data->time_slot);
-        $fromTime = trim($from);
-        
-        // Set the appointment time
-        list($hours, $minutes) = explode(':', $fromTime);
-        $appointmentDate->setTime((int)$hours, (int)$minutes, 0);
+
+    // Combine appointment_date and start_time into one DateTime
+    if (!empty($data->appointment_date) && !empty($data->start_time)) {
+        $appointmentDateTime = new DateTime("{$data->appointment_date} {$data->start_time}");
     } else {
-        // Default to 8:00 AM if no time slot is specified
-        $appointmentDate->setTime(8, 0, 0);
+        // Default to 8:00 AM on the appointment date if start_time is missing
+        $appointmentDateTime = new DateTime($data->appointment_date);
+        $appointmentDateTime->setTime(8, 0, 0);
     }
-    
+
     // Calculate hours left until appointment
-    $hoursLeft = ($appointmentDate->getTimestamp() - $currentDateTime->getTimestamp()) / 3600;
-    
+    $hoursLeft = ($appointmentDateTime->getTimestamp() - $currentDateTime->getTimestamp()) / 3600;
+
     // Check if less than 5 hours left or if appointment has already started
     if ($hoursLeft <= 0 && $data->status != 'pending') {
         $isDisabled = true; // Appointment has already started
     }
 }
 
+
 // Button class and text based on state
-$buttonClass = $isDeleteButton ? "request-delete-button" : "request-cancel-button";
-$buttonText = $isDeleteButton ? "Delete Request" : "Cancel";
-$buttonAction = $isDeleteButton 
+$buttonClass = $isRate ? "request-delete-button" : "request-cancel-button";
+$buttonText = $isRate ? "Rate" : "Cancel";
+$buttonAction = $isRate 
     ? "window.location.href='".URLROOT."/careseeker/deleteConsultRequest/".$data->request_id."'"
     : ($isDisabled 
         ? "alert('Cannot cancel an appointment that has already started')" 
@@ -110,7 +104,7 @@ $buttonAction = $isDeleteButton
 
 <!-- Replace the original cancel button with this code -->
 <button class="<?= $buttonClass ?>" 
-        <?= (!$isDeleteButton && $isDisabled) ? 'disabled' : '' ?> 
+        <?= (!$isRate && $isDisabled) ? 'disabled' : '' ?> 
         onclick="<?= $buttonAction ?>">
     <?= $buttonText ?>
 </button>
@@ -137,25 +131,24 @@ $buttonAction = $isDeleteButton
                 </div>
 
                 <div class="request-info-row">
-                    <label>Requested Slot</label>
-                    <p>
-                        <?php
-                        if (!empty($data->time_slot)) {
-                            [$from, $to] = explode('-', $data->time_slot);
+                <label>Requested Slot</label>
+<p>
+    <?php
+    if (!empty($data->start_time) && !empty($data->end_time)) {
+        $fromTime = DateTime::createFromFormat('H:i:s', $data->start_time);
+        $toTime = DateTime::createFromFormat('H:i:s', $data->end_time);
 
-                            $fromTime = DateTime::createFromFormat('H:i', trim($from));
-                            $toTime = DateTime::createFromFormat('H:i', trim($to));
+        if ($fromTime && $toTime) {
+            echo "From " . $fromTime->format('g:i A') . " to " . $toTime->format('g:i A');
+        } else {
+            echo "Invalid time format";
+        }
+    } else {
+        echo "N/A";
+    }
+    ?>
+</p>
 
-                            if ($fromTime && $toTime) {
-                                echo "From " . $fromTime->format('g:i A') . " to " . $toTime->format('g:i A');
-                            } else {
-                                echo htmlspecialchars($data->time_slot); // fallback if format is unexpected
-                            }
-                        } else {
-                            echo "N/A";
-                        }
-                        ?>
-                    </p>
 
 
                 </div>
@@ -290,32 +283,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function calculateCancellationDetails() {
         // Get request data from PHP
-        const requestData = {
-            id: <?= $data->request_id ?>,
-            status: '<?= $data->status ?>',
-            appointmentDate: '<?= $data->appointment_date ?>',
-            timeSlot: '<?= addslashes($data->time_slot) ?>',
-            isPaid: <?= isset($data->is_paid) && $data->is_paid ? 'true' : 'false' ?>,
-            paymentDetails: <?= $data->payment_details ?? 0 ?>
-        };
-        
-        const now = new Date();
-        
-        // Parse appointment date and time
-        const appointmentDate = new Date(requestData.appointmentDate);
-        
-        // Extract time from time slot
-        if (requestData.timeSlot) {
-            const timeParts = requestData.timeSlot.split('-');
-            if (timeParts.length > 0) {
-                const fromTime = timeParts[0].trim();
-                const [hours, minutes] = fromTime.split(':');
-                appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0);
-            }
-        }
-        
-        // Calculate hours left until appointment
-        const hoursLeft = (appointmentDate - now) / (1000 * 60 * 60);
+    const requestData = {
+        id: <?= $data->request_id ?>,
+        status: '<?= $data->status ?>',
+        appointmentDate: '<?= $data->appointment_date ?>',
+        startTime: '<?= $data->start_time ?>',
+        isPaid: <?= isset($data->is_paid) && $data->is_paid ? 'true' : 'false' ?>,
+        paymentDetails: <?= $data->payment_details ?? 0 ?>
+    };
+
+    const now = new Date();
+
+    // Parse appointment date and combine with start time
+    const appointmentDate = new Date(requestData.appointmentDate);
+    if (requestData.startTime) {
+        const [hours, minutes, seconds] = requestData.startTime.split(':');
+        appointmentDate.setHours(parseInt(hours), parseInt(minutes), parseInt(seconds));
+    }
+
+    // Calculate hours left until appointment
+    const hoursLeft = (appointmentDate - now) / (1000 * 60 * 60);
         
         let fineAmount = 0;
         let refundAmount = 0;
