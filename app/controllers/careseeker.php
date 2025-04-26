@@ -952,8 +952,8 @@ class careseeker extends controller
     public function viewConsultantProfile($consultant_id)
     {
         $profile = $this->careseekersModel->showConsultantProfile($consultant_id);
-        $rating = $this->careseekersModel->getAvgRating($consultant_id);
-        $reviews = $this->careseekersModel->getReviews($consultant_id);
+        $rating = $this->careseekersModel->getAvgRating($consultant_id,'consultant');
+        $reviews = $this->careseekersModel->getReviews($consultant_id,'consultant');
 
         // Calculate age
         $dob = new DateTime($profile->date_of_birth);
@@ -972,8 +972,8 @@ class careseeker extends controller
     public function viewCaregiverProfile($caregiver_id, $request_id = null, $elder_id = null)
     {
         $profile = $this->careseekersModel->showCaregiverProfile($caregiver_id);
-        $rating = $this->careseekersModel->getAvgRating($caregiver_id);
-        $reviews = $this->careseekersModel->getReviews($caregiver_id);
+        $rating = $this->careseekersModel->getAvgRating($caregiver_id,'caregiver');
+        $reviews = $this->careseekersModel->getReviews($caregiver_id,'caregiver');
 
         // Calculate age
         $dob = new DateTime($profile->date_of_birth);
@@ -1616,6 +1616,168 @@ private function sendEmail($to, $subject, $body) {
         return false;
     }
   }
+
+
+
+  public function viewCaregiverReviews($caregiver_id = null) {
+    if ($caregiver_id === null) {
+        flash('review_message', 'Caregiver ID is required.');
+        redirect('careseeker/showElderProfiles'); // Redirect to a fallback page
+    }
+
+    // Fetch reviews for the caregiver
+    $reviews = $this->careseekersModel->getReviews($caregiver_id);
+    error_log("Reviews for caregiver with ID $caregiver_id: " . json_encode($reviews));
+
+    // Prepare the data to pass to the view
+    $data = [
+        'title' => 'Caregiver Reviews',
+        'reviews' => $reviews,
+        'caregiver_id' => $caregiver_id // Pass caregiver_id to the view
+    ];
+
+    // Load the appropriate view
+    $this->view('caregiver/v_rate&review', $data);
+}
+
+public function addReview($reviewed_user_id, $role) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $data = [
+            'reviewer_id' => $_SESSION['user_id'], // The logged-in careseeker
+            'reviewed_user_id' => $reviewed_user_id, // The caregiver or consultant being reviewed
+            'review_role' => $role, // Either "Caregiver" or "Consultant"
+            'rating' => isset($_POST['rating']) ? trim($_POST['rating']) : '',
+            'review_text' => isset($_POST['review_text']) ? trim($_POST['review_text']) : '',
+            'rating_err' => '',
+            'review_text_err' => '',
+            'review_err' => '',
+            'caregiver_id' => $reviewed_user_id // Add this to ensure it's available in the view
+        ];
+        error_log("Data for adding review: " . json_encode($data));
+
+        // Validate rating
+        if (empty($data['rating']) || $data['rating'] == '0') {
+            $data['rating_err'] = 'Please provide a rating.';
+        }
+
+        // Validate review text
+        if (empty($data['review_text'])) {
+            $data['review_text_err'] = 'Please provide a review.';
+        }
+
+        // Check for errors
+        if (empty($data['rating_err']) && empty($data['review_text_err'])) {
+            if ($this->careseekersModel->addReview($data)) {
+                flash('review_message', 'Review added successfully');
+                redirect('careseeker/viewCaregiverReviews/' . $reviewed_user_id);
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            $this->view('careseeker/v_addReview', $data);
+        }
+    } else {
+        $data = [
+            'rating' => '',
+            'review_text' => '',
+            'rating_err' => '',
+            'review_text_err' => '',
+            'caregiver_id' => $reviewed_user_id // Pass caregiver_id to the view
+        ];
+
+        $this->view('careseeker/v_addReview', $data);
+    }
+}
+  public function editReview($review_id) {
+    $review = $this->careseekersModel->getReviewById($review_id);
+
+    // Ensure the logged-in user is the reviewer
+    if ($review->reviewer_id != $_SESSION['user_id']) {
+        flash('review_message', 'You are not authorized to edit this review.');
+        redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $data = [
+            'review_id' => $review_id,
+            'review_text' => trim($_POST['review_text']),
+            'rating' => trim($_POST['rating']),
+            'updated_at' => date('Y-m-d H:i:s'), // Update the updated_at field
+            'review_text_err' => '',
+            'rating_err' => '',
+            'review_err' => '' // Initialize review_err
+        ];
+
+        // Validate input
+        if (empty($data['review_text'])) {
+            $data['review_text_err'] = 'Please enter a review.';
+        }
+        if (empty($data['rating'])) {
+            $data['rating_err'] = 'Please select a rating.';
+        }
+
+        if (empty($data['review_text_err']) && empty($data['rating_err'])) {
+            if ($this->careseekersModel->updateReview($data)) {
+                flash('review_message', 'Review updated successfully');
+                redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+            } else {
+                $data['review_err'] = 'Something went wrong while updating the review.';
+                $this->view('careseeker/v_editreview', $data);
+            }
+        } else {
+            $this->view('careseeker/v_editreview', $data);
+        }
+    } else {
+        $data = [
+            'review_id' => $review_id,
+            'review_text' => $review->review_text,
+            'rating' => $review->rating,
+            'review_text_err' => '',
+            'rating_err' => '',
+            'review_err' => '' // Initialize review_err
+        ];
+        $this->view('careseeker/v_editreview', $data);
+    }
+}
+
+// public function deletereview($review_id) {
+//     $review = $this->careseekersModel->getReviewById($review_id);
+
+//     // Ensure the logged-in user is the reviewer
+//     if ($review->reviewer_id != $_SESSION['user_id']) {
+//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+//     }
+
+//     if ($this->careseekerModel->deleteReview($review_id)) {
+//         flash('review_message', 'Review deleted successfully');
+//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+//     } else {
+//         die('Something went wrong');
+//     }
+// }
+
+public function deleteReview($review_id) {
+    $review = $this->careseekersModel->getReviewById($review_id);
+
+    // Ensure the logged-in user is the reviewer
+    if ($review->reviewer_id != $_SESSION['user_id']) {
+        flash('review_message', 'You are not authorized to delete this review.');
+        redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+    }
+
+    if ($this->careseekersModel->deleteReview($review_id)) {
+        flash('review_message', 'Review deleted successfully');
+        redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
+    } else {
+        die('Something went wrong');
+    }
+}
+
 
 
    
