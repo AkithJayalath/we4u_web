@@ -13,6 +13,54 @@ class M_Admin {
     return $this->db->resultSet();
   }
 
+  public function getUserDetails($user_id) {
+    // First get the basic user data
+    $this->db->query('SELECT * FROM user WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $user_id);
+    $user = $this->db->single();
+    
+    if(!$user) {
+        return false;
+    }
+    
+    // For admin and moderator, just return the base user data
+    if($user->role == 'Admin' || $user->role == 'Moderator') {
+        return $user;
+    }
+    
+    // For other roles, fetch their specific additional data
+    switch($user->role) {
+        case 'Caregiver':
+            $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        case 'Careseeker':
+            $this->db->query('SELECT * FROM careseeker WHERE careseeker_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        case 'Consultant':
+            $this->db->query('SELECT * FROM consultant WHERE consultant_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        default:
+            $additionalData = null;
+    }
+    
+    // Combine the data and return
+    if($additionalData) {
+        $userData = (object) array_merge((array) $user, (array) $additionalData);
+        return $userData;
+    }
+    
+    return $user;
+}
+
   public function findUserByEmail($email){ 
       $this->db->query('SELECT * FROM user WHERE email = :email');
       $this->db->bind(':email' , $email);
