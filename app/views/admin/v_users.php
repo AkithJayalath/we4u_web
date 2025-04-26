@@ -162,7 +162,8 @@
                           data-role="<?php echo $user->role; ?>"
                           data-userid="<?php echo $user->user_id; ?>">
                           <td class="ad-users-user-cell">
-                                <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
+                          <a href="<?php echo URLROOT; ?>/operator/viewUserProfile/<?php echo $user->user_id; ?>">
+
                               
                             <img 
                                 src="<?php echo URLROOT; ?>/public/images/<?php echo strtolower($user->role); ?>-logo.png"
@@ -170,7 +171,7 @@
                                 class="ad-users-user-avatar"
                               />
                               </a>
-                              <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
+                              <a href="<?php echo URLROOT; ?>/operator/viewUserProfile/<?php echo $user->user_id; ?>">
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name"><?php echo $user->username; ?></div>
                               </div>

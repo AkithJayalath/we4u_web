@@ -273,10 +273,12 @@ class careseeker extends controller
 
         // First, check if caregiver exists
         $caregiver = $this->careseekersModel->showCaregiverProfile($caregiver_id);
+       
         if (!$caregiver) {
             flash('error', 'Caregiver not found');
             redirect('careseeker/ViewRequests');
         }
+        $caregiverEmail= $caregiver->email;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
@@ -471,7 +473,17 @@ class careseeker extends controller
                 // execute the query and get the resulting data 
                 $result = $this->careseekersModel->sendCareRequest($requestData);
                 if ($result['success']) {
+
                     flash('success', 'Care request sent successfully');
+                    // Send email to caregiver
+                    $emailBody = '<h1>New Request !</h1>
+                    <p>You have a new request.Please visit the website for more details</p>';
+                
+                   $this->sendEmail(
+                    $caregiverEmail,
+                    'New Request - We4u',
+                    $emailBody
+                );
                     // update sheduling table for caregiver
                     // first check duration type if if that is a short term then
                     if ($data['duration_type'] === 'short-term') {
@@ -530,6 +542,7 @@ class careseeker extends controller
             flash('error', 'Consultant not found');
             redirect('careseeker/viewConsultantRequests');
         }
+        $consultantEmail = $consultant->email;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -948,6 +961,7 @@ class careseeker extends controller
         date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
 
         $request = $this->careseekersModel->getRequestById($requestId);
+        $caregiver = $this->careseekersModel->getCaregiverById($request->caregiver_id);
 
         if (!$request) {
             flash('error', 'Invalid request or service.');
@@ -997,6 +1011,18 @@ class careseeker extends controller
             redirect('payment/payFine/' . $requestId);
             return;
         }
+        $emailBody = '<h1>Request Cancelled</h1>
+        <p>A request you previously received has been cancelled by the care seeker.</p>
+        <p>Request ID: ' . $requestId . '</p>
+        <p>Please log in to the We4u system for further details.</p>';
+  $caregiverEmail = $caregiver->email;
+        // Send email to caregiver  
+$this->sendEmail(
+$caregiverEmail,
+'Request Cancellation Notification - We4u',
+$emailBody
+);
+
 
         flash('success', 'Request cancelled successfully.');
         redirect('careseeker/viewRequests');
@@ -1032,6 +1058,7 @@ class careseeker extends controller
         date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
 
         $request = $this->careseekersModel->getConsultantRequestById($requestId);
+        $consultant = $this->careseekersModel->getConsultantById($request->consultant_id);
 
         if (!$request) {
             flash('error', 'Invalid consultation request.');
@@ -1082,6 +1109,17 @@ class careseeker extends controller
             redirect('payment/payConsultFine/' . $requestId);
             return;
         }
+        $emailBody = '<h1>Request Cancelled !</h1>
+        <p>A request you previously received has been cancelled by the care seeker.</p>
+        <p>Request ID: ' . $requestId . '</p>
+        <p>Please log in to the We4u system for further details.</p>';
+  $consultantEmail = $consultant->email;
+        // Send email to caregiver  
+$this->sendEmail(
+$consultantEmail,
+'Request Cancellation Notification - We4u',
+$emailBody
+);
 
         flash('success', 'Consultation request cancelled successfully.');
         redirect('careseeker/viewRequests');
@@ -1388,6 +1426,30 @@ class careseeker extends controller
         }
         exit;
     }
+
+
+    //caregiver history for careseeker
+    public function careseekerCaregivingHistory(){ 
+        $careseekerId = $_SESSION['user_id'];
+        $history = $this->careseekersModel->getCareseekerCaregivingHistory($careseekerId);
+    
+        $data = [
+            'history' => $history
+        ];
+    
+        $this->view('careseeker/v_caregivingHistory', $data);
+    }
+
+    public function careseekerConsultHistory(){ 
+        $careseekerId = $_SESSION['user_id'];
+        $history = $this->careseekersModel->getCareseekerConsultHistory($careseekerId);
+    
+        $data = [
+            'history' => $history
+        ];
+    
+        $this->view('careseeker/v_consultHistory', $data);
+    }
     
     
     
@@ -1397,7 +1459,18 @@ class careseeker extends controller
     
     
 
-
+// Send email helper method
+private function sendEmail($to, $subject, $body) {
+    // This is a wrapper for your existing sendEmail function
+    $result = sendEmail($to, $subject, $body);
+    
+    if ($result['success']) {
+        return true;
+    } else {
+        error_log($result['message']);
+        return false;
+    }
+  }
 
 
    
