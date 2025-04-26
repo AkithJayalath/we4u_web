@@ -45,7 +45,6 @@
                     <select id="role" name="role" class="ad-users-filter-select" required>
                         <option value="">Select Role</option>
                         <option value="moderator">Moderator</option>
-                        <option value="careseeker">Careseeker</option>
                     </select>
                 </div>
 

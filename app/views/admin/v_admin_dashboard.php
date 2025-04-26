@@ -16,6 +16,7 @@
   <div class="ad-dashboard-wrapper">
   <div class="ad-dashboard-header">
           <h1>Dashboard Overview</h1>
+          <!-- <?php echo $_SESSION['user_role'] ?> -->
       </div>
       <main class="ad-dashboard-main-content">
           <!-- Stats cards section -->
