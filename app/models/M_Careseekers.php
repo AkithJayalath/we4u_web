@@ -246,12 +246,16 @@ public function sendCareRequest($data) {
 }
 
 public function getCaregiverById($caregiverId) {
-    $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :caregiver_id');
+    $this->db->query('
+        SELECT c.*, u.email 
+        FROM caregiver c
+        JOIN user u ON c.caregiver_id = u.user_id
+        WHERE c.caregiver_id = :caregiver_id
+    ');
     $this->db->bind(':caregiver_id', $caregiverId);
     
     return $this->db->single();
 }
-
 
 public function sendConsultantRequest($data) {
     // to convert time to correct format
@@ -440,7 +444,8 @@ public function showConsultantProfile($consultant_id) {
 
 
 public function getRequestById($id) {
-    $this->db->query("SELECT * FROM carerequests WHERE request_id = :id");
+    $this->db->query("SELECT * FROM carerequests
+     WHERE request_id = :id");
     $this->db->bind(':id', $id);
 
     return $this->db->single();
@@ -451,6 +456,7 @@ public function cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundA
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
                           refund_amount = :refund_amount 
+                          is_paid = 0
                       WHERE request_id = :id");
 
     $this->db->bind(':fine_amount', $fineAmount);
@@ -477,11 +483,23 @@ public function getConsultantRequestById($id) {
 
     return $this->db->single();
 }
+
+public function getConsultantById($consultantId) {
+    $this->db->query('SELECT c.*, u.email 
+                      FROM consultant c
+                      JOIN user u ON c.consultant_id = u.user_id
+                      WHERE c.consultant_id = :consultant_id');
+    $this->db->bind(':consultant_id', $consultantId);
+    
+    return $this->db->single();
+}
+
 public function cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
     $this->db->query("UPDATE consultantrequests 
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
                           refund_amount = :refund_amount 
+                          is_paid = 0
                       WHERE request_id = :id");
 
     $this->db->bind(':fine_amount', $fineAmount);
@@ -629,8 +647,37 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
     return $this->db->resultSet();
 }
 
+public function getCareseekerCaregivingHistory($careseekerId){
+    $this->db->query('SELECT cr.*, u.username, u.profile_picture, e.first_name, e.middle_name, e.last_name, e.relationship_to_careseeker, e.profile_picture AS elder_pic
+    FROM carerequests cr
+    JOIN user u ON cr.caregiver_id = u.user_id
+    JOIN elderprofile e ON cr.elder_id = e.elder_id
+    WHERE cr.requester_id = :careseekerId
+    AND (cr.status = "completed")
+    ORDER BY cr.created_at DESC');
+
+    $this->db->bind(':careseekerId', $careseekerId);
+
+    return $this->db->resultSet();
+}
+
+public function getCareseekerConsultHistory($careseekerId){
+    $this->db->query('SELECT cr.*, u.username, u.profile_picture, e.first_name, e.middle_name, e.last_name, e.relationship_to_careseeker, e.profile_picture AS elder_pic
+    FROM consultantrequests cr
+    JOIN user u ON cr.consultant_id = u.user_id
+    JOIN elderprofile e ON cr.elder_id = e.elder_id
+    WHERE cr.requester_id = :careseekerId
+    AND (cr.status = "completed")
+    ORDER BY cr.created_at DESC');
+
+    $this->db->bind(':careseekerId', $careseekerId);
+
+    return $this->db->resultSet();
+}
+
 
 
 }
+
 
 ?>

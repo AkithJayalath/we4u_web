@@ -240,6 +240,7 @@ public function acceptRequest($request_id) {
 
       // Verify request belongs to this caregiver
       $request = $this->consultantModel->getRequestById($request_id);
+      $careseeker = $this->consultantModel->getCareseekerById($request->requester_id);
       if (!$request || $request->consultant_id != $consultantId) {
           flash('request_message', 'Unauthorized access!', 'alert alert-danger');
           redirect('consultant/viewRequests');
@@ -249,6 +250,18 @@ public function acceptRequest($request_id) {
       // Update status
       if ($this->consultantModel->updateRequestStatus($request_id, 'accepted')) {
           $session_id=$this->createOrReuseConsultantSession($request_id);
+
+          $emailBody = '<h1>Request Accepted</h1>
+          <p>A request you previously sent was accepted by the consultant #'.$request->consultant_id.'</p>
+          <p>Request ID: ' . $request_id . '</p>
+          <p>Please log in to the We4u system for further details.</p>';
+    $careseekerEmail = $careseeker->email;
+          // Send email to caregiver  
+  $this->sendEmail(
+  $careseekerEmail,
+  'Request Cancellation Notification - We4u',
+  $emailBody
+  );
           if ($session_id) {
             // Create or get chat for this session
             $chat_id = $this->consultantModel->getOrCreateChatForSession($session_id);
@@ -265,6 +278,7 @@ public function rejectRequest($request_id) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $consultantId = $_SESSION['user_id'];
       $request = $this->consultantModel->getRequestById($request_id);
+      $careseeker = $this->consultantModel->getCareseekerById($request->requester_id);
       if (!$request || $request->consultant_id != $consultantId) {
           flash('request_message', 'Unauthorized access!', 'alert alert-danger');
           redirect('consultant/viewRequests');
@@ -272,6 +286,17 @@ public function rejectRequest($request_id) {
       }
 
       if ($this->consultantModel->updateRequestStatus($request_id, 'rejected')) {
+        $emailBody = '<h1>Request Rejected</h1>
+        <p>A request you previously sent was rejected by the consultant #'.$request->consultant_id.'</p>
+        <p>Request ID: ' . $request_id . '</p>
+        <p>Please log in to the We4u system for further details.</p>';
+  $careseekerEmail = $careseeker->email;
+        // Send email to caregiver  
+$this->sendEmail(
+$careseekerEmail,
+'Request Rejection Notification - We4u',
+$emailBody
+);
           flash('request_message', 'Request has been rejected.');
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
@@ -285,6 +310,7 @@ public function cancelRequest($requestId, $flag = false) {
     date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
 
     $request = $this->consultantModel->getRequestById($requestId);
+    $careseeker = $this->consultantModel->getCareseekerById($request->requester_id);
 
     if (!$request) {
         flash('request_error', 'Invalid request or appointment.');
@@ -334,6 +360,21 @@ public function cancelRequest($requestId, $flag = false) {
     if ($result) {
         $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
         flash('request_success', 'Appointment cancelled successfully.' . $flagMessage);
+
+
+        $emailBody = '<h1>Request Cancelled</h1>
+        <p>A request you previously sent was Cancelled by the consultant #'.$request->consultant_id.'</p>
+        <p>Request ID: ' . $request->request_id . '</p>
+        <p>Please log in to the We4u system for further details.</p>';
+  $careseekerEmail = $careseeker->email;
+        // Send email to caregiver  
+$this->sendEmail(
+$careseekerEmail,
+'Request Cancellation Notification - We4u',
+$emailBody
+);
+
+
     } else {
         flash('request_error', 'Failed to cancel the appointment. Please try again.');
     }
@@ -952,6 +993,21 @@ public function viewAppointments() {
     
     $this->view('calendar/v_consultantAppointments', $data);
 }
+
+
+
+    // Send email helper method
+    private function sendEmail($to, $subject, $body) {
+        // This is a wrapper for your existing sendEmail function
+        $result = sendEmail($to, $subject, $body);
+        
+        if ($result['success']) {
+            return true;
+        } else {
+            error_log($result['message']);
+            return false;
+        }
+      }
 
 
   

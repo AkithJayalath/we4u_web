@@ -750,8 +750,9 @@ public function acceptRequest($request_id) {
 
       // Verify request belongs to this caregiver
       $request = $this->caregiversModel->getRequestById($request_id);
+        $careseeker = $this->caregiversModel->getCareseekerById($request->requester_id);
       if (!$request || $request->caregiver_id != $caregiverId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          flash('error', 'Unauthorized access!');
           redirect('caregivers/viewRequests');
           return;
       }
@@ -759,9 +760,22 @@ public function acceptRequest($request_id) {
       // Update status
       if ($this->caregiversModel->updateRequestStatus($request_id, 'accepted')) {
             $this->sheduleModel->updateScheduleStatusByRequestId($request_id, 'accepted');
-          flash('request_message', 'Request has been accepted.');
+
+            $emailBody = '<h1>Request Accepted</h1>
+            <p>A request you previously sent was accepted by the caregiver #'.$request->caregiver_id.'</p>
+            <p>Request ID: ' . $request_id . '</p>
+            <p>Please log in to the We4u system for further details.</p>';
+      $careseekerEmail = $careseeker->email;
+            // Send email to caregiver  
+    $this->sendEmail(
+    $careseekerEmail,
+    'Request Accept Notification - We4u',
+    $emailBody
+    );
+
+          flash('success', 'Request has been accepted.');
       } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+          flash('error', 'Something went wrong. Try again.', 'alert alert-danger');
       }
       redirect('caregivers/viewRequests');
   }
@@ -771,14 +785,29 @@ public function rejectRequest($request_id) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $caregiverId = $_SESSION['user_id'];
       $request = $this->caregiversModel->getRequestById($request_id);
+      $careseeker = $this->caregiversModel->getCareseekerById($request->requester_id);
       if (!$request || $request->caregiver_id != $caregiverId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          flash('error', 'Unauthorized access!');
           redirect('caregivers/viewRequests');
           return;
       }
 
       if ($this->caregiversModel->updateRequestStatus($request_id, 'rejected')) {
-          flash('request_message', 'Request has been rejected.');
+          flash('success', 'Request has been rejected.');
+
+          $emailBody = '<h1>Request Rejected</h1>
+          <p>A request you previously sent was accepted by the caregiver #'.$request->caregiver_id.'</p>
+          <p>Request ID: ' . $request_id . '</p>
+          <p>Please log in to the We4u system for further details.</p>';
+    $careseekerEmail = $careseeker->email;
+          // Send email to caregiver  
+  $this->sendEmail(
+  $careseekerEmail,
+  'Request Rejection Notification - We4u',
+  $emailBody
+  );
+
+
       } else {
           flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
       }
@@ -793,6 +822,7 @@ public function cancelRequest($requestId, $flag = false) {
   date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
 
   $request = $this->caregiversModel->getRequestById($requestId);
+    $careseeker = $this->caregiversModel->getCareseekerById($request->requester_id);
 
   if (!$request) {
       flash('request_error', 'Invalid request or service.');
@@ -841,6 +871,18 @@ public function cancelRequest($requestId, $flag = false) {
 
   if ($result) {
         $this->sheduleModel->deleteSchedulesByRequestId($requestId);
+
+        $emailBody = '<h1>Request Cancelled</h1>
+        <p>A request you previously sent was cancelled by the caregiver #'.$request->caregiver_id.'</p>
+        <p>Request ID: ' . $request->request_id . '</p>
+        <p>Please log in to the We4u system for further details.</p>';
+  $careseekerEmail = $careseeker->email;
+        // Send email to caregiver  
+$this->sendEmail(
+$careseekerEmail,
+'Request Cancellation Notification - We4u',
+$emailBody
+);
       $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
       flash('request_success', 'Request cancelled successfully.' . $flagMessage);
   } else {
@@ -1037,6 +1079,19 @@ private function getStartDateTime($request) {
         $this->view('calendar/v_editcgcalander', $data);
     }
 
+
+    // Send email helper method
+private function sendEmail($to, $subject, $body) {
+    // This is a wrapper for your existing sendEmail function
+    $result = sendEmail($to, $subject, $body);
+    
+    if ($result['success']) {
+        return true;
+    } else {
+        error_log($result['message']);
+        return false;
+    }
+  }
 
 
 
