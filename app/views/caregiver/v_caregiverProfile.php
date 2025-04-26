@@ -164,20 +164,19 @@
             </div>
             <div class="caregiver-other-info-section">
             <div class="caregiver-health-concern-section">
-            <div class="caregiver-health-concern-section-header">
+                <div class="caregiver-health-concern-section-header">
                     <div class="caregiver-header-with-icon">
                         <h3>Rating & reviews</h3>
                     </div>
                 </div>
                 <div class="rating-section-content">
-                                <!-- ratings.js -->
+                    <!-- ratings.js -->
                 </div>
                 <div class="reviews-section-content">
-                            <!-- reviews.js -->
+                    <!-- reviews.js -->
                 </div>
             </div>
-            </div>
-            
+        </div>
     </div>
 
 </page-body-container>

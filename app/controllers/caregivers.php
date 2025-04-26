@@ -292,7 +292,16 @@
     public function caregivingHistory(){ 
 
         $caregiverId = $_SESSION['user_id'];
-        $history = $this->caregiversModel->getCaregivingHistory($caregiverId);
+        $dateSort = $_GET['date_sort'] ?? 'newest';
+        $statusFilter = $_GET['status_filter'] ?? 'all';
+        $paymentFilter = $_GET['payment_filter'] ?? 'all';
+
+        $history = $this->caregiversModel->getCaregivingHistory(
+            $caregiverId,
+            $dateSort,
+            $statusFilter,
+            $paymentFilter
+        );
 
         $data = [
           'history' => $history
@@ -719,6 +728,9 @@ public function viewCaregiverProfile($id = null) {
 
 public function viewRequests()
 {
+
+    $dateSort = $_GET['date_sort'] ?? 'newest';
+    $statusFilter = $_GET['status_filter'] ?? 'all';
     
     // Check if user is logged in as caregiver
     if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Caregiver') {
@@ -730,7 +742,11 @@ public function viewRequests()
     $caregiverId = $_SESSION['user_id'];
     
     // Get all requests for this caregiver
-    $careRequests = $this->caregiversModel->getAllCareRequestsByCaregiver($caregiverId);
+    $careRequests = $this->caregiversModel->getAllCareRequestsByCaregiver(
+        $caregiverId,
+        $dateSort,
+        $statusFilter
+        );
     
     $data = [
         'requests' => $careRequests
@@ -901,6 +917,122 @@ private function getStartDateTime($request) {
       // Load the calendar view
       $this->view('calendar/v_cgcalendar', $data);
   }
+
+
+  public function payMethodView(){
+     // Check if user is logged in
+     if(!$this->isLoggedIn()){
+        redirect('users/login');
+    }
+    
+    $email = $_SESSION['user_email'];
+
+   
+    $payment = $this->caregiversModel->getPaymentMethodByEmail($email);
+
+    // Pass data to the view
+    $data = [
+        'email' => $email,
+        'mobile' => $payment->mobile ?? '',
+        'bank_name' => $payment->bank_name ?? '',
+        'account_number' => $payment->account_number ?? '',
+        'branch_name' => $payment->branch_name ?? '',
+        'account_holder' => $payment->account_holder ?? '',
+        'edit_mode' => false,
+
+        // Error placeholders
+        'mobile_err' => '',
+        'bank_name_err' => '',
+        'account_number_err' => '',
+        'branch_name_err' => '',
+        'account_holder_err' => '',
+    ];
+
+    $this->view('caregiver/v_paymentMethodnew', $data);
+}
+
+public function updatePayMethod(){
+     // Check if user is logged in
+     if(!$this->isLoggedIn()){
+        redirect('users/login');
+    }
+    // Check if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $email = $_SESSION['user_email'];
+        $paymentData = $this->caregiversModel->getPaymentMethodByEmail($email);
+        $data = [
+            'edit_mode' => true,
+            'email' => $email,
+            'mobile' => trim($_POST['mobile']),
+            'bank_name' => trim($_POST['bank_name']),
+            'account_number' => trim($_POST['account_number']),
+            'branch_name' => trim($_POST['branch_name']),
+            'account_holder' => trim($_POST['account_holder']),
+
+            // Error placeholders
+            'mobile_err' => '',
+            'bank_name_err' => '',
+            'account_number_err' => '',
+            'branch_name_err' => '',
+            'account_holder_err' => '',
+        ];
+
+        // Validate fields
+        if (empty($data['mobile'])) {
+            $data['mobile_err'] = 'Please enter mobile number';
+        }
+        
+        if (empty($data['bank_name'])) {
+            $data['bank_name_err'] = 'Please enter bank name';
+        }
+        
+        if (empty($data['account_number'])) {
+            $data['account_number_err'] = 'Please enter account number';
+        }
+        
+        if (empty($data['branch_name'])) {
+            $data['branch_name_err'] = 'Please enter branch name';
+        }
+        
+        if (empty($data['account_holder'])) {
+            $data['account_holder_err'] = 'Please enter account holder name';
+        }
+
+        // Check if there are any errors
+        if (empty($data['mobile_err']) && 
+            empty($data['bank_name_err']) && 
+            empty($data['account_number_err']) && 
+            empty($data['branch_name_err']) && 
+            empty($data['account_holder_err'])) {
+            
+            // No errors - proceed with update
+            if($this->caregiversModel->updatePayMethod($email, $data)) {
+                flash('update_success', 'Payment method updated successfully!');
+                redirect('caregivers/payMethodView');
+            } else {
+                die("Something went wrong");
+            }
+        } else {
+            // There are errors - reload the edit view with errors
+            $this->view('caregiver/v_paymentMethodnew', $data);
+        }
+    } else {
+        // Not a POST request - redirect to view
+        redirect('caregivers/payMethodView');
+    }
+
+}
   
-  }
+}
+  
+
+
+   
+  
+
+  
+
 ?>

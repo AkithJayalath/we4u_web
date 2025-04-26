@@ -12,7 +12,7 @@
         </div>
 
         <div class="btn-history">
-            <button onClick="navigateToDetails()">Payment History</button>
+            <button onClick="navigateToDetails()">Payment History</button> 
         </div>
 
         <div class="details">
@@ -28,7 +28,7 @@
                     <div class="card">
                         <label><span class="required">*</span>Mobile Number</label>
                         <div class="content-box">
-                            <input type="text" id="mobile_number" name="mobile_number" value="<?php echo isset($data['paymentMethod']->mobile_number) ? $data['paymentMethod']->mobile_number : ''; ?> "
+                            <input type="text" id="mobile_number" name="mobile_number" value="<?php echo isset($data['paymentMethod']->mobile) ? $data['paymentMethod']->mobile : ''; ?> "
                             <?php echo (!isset($data['paymentMethod']) || !$data['paymentMethod']) ? 'readonly' : ''; ?>>
                             <span class="error"><?php echo isset($data['mobile_number_err']) ? $data['mobile_number_err'] : ''; ?></span>
                         </div>

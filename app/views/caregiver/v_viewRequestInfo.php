@@ -19,7 +19,7 @@ echo loadCSS($required_styles);
         <!-- Personal info section -->
         <div class="request-info-header">
     <div class="request-info-header-left">
-        <div class="request-info-header-left-left">
+        <div class="request-info-header-left-left"> 
             <?php
             // Determine which image to display
             $CaregiverprofilePic = !empty($data->caregiver_pic)
@@ -159,8 +159,14 @@ echo loadCSS($required_styles);
                 </div>
                 <div class="request-info-row">
                     <label>Total Payment</label>
-                    <p>Rs. <?= $data->payment_details ?? 'N/A' ?></p>
+                    <p>Rs. <?= $data->payment_details ?? 'N/A' ?> <?php if (isset($data->is_paid) && $data->is_paid == 1): ?>
+            <span class="payment-status" style=" font-weight: bold; margin-left: 10px;">✅ Payment Done</span>
+        <?php endif; ?></p>
+
+                    
+                    
                 </div>
+                
                 <div class="request-info-row">
                     <label>Additional Notes</label>
                     <p><?= htmlspecialchars($data->additional_notes) ?></p>

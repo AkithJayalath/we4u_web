@@ -50,7 +50,7 @@ echo loadCSS($required_styles);
                             </p>
                             <p><?php echo $data['age']; ?></p>
                             <p><?php echo $data['caregiver']->gender; ?></p>
-                            <p><?php echo $data['caregiver']->caregiver_type; ?> Term Care</p>
+                            <p><?php echo $data['caregiver']->caregiver_type; ?> Term Care</p> 
                         </div>
                     </div>
                 </div>
