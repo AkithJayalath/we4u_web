@@ -278,6 +278,9 @@ add COLUM is_paid boolean;
 alter table care_payments
 add COLUM we4u_earn decimal(10,2);
 
+alter table care_payments
+add COLUM is_paid boolean;
+
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

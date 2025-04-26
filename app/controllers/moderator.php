@@ -255,7 +255,7 @@
           }
       }
 
-      public function sendRejectionEmail($email, $reason) {
+      private function sendRejectionEmail($email, $reason) {
         $result = sendEmail(
             $email,
             'Update on Your Consultant Application',
@@ -289,7 +289,7 @@
         }
     }
 
-    public function sendAcceptionEmail($email) {
+    private function sendAcceptionEmail($email) {
       $result = sendEmail(
         $email,
         'Your Consultant Application is Approved',
@@ -440,9 +440,12 @@
         
         // Call the model function to mark payment as paid
         if ($this->moderatorModel->markPaymentAsPaid($care_request_id, $caregiver_id)) {
-            flash('payment_success', 'Payment marked as paid successfully', 'alert alert-success');
+          // send a notification to the caregiver
+          createNotification($caregiver_id, 'Your account has been marked as paid by a moderator. You should receive your payment within 24-48 hours. If you do not receive it within 3 days, please contact our support team at.', false);
+
+            flash('success', 'Payment marked as paid successfully');
         } else {
-            flash('payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
+            flash('error', 'Failed to mark payment as paid');
         }
         
         // Redirect back to payments page
@@ -497,9 +500,11 @@ public function markConsultantAsPaid() {
       
       // Call the model function to mark payment as paid
       if ($this->moderatorModel->markConsultantPaymentAsPaid($payment_id, $consultant_id)) {
-          flash('consultant_payment_success', 'Payment marked as paid successfully', 'alert alert-success');
+        // send a notification to the consultant
+        createNotification($consultant_id, 'Your account has been marked as paid by a moderator. You should receive your payment within 24-48 hours. If you do not receive it within 3 days, please contact our support team at.', false);
+        flash('success', 'Payment marked as paid successfully');
       } else {
-          flash('consultant_payment_error', 'Failed to mark payment as paid', 'alert alert-danger');
+        flash('error', 'Payment marked as paid successfully');
       }
       
       // Redirect back to payments page
@@ -510,12 +515,6 @@ public function markConsultantAsPaid() {
   }
 }
 
-
-
-
-    
-
-      
 }
 ?>
 
