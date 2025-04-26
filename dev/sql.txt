@@ -278,4 +278,16 @@ add COLUM is_paid boolean;
 alter table care_payments
 add COLUM we4u_earn decimal(10,2);
 
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    is_announcement BOOLEAN DEFAULT FALSE,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (user_id),
+    INDEX (is_announcement),
+    INDEX (created_at)
+);
+
 

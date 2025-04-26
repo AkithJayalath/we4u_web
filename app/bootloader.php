@@ -14,6 +14,7 @@
     require_once 'helpers/flash_Helper.php';
     require_once 'helpers/EmailHelper.php';
     require_once 'helpers/encryption_Helper.php';
+    require_once 'helpers/notification_helper.php';
 
     // This is the initial file that will be executed.
     // Other files to be executed will be redirected from here.
