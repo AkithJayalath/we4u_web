@@ -144,7 +144,7 @@ echo loadCSS($required_styles);
             </div>
             <div class="caregiver-other-info-section">
             <div class="caregiver-health-concern-section">
-            <div class="caregiver-health-concern-section-header">
+            <div class="caregiver-health-concern-section-header"> 
                     <div class="caregiver-header-with-icon">
                         <h3>Rating & reviews</h3>
                     </div>

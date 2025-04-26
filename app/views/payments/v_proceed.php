@@ -47,7 +47,7 @@
     <h2><?php echo isset($data['message']) ? $data['message'] : 'Payment processed'; ?></h2>
 
     <div class="btn-group">
-        <a href="<?= URLROOT ?>caregivers/viewRequests">🏠 Return to Home</a>
+        <a href="<?php echo URLROOT; ?>/careseeker/viewRequests">🏠 Return to Home</a>
 
         <?php if (isset($data['message']) && str_contains($data['message'], 'successful')): ?>
             <a href="#" onclick="showReceipt()">🧾 View Receipt</a>
@@ -369,6 +369,12 @@ function downloadReceipt() {
 }
 
 
+
+  // Prevent back button
+  history.pushState(null, null, location.href);
+  window.onpopstate = function () {
+      history.go(1);
+  };
 
 
 

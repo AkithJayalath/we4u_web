@@ -12,8 +12,19 @@
             <h2>Payment History</h2>
         </div>
 
-        <div class="btn-Method">
-            <button onclick="navigateToDetails()">Payment Method</button> 
+        <div class="income-summary">
+            <div class="income-card">
+                <span class="label">This Month</span>
+                <span class="amount">LKR <?= number_format($data['income']['monthly'], 2) ?></span>
+            </div>
+            <div class="income-card">
+                <span class="label">This Year</span>
+                <span class="amount">LKR <?= number_format($data['income']['annual'], 2) ?></span>
+            </div>
+            <div class="income-card highlight">
+                <span class="label">All-Time</span>
+                <span class="amount">LKR <?= number_format($data['income']['total'], 2) ?></span>
+            </div>
         </div>
 
         <div class="details">
@@ -39,9 +50,9 @@
                                         <span><?php echo $payment->username; ?></span>
                                     </div>
                                 </td>
-                                <td>LKR. <?php echo number_format($payment->amount, 2); ?> </td>
-                                <td class="status <?php echo $payment->is_refunded == 1 ? 'Refunded' : 'Success'; ?>">
-                                    <?php echo $payment->is_refunded == 1 ? 'Refunded' : 'Success'; ?>
+                                <td>LKR. <?php echo number_format($payment->amount * 0.92, 2); ?> </td>
+                                <td class="status <?php echo $payment->is_paid == 1 ? 'Success' : 'Pending'; ?>">
+                                    <?php echo $payment->is_paid == 1 ? 'Success' : 'Pending'; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

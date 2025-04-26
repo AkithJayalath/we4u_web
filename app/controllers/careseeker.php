@@ -1157,7 +1157,34 @@ class careseeker extends controller
 
     public function viewPayments()
     {
-        $data = [];
+        // Check if user is logged in as consultant
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Careseeker') {
+            redirect('users/login');
+        }
+
+        $careseekerId= $_SESSION['user_id'];
+        $carepayments = $this->careseekersModel->getPaymentsByCareseekerId($careseekerId);
+        $consultpayments = $this->careseekersModel->getConsultPaymentsByCareseekerId($careseekerId);
+
+        foreach($carepayments as $payment) {
+            $payment->service="Caregiving";
+        }
+        foreach($consultpayments as $payment) {
+            $payment->service="Consulting";
+        }
+        //merge arrays
+        $allPayments = array_merge($carepayments, $consultpayments);
+
+        // Sort all payments by date descending
+        usort($allPayments, function($a, $b) {
+            return strtotime($b->created_at) - strtotime($a->created_at);
+        });
+
+        
+        
+        $data = [
+            'payments' => $allPayments
+        ];
         $this->view('careseeker/v_viewPayments', $data);
     }
 

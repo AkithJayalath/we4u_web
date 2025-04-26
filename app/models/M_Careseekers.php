@@ -629,8 +629,24 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
     return $this->db->resultSet();
 }
 
+public function getPaymentsByCareseekerId($careseekerId){
+    $this->db->query("SELECT cp.*,u.username AS name From care_payments cp
+                        JOIN user u ON cp.caregiver_id = u.user_id
+                        WHERE cp.payer_id = :careseekerId");
+    $this->db->bind(':careseekerId', $careseekerId);
+    return $this->db->resultSet();
+}
+
+public function getConsultPaymentsByCareseekerId($careseekerId){
+    $this->db->query("SELECT cp.*,u.username AS name From consultant_payments cp
+                        JOIN user u ON cp.consultant_id = u.user_id
+                        WHERE cp.payer_id = :careseekerId");
+    $this->db->bind(':careseekerId', $careseekerId);
+    return $this->db->resultSet();
+
 
 
 }
 
+}
 ?>

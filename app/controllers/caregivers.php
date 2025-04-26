@@ -498,19 +498,41 @@
         }
     }
     
-   public function paymentHistory(){
-    if (!$this->isLoggedIn()) {
-        redirect('users/login');
-    }
-    
-    $caregiverId = $_SESSION['user_id'];
-    $payments = $this->caregiversModel->getPaymentHistory($caregiverId);
-
-    $data=[
-        'payments' => $payments
+    public function paymentHistory() {
+        if (!$this->isLoggedIn()) redirect('users/login');
         
-    ];
-       $this->view('caregiver/v_paymentHistory',$data);
+        $caregiverId = $_SESSION['user_id'];
+        $payments = $this->caregiversModel->getPaymentHistory($caregiverId);
+    
+        $data = [
+            'payments' => $payments,
+            'income' => [
+                'total' => 0,
+                'monthly' => 0,
+                'annual' => 0
+            ]
+        ];
+    
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+    
+        foreach ($payments as $payment) {
+            if ($payment->is_paid == 1) {
+                $amount = $payment->amount * 0.92;
+                $paymentMonth = date('m', strtotime($payment->created_at));
+                $paymentYear = date('Y', strtotime($payment->created_at));
+    
+                $data['income']['total'] += $amount;
+                if ($paymentYear == $currentYear) {
+                    $data['income']['annual'] += $amount;
+                    if ($paymentMonth == $currentMonth) {
+                        $data['income']['monthly'] += $amount;
+                    }
+                }
+            }
+        }
+    
+        $this->view('caregiver/v_paymentHistory', $data);
     }
 
     public function request(){
@@ -937,11 +959,11 @@ private function getStartDateTime($request) {
     // Pass data to the view
     $data = [
         'email' => $email,
-        'mobile' => $payment->mobile ?? '',
+        'mobile_number' => $payment->mobile_number ?? '',
         'bank_name' => $payment->bank_name ?? '',
         'account_number' => $payment->account_number ?? '',
         'branch_name' => $payment->branch_name ?? '',
-        'account_holder' => $payment->account_holder ?? '',
+        'account_holder_name' => $payment->account_holder_name ?? '',
         'edit_mode' => false,
 
         // Error placeholders
@@ -970,11 +992,11 @@ public function updatePayMethod(){
         $data = [
             'edit_mode' => true,
             'email' => $email,
-            'mobile' => trim($_POST['mobile']),
+            'mobile_number' => trim($_POST['mobile_number']),
             'bank_name' => trim($_POST['bank_name']),
             'account_number' => trim($_POST['account_number']),
             'branch_name' => trim($_POST['branch_name']),
-            'account_holder' => trim($_POST['account_holder']),
+            'account_holder_name' => trim($_POST['account_holder_name']),
 
             // Error placeholders
             'mobile_err' => '',
@@ -985,7 +1007,7 @@ public function updatePayMethod(){
         ];
 
         // Validate fields
-        if (empty($data['mobile'])) {
+        if (empty($data['mobile_number'])) {
             $data['mobile_err'] = 'Please enter mobile number';
         }
         
@@ -1001,7 +1023,7 @@ public function updatePayMethod(){
             $data['branch_name_err'] = 'Please enter branch name';
         }
         
-        if (empty($data['account_holder'])) {
+        if (empty($data['account_holder_name'])) {
             $data['account_holder_err'] = 'Please enter account holder name';
         }
 
@@ -1030,7 +1052,7 @@ public function updatePayMethod(){
 
 }
   
-}
+
   
 
 
@@ -1039,7 +1061,7 @@ public function updatePayMethod(){
 
   
 
-?>
+
     public function editMyCalendar() {
         
         if(!$this->isLoggedIn()){

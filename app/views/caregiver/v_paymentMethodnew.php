@@ -20,7 +20,7 @@
                     </div>
                     <div class="display-group">
                         <label>Mobile Number</label>
-                        <p><?php echo $data['mobile']; ?></p>
+                        <p><?php echo $data['mobile_number']; ?></p>
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
                     <h3>Bank Details</h3>
                     <div class="display-group">
                         <label>Account Holder</label>
-                        <p><?php echo $data['account_holder']; ?></p>
+                        <p><?php echo $data['account_holder_name']; ?></p>
                     </div>
                     <div class="display-group">
                         <label>Bank Name</label>
@@ -48,6 +48,10 @@
 
                 <div class="editbutton">
                     <button onclick="enableEdit()" class="edit">Edit Payment Method</button>
+                    <form action="<?php echo URLROOT; ?>/caregivers/deletePayMethod" method="post" style="display:inline;">
+                        <button type="submit" class="delete">Delete Details</button>
+                    </form>
+
                 </div>
             </div>
 
@@ -60,8 +64,8 @@
                         <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="mobile">Mobile Number <span class="required">*</span></label>
-                        <input type="tel" id="mobile" name="mobile" value="<?php echo $data['mobile']; ?>">
+                        <label for="mobile_number">Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="mobile_number" name="mobile_number" value="<?php echo $data['mobile_number']; ?>">
                         <span class="invalid-feedback"><?php echo $data['mobile_err']; ?></span>
                     </div>
                 </div>
@@ -70,7 +74,7 @@
                     <h3>Bank Details</h3>
                     <div class="form-group">
                         <label for="account_holder">Account Holder <span class="required">*</span></label>
-                        <input type="text" id="account_holder" name="account_holder" value="<?php echo $data['account_holder']; ?>">
+                        <input type="text" id="account_holder_name" name="account_holder_name" value="<?php echo $data['account_holder_name']; ?>">
                         <span class="invalid-feedback"><?php echo $data['account_holder_err']; ?></span>
                     </div>
                     <div class="form-group">

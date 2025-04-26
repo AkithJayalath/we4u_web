@@ -116,7 +116,7 @@
     margin-top: 24px;
 }
 
-.edit, .cancel ,.save {
+.edit, .cancel ,.save,.delete {
     background-color: #1a237e;
     color: white;
     border: none;
@@ -126,6 +126,17 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s;
+}
+
+.delete{
+    background-color: #e53935;
+    margin-right: 10px;
+}
+
+.delete:hover {
+    background-color: #c62828;
+    transform: translateY(-2px);
+
 }
 
 

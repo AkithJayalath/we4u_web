@@ -573,26 +573,26 @@ public function updatePayMethod($email, $data){
         $this->db->query('
             UPDATE payment_methods 
             SET 
-                mobile = :mobile,
+                mobile_number = :mobile_number,
                 bank_name = :bank_name,
                 account_number = :account_number,
                 branch_name = :branch_name,
-                account_holder = :account_holder
+                account_holder_name = :account_holder_name
             WHERE email = :email
         ');
     } else {
         // If not, insert a new record
         $this->db->query('
-            INSERT INTO payment_methods (email, mobile, bank_name, account_number, branch_name, account_holder)
-            VALUES (:email, :mobile, :bank_name, :account_number, :branch_name, :account_holder)
+            INSERT INTO payment_methods (email, mobile_number, bank_name, account_number, branch_name, account_holder_name)
+            VALUES (:email, :mobile_number, :bank_name, :account_number, :branch_name, :account_holder_name)
         ');
     }
 
-    $this->db->bind(':mobile', $data['mobile']);
+    $this->db->bind(':mobile_number', $data['mobile_number']);
     $this->db->bind(':bank_name', $data['bank_name']);
     $this->db->bind(':account_number', $data['account_number']);
     $this->db->bind(':branch_name', $data['branch_name']);
-    $this->db->bind(':account_holder', $data['account_holder']);
+    $this->db->bind(':account_holder_name', $data['account_holder_name']);
     $this->db->bind(':email', $email);
 
     // Execute
