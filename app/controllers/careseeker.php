@@ -1158,7 +1158,7 @@ class careseeker extends controller
     public function viewPayments()
     {
         $data = [];
-        $this->view('careseeker/v_viewPayments', $data);
+        $this->view('careseeker/v_viewPayments', $data); 
     }
 
     public function viewConsultants()

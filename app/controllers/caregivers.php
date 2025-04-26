@@ -1029,17 +1029,6 @@ public function updatePayMethod(){
     }
 
 }
-  
-}
-  
-
-
-   
-  
-
-  
-
-?>
     public function editMyCalendar() {
         
         if(!$this->isLoggedIn()){

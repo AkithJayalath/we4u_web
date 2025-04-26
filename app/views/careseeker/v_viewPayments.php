@@ -129,7 +129,7 @@ echo loadCSS($required_styles);
               <div class="view-requests-m-c-r-table-cell">Caregiving</div>
               <div class="view-requests-m-c-r-table-cell"><span class="tag accepted">Success</span></div>
             <div class="view-requests-m-c-r-table-cell">
-                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button>
+                  <button type="submit" class="view-requests-m-c-r-view-req-action-btn">View payment</button> 
               </div>
             </div>
       

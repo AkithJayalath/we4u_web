@@ -47,7 +47,7 @@
     <h2><?php echo isset($data['message']) ? $data['message'] : 'Payment processed'; ?></h2>
 
     <div class="btn-group">
-        <a href="<?= URLROOT ?>caregivers/viewRequests">🏠 Return to Home</a>
+        <a href="<?= URLROOT ?>/careseekers/viewRequests">🏠 Return to Home</a>
 
         <?php if (isset($data['message']) && str_contains($data['message'], 'successful')): ?>
             <a href="#" onclick="showReceipt()">🧾 View Receipt</a>
