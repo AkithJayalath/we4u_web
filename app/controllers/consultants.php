@@ -3,10 +3,10 @@ class Consultants extends Controller {
     private $consultantsModel;
 
     public function __construct() {
-        if(!isLoggedIn()) {
-            $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
-            redirect('users/login');
-        }
+        // if(!isLoggedIn()) {
+        //     $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
+        //     redirect('users/login');
+        // }
 
         $this->consultantsModel = $this->model('M_Consultantss');
     }

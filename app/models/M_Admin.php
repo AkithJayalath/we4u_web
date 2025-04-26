@@ -445,6 +445,55 @@ public function getTotalUserEarnings() {
         return $result->total;
     }
 
+
+    //blogs
+    // Get all blogs (admin can see all)
+   public function getAllBlogs() {
+    $this->db->query("SELECT * FROM blogs ORDER BY created_at DESC");
+    return $this->db->resultSet();
+  }
+
+  // Add a new blog
+  public function addBlog($data) {
+    $this->db->query("INSERT INTO blogs (user_id, title, content, image_path,created_at,updated_at) 
+                      VALUES (:user_id, :title, :content, :image_path,:created_at,:updated_at)");
+    $this->db->bind(':user_id', $data['user_id']);
+    $this->db->bind(':title', $data['title']);
+    $this->db->bind(':content', $data['content']);
+    $this->db->bind(':image_path', $data['image_path']);
+    $this->db->bind(':created_at', date('Y-m-d H:i:s'));
+    $this->db->bind(':updated_at', date('Y-m-d H:i:s'));
+    return $this->db->execute();
+}
+
+
+  // Get a single blog by ID
+  public function getBlogById($blogId) {
+    $this->db->query("SELECT * FROM blogs WHERE blog_id = :blog_id");
+    $this->db->bind(':blog_id', $blogId);
+    return $this->db->single();
+  }
+
+  // Update any blog (admin can edit any blog)
+  public function updateBlog($data) {
+    $this->db->query("UPDATE blogs 
+                      SET title = :title, content = :content, image_path = :image_path 
+                      WHERE blog_id = :blog_id");
+    $this->db->bind(':title', $data['title']);
+    $this->db->bind(':content', $data['content']);
+    $this->db->bind(':image_path', $data['image_path']);
+    $this->db->bind(':blog_id', $data['blog_id']);
+    return $this->db->execute();
+  }
+
+  // Delete any blog (admin can delete any blog)
+  public function deleteBlog($blogId) {
+    $this->db->query("DELETE FROM blogs WHERE blog_id = :blog_id");
+    $this->db->bind(':blog_id', $blogId);
+    return $this->db->execute();
+  }
+
+
     
     
 }
