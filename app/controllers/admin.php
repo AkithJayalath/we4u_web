@@ -448,6 +448,71 @@ public function addblog() {
         $this->view('admin/v_add_blog', $data);
     }
 }
+
+    public function viewUserProfile($user_id) {
+        // check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+        // PERMISSION DENIED
+        redirect('pages/permissiondenied');
+        }
+        $user_details = $this->adminModel->getUserDetails($user_id);
+        $data = [
+        'user_details' => $user_details,
+        'title' => 'View Careseeker'
+        ];
+        $this->view('users/v_allUserProfiles', $data);
+    }
+
+    public function activateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->activateUser($user_id)) {
+            // Send activation email
+            $result = sendEmail(
+                $user_email,
+                'Account Activation',
+                '<h1>Account Activation</h1><p>Your account has been activated. You can now log in.</p>'
+            );
+            flash('success', 'User activated successfully. Activation email sent.');
+        } else {
+            flash('error', 'Failed to activate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
+    public function deactivateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->deactivateUser($user_id)) {
+            // send deactivation email
+            $result = sendEmail(
+                $user_email,
+                'Account Deactivation',
+                '<h1>Account Deactivation</h1><p>Your account has been deactivated. Please contact support for more information.</p>'
+            );
+
+            flash('success', 'User deactivated successfully. Deactivation email.');
+        } else {
+            flash('error', 'Failed to deactivate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
+
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();
     $data = [

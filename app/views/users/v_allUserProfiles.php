@@ -3,7 +3,7 @@
 
 <?php 
     $required_styles = [
-        'operator/moderatorProfile',
+        'admin/viewProfile',
     ];
     echo loadCSS($required_styles);
 ?>
@@ -11,7 +11,7 @@
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?> 
     <!-- Container -->
-    <div class="view-caregiver-profile">
+    <div class="view-caregiver-profile">       
         <!-- Personal info section -->
         <div class="caregiver-personal-info-section">
             <div class="caregiver-personal-info-left">
@@ -46,17 +46,14 @@
 
             <div class="caregiver-personal-info-right">
                 <?php if($data['user_details']->is_deactive == 0): ?>
-                    <button class="caregiver-chat-button" onclick="deactivateUser(<?php echo $data['user_details']->user_id; ?>)">
+                    <button class="caregiver-chat-button" onclick="deactivateUser()">
                         <i class="fas fa-user-slash"></i> Deactivate User
                     </button>
                 <?php else: ?>
-                    <button class="caregiver-chat-button" onclick="activateUser(<?php echo $data['user_details']->user_id; ?>)">
+                    <button class="caregiver-chat-button" onclick="activateUser()">
                         <i class="fas fa-user-check"></i> Activate User
                     </button>
                 <?php endif; ?>
-                <button class="caregiver-delete-button" onclick="openRejectModal()">
-                    <i class="fas fa-user-minus"></i> Delete User
-                </button>
             </div>
         </div>
 
@@ -138,18 +135,32 @@
         </div>
     </div>
 
-    <div id="rejecttModal" class="r-modal">
-        <div class="r-modal-content">
-            <div class="modal-header">
-                <img src="<?php echo URLROOT; ?>/images/oversight-rafiki.png" class="modal-img"/>         
-                <h2>You are going to delete this <?php echo $data['user_details']->role; ?>!</h2>
-            </div>
-           
-            <textarea id="rejectReason" placeholder="Provide your reason to delete this user" rows="4" cols="50"></textarea>
-
+    <!-- Deactivation modal popup -->
+    <div id="deactivateModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Deactivation</h2>
+            <p>Are you sure you want to deactivate this user?</p>
             <div class="modal-buttons">
-                <button class="btn-submit" onclick="submitRejection(<?php echo $data['user_details']->user_id; ?>)">Delete User</button>
-                <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
+                <form action="<?php echo URLROOT; ?>/admin/deactivateUser/<?php echo $data['user_details']->user_id; ?>" method="post">
+                    <input type="hidden" name="email" value="<?php echo $data['user_details']->email; ?>">
+                    <button type="submit" class="modal-btn confirm-btn">Yes, Deactivate</button>
+                </form>
+                <button class="modal-btn cancel-btn" onclick="closeDeactivateModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activation modal popup -->
+    <div id="activateModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Activation</h2>
+            <p>Are you sure you want to activate this user?</p>
+            <div class="modal-buttons">
+                <form action="<?php echo URLROOT; ?>/admin/activateUser/<?php echo $data['user_details']->user_id; ?>" method="post">
+                    <input type="hidden" name="email" value="<?php echo $data['user_details']->email; ?>">
+                    <button type="submit" class="modal-btn confirm-btn" style="background-color: #4caf50;">Yes, Activate</button>
+                </form>
+                <button class="modal-btn cancel-btn" onclick="closeActivateModal()">Cancel</button>
             </div>
         </div>
     </div>
@@ -161,93 +172,19 @@
 <?php require APPROOT . '/views/includes/footer.php' ?>
 
 <script>
-    // Function to handle user activation
-    function activateUser(userId) {
-        if (confirm('Are you sure you want to activate this user?')) {
-            // AJAX request to activate user
-            fetch('<?php echo URLROOT; ?>/users/activateUser/' + userId, {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User activated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to activate user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while processing your request.');
-            });
-        }
-    }
+function deactivateUser() {
+    document.getElementById('deactivateModal').style.display = 'block';
+}
 
-    // Function to handle user deactivation
-    function deactivateUser(userId) {
-        if (confirm('Are you sure you want to deactivate this user?')) {
-            // AJAX request to deactivate user
-            fetch('<?php echo URLROOT; ?>/users/deactivateUser/' + userId, {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User deactivated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to deactivate user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while processing your request.');
-            });
-        }
-    }
+function closeDeactivateModal() {
+    document.getElementById('deactivateModal').style.display = 'none';
+}
 
-    // Function to handle the Submit button for deletion
-    function submitRejection(userId) {
-        const reason = document.getElementById('rejectReason').value.trim();
-        
-        if (reason === '') {
-            alert('Please provide a reason for deletion.');
-            return;
-        }
-        
-        // AJAX request to delete user
-        fetch('<?php echo URLROOT; ?>/users/deleteUser/' + userId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ reason: reason })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('User deleted successfully!');
-                window.location.href = '<?php echo URLROOT; ?>/users';
-            } else {
-                alert('Failed to delete user: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while processing your request.');
-        });
-    }
+function activateUser() {
+    document.getElementById('activateModal').style.display = 'block';
+}
 
-    // Function to handle the Cancel button
-    function closeRejectModal() {
-        const modal = document.getElementById('rejecttModal');
-        modal.style.display = 'none'; // Hide the modal
-    }
-
-    // Function to open the modal
-    function openRejectModal() {
-        const modal = document.getElementById('rejecttModal');
-        modal.style.display = 'block'; // Show the modal
-    }
+function closeActivateModal() {
+    document.getElementById('activateModal').style.display = 'none';
+}
 </script>
