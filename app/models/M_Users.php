@@ -143,7 +143,7 @@
     } elseif ($role == 'Consultant') {
         $sql = "SELECT is_approved FROM consultant WHERE consultant_id = :user_id";
     } else {
-        return 'approved'; // Other roles don’t require approval
+        return 'approved'; // Other roles don't require approval
     }
 
     $this->db->query($sql);
@@ -486,6 +486,21 @@ public function getBlogById($blogId) {
     return $this->db->single();
 }
 
+// Announcement methods
+public function getActiveAnnouncements() {
+    $this->db->query('SELECT * FROM announcement 
+                     WHERE status = "Published" 
+                     ORDER BY publish_date DESC');
+    return $this->db->resultSet();
+}
+
+public function getAnnouncementById($id) {
+    $this->db->query('SELECT * FROM announcement 
+                     WHERE announcement_id = :id 
+                     AND status = "Published"');
+    $this->db->bind(':id', $id);
+    return $this->db->single();
+}
 
 }
 

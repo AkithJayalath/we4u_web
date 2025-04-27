@@ -905,6 +905,41 @@ public function viewblog($blogId = null) {
 //   return $result ? $result->approval_status : 'unknown';
 // }
 
+// Announcement methods
+public function announcements() {
+    if(!$this->isLoggedIn()) {
+        redirect('users/login');
+    }
+    
+    // Get all active announcements
+    $announcements = $this->usersModel->getActiveAnnouncements();
+    
+    $data = [
+        'announcements' => $announcements
+    ];
+    
+    $this->view('users/v_announcement', $data);
+}
+
+public function viewannouncement($id) {
+    if(!$this->isLoggedIn()) {
+        redirect('users/login');
+    }
+    
+    // Get single announcement
+    $announcement = $this->usersModel->getAnnouncementById($id);
+    
+    if(!$announcement) {
+        redirect('users/announcements');
+    }
+    
+    $data = [
+        'announcement' => $announcement
+    ];
+    
+    $this->view('users/v_view_announcement', $data);
+}
+
 
 
 
