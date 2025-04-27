@@ -409,5 +409,3 @@ echo loadCSS($required_styles);
     < script src = "<?php echo URLROOT; ?>/js/ratingStars.js" >
 
 <?php require APPROOT . '/views/includes/footer.php' ?>
-
-// test comment
