@@ -6,15 +6,25 @@
 
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php';?>
-    <div class="container">
-        <div class="header">
-                <h2>Ratings and Reviews<h2> 
-               
-        </div>
 
-        <div class="review">
-            <?php if(!empty($data['reviews'])) : ?>
-            <?php foreach ($data['reviews'] as $review) : ?>
+    <div class="view-requests-m-c-r-container">
+
+      <div class="view-requests-m-c-r-table-container">
+        <h2>Ratings & reviews</h2>
+        
+        <div class="view-requests-m-c-r-table">
+          
+          <div class="view-requests-m-c-r-table-body">
+          <?php if (empty($data['reviews'])): ?>
+            <div class="no-history">
+                <img src="<?php echo URLROOT; ?>/public/images/Empty-cuate.png" alt="No History">
+                <p>You don't have any caregiving history yet.</p>
+            </div>
+        <?php else: ?>
+
+
+            <?php foreach ($data['reviews'] as $review): ?>
+                <div class="view-requests-m-c-r-table-row">
                 <div class="review-card">
                     <div class="user-details">
                         <img src="<?php echo !empty($review->profile_picture) ? URLROOT . '/images/profile_imgs/'. $review->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
@@ -33,18 +43,30 @@
                     </div>
                     
                 </div>
-            <?php endforeach; ?>
-            <?php else : ?>
-            <div class="no-reviews">
-                <img src="/we4u/public/images/Empty-cuate.png" alr="No Request">
-                <p>No reviews yet</p>
-
-            </div>
-            <?php endif; ?>
                 
+                
+                </div>
+            <?php endforeach; ?>
 
+
+            <?php endif; ?>
+
+            <!-- Your existing table rows here -->
+          </div>
         </div>
+      </div>
     </div>
 
+
+        
+
+               
+    </div>
+
+    
+
 </page-body-container>
+
 <?php require APPROOT.'/views/includes/footer.php';?>
+
+

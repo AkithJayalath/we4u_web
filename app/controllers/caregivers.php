@@ -11,7 +11,7 @@
       $allowedRoutes = [
           '/we4u/caregivers/register',
           '/we4u/users/login'
-          // Add other public routes as needed
+          // Add other public routes as needed 
       ];
       
       // Only check authentication if not accessing a public route
@@ -1191,6 +1191,20 @@ public function updatePayMethod(){
         
         // Load the calendar edit view
         $this->view('calendar/v_editcgcalander', $data);
+    }
+
+    public function deletePayMethod(){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->caregiversModel->deletePayMethod($_SESSION['user_email'])) { // Assuming you store user id in session
+                flash('payment_success', 'Payment method deleted successfully');
+                redirect('caregivers/payMethodView');
+            } else {
+                flash('payment_error', 'Something went wrong, please try again');
+                redirect('caregivers/payMethodView');
+            }
+        } else {
+            redirect('caregivers/payMethodView');
+        }
     }
 
 

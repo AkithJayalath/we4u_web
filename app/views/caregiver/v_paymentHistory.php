@@ -7,9 +7,11 @@
 
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
-    <div class="container">
-        <div class="header">
-            <h2>Payment History</h2>
+    <div class="view-requests-m-c-r-container">
+
+      <div class="view-requests-m-c-r-table-container">
+            <h2>Payments History</h2>
+        
         </div>
 
         <div class="income-summary">

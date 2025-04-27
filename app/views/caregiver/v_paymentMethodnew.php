@@ -15,7 +15,7 @@
                 <div class="form-section">
                     <h3>Contact Information</h3>
                     <div class="display-group">
-                        <label>Email Address</label>
+                        <label>Email Address</label> 
                         <input type="email" value=<?php echo $data['email']; ?> readonly>
                     </div>
                     <div class="display-group">

@@ -9,7 +9,7 @@ class M_Caregivers {
     // find the user by user email
     public function findUserByEmail($email){ 
         //:indicate a bind value
-        $this->db->query('SELECT * FROM user WHERE email = :email');  
+        $this->db->query('SELECT * FROM user WHERE email = :email');   
         $this->db->bind(':email' , $email);
   
         $row = $this->db->single();
@@ -557,21 +557,21 @@ public function getCaregivingHistory($caregiverId ,$dateSort = 'newest', $status
 }
 
 public function getPaymentMethodByEmail($email) {
-    $this->db->query('SELECT * FROM payment_methods WHERE email = :email');
+    $this->db->query('SELECT * FROM payment_method WHERE email = :email');
     $this->db->bind(':email', $email);
 
     return $this->db->single(); 
 }
 
 public function updatePayMethod($email, $data){
-    $this->db->query('SELECT * FROM payment_methods WHERE email = :email');
+    $this->db->query('SELECT * FROM payment_method WHERE email = :email');
     $this->db->bind(':email', $email);
     $this->db->execute();
     
     if ($this->db->rowCount() > 0) {
         // If record exists, update it
         $this->db->query('
-            UPDATE payment_methods 
+            UPDATE payment_method 
             SET 
                 mobile_number = :mobile_number,
                 bank_name = :bank_name,
@@ -583,7 +583,7 @@ public function updatePayMethod($email, $data){
     } else {
         // If not, insert a new record
         $this->db->query('
-            INSERT INTO payment_methods (email, mobile_number, bank_name, account_number, branch_name, account_holder_name)
+            INSERT INTO payment_method (email, mobile_number, bank_name, account_number, branch_name, account_holder_name)
             VALUES (:email, :mobile_number, :bank_name, :account_number, :branch_name, :account_holder_name)
         ');
     }
@@ -723,6 +723,12 @@ public function getCareseekerById($id) {
                     WHERE c.careseeker_id = :id");
     $this->db->bind(':id', $id);
     return $this->db->single();
+}
+
+public function deletePayMethod($email){
+    $this->db->query('DELETE FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+    return $this->db->execute();
 }
 
 
