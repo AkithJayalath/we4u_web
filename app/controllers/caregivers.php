@@ -989,12 +989,15 @@ private function getStartDateTime($request) {
                     $error = 'Please select a date';
                 } elseif(empty($data['shift'])) {
                     $error = 'Please select a time slot';
-                } else {
+                } 
+                
+                else {
                     // Check if the time slot is already marked as unavailable
                     if($this->sheduleModel->isTimeSlotAvailable($data['sheduled_date'], $data['shift'], $id)) {
                         // Time slot is available, mark it as unavailable
                         if($this->sheduleModel->createShortShedule($data)) {
-                            flash('calendar_message', 'Time slot marked as unavailable', 'alert alert-success');
+                            createNotification($_SESSION['user_id'] , 'Your Shedule Has been Updated', false);
+                            flash('success', 'Time slot marked as unavailable');
                         } else {
                             $error = 'Something went wrong while saving your unavailability';
                         }

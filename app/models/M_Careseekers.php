@@ -456,7 +456,7 @@ public function cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundA
     $this->db->query("UPDATE carerequests 
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
-                          refund_amount = :refund_amount 
+                          refund_amount = :refund_amount,
                           is_paid = 0
                       WHERE request_id = :id");
 
@@ -499,7 +499,7 @@ public function cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $
     $this->db->query("UPDATE consultantrequests 
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
-                          refund_amount = :refund_amount 
+                          refund_amount = :refund_amount,
                           is_paid = 0
                       WHERE request_id = :id");
 

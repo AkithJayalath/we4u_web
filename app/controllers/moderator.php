@@ -95,7 +95,7 @@
 
 
     public function submitInterview() {
-      if($_SERVER['REQUEST_METHOD'] == 'POST') {
+      if($_SERVER['REQUEST_METHOD'] == 'POST' ) {
           // Initial validation for required fields
           if(empty($_POST['request_date']) || empty($_POST['interview_time'])) {
               // Get request details for re-displaying the form
@@ -123,7 +123,8 @@
           $validationData = [
               'request_date' => $_POST['request_date'],
               'interview_time' => $_POST['interview_time'],
-              'meeting_link' => $_POST['meeting_link']
+              'meeting_link' => $_POST['meeting_link'],
+              'platform' => $_POST['platform'],
           ];
   
           $errors = [];
@@ -131,11 +132,19 @@
           // Validate date and time
           $currentDateTime = new DateTime('now');
           $selectedDateTime = new DateTime($validationData['request_date'] . ' ' . $validationData['interview_time']);
+          $tomorrow = new DateTime('tomorrow');
+          $tomorrow->setTime(0, 0, 0);
   
           if ($selectedDateTime <= $currentDateTime) {
               $errors['time-err-message'] = 'Interview cannot be scheduled in the past';
-          }
+          }elseif ($selectedDateTime < $tomorrow) {
+            $errors['time-err-message'] = 'Interview must be scheduled for tomorrow or later';
+        }
   
+          // Validate platform
+          if (empty($validationData['platform'])) {
+              $errors['link-err-message'] = 'Please select a platform for the interview';
+          }
           // Validate meeting link
           if (!filter_var($validationData['meeting_link'], FILTER_VALIDATE_URL)) {
               $errors['link-err-message'] = 'Please enter a valid meeting link';
@@ -181,12 +190,14 @@
               if($this->moderatorModel->updateInterview($data)) {
                   // Send email to provider
                   $this->sendInterviewEmail($data['provider_email'], $data['service'], $data['request_date'], $data['interview_time'], $data['platform'], $data['meeting_link']);
+                  flash('success', 'Interview rescheduled successfully! and email sent to the service provider.');
                   redirect('moderator/careseekerrequests');
               }
           } else {
               if($this->moderatorModel->scheduleInterview($data)) {
                 // Send email to provider
                 $this->sendInterviewEmail($data['provider_email'], $data['service'], $data['request_date'], $data['interview_time'], $data['platform'], $data['meeting_link']);
+                flash('success', 'Interview scheduled successfully! and email sent to the service provider.');
                   redirect('moderator/careseekerrequests');
               }
           }
@@ -217,10 +228,8 @@
     );
     
     if ($result['success']) {
-        flash('success', 'Interview notification email sent successfully');
         return true;
     } else {
-        flash('error', 'Failed to send interview notification email');
         return false;
     }
 }
@@ -263,7 +272,7 @@
         );       
 
         if ($result['success']) {
-            flash('success', 'Email sent successfully');
+            flash('success', 'Rejection Email sent successfully');
             return true;
         } else {
             return false;

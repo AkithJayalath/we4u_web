@@ -1246,7 +1246,7 @@ $consultantEmail,
 'Request Cancellation Notification - We4u',
 $emailBody
 );  
-        createNotification($request->caregiver_id, 'A request you previously received has been cancelled by the care seeker.', false);
+        createNotification($request->consultant_id, 'A request you previously received has been cancelled by the care seeker.', false);
 
         flash('success', 'Consultation request cancelled successfully.');
         redirect('careseeker/viewRequests');
