@@ -4,12 +4,13 @@ class admin extends controller{
   private $adminModel;
 
   public function __construct(){
-    // if(!$_SESSION['user_id']) {
-    //   redirect('users/login');
-    // }else{
-    //   if($_SESSION['user_role'] != 'Admin'){
-    //     redirect('pages/permissonerror');
-    //   }
+    if(!$_SESSION['user_id']) {
+      redirect('users/login');
+    }else{
+      if($_SESSION['user_role'] != 'Admin'){
+        redirect('pages/permissonerror');
+      }
+    }
     $this->adminModel = $this->model('M_Admin');
   }
 
@@ -174,9 +175,13 @@ public function viewCompletedJob($job_id) {
            empty($data['password_err']) && empty($data['verify_password_err']) && 
            empty($data['role_err'])){
             
+            $passwordToEmail = $data['password'];
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
             if($this->adminModel->addUser($data)){
+                // send a Welcome email to the moderator
+                $this->sendModeratorWelcomeEmail($data['email'], $data['name'], $passwordToEmail);
+                flash('success', 'User added successfully');
                 redirect('admin/user_detailes');
             } else {
                 die('Something went wrong');
@@ -203,7 +208,18 @@ public function viewCompletedJob($job_id) {
 
   }
 
-
+  private function sendModeratorWelcomeEmail($email, $name, $password) {
+    $result = sendEmail(
+        $email,
+        'Congratulations! You have been added as a moderator',
+        '<h1>Welcome to We4u, ' . $name . '!</h1>
+        <p>Here are your login credentials:</p>
+        <p><strong>Email:</strong> ' . $email . '<br>
+        <strong>Password:</strong> ' . $password . '</p>
+        <p>Please log into your account to explore more features and start your journey with us. We recommend changing your password after your first login for security purposes.</p>'
+        );
+    }
+  
 public function user_detailes(){
     // Check if flagged filter is applied
     $showFlagged = isset($_GET['flagged']) && $_GET['flagged'] == 'true';
@@ -238,10 +254,6 @@ public function user_detailes(){
     
     $this->view('admin/v_users', $data);
 }
-
-
-
-  
 
 public function blog() {
     $blogs = $this->adminModel->getAllBlogs(); // Fetch all blogs (admin/moderator can see all)
@@ -436,6 +448,71 @@ public function addblog() {
         $this->view('admin/v_add_blog', $data);
     }
 }
+
+    public function viewUserProfile($user_id) {
+        // check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+        // PERMISSION DENIED
+        redirect('pages/permissiondenied');
+        }
+        $user_details = $this->adminModel->getUserDetails($user_id);
+        $data = [
+        'user_details' => $user_details,
+        'title' => 'View Careseeker'
+        ];
+        $this->view('users/v_allUserProfiles', $data);
+    }
+
+    public function activateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->activateUser($user_id)) {
+            // Send activation email
+            $result = sendEmail(
+                $user_email,
+                'Account Activation',
+                '<h1>Account Activation</h1><p>Your account has been activated. You can now log in.</p>'
+            );
+            flash('success', 'User activated successfully. Activation email sent.');
+        } else {
+            flash('error', 'Failed to activate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
+    public function deactivateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->deactivateUser($user_id)) {
+            // send deactivation email
+            $result = sendEmail(
+                $user_email,
+                'Account Deactivation',
+                '<h1>Account Deactivation</h1><p>Your account has been deactivated. Please contact support for more information.</p>'
+            );
+
+            flash('success', 'User deactivated successfully. Deactivation email.');
+        } else {
+            flash('error', 'Failed to deactivate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
+
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();
     $data = [
@@ -469,8 +546,10 @@ public function editannouncement($announcement_id) {
 
         if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
             if ($this->adminModel->updateAnnouncement($data)) {
+                flash('success', 'Announcement updated successfully');
                 redirect('admin/viewannouncement');
             } else {
+                flash('error', 'Something went wrong');
                 die('Something went wrong');
             }
         } else {
@@ -489,13 +568,15 @@ public function editannouncement($announcement_id) {
     }
 }
 
-public function deleteannouncement($announcement_id) {
-  if ($this->adminModel->deleteAnnouncement($announcement_id)) {
-      redirect('admin/viewannouncement');
-  } else {
-      die('Something went wrong');
-  }
-}
+        public function deleteannouncement($announcement_id) {
+        if ($this->adminModel->deleteAnnouncement($announcement_id)) {
+            flash('success', 'Announcement deleted successfully');
+            redirect('admin/viewannouncement');
+        } else { 
+            flash('error', 'Something went wrong');
+            die('Something went wrong');
+        }
+        }
 
       public function addannouncement() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -521,8 +602,10 @@ public function deleteannouncement($announcement_id) {
 
             if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
                 if ($this->adminModel->addAnnouncement($data)) {
+                    flash('success', 'Announcement added successfully');
                     redirect('admin/viewannouncement');
                 } else {
+                    flash('error', 'Something went wrong');
                     die('Something went wrong');
                 }
             } else {

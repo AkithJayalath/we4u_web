@@ -493,6 +493,19 @@ public function getTotalUserEarnings() {
     return $this->db->execute();
   }
 
+  public function activateUser($userId) {
+    $this->db->query('UPDATE user SET is_deactive = 0 WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    return $this->db->execute();
+}
+
+public function deactivateUser($userId) {
+    $this->db->query('UPDATE user SET is_deactive = 1 WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    return $this->db->execute();
+}
+
+
 
     
     

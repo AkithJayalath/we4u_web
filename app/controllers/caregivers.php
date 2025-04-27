@@ -765,15 +765,17 @@ public function acceptRequest($request_id) {
             <p>A request you previously sent was accepted by the caregiver #'.$request->caregiver_id.'</p>
             <p>Request ID: ' . $request_id . '</p>
             <p>Please log in to the We4u system for further details.</p>';
-      $careseekerEmail = $careseeker->email;
+            $careseekerEmail = $careseeker->email;
             // Send email to caregiver  
-    $this->sendEmail(
-    $careseekerEmail,
-    'Request Accept Notification - We4u',
-    $emailBody
-    );
+            $this->sendEmail(
+            $careseekerEmail,
+            'Request Accept Notification - We4u',
+            $emailBody
+            );
 
-          flash('success', 'Request has been accepted.');
+            // send a notification to the careseeker
+            createNotification($request->requester_id, 'A request you previously received has been cancelled by the care seeker.', false);
+            flash('success', 'Request has been accepted.');
       } else {
           flash('error', 'Something went wrong. Try again.', 'alert alert-danger');
       }
@@ -799,13 +801,16 @@ public function rejectRequest($request_id) {
           <p>A request you previously sent was accepted by the caregiver #'.$request->caregiver_id.'</p>
           <p>Request ID: ' . $request_id . '</p>
           <p>Please log in to the We4u system for further details.</p>';
-    $careseekerEmail = $careseeker->email;
-          // Send email to caregiver  
-  $this->sendEmail(
-  $careseekerEmail,
-  'Request Rejection Notification - We4u',
-  $emailBody
-  );
+            $careseekerEmail = $careseeker->email;
+                // Send email to caregiver  
+        $this->sendEmail(
+        $careseekerEmail,
+        'Request Rejection Notification - We4u',
+        $emailBody
+        );
+
+        // send a notification to the careseeker
+        createNotification($request->requester_id, 'A request you previously added has been rejected by the caregiver.', false);
 
 
       } else {
@@ -883,6 +888,9 @@ $careseekerEmail,
 'Request Cancellation Notification - We4u',
 $emailBody
 );
+
+      // send a notification to the careseeker
+      createNotification($request->requester_id, 'A request you previously sent has been cancelled by the caregiver.', false);
       $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
       flash('request_success', 'Request cancelled successfully.' . $flagMessage);
   } else {
@@ -981,12 +989,15 @@ private function getStartDateTime($request) {
                     $error = 'Please select a date';
                 } elseif(empty($data['shift'])) {
                     $error = 'Please select a time slot';
-                } else {
+                } 
+                
+                else {
                     // Check if the time slot is already marked as unavailable
                     if($this->sheduleModel->isTimeSlotAvailable($data['sheduled_date'], $data['shift'], $id)) {
                         // Time slot is available, mark it as unavailable
                         if($this->sheduleModel->createShortShedule($data)) {
-                            flash('calendar_message', 'Time slot marked as unavailable', 'alert alert-success');
+                            createNotification($_SESSION['user_id'] , 'Your Shedule Has been Updated', false);
+                            flash('success', 'Time slot marked as unavailable');
                         } else {
                             $error = 'Something went wrong while saving your unavailability';
                         }
@@ -1014,7 +1025,9 @@ private function getStartDateTime($request) {
                     if($this->sheduleModel->isDateRangeAvailable($data['from_date'], $data['to_date'], $id)) {
                         // Date range is available, mark it as unavailable
                         if($this->sheduleModel->createLongShedule($data)) {
-                            flash('calendar_message', 'Date range marked as unavailable', 'alert alert-success');
+                            flash('success', 'Your Shedule has been updated successfully.');
+                            // send a notification to the caregiver
+                            createNotification($_SESSION['user_id'] , 'Your Shedule Has been Updated', false);
                         } else {
                             $error = 'Something went wrong while saving your unavailability';
                         }
@@ -1029,9 +1042,12 @@ private function getStartDateTime($request) {
                 
                 if($schedule_type == 'short') {
                     if($this->sheduleModel->deleteShortSchedule($schedule_id, $id)) {
-                        flash('calendar_message', 'Unavailability removed successfully', 'alert alert-success');
+                        // send a notification to the caregiver
+                        createNotification($_SESSION['user_id'] , 'Your Shedule Has been Updated', false);
+                        flash('success', 'Your profile has been updated successfully.');
                     } else {
                         $error = 'Failed to remove unavailability';
+                        flash('error', 'Failed to remove unavailability');
                     }
                 } else {
                     if($this->sheduleModel->deleteLongSchedule($schedule_id, $id)) {

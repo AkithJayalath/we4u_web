@@ -868,10 +868,6 @@ public function blogs() {
   $this->view('users/v_blog', $data);
 }
 
-/**
-* View a single blog post
-* @param int $blogId The ID of the blog to view
-*/
 public function viewblog($blogId = null) {
   // Validate blog ID
   if ($blogId === null) {
@@ -894,20 +890,20 @@ public function viewblog($blogId = null) {
   $this->view('users/v_view_blog', $data);
 }
 
-public function getApprovalStatus($userId, $role) {
-  if ($role === 'Caregiver') {
-      $this->db->query('SELECT approval_status FROM caregivers WHERE user_id = :user_id');
-  } elseif ($role === 'Consultant') {
-      $this->db->query('SELECT approval_status FROM consultants WHERE user_id = :user_id');
-  } else {
-      return 'unknown';
-  }
+// public function getApprovalStatus($userId, $role) {
+//   if ($role === 'Caregiver') {
+//       $this->db->query('SELECT approval_status FROM caregivers WHERE user_id = :user_id');
+//   } elseif ($role === 'Consultant') {
+//       $this->db->query('SELECT approval_status FROM consultants WHERE user_id = :user_id');
+//   } else {
+//       return 'unknown';
+//   }
 
-  $this->db->bind(':user_id', $userId);
-  $result = $this->db->single();
+//   $this->db->bind(':user_id', $userId);
+//   $result = $this->db->single();
   
-  return $result ? $result->approval_status : 'unknown';
-}
+//   return $result ? $result->approval_status : 'unknown';
+// }
 
 
 

@@ -41,7 +41,7 @@
       // check if the user is admin 
       if($_SESSION['user_role'] !== 'Admin') {
         // PERMISSION DENIED
-        redirect('');
+        redirect('pages/permissiondenied');
       }
       $user_details = $this->adminModel->getUserDetails($user_id);
 

@@ -118,6 +118,10 @@ class careseeker extends controller
 
                 // If no errors, proceed to create the profile
                 if ($this->careseekersModel->createElderProfile($data)) {
+                    // Create a notification for the careseeker
+                    createNotification($careseeker_id, 'Your Elder Profile has been Created.', false);
+                    // add flash message
+                    flash('success', 'Elder profile created successfully.');
                     redirect('careseeker/showElderProfiles'); // Redirect to the elder profiles page
                 } else {
                     echo "Error creating profile!";
@@ -492,7 +496,12 @@ class careseeker extends controller
                     $caregiverEmail,
                     'New Request - We4u',
                     $emailBody
-                );
+                    );
+
+                    // send a notification to caregiver
+                    createNotification($caregiver_id, 'A new care request has been sent to you. Please review the details and respond.', false);
+
+
                     // update sheduling table for caregiver
                     // first check duration type if if that is a short term then
                     if ($data['duration_type'] === 'short-term') {
@@ -584,7 +593,7 @@ class careseeker extends controller
             if ($appointment_date < $today) {
                 $data['error'] = 'Appointment must be at least tomorrow. Please select a different time slot';
             }        // If basic validations pass, check consultant availability
-            if (empty($data['error'])) {
+            if (empty($data['error'])) { 
                 // Format times for database queries
                 $startTime = $data['from_time'] . ':00';
                 $endTime = $data['to_time'] . ':00';
@@ -596,8 +605,6 @@ class careseeker extends controller
                     $startTime, 
                     $endTime
                 );
-    
-    
     
                 if (!$isAvailable) {
                     $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
@@ -640,8 +647,6 @@ class careseeker extends controller
                     $endTime
                 );
     
-    
-    
                 if (!$isAvailable) {
                     $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
                 } else {
@@ -677,6 +682,19 @@ class careseeker extends controller
                 ];
 
                 if ($this->careseekersModel->sendConsultantRequest($requestData)) {
+                    // Send email to caregiver
+                    $emailBody = '<h1>New Request !</h1>
+                        <p>You have a new request.Please visit the website for more details</p>';
+                                    
+                   $this->sendEmail(
+                        $consultantEmail,
+                        'New Request - We4u',
+                        $emailBody
+                    );
+
+                    // send a notification to consultant
+                    createNotification($consultant_id, 'A new care request has been sent to you. Please review the details and respond.', false);
+
                     flash('success', 'Consultant request sent successfully');
                     redirect('careseeker/viewRequests');
                 } else {
@@ -704,6 +722,7 @@ class careseeker extends controller
         }
         // Check if the elder profile exists
         if ($this->careseekersModel->deleteElderProfile($elderId)) {
+            createNotification($_SESSION['user_id'] , 'Your Elder Profile has been Deleted.', false);
             echo 'Elder profile deleted successfully.';
         } else {
             echo 'Failed to delete elder profile.';
@@ -913,6 +932,10 @@ class careseeker extends controller
             ) {
                 // No errors, update the profile
                 if ($this->careseekersModel->updateElderProfile($data, $elderID)) {
+                    // Send a notification to the careseeker
+                    createNotification($_SESSION['user_id'] , 'Your Elder Profile has been Changed.', false);
+                    // send flash message
+                    flash('success', 'Your profile has been updated successfully.');
                     redirect('careseeker/showElderProfiles'); // Redirect to the elder profiles page
                 } else {
                     die('Something went wrong. Please try again.');
@@ -1116,6 +1139,8 @@ $caregiverEmail,
 $emailBody
 );
 
+        // send a notification to caregiver
+        createNotification($request->caregiver_id, 'A request you previously received has been cancelled by the care seeker.', false);
 
         flash('success', 'Request cancelled successfully.');
         redirect('careseeker/viewRequests');
@@ -1206,6 +1231,7 @@ $emailBody
 
         if (!$request->is_paid && $fineAmount > 0) {
             flash('warning', 'Consultation cancelled. Please proceed to pay the cancellation fee to complete this process.');
+
             redirect('payment/payConsultFine/' . $requestId);
             return;
         }
@@ -1219,7 +1245,8 @@ $this->sendEmail(
 $consultantEmail,
 'Request Cancellation Notification - We4u',
 $emailBody
-);
+);  
+        createNotification($request->consultant_id, 'A request you previously received has been cancelled by the care seeker.', false);
 
         flash('success', 'Consultation request cancelled successfully.');
         redirect('careseeker/viewRequests');
