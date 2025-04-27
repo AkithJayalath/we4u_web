@@ -910,6 +910,7 @@ public function cancelRequest($requestId, $flag = false) {
   }
 
   // Process the cancellation
+  
   $result = $this->caregiversModel->cancelRequestWithRefund($requestId, $refundAmount, $shouldFlag);
 
   if ($result) {

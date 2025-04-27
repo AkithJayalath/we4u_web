@@ -63,85 +63,81 @@ echo loadCSS($required_styles);
                     <?php endif; ?>
                 <?php endif; ?>
 
-                    <?php
-                    // Determine button state: delete or cancel
-                    $disabledStatuses = ['cancelled', 'rejected', 'completed'];
-                    $isDeleteButton = in_array(strtolower($data->status), $disabledStatuses);
+                <?php
+// Determine if button should be shown at all - only for non-disabled statuses
+$disabledStatuses = ['cancelled', 'rejected', 'completed'];
+$showButton = !in_array(strtolower($data->status), $disabledStatuses);
 
-                    // Calculate if cancel button should be disabled (for the cancel functionality only)
-                    $isDisabled = false;
-                    $currentDateTime = new DateTime(); // Current date and time
-                    $startDate = new DateTime($data->start_date);
+// Only proceed if button should be shown
+if ($showButton) {
+    // Calculate if cancel button should be disabled
+    $isDisabled = false;
+    $currentDateTime = new DateTime(); // Current date and time
+    $startDate = new DateTime($data->start_date);
+    
+    // Set start time based on service type
+    if (isset($data->duration_type) && $data->duration_type === 'long-term') {
+        // For long term, start time is 8:00 AM
+        $startDate->setTime(8, 0, 0);
+    } else {
+        // For short term, determine the earliest time slot
+        $earliestTime = null;
 
-                    // Only check time-based disabling if it's not a delete button
-                    if (!$isDeleteButton) {
-                        // Set start time based on service type
-                        if (isset($data->duration_type) && $data->duration_type === 'long-term') {
-                            // For long term, start time is 8:00 AM
-                            $startDate->setTime(8, 0, 0);
-                        } else {
-                            // For short term, determine the earliest time slot
-                            $earliestTime = null;
+        // First, clean up and decode time slots
+        $raw = trim($data->time_slots, " \t\n\r\0\x0B\"");
+        $cleaned = stripslashes($raw);
+        $slots = json_decode($cleaned);
 
-                            // First, clean up and decode time slots
-                            $raw = trim($data->time_slots, " \t\n\r\0\x0B\"");
-                            $cleaned = stripslashes($raw);
-                            $slots = json_decode($cleaned);
+        // Define the mapping of time slot names to actual times
+        $timeSlotMap = [
+            'morning' => '08:00',
+            'evening' => '13:00',
+            'overnight' => '20:00',
+            'full-day' => '08:00'
+        ];
 
-                            // Define the mapping of time slot names to actual times
-                            $timeSlotMap = [
-                                'morning' => '08:00',
-                                'evening' => '13:00',
-                                'overnight' => '20:00',
-                                'full-day' => '08:00'
-                            ];
+        // Find the earliest time slot
+        if (is_array($slots)) {
+            $earliestHour = 24; // Initialize with a high value
 
-                            // Find the earliest time slot
-                            if (is_array($slots)) {
-                                $earliestHour = 24; // Initialize with a high value
-
-                                foreach ($slots as $slot) {
-                                    $slot = strtolower($slot);
-                                    if (isset($timeSlotMap[$slot])) {
-                                        $slotHour = (int)substr($timeSlotMap[$slot], 0, 2);
-                                        if ($slotHour < $earliestHour) {
-                                            $earliestHour = $slotHour;
-                                            $earliestTime = $timeSlotMap[$slot];
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Set the time to the earliest slot time or default to 8:00 AM if no valid slot found
-                            if ($earliestTime) {
-                                list($hour, $minute) = explode(':', $earliestTime);
-                                $startDate->setTime((int)$hour, (int)$minute, 0);
-                            } else {
-                                $startDate->setTime(8, 0, 0); // Default to 8:00 AM 
-                            }
-                        }
-
-                        // Check if service has started (current time is past start time)
-                        if ($currentDateTime >= $startDate && $data->status != 'pending') {
-                            $isDisabled = true;
-                        }
+            foreach ($slots as $slot) {
+                $slot = strtolower($slot);
+                if (isset($timeSlotMap[$slot])) {
+                    $slotHour = (int)substr($timeSlotMap[$slot], 0, 2);
+                    if ($slotHour < $earliestHour) {
+                        $earliestHour = $slotHour;
+                        $earliestTime = $timeSlotMap[$slot];
                     }
+                }
+            }
+        }
 
-                    // Button class and text based on state
-                    $buttonClass = $isDeleteButton ? "request-delete-button" : "request-cancel-button";
-                    $buttonText = $isDeleteButton ? "Delete Request" : "Cancel";
-                    $buttonAction = $isDeleteButton
-                        ? "window.location.href='" . URLROOT . "/careseeker/deleteRequest/" . $data->request_id . "'"
-                        : ($isDisabled
-                            ? "alert('Cannot cancel a service that has already started')"
-                            : "window.location.href='" . URLROOT . "/careseeker/cancelCaregivingRequest'");
-                    ?>
+        // Set the time to the earliest slot time or default to 8:00 AM if no valid slot found
+        if ($earliestTime) {
+            list($hour, $minute) = explode(':', $earliestTime);
+            $startDate->setTime((int)$hour, (int)$minute, 0);
+        } else {
+            $startDate->setTime(8, 0, 0); // Default to 8:00 AM 
+        }
+    }
 
-                    <button class="<?= $buttonClass ?>"
-                        <?= (!$isDeleteButton && $isDisabled) ? 'disabled' : '' ?>
-                        onclick="<?= $buttonAction ?>">
-                        <?= $buttonText ?>
-                    </button>
+    // Check if service has started (current time is past start time)
+    if ($currentDateTime >= $startDate && $data->status != 'pending') {
+        $isDisabled = true;
+    }
+
+    // Only render button if we should show it
+    ?>
+    <button class="request-cancel-button"
+        <?= $isDisabled ? 'disabled' : '' ?>
+        onclick="<?= $isDisabled 
+            ? "alert('Cannot cancel a service that has already started')" 
+            : "window.location.href='" . URLROOT . "/careseeker/cancelCaregivingRequest'" ?>">
+        Cancel
+    </button>
+<?php
+}
+?>
                     
                 </div>
 
@@ -223,6 +219,21 @@ echo loadCSS($required_styles);
                     <label>Total Payment</label>
                     <p>Rs. <?= $data->payment_details ?? 'N/A' ?></p>
                 </div>
+                <?php if ($data->status === 'cancelled'): ?>
+    <?php if ($data->refund_amount > 0): ?>
+        <div class="request-info-row">
+            <label>Refundable Amount</label>
+            <p><?= htmlspecialchars($data->refund_amount) ?></p>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($data->fine_amount > 0): ?>
+        <div class="request-info-row">
+            <label>Fined Amount</label>
+            <p><?= htmlspecialchars($data->fine_amount) ?></p>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
                 <div class="request-info-row">
                     <label>Additional Notes</label>
                     <p><?= htmlspecialchars($data->additional_notes) ?></p>

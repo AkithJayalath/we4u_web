@@ -62,15 +62,15 @@ echo loadCSS($required_styles);
                         <span class="text-success" style="color: #007bff; font-weight: bold;">✅ Payment Done</span>
                     <?php endif; ?>
                 <?php endif; ?>
- <?php
-// Determine button state: delete or cancel
+                <?php
+// Determine if button should be shown at all - don't show for completed status
 $disabledStatuses = ['completed'];
-$isRate = in_array(strtolower($data->status), $disabledStatuses);
+$showButton = !in_array(strtolower($data->status), $disabledStatuses);
 
-// Calculate if cancel button should be disabled (for the cancel functionality only)
-$isDisabled = false;
-
-if (!$isRate) {
+// Only proceed if button should be shown
+if ($showButton) {
+    // Calculate if cancel button should be disabled
+    $isDisabled = false;
     $currentDateTime = new DateTime(); // Current date and time
 
     // Combine appointment_date and start_time into one DateTime
@@ -85,30 +85,23 @@ if (!$isRate) {
     // Calculate hours left until appointment
     $hoursLeft = ($appointmentDateTime->getTimestamp() - $currentDateTime->getTimestamp()) / 3600;
 
-    // Check if less than 5 hours left or if appointment has already started
+    // Check if appointment has already started
     if ($hoursLeft <= 0 && $data->status != 'pending') {
         $isDisabled = true; // Appointment has already started
     }
+    
+    // Only render cancel button if we should show it
+    ?>
+    <button class="request-cancel-button" 
+            <?= $isDisabled ? 'disabled' : '' ?> 
+            onclick="<?= $isDisabled 
+                ? "alert('Cannot cancel an appointment that has already started')" 
+                : "openCancelModal()" ?>">
+        Cancel
+    </button>
+<?php
 }
-
-
-// Button class and text based on state
-$buttonClass = $isRate ? "request-delete-button" : "request-cancel-button";
-$buttonText = $isRate ? "Rate" : "Cancel";
-$buttonAction = $isRate 
-    ? "window.location.href='".URLROOT."/careseeker/deleteConsultRequest/".$data->request_id."'"
-    : ($isDisabled 
-        ? "alert('Cannot cancel an appointment that has already started')" 
-        : "openCancelModal()");
 ?>
-
-<!-- Replace the original cancel button with this code -->
-<button class="<?= $buttonClass ?>" 
-        <?= (!$isRate && $isDisabled) ? 'disabled' : '' ?> 
-        onclick="<?= $buttonAction ?>">
-    <?= $buttonText ?>
-</button>
-
                 </div>
 
             </div>
@@ -182,6 +175,21 @@ $buttonAction = $isRate
                     <label>Total Payment</label>
                     <p>Rs. <?= $data->payment_details ?? 'N/A' ?></p>
                 </div>
+                <?php if ($data->status === 'cancelled'): ?>
+    <?php if ($data->refund_amount > 0): ?>
+        <div class="request-info-row">
+            <label>Refundable Amount</label>
+            <p>Rs.<?= htmlspecialchars($data->refund_amount) ?></p>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($data->fine_amount > 0): ?>
+        <div class="request-info-row">
+            <label>Fined Amount</label>
+            <p>Rs.<?= htmlspecialchars($data->fine_amount) ?></p>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
                 <div class="request-info-row">
                     <label>Additional Notes</label>
                     <p><?= htmlspecialchars($data->additional_notes) ?></p>
