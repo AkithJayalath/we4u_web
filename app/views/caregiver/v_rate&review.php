@@ -6,20 +6,26 @@
 
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php';?>
-    <div class="container">
-        <div class="header">
-            <h2>Ratings and Reviews</h2>
-            <button class="add-review-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/addReview/<?php echo $data['caregiver_id']; ?>/Caregiver'">
-                Add Review
-            </button>
-        </div>
 
-        <div class="review">
-            <?php if(!empty($data['reviews'])) : ?>
-            <?php foreach ($data['reviews'] as $review) : ?>
-                <div class="review-card" 
-                     style="cursor: <?php echo ($review->reviewer_id == $_SESSION['user_id']) ? 'pointer' : 'default'; ?>;" 
-                     onclick="<?php echo ($review->reviewer_id == $_SESSION['user_id']) ? "window.location.href='" . URLROOT . "/careseeker/editReview/" . $review->review_id . "'" : ''; ?>">
+    <div class="view-requests-m-c-r-container">
+
+      <div class="view-requests-m-c-r-table-container">
+        <h2>Ratings & reviews</h2>
+        
+        <div class="view-requests-m-c-r-table">
+          
+          <div class="view-requests-m-c-r-table-body">
+          <?php if (empty($data['reviews'])): ?>
+            <div class="no-history">
+                <img src="<?php echo URLROOT; ?>/public/images/Empty-cuate.png" alt="No History">
+                <p>You don't have any caregiving history yet.</p>
+            </div>
+        <?php else: ?>
+
+
+            <?php foreach ($data['reviews'] as $review): ?>
+                <div class="view-requests-m-c-r-table-row">
+                <div class="review-card">
                     <div class="user-details">
                         <img src="<?php echo !empty($review->profile_picture) ? URLROOT . '/images/profile_imgs/'. $review->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                         <h3 class="name"><?php echo $review->username; ?></h3>
@@ -42,14 +48,16 @@
                         <?php endfor; ?>
                     </div>
                 </div>
+                </div>
             <?php endforeach; ?>
-            <?php else : ?>
-            <div class="no-reviews">
-                <img src="/we4u/public/images/Empty-cuate.png" alt="No Request">
-                <p>No reviews yet</p>
-            </div>
             <?php endif; ?>
+          </div>
         </div>
+      </div>
+    </div>
     </div>
 </page-body-container>
+
 <?php require APPROOT.'/views/includes/footer.php';?>
+
+

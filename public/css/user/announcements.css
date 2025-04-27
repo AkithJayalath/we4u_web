@@ -1,0 +1,251 @@
+.announcement-container {
+    padding: 20px;
+    width: 100%;
+}
+
+.announcement-container h2 {
+    color: #013CC6;
+    text-align: center;
+    margin-bottom: 30px;
+    /* font-family: 'Poppins', sans-serif; */
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+/* .announcement-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background-color: #08DCC1;
+    border-radius: 2px;
+} */
+
+.announcement-list {
+    background: #f1eded;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: auto;
+    width: 98%;
+    max-width: 1200px;
+    min-height: 80vh;
+}
+
+.announcement-list h2 {
+    color: #013CC6;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.announcement-item {
+    background-color: #F7F6FA;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    transition: transform 0.2s ease;
+}
+
+.announcement-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.announcement-icon {
+    background: #f0f0f0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.announcement-icon i {
+    color: #1a237e;
+    font-size: 20px;
+}
+
+.announcement-title {
+    margin-bottom: 15px;
+}
+
+.announcement-title a {
+    color: #1a237e;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 600;
+    transition: color 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.announcement-title a:hover {
+    color: #08DCC1;
+}
+
+.announcement-preview {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.announcement-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #888;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.announcement-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.announcement-date i {
+    color: #08DCC1;
+}
+
+.no-announcements {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 1.2rem;
+    background: #F7F6FA;
+    border-radius: 15px;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Detailed View Styles */
+.view-announcement-container {
+    background: #f1eded;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: auto;
+    width: 98%;
+    max-width: 1200px;
+    min-height: 80vh;
+}
+
+.announcement-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.announcement-header h2 {
+    font-size: 2rem;
+    color: #1a237e;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.announcement-content {
+    background-color: #F7F6FA;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #333;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Back Button Styles */
+.back-button {
+    margin: 24px 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-back {
+    padding: 12px 24px;
+    background: var(--color-btn-primary);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background: var(--color-btn-primary-hover);
+}
+
+.btn-back i {
+    font-size: 14px;
+}
+
+.announcement-status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.announcement-status.active {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.announcement-status.draft {
+    background: #f5f5f5;
+    color: #757575;
+}
+
+.announcement-status.archived {
+    background: #fafafa;
+    color: #9e9e9e;
+}
+
+.announcement-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+.edit-btn:hover {
+    color: #007bff;
+}
+
+.delete-btn:hover {
+    color: #dc3545;
+} 

@@ -2,6 +2,7 @@
 <?php
 $required_styles = [
     'consultant/viewConsultantProfile',
+    'caregiver/caregiverProfile',
 ];
 echo loadCSS($required_styles);
 ?>
@@ -16,19 +17,19 @@ echo loadCSS($required_styles);
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>  
     <!-- Container -->
-    <div class="view-caregiver-profile">
+    <div class="view-consultant-profile">
         <!-- Personal info section -->
-        <div class="caregiver-personal-info-section">
-            <div class="caregiver-personal-info-left">
-                <div class="caregiver-personal-info-left-left">
+        <div class="consultant-personal-info-section">
+            <div class="consultant-personal-info-left">
+                <div class="consultant-personal-info-left-left">
                     <img src="<?php echo !empty($data['profile']->profile_picture) ? URLROOT . '/images/profile_imgs/'. $data['profile']->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                 </div>
-                <div class="caregiver-personal-info-left-right">
-                    <div class="caregiver-personal-info-profile">
-                        <div class="caregiver-personal-info-details">
-                            <span class="caregiver-personal-info-tag">Verfied</span>
+                <div class="consultant-personal-info-left-right">
+                    <div class="consultant-personal-info-profile">
+                        <div class="consultant-personal-info-details">
+                            <span class="consultant-personal-info-tag">Verfied</span>
                             <h2><?php echo $data['profile']->username; ?></h2>
-                            <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
+                            <span class="consultant-email"><?php echo $data['profile']->email; ?></span>
                             <p class="consultant-rating">
                                 <?php for($i=1; $i<=5; $i++) : ?>
                                     <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
@@ -44,7 +45,7 @@ echo loadCSS($required_styles);
 
             </div>
 
-            <div class="caregiver-personal-info-right">
+            <div class="consultant-personal-info-right">
                 <div class="caregiver-personal-info-right-top">
                     <div class="personal-info-badge">I am a Consultant</div>
                     <div class="personal-info-badge"><?php echo $data['profile']->expertise; ?></div>
@@ -144,7 +145,7 @@ echo loadCSS($required_styles);
             </div>
             <div class="caregiver-other-info-section">
             <div class="caregiver-health-concern-section">
-            <div class="caregiver-health-concern-section-header">
+            <div class="caregiver-health-concern-section-header"> 
                     <div class="caregiver-header-with-icon">
                         <h3>Rating & reviews</h3>
                     </div>

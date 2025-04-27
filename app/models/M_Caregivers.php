@@ -9,7 +9,7 @@ class M_Caregivers {
     // find the user by user email
     public function findUserByEmail($email){ 
         //:indicate a bind value
-        $this->db->query('SELECT * FROM user WHERE email = :email');  
+        $this->db->query('SELECT * FROM user WHERE email = :email');   
         $this->db->bind(':email' , $email);
   
         $row = $this->db->single();
@@ -360,19 +360,35 @@ public function getCaregiverById($id) {
 
 
 //view care requests for caregiver
-public function getAllCareRequestsByCaregiver($caregiverId)
+public function getAllCareRequestsByCaregiver($caregiverId, $dateSort = 'newest', $statusFilter = 'all')
 {
-    $this->db->query("
-        SELECT cr.*, u.username AS requester_name, u.profile_picture,
+    $sql="SELECT cr.*, u.username AS requester_name, u.profile_picture,
                cr.created_at AS request_date,
                DATE_FORMAT(cr.created_at, '%e %b %Y') AS formatted_date,
                DATE_FORMAT(cr.created_at, '%h:%i %p') AS formatted_time
         FROM carerequests cr
         LEFT JOIN user u ON cr.requester_id = u.user_id
-        WHERE cr.caregiver_id = :caregiver_id
-        ORDER BY cr.created_at DESC
-    ");
+        WHERE cr.caregiver_id = :caregiver_id";
+
+    // Apply status filter
+    if ($statusFilter !== 'all') {
+        $sql .= " AND cr.status = :status";
+    }
+    
+    // Apply date sorting
+    if ($dateSort === 'newest') {
+        $sql .= " ORDER BY cr.created_at DESC";
+    } else {
+        $sql .= " ORDER BY cr.created_at ASC";
+    }
+    
+    $this->db->query($sql);
+        
+
     $this->db->bind(':caregiver_id', $caregiverId);
+    if ($statusFilter !== 'all') {
+        $this->db->bind(':status', $statusFilter);
+    }
     return $this->db->resultSet();
 }
 
@@ -489,20 +505,99 @@ public function getPaymentHistory($caregiverId){
     return $this->db->resultSet();
 }
 
-public function getCaregivingHistory($caregiverId){
-    $this->db->query('SELECT cr.*,u.username,u.profile_picture
-    FROM carerequests cr
-    JOIN user u ON cr.requester_id = u.user_id
+public function getCaregivingHistory($caregiverId ,$dateSort = 'newest', $statusFilter = 'all', $paymentFilter = 'all'){
+    $sql = 'SELECT cr.*, u.username, u.profile_picture 
+    FROM carerequests cr 
+    JOIN user u ON cr.requester_id = u.user_id 
+    WHERE cr.caregiver_id = :caregiverId';
+
+
+    if ($statusFilter === 'all') {
+        $sql .= ' AND (cr.status = "accepted" OR cr.status = "cancelled")';
+    } else {
+        $sql .= ' AND cr.status = :status';
+    }
+
+    // Add payment filter conditions
+    switch ($paymentFilter) {
+        case 'pending':
+            $sql .= ' AND (cr.is_paid = 0 OR cr.is_paid IS NULL)';
+            break;
+        case 'done':
+            $sql .= ' AND cr.is_paid = 1 AND (cr.refund_amount = 0 OR cr.refund_amount IS NULL)';
+            break;
+        case 'refunded':
+            $sql .= ' AND cr.refund_amount IS NOT NULL';
+            break;
+        // 'all' case doesn't need additional conditions
+    }
     
-    WHERE cr.caregiver_id = :caregiverId
-    AND cr.status ="accepted" OR cr.status ="cancelled"
-   
-    ORDER BY cr.created_at DESC');
+    // Add sorting
+    if ($dateSort === 'newest') {
+        $sql .= ' ORDER BY cr.created_at DESC';
+    } else {
+        $sql .= ' ORDER BY cr.created_at ASC';
+    }
+    
+    $this->db->query($sql);
+
+    
 
     $this->db->bind(':caregiverId', $caregiverId);
 
+    // Bind status parameter if filtering by specific status
+    if ($statusFilter !== 'all') {
+        $this->db->bind(':status', $statusFilter);
+    }
+
     return $this->db->resultSet();
 }
+
+public function getPaymentMethodByEmail($email) {
+    $this->db->query('SELECT * FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+
+    return $this->db->single(); 
+}
+
+public function updatePayMethod($email, $data){
+    $this->db->query('SELECT * FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+    $this->db->execute();
+    
+    if ($this->db->rowCount() > 0) {
+        // If record exists, update it
+        $this->db->query('
+            UPDATE payment_method 
+            SET 
+                mobile_number = :mobile_number,
+                bank_name = :bank_name,
+                account_number = :account_number,
+                branch_name = :branch_name,
+                account_holder_name = :account_holder_name
+            WHERE email = :email
+        ');
+    } else {
+        // If not, insert a new record
+        $this->db->query('
+            INSERT INTO payment_method (email, mobile_number, bank_name, account_number, branch_name, account_holder_name)
+            VALUES (:email, :mobile_number, :bank_name, :account_number, :branch_name, :account_holder_name)
+        ');
+    }
+
+    $this->db->bind(':mobile_number', $data['mobile_number']);
+    $this->db->bind(':bank_name', $data['bank_name']);
+    $this->db->bind(':account_number', $data['account_number']);
+    $this->db->bind(':branch_name', $data['branch_name']);
+    $this->db->bind(':account_holder_name', $data['account_holder_name']);
+    $this->db->bind(':email', $email);
+
+    // Execute
+    return $this->db->execute();
+}
+
+
+
 
 
 // for chat
@@ -625,6 +720,12 @@ public function getCareseekerById($id) {
                     WHERE c.careseeker_id = :id");
     $this->db->bind(':id', $id);
     return $this->db->single();
+}
+
+public function deletePayMethod($email){
+    $this->db->query('DELETE FROM payment_method WHERE email = :email');
+    $this->db->bind(':email', $email);
+    return $this->db->execute();
 }
 
 

@@ -648,6 +648,23 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
     return $this->db->resultSet();
 }
 
+
+public function getPaymentsByCareseekerId($careseekerId){
+    $this->db->query("SELECT cp.*,u.username AS name From care_payments cp
+                        JOIN user u ON cp.caregiver_id = u.user_id
+                        WHERE cp.payer_id = :careseekerId");
+    $this->db->bind(':careseekerId', $careseekerId);
+    return $this->db->resultSet();
+}
+
+public function getConsultPaymentsByCareseekerId($careseekerId){
+    $this->db->query("SELECT cp.*,u.username AS name From consultant_payments cp
+                        JOIN user u ON cp.consultant_id = u.user_id
+                        WHERE cp.payer_id = :careseekerId");
+    $this->db->bind(':careseekerId', $careseekerId);
+    return $this->db->resultSet();
+}
+
 public function getCareseekerCaregivingHistory($careseekerId){
     $this->db->query('SELECT cr.*, u.username, u.profile_picture, e.first_name, e.middle_name, e.last_name, e.relationship_to_careseeker, e.profile_picture AS elder_pic
     FROM carerequests cr
@@ -725,9 +742,5 @@ public function updateReview($data) {
     return $this->db->execute();
 }
 
-
-
 }
-
-
 ?>

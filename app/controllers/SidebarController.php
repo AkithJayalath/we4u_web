@@ -122,7 +122,7 @@
             ],
             [
                 'title' => 'PaymentMethod',
-                'url' => URLROOT . '/caregivers/paymentMethod',
+                'url' => URLROOT . '/caregivers/payMethodView',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160h640v-80H160v80Zm0 160h640v-80H160v80Z"/></svg>',
                 'active' => false
             ],
@@ -138,6 +138,18 @@
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>',
                 'active' => false
             ],          
+            [
+                'title' => 'Calendar',
+                'url' => URLROOT . '/caregivers/viewMyCalendar',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z"/></svg>',
+                'active' => false
+            ],
+            [
+                'title' => 'Announcements',
+                'url' => URLROOT . '/users/announcements',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/></svg>',
+                'active' => false
+            ]          
 
         ];
     }
@@ -228,6 +240,12 @@
                 'url' => URLROOT . '/careseeker/careseekerConsultHistory',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>',
                 'active' => false
+            ],
+            [
+                'title' => 'Announcements',
+                'url' => URLROOT . '/users/announcements',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/></svg>',
+                'active' => false
             ]
         ];
     }
@@ -306,6 +324,12 @@
                 'title' => 'My Profile',
                 'url' => URLROOT . '/consultant/viewmyProfile',
                 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>',
+                'active' => false
+            ],
+            [
+                'title' => 'Announcements',
+                'url' => URLROOT . '/users/announcements',
+                'icon' => '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/></svg>',
                 'active' => false
             ]
         ];
