@@ -88,13 +88,15 @@
 
             </div>
 
-            <form action="<?php echo URLROOT; ?>/payments/stripe" method="post">
+            <div class="btn">
+                <button class="proceed-btn" type="button" onclick="handlePayment()">Proceed to Payment</button> 
+
+            </div>
+
+            <form id="paymentForm" action="<?php echo URLROOT; ?>/payments/stripe" method="post">
                 <input type="hidden" name="amount" value="<?= $data['amount'] ?>"> 
                 <input type="hidden" name="description" value="Elderly Care Visit">
-                <div class="btn">
-                    <button class="proceed-btn" type="submit">Proceed to Payment</button> 
-
-                </div>
+                
             </form>
             
 
@@ -121,6 +123,58 @@
     </div>
 </div>
 
-
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <h2>Are u sure?</h2>
+            <p>Proceed with the payment of Rs.<?= number_format($data['amount'], 2) ?></p>
+            <div class="modal-buttons">
+                <button class="modal-confirm-btn" onclick="submitAdd()">Yes, Proceed</button>
+                <button class="modal-cancel-btn" onclick="closeAddModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 </page-body-container>
 <?php require APPROOT.'/views/includes/footer.php';?>
+
+<script>
+    // Modal functions
+    function handlePayment() {
+        event.preventDefault();
+        const modal = document.getElementById("addModal");
+        if (modal) {
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+    }
+
+    function submitAdd() {
+        document.getElementById('paymentForm').submit();
+        closeAddModal();
+    }
+
+    function closeAddModal() {
+        const modal = document.getElementById("addModal");
+        if (modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDropdowns();
+        setupCheckboxes();
+        
+        // Outside click handler for modal
+        window.addEventListener("click", function(event) {
+            const addModal = document.getElementById("addModal");
+            if (addModal && event.target === addModal) {
+                closeAddModal();
+            }
+        });
+    });
+</script>
+
+
+
