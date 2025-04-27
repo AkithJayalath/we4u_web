@@ -1121,6 +1121,7 @@ class careseeker extends controller
         }
 
         $this->careseekersModel->cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount);
+        $this->scheduleModel->deleteSchedulesByRequestId($requestId);
 
         if (!$request->is_paid && $fineAmount > 0) {
             flash('warning', 'Request cancelled. Please proceed to pay the fine to complete cancellation.');

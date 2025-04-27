@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'evening':
                     startTime = '13:00:00';
                     endTime = '19:00:00';
-                    shiftName = 'Afternoon Shift (1:00 PM - 7:00 PM)';
+                    shiftName = 'Evening Shift (1:00 PM - 7:00 PM)';
                     break;
                 case 'overnight':
                     startTime = '20:00:00';

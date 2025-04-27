@@ -405,7 +405,9 @@ echo loadCSS($required_styles);
 <script>
     const URLROOT = '<?php echo URLROOT; ?>';
 </script>
-<script src="<?php echo URLROOT; ?>/js/caregiverChatPopup.js">
-    < script src = "<?php echo URLROOT; ?>/js/ratingStars.js" >
+<script src="<?php echo URLROOT; ?>/js/caregiverChatPopup.js"></script>
+    <scrpt script src = "<?php echo URLROOT; ?>/js/ratingStars.js" ></scrpt>
+
 
 <?php require APPROOT . '/views/includes/footer.php' ?>
+

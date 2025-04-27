@@ -9,6 +9,10 @@ consultant Login
 consultant10@gmail.com
 #Consultant10
 
+caregiver Login
+caregiver@gmail.com
+#Caregiver10
+
 Admin Login
 admin@gmail.com
 Admin1234
@@ -16,6 +20,9 @@ Admin1234
 Moderator Login
 moderator@gmail.com
 Admin1234
+
+johnstone1@gmail.com
+#Johnstone10
 
 
 warning - thabili

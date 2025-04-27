@@ -833,6 +833,7 @@ public function rejectRequest($request_id) {
       }
 
       if ($this->caregiversModel->updateRequestStatus($request_id, 'rejected')) {
+        $this->sheduleModel->deleteSchedulesByRequestId($request_id);
           flash('success', 'Request has been rejected.');
 
           $emailBody = '<h1>Request Rejected</h1>
