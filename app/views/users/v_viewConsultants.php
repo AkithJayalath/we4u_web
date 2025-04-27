@@ -1,6 +1,6 @@
 <?php 
     $required_styles = [
-        'careseeker/viewCaregivers',
+        'careseeker/viewCaregiversNew',
     ];
     echo loadCSS($required_styles);
 ?>
@@ -15,27 +15,32 @@
        <div class="filter-sort-bar">
         <form method="GET" action="<?php echo URLROOT; ?>/users/viewConsultants" id="filter-form">
             <div class="filters">
-              <label for="username-filter">Username:</label>
-              <input type="text" 
-                     id="username-filter" 
-                     class="live-search"
-                     name="username" 
-                     placeholder="Search by name" 
-                     value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
+              <div class="filter-group">
+                <label for="username-filter">Username</label>
+                <input type="search" 
+                       id="username-filter" 
+                       class="live-search"
+                       name="username" 
+                       placeholder="Search by name" 
+                       value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" />
+              </div>
 
-              <label for="region-filter">Region:</label>
-              <select id="region-filter" name="region">
-                <option value="">All</option>
-                <?php 
-                $regions = $data['regions'] ?? [];
-                foreach($regions as $region): ?>
-                    <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
-                        <?php echo $region; ?>
-                    </option>
-                <?php endforeach; ?>
-              </select>
+              <div class="filter-group">
+                <label for="region-filter">Region</label>
+                <select id="region-filter" name="region">
+                  <option value="">All</option>
+                  <?php 
+                  $regions = $data['regions'] ?? [];
+                  foreach($regions as $region): ?>
+                      <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
+                          <?php echo $region; ?>
+                      </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
 
-              <label for="speciality-filter">Speciality:</label>
+              <div class="filter-group">
+                <label for="speciality-filter">Speciality</label>
                 <select id="speciality-filter" name="speciality">
                     <option value="">All</option>
                     <?php 
@@ -47,34 +52,25 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+              </div>
 
+              
 
-                <!-- Calendar -->
-                <label for="date-filter">Date:</label>
-                <input type="date" id="date-filter" name="date" value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : ''; ?>" />
-
-                <!-- Availability Selector -->
-                <label for="availability-filter">Availability:</label>
-                <select id="availability-filter" name="availability">
-                <option value="">All</option>
-                <option value="morning" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'morning') ? 'selected' : ''; ?>>Morning</option>
-                <option value="afternoon" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'afternoon') ? 'selected' : ''; ?>>Afternoon</option>
-                <option value="overnight" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'overnight') ? 'selected' : ''; ?>>Overnight</option>
-                <option value="day" <?php echo (isset($_GET['availability']) && $_GET['availability'] === 'day') ? 'selected' : ''; ?>>Day</option>
-                </select>
-
-
-             <div class="sort-options">
-              <label for="sort-by">Sort by:</label>
-              <select id="sort-by" name="sort">
-                <option value="">Select</option>
-                <option value="rating" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'rating' ? 'selected' : ''; ?>>Rating</option>
-                <option value="price-asc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-asc' ? 'selected' : ''; ?>>Price: Low to High</option>
-                <option value="price-desc" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'price-desc' ? 'selected' : ''; ?>>Price: High to Low</option>
-              </select>
+              
             </div>
 
-            <button type="submit" id="apply-filters" class="apply-button">Apply</button>
+            <div class="sort-options">
+              <div class="filter-group">
+                <label for="sort-by">Sort by</label>
+                <select id="sort-by" name="sort">
+                  <option value="">Select</option>
+                  <option value="rating" <?php echo isset($_GET['sort']) && $_GET['sort'] == 'rating' ? 'selected' : ''; ?>>Rating</option>
+                  
+                </select>
+              </div>
+
+              <button type="submit" id="apply-filters" class="apply-button">Apply</button>
+            </div>
         </form>
       </div>
     </div>
