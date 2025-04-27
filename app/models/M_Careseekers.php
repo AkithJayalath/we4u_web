@@ -246,12 +246,16 @@ public function sendCareRequest($data) {
 }
 
 public function getCaregiverById($caregiverId) {
-    $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :caregiver_id');
+    $this->db->query('
+        SELECT c.*, u.email 
+        FROM caregiver c
+        JOIN user u ON c.caregiver_id = u.user_id
+        WHERE c.caregiver_id = :caregiver_id
+    ');
     $this->db->bind(':caregiver_id', $caregiverId);
     
     return $this->db->single();
 }
-
 
 public function sendConsultantRequest($data) {
     // to convert time to correct format
@@ -356,24 +360,25 @@ public function getFullConsultRequestInfo($requestId)
 
 //to view caregiver profile
 public function getReviews($caregiver_id) {
-    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
+    $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date, r.updated_date
                       FROM review r
                       JOIN user u ON r.reviewer_id = u.user_id
                       WHERE r.reviewed_user_id = :caregiver_id
                       AND r.review_role = "Caregiver"
-                      ORDER BY r.review_date DESC');
+                      ORDER BY COALESCE(r.updated_date,r.review_date) DESC');
 
     $this->db->bind(':caregiver_id', $caregiver_id);
     return $this->db->resultSet();
 }
 
-public function getAvgRating($caregiver_id) {
+public function getAvgRating($user_id, $role) {
     $this->db->query('SELECT AVG(r.rating) AS avg_rating
                       FROM review r
-                      WHERE r.reviewed_user_id = :caregiver_id 
-                      AND r.review_role = "Caregiver"');
+                      WHERE r.reviewed_user_id = :user_id
+                      AND r.review_role = :role');
 
-    $this->db->bind(':caregiver_id', $caregiver_id);
+    $this->db->bind(':user_id', $user_id);
+    $this->db->bind(':role', $role);
     $result = $this->db->single();
     return round($result->avg_rating ?? 0, 1);
 }
@@ -440,7 +445,8 @@ public function showConsultantProfile($consultant_id) {
 
 
 public function getRequestById($id) {
-    $this->db->query("SELECT * FROM carerequests WHERE request_id = :id");
+    $this->db->query("SELECT * FROM carerequests
+     WHERE request_id = :id");
     $this->db->bind(':id', $id);
 
     return $this->db->single();
@@ -450,7 +456,8 @@ public function cancelRequestWithFineAndRefund($requestId, $fineAmount, $refundA
     $this->db->query("UPDATE carerequests 
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
-                          refund_amount = :refund_amount 
+                          refund_amount = :refund_amount,
+                          is_paid = 0
                       WHERE request_id = :id");
 
     $this->db->bind(':fine_amount', $fineAmount);
@@ -477,11 +484,23 @@ public function getConsultantRequestById($id) {
 
     return $this->db->single();
 }
+
+public function getConsultantById($consultantId) {
+    $this->db->query('SELECT c.*, u.email 
+                      FROM consultant c
+                      JOIN user u ON c.consultant_id = u.user_id
+                      WHERE c.consultant_id = :consultant_id');
+    $this->db->bind(':consultant_id', $consultantId);
+    
+    return $this->db->single();
+}
+
 public function cancelConsultRequestWithFineAndRefund($requestId, $fineAmount, $refundAmount) {
     $this->db->query("UPDATE consultantrequests 
                       SET status = 'cancelled', 
                           fine_amount = :fine_amount, 
-                          refund_amount = :refund_amount 
+                          refund_amount = :refund_amount,
+                          is_paid = 0
                       WHERE request_id = :id");
 
     $this->db->bind(':fine_amount', $fineAmount);
@@ -629,6 +648,7 @@ public function getSessionFilesByUploader($session_id, $uploaded_by) {
     return $this->db->resultSet();
 }
 
+
 public function getPaymentsByCareseekerId($careseekerId){
     $this->db->query("SELECT cp.*,u.username AS name From care_payments cp
                         JOIN user u ON cp.caregiver_id = u.user_id
@@ -643,9 +663,83 @@ public function getConsultPaymentsByCareseekerId($careseekerId){
                         WHERE cp.payer_id = :careseekerId");
     $this->db->bind(':careseekerId', $careseekerId);
     return $this->db->resultSet();
+}
+
+public function getCareseekerCaregivingHistory($careseekerId){
+    $this->db->query('SELECT cr.*, u.username, u.profile_picture, e.first_name, e.middle_name, e.last_name, e.relationship_to_careseeker, e.profile_picture AS elder_pic
+    FROM carerequests cr
+    JOIN user u ON cr.caregiver_id = u.user_id
+    JOIN elderprofile e ON cr.elder_id = e.elder_id
+    WHERE cr.requester_id = :careseekerId
+    AND (cr.status = "completed")
+    ORDER BY cr.created_at DESC');
+
+    $this->db->bind(':careseekerId', $careseekerId);
+
+    return $this->db->resultSet();
+}
+
+public function getCareseekerConsultHistory($careseekerId){
+    $this->db->query('SELECT cr.*, u.username, u.profile_picture, e.first_name, e.middle_name, e.last_name, e.relationship_to_careseeker, e.profile_picture AS elder_pic
+    FROM consultantrequests cr
+    JOIN user u ON cr.consultant_id = u.user_id
+    JOIN elderprofile e ON cr.elder_id = e.elder_id
+    WHERE cr.requester_id = :careseekerId
+    AND (cr.status = "completed")
+    ORDER BY cr.created_at DESC');
+
+    $this->db->bind(':careseekerId', $careseekerId);
+
+    return $this->db->resultSet();
+}
 
 
+//review
+public function addReview($data) {
+    $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, rating, review_text, review_date,updated_date) 
+                      VALUES (:reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    $this->db->bind(':reviewer_id', $data['reviewer_id']);
+    $this->db->bind(':reviewed_user_id', $data['reviewed_user_id']);
+    $this->db->bind(':review_role', $data['review_role']);
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_text', $data['review_text']);
+    return $this->db->execute();
+}
 
+public function getReviewById($review_id) {
+    $this->db->query('SELECT * FROM review WHERE review_id = :review_id');
+    $this->db->bind(':review_id', $review_id);
+    return $this->db->single();
+}
+
+public function editReview($data) {
+    $this->db->query('UPDATE review SET 
+                      rating = :rating,
+                      review_text = :review_text,
+                      updated_date = CURRENT_TIMESTAMP
+                      WHERE review_id = :review_id');
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_text', $data['review_text']);
+    $this->db->bind(':review_id', $data['review_id']);
+    return $this->db->execute();
+}
+
+public function deleteReview($review_id) {
+    $this->db->query('DELETE FROM review WHERE review_id = :review_id');
+    $this->db->bind(':review_id', $review_id);
+    return $this->db->execute();
+}
+
+public function updateReview($data) {
+    $this->db->query("UPDATE review 
+                      SET review_text = :review_text, 
+                          rating = :rating, 
+                          updated_date = CURRENT_TIMESTAMP 
+                      WHERE review_id = :review_id");
+    $this->db->bind(':review_text', $data['review_text']);
+    $this->db->bind(':rating', $data['rating']);
+    $this->db->bind(':review_id', $data['review_id']);
+    return $this->db->execute();
 }
 
 }

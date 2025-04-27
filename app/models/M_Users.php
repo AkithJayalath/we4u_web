@@ -143,7 +143,7 @@
     } elseif ($role == 'Consultant') {
         $sql = "SELECT is_approved FROM consultant WHERE consultant_id = :user_id";
     } else {
-        return 'approved'; // Other roles don’t require approval
+        return 'approved'; // Other roles don't require approval
     }
 
     $this->db->query($sql);
@@ -458,6 +458,48 @@ public function invalidateResetCodes($email) {
     $this->db->bind(':user_id', $userId);
     
     return $this->db->execute();
+}
+
+public function getAllBlogs($page, $perPage) {
+    // Calculate the offset for pagination
+    $offset = ($page - 1) * $perPage;
+
+    // Select all blogs along with their authors' information
+    $this->db->query('SELECT b.*, u.username, u.profile_picture
+                      FROM blogs b
+                      JOIN user u ON b.user_id = u.user_id
+                      ORDER BY b.created_at DESC
+                      LIMIT :offset, :perPage'); // Fetch blogs with pagination
+    $this->db->bind(':offset', $offset, PDO::PARAM_INT);
+    $this->db->bind(':perPage', $perPage, PDO::PARAM_INT);
+
+    return $this->db->resultSet();
+}
+
+// Fetch a single blog by its ID for detailed view
+public function getBlogById($blogId) {
+    $this->db->query('SELECT b.*, u.username, u.profile_picture 
+                      FROM blogs b
+                      JOIN user u ON b.user_id = u.user_id
+                      WHERE b.blog_id = :blog_id'); // Fetch blog by ID
+    $this->db->bind(':blog_id', $blogId);
+    return $this->db->single();
+}
+
+// Announcement methods
+public function getActiveAnnouncements() {
+    $this->db->query('SELECT * FROM announcement 
+                     WHERE status = "Published" 
+                     ORDER BY publish_date DESC');
+    return $this->db->resultSet();
+}
+
+public function getAnnouncementById($id) {
+    $this->db->query('SELECT * FROM announcement 
+                     WHERE announcement_id = :id 
+                     AND status = "Published"');
+    $this->db->bind(':id', $id);
+    return $this->db->single();
 }
 
 }

@@ -9,6 +9,10 @@
       $this->consultantsModel = $this->model('M_Consultant');
     }
 
+    public function index() {
+      // Redirect to the blogs page or another appropriate page
+      redirect('users/blogs');
+  }
     public function register(){
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
         // Now the form is submitting
@@ -300,7 +304,7 @@
   }
 
   public function viewProfile(){
-    if($this->isLoggedIn() && $_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'Moderator'){
+    if($this->isLoggedIn() && ($_SESSION['user_role'] == 'Admin')){
       $userId= $_SESSION['user_id'];
       $profileData=$this->usersModel->getCareseekerProfile($userId);
       $data =[
@@ -527,15 +531,9 @@ public function deleteUser() {
 
 // create profile
 
-public function blog(){
-  $data=[];
-  $this->view('users/v_blog', $data);
-}
 
-public function viewblog(){
-  $data=[];
-  $this->view('users/v_view_blog', $data);
-}
+
+
 
 public function viewCaregivers() {
   // Get filter and sort parameters
@@ -836,6 +834,111 @@ private function sendEmail($to, $subject, $body) {
   }
 }
 
+
+//blogs
+public function blogs() {
+  // Set up pagination
+  $perPage = 6; // Number of blogs per page
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  
+  if ($page < 1) {
+      $page = 1;
+  }
+  
+  // Get blogs for current page using the model
+  $blogs = $this->usersModel->getAllBlogs($page, $perPage);
+  
+  // Count total blogs for pagination
+  $this->db = new Database;
+  $this->db->query('SELECT COUNT(*) as total FROM blogs');
+  $result = $this->db->single();
+  $totalBlogs = $result->total;
+  
+  $totalPages = ceil($totalBlogs / $perPage);
+  
+  // Set up data for the view
+  $data = [
+      'blogs' => $blogs,
+      'currentPage' => $page,
+      'totalPages' => $totalPages,
+      'hasNextPage' => ($page < $totalPages),
+      'nextPage' => ($page < $totalPages) ? $page + 1 : null
+  ];
+  
+  $this->view('users/v_blog', $data);
+}
+
+public function viewblog($blogId = null) {
+  // Validate blog ID
+  if ($blogId === null) {
+      redirect('users/blogs');
+  }
+  
+  // Get blog details using the model
+  $blog = $this->usersModel->getBlogById($blogId);
+  
+  // Check if blog exists
+  if (!$blog) {
+      flash('blog_message', 'Blog not found', 'alert alert-danger');
+      redirect('users/blogs');
+  }
+  
+  $data = [
+      'blog' => $blog
+  ];
+  
+  $this->view('users/v_view_blog', $data);
+}
+
+// public function getApprovalStatus($userId, $role) {
+//   if ($role === 'Caregiver') {
+//       $this->db->query('SELECT approval_status FROM caregivers WHERE user_id = :user_id');
+//   } elseif ($role === 'Consultant') {
+//       $this->db->query('SELECT approval_status FROM consultants WHERE user_id = :user_id');
+//   } else {
+//       return 'unknown';
+//   }
+
+//   $this->db->bind(':user_id', $userId);
+//   $result = $this->db->single();
+  
+//   return $result ? $result->approval_status : 'unknown';
+// }
+
+// Announcement methods
+public function announcements() {
+    if(!$this->isLoggedIn()) {
+        redirect('users/login');
+    }
+    
+    // Get all active announcements
+    $announcements = $this->usersModel->getActiveAnnouncements();
+    
+    $data = [
+        'announcements' => $announcements
+    ];
+    
+    $this->view('users/v_announcement', $data);
+}
+
+public function viewannouncement($id) {
+    if(!$this->isLoggedIn()) {
+        redirect('users/login');
+    }
+    
+    // Get single announcement
+    $announcement = $this->usersModel->getAnnouncementById($id);
+    
+    if(!$announcement) {
+        redirect('users/announcements');
+    }
+    
+    $data = [
+        'announcement' => $announcement
+    ];
+    
+    $this->view('users/v_view_announcement', $data);
+}
 
 
 

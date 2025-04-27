@@ -4,12 +4,13 @@ class admin extends controller{
   private $adminModel;
 
   public function __construct(){
-    // if(!$_SESSION['user_id']) {
-    //   redirect('users/login');
-    // }else{
-    //   if($_SESSION['user_role'] != 'Admin'){
-    //     redirect('pages/permissonerror');
-    //   }
+    if(!$_SESSION['user_id']) {
+      redirect('users/login');
+    }else{
+      if($_SESSION['user_role'] != 'Admin'){
+        redirect('pages/permissonerror');
+      }
+    }
     $this->adminModel = $this->model('M_Admin');
   }
 
@@ -174,9 +175,13 @@ public function viewCompletedJob($job_id) {
            empty($data['password_err']) && empty($data['verify_password_err']) && 
            empty($data['role_err'])){
             
+            $passwordToEmail = $data['password'];
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
             if($this->adminModel->addUser($data)){
+                // send a Welcome email to the moderator
+                $this->sendModeratorWelcomeEmail($data['email'], $data['name'], $passwordToEmail);
+                flash('success', 'User added successfully');
                 redirect('admin/user_detailes');
             } else {
                 die('Something went wrong');
@@ -203,7 +208,18 @@ public function viewCompletedJob($job_id) {
 
   }
 
-
+  private function sendModeratorWelcomeEmail($email, $name, $password) {
+    $result = sendEmail(
+        $email,
+        'Congratulations! You have been added as a moderator',
+        '<h1>Welcome to We4u, ' . $name . '!</h1>
+        <p>Here are your login credentials:</p>
+        <p><strong>Email:</strong> ' . $email . '<br>
+        <strong>Password:</strong> ' . $password . '</p>
+        <p>Please log into your account to explore more features and start your journey with us. We recommend changing your password after your first login for security purposes.</p>'
+        );
+    }
+  
 public function user_detailes(){
     // Check if flagged filter is applied
     $showFlagged = isset($_GET['flagged']) && $_GET['flagged'] == 'true';
@@ -239,38 +255,263 @@ public function user_detailes(){
     $this->view('admin/v_users', $data);
 }
 
-
-
-  
-
-  public function blog(){
+public function blog() {
+    $blogs = $this->adminModel->getAllBlogs(); // Fetch all blogs (admin/moderator can see all)
     $data = [
-      'title' => 'Blog'
+        'title' => 'All Blogs',
+        'blogs' => $blogs,
+        'nextPage' => isset($_GET['page']) ? $_GET['page'] + 1 : 2
     ];
-    $this->view('admin/v_blog', $data);
-  }
-
-  public function viewblog(){
     
-    $data = [
-      'title' => 'View Blog'
-    ];
-    $this->view('admin/v_view_blog', $data); 
-  }
+    $this->view('admin/v_blog', $data); 
+}
 
-  public function editblog(){
-    $data = [
-      'title' => 'Add Blog'
-    ];
-    $this->view('admin/v_edit_blog', $data);
-  }
+public function viewblog($blog_id = null) {
+    if ($blog_id === null) {
+        redirect('admin/blog'); // Redirect to the blog list if no blog_id is provided
+    }
 
-  public function addblog(){
+    // Fetch the blog details
+    $blog = $this->adminModel->getBlogById($blog_id);
+    if (!$blog) {
+        redirect('admin/blog'); // Redirect if the blog does not exist
+    }
+
     $data = [
-      'title' => 'Add Blog'
+        'blog' => $blog
     ];
-    $this->view('admin/v_add_blog', $data);
-  }
+
+    $this->view('admin/v_view_blog', $data);
+}
+
+public function editBlog($blog_id = null) {
+    if ($blog_id === null) {
+        redirect('admin/blog'); // Redirect to the blog list if no blog_id is provided
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        // Initialize variables
+        $imagePath = '';
+        $imagePathErr = '';
+
+        // Handle file upload
+        if (!empty($_FILES['image_path']['name'])) {
+            $imageName = time() . '_' . $_FILES['image_path']['name']; // Generate a unique name for the image
+            $imageTmpName = $_FILES['image_path']['tmp_name'];
+            $uploadLocation = 'images/blogs'; // Directory for uploaded images
+
+            // Ensure the upload directory exists
+            if (!is_dir($uploadLocation)) {
+                mkdir($uploadLocation, 0777, true); // Create the directory if it doesn't exist
+            }
+
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($imageTmpName, $uploadLocation . '/' . $imageName)) {
+                $imagePath = $uploadLocation . '/' . $imageName;
+            } else {
+                $imagePathErr = 'Failed to upload the image.';
+            }
+        } else {
+            // Use the existing image if no new image is uploaded
+            $imagePath = trim($_POST['existing_image_path']);
+        }
+
+        $data = [
+            'blog_id' => $blog_id,
+            'title' => trim($_POST['title']),
+            'content' => trim($_POST['content']),
+            'image_path' => $imagePath,
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => $imagePathErr
+        ];
+
+        // Validation
+        if (empty($data['title'])) {
+            $data['title_err'] = 'Please enter blog title';
+        }
+        if (empty($data['content'])) {
+            $data['content_err'] = 'Please enter blog content';
+        }
+
+        // Check for errors
+        if (empty($data['title_err']) && empty($data['content_err']) && empty($data['image_path_err'])) {
+            // Update the blog in the database
+            if ($this->adminModel->updateBlog($data)) {
+                flash('blog_message', 'Blog updated successfully');
+                redirect('admin/viewblog/' . $blog_id);
+            } else {
+                die('Something went wrong updating the blog.');
+            }
+        } else {
+            // Load the view with errors
+            $this->view('admin/v_edit_blog', $data);
+        }
+    } else {
+        // Fetch the blog details
+        $blog = $this->adminModel->getBlogById($blog_id);
+        if (!$blog) {
+            redirect('admin/blog'); // Redirect if the blog does not exist
+        }
+
+        $data = [
+            'blog_id' => $blog_id,
+            'title' => $blog->title,
+            'content' => $blog->content,
+            'image_path' => $blog->image_path,
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+        $this->view('admin/v_edit_blog', $data);
+    }
+}
+
+public function deleteBlog($blog_id) {
+    if ($this->adminModel->deleteBlog($blog_id)) {
+        redirect('admin/viewblog');
+    } else {
+        die('Something went wrong deleting blog');
+    }
+}
+
+public function addblog() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        // Initialize variables
+        $imagePath = '';
+        $imagePathErr = '';
+
+        // Handle file upload
+        if (!empty($_FILES['image_path']['name'])) {
+            $imageName = time() . '_' . $_FILES['image_path']['name']; // Generate a unique name for the image
+            $imageTmpName = $_FILES['image_path']['tmp_name'];
+            $uploadLocation = 'images/blogs'; // Removed leading slash
+
+            // Use the uploadImage helper function
+            if (uploadImage($imageTmpName, $imageName, $uploadLocation)) {
+                $imagePath = $uploadLocation . '/' . $imageName;
+            } else {
+                $imagePathErr = 'Failed to upload the image.';
+            }
+        } else {
+            $imagePathErr = 'Please select an image';
+        }
+
+        $data = [
+            'user_id' => $_SESSION['user_id'], // Add the user ID (make sure you have sessions enabled)
+            'title' => trim($_POST['title']),
+            'content' => trim($_POST['content']),
+            'image_path' => $imagePath,
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => $imagePathErr
+        ];
+        error_log(json_encode($data));
+
+        // Validation
+        if (empty($data['title'])) {
+            $data['title_err'] = 'Please enter a blog title';
+        }
+        if (empty($data['content'])) {
+            $data['content_err'] = 'Please enter blog content';
+        }
+
+        // Check for errors
+        if (empty($data['title_err']) && empty($data['content_err']) && empty($data['image_path_err'])) {
+            // Add blog to the database
+            if ($this->adminModel->addBlog($data)) {
+                flash('blog_message', 'Blog added successfully');
+                redirect('admin/blog'); // Changed from blogs to blog to match your cancel button URL
+            } else {
+                die('Something went wrong while adding the blog.');
+            }
+        } else {
+            // Load the view with errors
+            $this->view('admin/v_add_blog', $data);
+        }
+    } else {
+        // Load the form
+        $data = [
+            'title' => '',
+            'content' => '',
+            'image_path' => '',
+            'title_err' => '',
+            'content_err' => '',
+            'image_path_err' => ''
+        ];
+        $this->view('admin/v_add_blog', $data);
+    }
+}
+
+    public function viewUserProfile($user_id) {
+        // check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+        // PERMISSION DENIED
+        redirect('pages/permissiondenied');
+        }
+        $user_details = $this->adminModel->getUserDetails($user_id);
+        $data = [
+        'user_details' => $user_details,
+        'title' => 'View Careseeker'
+        ];
+        $this->view('users/v_allUserProfiles', $data);
+    }
+
+    public function activateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->activateUser($user_id)) {
+            // Send activation email
+            $result = sendEmail(
+                $user_email,
+                'Account Activation',
+                '<h1>Account Activation</h1><p>Your account has been activated. You can now log in.</p>'
+            );
+            flash('success', 'User activated successfully. Activation email sent.');
+        } else {
+            flash('error', 'Failed to activate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
+    public function deactivateUser($user_id) {
+        // Check if the user is admin 
+        if($_SESSION['user_role'] !== 'Admin') {
+            // PERMISSION DENIED
+            redirect('pages/permissiondenied');
+        }
+
+        $user_email = $_POST['email'];
+        
+        if($this->adminModel->deactivateUser($user_id)) {
+            // send deactivation email
+            $result = sendEmail(
+                $user_email,
+                'Account Deactivation',
+                '<h1>Account Deactivation</h1><p>Your account has been deactivated. Please contact support for more information.</p>'
+            );
+
+            flash('success', 'User deactivated successfully. Deactivation email.');
+        } else {
+            flash('error', 'Failed to deactivate user');
+        }
+        
+        redirect('admin/viewUserProfile/' . $user_id);
+    }
+
 
   public function viewannouncement() {
     $announcements = $this->adminModel->getAnnouncements();
@@ -305,8 +546,10 @@ public function editannouncement($announcement_id) {
 
         if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
             if ($this->adminModel->updateAnnouncement($data)) {
+                flash('success', 'Announcement updated successfully');
                 redirect('admin/viewannouncement');
             } else {
+                flash('error', 'Something went wrong');
                 die('Something went wrong');
             }
         } else {
@@ -325,13 +568,15 @@ public function editannouncement($announcement_id) {
     }
 }
 
-public function deleteannouncement($announcement_id) {
-  if ($this->adminModel->deleteAnnouncement($announcement_id)) {
-      redirect('admin/viewannouncement');
-  } else {
-      die('Something went wrong');
-  }
-}
+        public function deleteannouncement($announcement_id) {
+        if ($this->adminModel->deleteAnnouncement($announcement_id)) {
+            flash('success', 'Announcement deleted successfully');
+            redirect('admin/viewannouncement');
+        } else { 
+            flash('error', 'Something went wrong');
+            die('Something went wrong');
+        }
+        }
 
       public function addannouncement() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -357,8 +602,10 @@ public function deleteannouncement($announcement_id) {
 
             if (empty($data['title_err']) && empty($data['content_err']) && empty($data['status_err'])) {
                 if ($this->adminModel->addAnnouncement($data)) {
+                    flash('success', 'Announcement added successfully');
                     redirect('admin/viewannouncement');
                 } else {
+                    flash('error', 'Something went wrong');
                     die('Something went wrong');
                 }
             } else {
@@ -385,203 +632,23 @@ public function sendWelcomeEmail() {
     
     $result = sendEmail(
         $email,
-        'Welcome to We4u',
-        '<h1>Welcome to We4u!</h1><p>ammo hutto kohomada ithin</p>'
+        'Congratulations! Your Caregiver Application is Approved',
+        '<h1>Welcome to We4u!</h1><p>Your request to become a Caregiver has been successfully accepted by our moderators. Congratulations!</p><p>Log into your account to explore more features and start your journey with us.</p><p>Thank you for choosing We4u.</p>'
     );
+
+    // $result = sendEmail(
+    //     $email,
+    //     'Update on Your Consultant Application',
+    //     '<h1>We4u Application Status</h1><p>We regret to inform you that your request to become a Consultant has been rejected.</p><p><strong>Reason for rejection:</strong> ' . htmlspecialchars($reason) . '</p><p>If you believe this decision was made in error or if you would like to reapply with additional information, please contact our support team.</p><p>Thank you for your interest in We4u.</p>'
+    // );
     
     if ($result['success']) {
-        // Email sent successfully
+        flash('success', 'Email sent successfully');
         return true;
     } else {
-        // Log the error
-        error_log($result['message']);
         return false;
     }
 }
-
-// In your controller
-public function downloadPdf() {
-    $content = '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Invoice</title>
-    <style>
-        @page {
-            size: A4;
-            margin: 2cm;
-        }
-        
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12pt;
-            line-height: 1.3;
-            color: #000000;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 10px 20px;
-            box-sizing: border-box;
-        }
-        
-        .header {
-            width: 100%;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dddddd;
-            padding-bottom: 10px;
-        }
-        
-        .brand {
-            float: left;
-            font-size: 18pt;
-            font-weight: bold;
-        }
-        
-        .date {
-            float: right;
-        }
-        
-        .supplier-section {
-            text-align: left;
-            margin-bottom: 30px;
-        }
-        
-        .supplier-title {
-            font-size: 18pt;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .supplier-info {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .supplier-info p {
-            margin: 3px 0;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        thead tr {
-            background-color: #f0f0f0;
-        }
-        
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border: none;
-        }
-        
-        td {
-            border-bottom: 1px solid #eeeeee;
-        }
-        
-        .total-section {
-            text-align: right;
-            margin: 20px 0;
-        }
-        
-        .total {
-            display: inline-block;
-            background-color: #6c5ce7;
-            color: white;
-            padding: 8px 20px;
-            min-width: 150px;
-            text-align: center;
-        }
-        
-        .footer-separator {
-            border-top: 1px solid #dddddd;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="brand">Brand</div>
-            <div class="date">Date</div>
-        </div>
-        
-        <div class="supplier-section">
-            <div class="supplier-title">Supplier Company INC</div>
-            <div class="supplier-info">
-                <p>Number: 23456789</p>
-                <p>VAT: 23456789</p>
-                <p>6522 Abshire Mills</p>
-                <p>Port Orfolurt, 05820</p>
-                <p>United States</p>
-            </div>
-        </div>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Bank</th>
-                    <th>Bank Holder Name</th>
-                    <th>Phone Number</th>
-                    <th>Account Number</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1.</td>
-                    <td>Bank of America</td>
-                    <td>John Smith</td>
-                    <td>+1-555-123-4567</td>
-                    <td>123456789</td>
-                    <td>$180.00</td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Chase Bank</td>
-                    <td>Sarah Johnson</td>
-                    <td>+1-555-234-5678</td>
-                    <td>987654321</td>
-                    <td>$144.00</td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Wells Fargo</td>
-                    <td>Michael Brown</td>
-                    <td>+1-555-345-6789</td>
-                    <td>456789123</td>
-                    <td>$60.00</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="total-section">
-            <div class="total">Total: $384.00</div>
-        </div>
-        
-        <div class="footer-separator"></div>
-    </div>
-</body>
-</html>';
-    
-    generate_pdf('We4U Invoice', $content, 'we4u_invoice.pdf', 'download');
-}
-
-
-
-
-   
   
 }// Only one closing brace needed here for the class
 

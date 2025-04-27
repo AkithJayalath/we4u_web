@@ -1,7 +1,7 @@
 <?php require APPROOT.'/views/includes/header.php';?>
 <?php require APPROOT.'/views/includes/components/topnavbar.php';?>
 
-<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/rate&review.css"> 
+<link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/caregiver/rate&reviewNew.css"> 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 <page-body-container>
@@ -30,7 +30,13 @@
                         <img src="<?php echo !empty($review->profile_picture) ? URLROOT . '/images/profile_imgs/'. $review->profile_picture : URLROOT .'/images/def_profile_pic.jpg'; ?>" alt="Profile Image" class="pro-img"/>
                         <h3 class="name"><?php echo $review->username; ?></h3>
                         <div class="review-date">
-                            <span><?php echo date('d M Y', strtotime($review->review_date)); ?></span>
+                            <span>
+                                <?php 
+                                echo !empty($review->updated_date) 
+                                    ? date('d M Y', strtotime($review->updated_date)) 
+                                    : date('d M Y', strtotime($review->review_date)); 
+                                ?>
+                            </span>
                         </div>
                     </div>
                     <p class="review-cont">
@@ -41,30 +47,15 @@
                             <i class="fa-solid fa-star <?php echo ($i <= $review->rating) ? 'active' : ''; ?>"></i>
                         <?php endfor; ?>
                     </div>
-                    
                 </div>
-                
-                
                 </div>
             <?php endforeach; ?>
-
-
             <?php endif; ?>
-
-            <!-- Your existing table rows here -->
           </div>
         </div>
       </div>
     </div>
-
-
-        
-
-               
     </div>
-
-    
-
 </page-body-container>
 
 <?php require APPROOT.'/views/includes/footer.php';?>

@@ -151,6 +151,20 @@ echo loadCSS($required_styles);
                     <p>Rs. <?= $data->payment_details ?? 'N/A' ?></p>
                 </div>
                 <div class="request-info-row">
+    <label>Chargable Payment</label>
+    <p>
+        <?php 
+        if (isset($data->payment_details) && is_numeric($data->payment_details)) {
+            $commission = $data->payment_details * 0.08; // Calculate 8% commission
+            $chargablePayment = $data->payment_details - $commission; // Subtract commission
+            echo "Rs. " . number_format($chargablePayment, 2) . " (Total - 8% = Rs. " . number_format($data->payment_details, 2) . " - Rs. " . number_format($commission, 2) . ")";
+        } else {
+            echo 'N/A';
+        }
+        ?>
+    </p>
+</div>
+                <div class="request-info-row">
                     <label>Additional Notes</label>
                     <p><?= htmlspecialchars($data->additional_notes) ?></p>
                 </div>

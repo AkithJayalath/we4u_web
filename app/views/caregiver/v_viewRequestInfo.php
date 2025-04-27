@@ -18,62 +18,62 @@ echo loadCSS($required_styles);
 
         <!-- Personal info section -->
         <div class="request-info-header">
-    <div class="request-info-header-left">
-        <div class="request-info-header-left-left"> 
-            <?php
-            // Determine which image to display
-            $CaregiverprofilePic = !empty($data->caregiver_pic)
-                ? URLROOT . '/public/images/profile_imgs/' . $data->caregiver_pic
-                : URLROOT . '/public/images/def_profile_pic2.jpg';
 
-            $CareseekerprofilePic = !empty($data->careseeker_pic)
-                ? URLROOT . '/public/images/profile_imgs/' . $data->careseeker_pic
-                : URLROOT . '/public/images/def_profile_pic2.jpg';
+            <div class="request-info-header-left">
+                <div class="request-info-header-left-left">
+                    <?php
+                    // Determine which image to display
+                    $CaregiverprofilePic = !empty($data->caregiver_pic)
+                        ? URLROOT . '/public/images/profile_imgs/' . $data->caregiver_pic
+                        : URLROOT . '/public/images/def_profile_pic2.jpg';
+                    $CareseekerprofilePic = !empty($data->careseeker_pic)
+                        ? URLROOT . '/public/images/profile_imgs/' . $data->careseeker_pic
+                        : URLROOT . '/public/images/def_profile_pic2.jpg';
 
-            $elderprofilePic = !empty($data->elder_pic)
-                ? URLROOT . '/public/images/profile_imgs/' . $data->elder_pic
-                : URLROOT . '/public/images/def_profile_pic2.jpg';
-            ?>
-            <div class="info-circle image1"><img src="<?= $CareseekerprofilePic ?>" alt="Profile" /></div>
-            <div class="info-circle image1"><img src="<?= $elderprofilePic ?>" alt="Profile" /></div>
-            <div class="info-circle image1"><img src="<?= $CaregiverprofilePic ?>" alt="Profile" /></div>
-        </div>
-        <div class="request-info-header-left-right">
-            <div class="request-info-personal-info-profile">
-                <div class="request-info-personal-info-details">
-                    <h2>Request ID #<?= $data->request_id ?></h2>
-                    <span class="tag <?= strtolower($data->status) ?>">
-                        <?= ucfirst($data->status) ?>
-                    </span>
+                    $elderprofilePic = !empty($data->elder_pic)
+                        ? URLROOT . '/public/images/profile_imgs/' . $data->elder_pic
+                        : URLROOT . '/public/images/def_profile_pic2.jpg';
+                    ?>
+                    <div class="info-circle image1"><img src="<?= $CareseekerprofilePic ?>" alt="Profile" /></div>
+                    <div class="info-circle image1"><img src="<?= $elderprofilePic ?>" alt="Profile" /></div>
+                    <div class="info-circle image1"><img src="<?= $CaregiverprofilePic ?>" alt="Profile" /></div>
+                </div>
+                <div class="request-info-header-left-right">
+                    <div class="request-info-personal-info-profile">
+                        <div class="request-info-personal-info-details">
+                            <h2>Request ID #<?= $data->request_id ?></h2>
+                            <span class="tag <?= strtolower($data->status) ?>">
+                                <?= ucfirst($data->status) ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <?php if ($data->status === 'pending'): ?>
+                <div class="request-info-buttons">
+                    <form action="<?= URLROOT ?>/caregivers/acceptRequest/<?= $data->request_id ?>" method="post">
+                        <button class="request-send-button" type="submit">Accept</button>
+                    </form>
+                    <form action="<?= URLROOT ?>/caregivers/rejectRequest/<?= $data->request_id ?>" method="post">
+                        <button class="request-reject-button" type="submit">Reject</button>
+                    </form>
+                </div>
+
+            <?php elseif ($data->status === 'accepted'): ?>
+                <div class="request-info-buttons">
+                    <form action="<?= URLROOT ?>/caregivers/cancelRequest/<?= $data->request_id ?>" method="post">
+                        <button class="request-cancel-button" type="submit">Cancel Request</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+
+
         </div>
-    </div>
-    
-    <?php if ($data->status === 'pending'): ?>
-    <div class="request-info-buttons">
-        <form action="<?= URLROOT ?>/caregivers/acceptRequest/<?= $data->request_id ?>" method="post">
-            <button class="request-send-button" type="submit">Accept</button>
-        </form>
-        <form action="<?= URLROOT ?>/caregivers/rejectRequest/<?= $data->request_id ?>" method="post">
-            <button class="request-reject-button" type="submit">Reject</button>
-        </form>
-    </div>
-
-<?php elseif ($data->status === 'accepted'): ?>
-    <div class="request-info-buttons">
-        <form action="<?= URLROOT ?>/caregivers/cancelRequest/<?= $data->request_id ?>" method="post">
-            <button class="request-cancel-button" type="submit">Cancel Request</button>
-        </form>
-    </div>
-<?php endif; ?>
-
-
-</div>
         <div class="request-infos-section">
             <!-- First Column -->
             <div class="request-info-column">
-            <div class="request-info-row">
+                <div class="request-info-row">
                     <label>Service Type</label>
                     <p><?= htmlspecialchars($data->duration_type) ?></p>
                 </div>
@@ -86,18 +86,18 @@ echo loadCSS($required_styles);
                 </div>
 
                 <div class="request-info-row">
-    <label>Elder Profile Name</label>
-    <p>
-        <?= htmlspecialchars($data->elder_name) ?> (<?= htmlspecialchars($data->relationship_to_careseeker) ?>)
-        &nbsp;
-        <?php if ($data->status !== 'rejected'): ?>
-    <a href="<?= URLROOT ?>/caregivers/viewCareseeker/<?= $data->elder_id ?>" class="view-elder-profile-link">
-        View Profile
-    </a>
-<?php endif; ?>
+                    <label>Elder Profile Name</label>
+                    <p>
+                        <?= htmlspecialchars($data->elder_name) ?> (<?= htmlspecialchars($data->relationship_to_careseeker) ?>)
+                        &nbsp;
+                        <?php if ($data->status !== 'rejected'): ?>
+                            <a href="<?= URLROOT ?>/caregivers/viewCareseeker/<?= $data->elder_id ?>" class="view-elder-profile-link">
+                                View Profile
+                            </a>
+                        <?php endif; ?>
 
-    </p>
-</div>
+                    </p>
+                </div>
 
 
                 <div class="request-info-row">
@@ -168,6 +168,20 @@ echo loadCSS($required_styles);
                 </div>
                 
                 <div class="request-info-row">
+                    <label>Chargable Payment</label>
+                    <p>
+                        <?php
+                        if (isset($data->payment_details) && is_numeric($data->payment_details)) {
+                            $commission = $data->payment_details * 0.08; // Calculate 8% commission
+                            $chargablePayment = $data->payment_details - $commission; // Subtract commission
+                            echo "Rs. " . number_format($chargablePayment, 2) . " (Total - 8% = Rs. " . number_format($data->payment_details, 2) . " - Rs. " . number_format($commission, 2) . ")";
+                        } else {
+                            echo 'N/A';
+                        }
+                        ?>
+                    </p>
+                </div>
+                <div class="request-info-row">
                     <label>Additional Notes</label>
                     <p><?= htmlspecialchars($data->additional_notes) ?></p>
                 </div>
@@ -183,47 +197,47 @@ echo loadCSS($required_styles);
     </div>
 
     <div id="cancelModal" class="cancel-modal">
-    <div class="cancel-modal-content">
-        <div class="cancel-modal-header">
-            <h2>Cancel Request</h2>
-            <span class="close-modal">&times;</span>
-        </div>
-        <div class="cancel-modal-body">
-            <div class="cancel-icon">
-                <i class="fas fa-exclamation-triangle"></i>
+        <div class="cancel-modal-content">
+            <div class="cancel-modal-header">
+                <h2>Cancel Request</h2>
+                <span class="close-modal">&times;</span>
             </div>
-            <div id="cancellationMessage">
-                <!-- Dynamic message will be inserted here -->
-            </div>
+            <div class="cancel-modal-body">
+                <div class="cancel-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div id="cancellationMessage">
+                    <!-- Dynamic message will be inserted here -->
+                </div>
 
-            <div id="cancellationDetails" class="cancellation-details">
-                <div id="cancellationReason" class="cancellation-reason">
-                    <!-- Dynamic reason will be inserted here -->
-                </div>
-                <div class="cancellation-policy">
-                    <p><strong>Caregiver Cancellation Policy:</strong></p>
-                    <ul>
-                        <li>Cancel more than 24 hours before start: No penalty</li>
-                        <li>Cancel between 12-24 hours before start: Warning flag added to your account</li>
-                        <li>Cannot cancel less than 12 hours before service start</li>
-                        <li>Cannot cancel after service has started</li>
-                    </ul>
+                <div id="cancellationDetails" class="cancellation-details">
+                    <div id="cancellationReason" class="cancellation-reason">
+                        <!-- Dynamic reason will be inserted here -->
+                    </div>
+                    <div class="cancellation-policy">
+                        <p><strong>Caregiver Cancellation Policy:</strong></p>
+                        <ul>
+                            <li>Cancel more than 24 hours before start: No penalty</li>
+                            <li>Cancel between 12-24 hours before start: Warning flag added to your account</li>
+                            <li>Cannot cancel less than 12 hours before service start</li>
+                            <li>Cannot cancel after service has started</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="cancel-modal-footer" id="modalFooter">
-            <button id="cancelRequestBtn" class="confirm-cancel-btn">Confirm Cancellation</button>
-            <button id="closeModalBtn" class="keep-request-btn">Keep Request</button>
+            <div class="cancel-modal-footer" id="modalFooter">
+                <button id="cancelRequestBtn" class="confirm-cancel-btn">Confirm Cancellation</button>
+                <button id="closeModalBtn" class="keep-request-btn">Keep Request</button>
+            </div>
         </div>
     </div>
-</div>
 
-<?php if (strtolower($data->status) === 'accepted' || strtolower($data->status) === 'pending'): ?>
-    <div class="floating-chat-button" data-request-id="<?php echo $data->request_id; ?>" data-user-id="<?php echo $_SESSION['user_id']; ?>">
-        <i class="fas fa-comments"></i>
-        <span class="message-badge hidden">0</span>
-    </div>
-<?php endif; ?>
+    <?php if (strtolower($data->status) === 'accepted' || strtolower($data->status) === 'pending'): ?>
+        <div class="floating-chat-button" data-request-id="<?php echo $data->request_id; ?>" data-user-id="<?php echo $_SESSION['user_id']; ?>">
+            <i class="fas fa-comments"></i>
+            <span class="message-badge hidden">0</span>
+        </div>
+    <?php endif; ?>
 </page-body-container>
 
 <script>
@@ -392,5 +406,6 @@ echo loadCSS($required_styles);
     const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/caregiverChatPopup.js">
-<script src="<?php echo URLROOT; ?>/js/ratingStars.js"></script>
+    < script src = "<?php echo URLROOT; ?>/js/ratingStars.js" >
+
 <?php require APPROOT . '/views/includes/footer.php' ?>

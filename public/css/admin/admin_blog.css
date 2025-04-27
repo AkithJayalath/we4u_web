@@ -1,0 +1,236 @@
+/* Main Layout */
+.ad-blog-wrapper {
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
+  padding: 20px;
+  background-color: var(--color-background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add dashboard-like header */
+.ad-blog-header {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ad-blog-header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.ad-blog-main-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: var(--color-background-secondary);
+}
+
+/* Blog Cards Container */
+.ad-blog-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Blog Card */
+.ad-blog-card {
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 450px; /* Fixed height for all cards */
+}
+
+.ad-blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ad-blog-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.ad-blog-card h2 {
+  padding: 16px 16px 8px;
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+/* Content area */
+.ad-blog-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevents content from overflowing */
+}
+
+.ad-blog-card p {
+  padding: 0 16px;
+  margin: 0 0 16px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+/* Action Buttons */
+.ad-blog-action-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.ad-blog-edit-btn,
+.ad-blog-delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.ad-blog-edit-btn {
+  background: #1a73e8; /* Blue color matching dashboard */
+}
+
+.ad-blog-delete-btn {
+  background: #ea4335; /* Red color matching dashboard */
+}
+
+.ad-blog-edit-btn:hover {
+  background: #1967d2;
+}
+
+.ad-blog-delete-btn:hover {
+  background: #d93025;
+}
+
+/* View Button */
+.ad-blog-view {
+  padding: 16px;
+  text-align: center;
+  margin-top: auto; /* Pushes the button to the bottom */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white); /* Ensures the background matches the card */
+}
+
+.ad-blog-view a {
+  display: inline-block;
+  padding: 8px 24px;
+  background: #1a73e8;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.ad-blog-view a:hover {
+  background: #1967d2;
+}
+
+/* Create Blog Button */
+.ad-blog-btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background-color: #1a73e8;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.ad-blog-btn-add:hover {
+  background-color: #083cb6;
+}
+
+/* No blogs message */
+.ad-blog-no-blogs {
+  padding: 30px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* See More Button */
+.ad-blog-see-more {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.ad-blog-see-more button {
+  padding: 12px 32px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ad-blog-see-more button:hover {
+  background-color: #0030a0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .ad-blog-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .ad-blog-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ad-blog-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .ad-blog-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .ad-blog-header h1 {
+    text-align: center;
+  }
+}
+
+/* CSS Variables are already defined in the root scope */

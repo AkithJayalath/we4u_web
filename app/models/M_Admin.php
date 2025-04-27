@@ -7,11 +7,59 @@ class M_Admin {
   }
 
   public function getAllUsers() {
-    $this->db->query('SELECT user_id, username, email, role, profile_picture, created_at 
+    $this->db->query('SELECT user_id, username, email, role, profile_picture, created_at, is_deactive
                       FROM user 
                       ORDER BY created_at DESC');
     return $this->db->resultSet();
   }
+
+  public function getUserDetails($user_id) {
+    // First get the basic user data
+    $this->db->query('SELECT * FROM user WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $user_id);
+    $user = $this->db->single();
+    
+    if(!$user) {
+        return false;
+    }
+    
+    // For admin and moderator, just return the base user data
+    if($user->role == 'Admin' || $user->role == 'Moderator') {
+        return $user;
+    }
+    
+    // For other roles, fetch their specific additional data
+    switch($user->role) {
+        case 'Caregiver':
+            $this->db->query('SELECT * FROM caregiver WHERE caregiver_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        case 'Careseeker':
+            $this->db->query('SELECT * FROM careseeker WHERE careseeker_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        case 'Consultant':
+            $this->db->query('SELECT * FROM consultant WHERE consultant_id = :user_id');
+            $this->db->bind(':user_id', $user_id);
+            $additionalData = $this->db->single();
+            break;
+            
+        default:
+            $additionalData = null;
+    }
+    
+    // Combine the data and return
+    if($additionalData) {
+        $userData = (object) array_merge((array) $user, (array) $additionalData);
+        return $userData;
+    }
+    
+    return $user;
+}
 
   public function findUserByEmail($email){ 
       $this->db->query('SELECT * FROM user WHERE email = :email');
@@ -396,6 +444,68 @@ public function getTotalUserEarnings() {
         $result = $this->db->single();
         return $result->total;
     }
+
+
+    //blogs
+    // Get all blogs (admin can see all)
+   public function getAllBlogs() {
+    $this->db->query("SELECT * FROM blogs ORDER BY created_at DESC");
+    return $this->db->resultSet();
+  }
+
+  // Add a new blog
+  public function addBlog($data) {
+    $this->db->query("INSERT INTO blogs (user_id, title, content, image_path,created_at,updated_at) 
+                      VALUES (:user_id, :title, :content, :image_path,:created_at,:updated_at)");
+    $this->db->bind(':user_id', $data['user_id']);
+    $this->db->bind(':title', $data['title']);
+    $this->db->bind(':content', $data['content']);
+    $this->db->bind(':image_path', $data['image_path']);
+    $this->db->bind(':created_at', date('Y-m-d H:i:s'));
+    $this->db->bind(':updated_at', date('Y-m-d H:i:s'));
+    return $this->db->execute();
+}
+
+
+  // Get a single blog by ID
+  public function getBlogById($blogId) {
+    $this->db->query("SELECT * FROM blogs WHERE blog_id = :blog_id");
+    $this->db->bind(':blog_id', $blogId);
+    return $this->db->single();
+  }
+
+  // Update any blog (admin can edit any blog)
+  public function updateBlog($data) {
+    $this->db->query("UPDATE blogs 
+                      SET title = :title, content = :content, image_path = :image_path 
+                      WHERE blog_id = :blog_id");
+    $this->db->bind(':title', $data['title']);
+    $this->db->bind(':content', $data['content']);
+    $this->db->bind(':image_path', $data['image_path']);
+    $this->db->bind(':blog_id', $data['blog_id']);
+    return $this->db->execute();
+  }
+
+  // Delete any blog (admin can delete any blog)
+  public function deleteBlog($blogId) {
+    $this->db->query("DELETE FROM blogs WHERE blog_id = :blog_id");
+    $this->db->bind(':blog_id', $blogId);
+    return $this->db->execute();
+  }
+
+  public function activateUser($userId) {
+    $this->db->query('UPDATE user SET is_deactive = 0 WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    return $this->db->execute();
+}
+
+public function deactivateUser($userId) {
+    $this->db->query('UPDATE user SET is_deactive = 1 WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    return $this->db->execute();
+}
+
+
 
     
     

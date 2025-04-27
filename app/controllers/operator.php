@@ -34,7 +34,23 @@
       $data = [
         'title' => 'View Careseeker'
       ];
-      $this->view('users/v_moderatorProfile', $data);
+      $this->view('users/v_allUserProfiles', $data);
+    }
+
+    public function viewUserProfile($user_id) {
+      // check if the user is admin 
+      if($_SESSION['user_role'] !== 'Admin') {
+        // PERMISSION DENIED
+        redirect('pages/permissiondenied');
+      }
+      $user_details = $this->adminModel->getUserDetails($user_id);
+
+
+      $data = [
+        'user_details' => $user_details,
+        'title' => 'View Careseeker'
+      ];
+      $this->view('users/v_allUserProfiles', $data);
     }
 
 

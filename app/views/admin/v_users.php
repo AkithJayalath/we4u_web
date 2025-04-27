@@ -129,10 +129,6 @@
                     </div>
               </div>
               <div class="ad-users-action-group">
-                  <button class="ad-users-btn-export" id="export-users">
-                      <i data-lucide="download" class="ad-users-btn-icon"></i>
-                      Export
-                  </button>
                   <a href="<?php echo URLROOT; ?>/admin/adduser">
                     <button class="ad-users-btn-add">
                         <i data-lucide="plus" class="ad-users-btn-icon"></i>
@@ -162,7 +158,8 @@
                           data-role="<?php echo $user->role; ?>"
                           data-userid="<?php echo $user->user_id; ?>">
                           <td class="ad-users-user-cell">
-                                <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
+                          <a href="<?php echo URLROOT; ?>/admin/viewUserProfile/<?php echo $user->user_id; ?>">
+
                               
                             <img 
                                 src="<?php echo URLROOT; ?>/public/images/<?php echo strtolower($user->role); ?>-logo.png"
@@ -170,7 +167,7 @@
                                 class="ad-users-user-avatar"
                               />
                               </a>
-                              <a href="<?php echo URLROOT; ?>/operator/viewmoderator">
+                              <a href="<?php echo URLROOT; ?>/admin/viewUserProfile/<?php echo $user->user_id; ?>">
                               <div class="ad-users-user-info">
                                   <div class="ad-users-user-name"><?php echo $user->username; ?></div>
                               </div>
@@ -192,7 +189,12 @@
                           ?></td>
                           <td><?php echo $user->email; ?></td>
                           <td>
-                              <span class="ad-users-status ad-users-active">Active</span>
+                            
+                              <?php if(isset($user->is_deactive) && $user->is_deactive == 1): ?>
+                                  <span class="ad-users-status ad-users-inactive">Inactive</span>
+                              <?php else: ?>
+                                  <span class="ad-users-status ad-users-active">Active</span>
+                              <?php endif; ?>
                           </td>
                       </tr>
                       <?php endforeach;?>
