@@ -628,6 +628,21 @@ public function deleteSessionFile($file_id) {
     return $this->db->execute();
 }
 
+public function deleteSchedulesByRequestId($request_id) {
+    // Delete entries from short schedules table
+    $this->db->query('DELETE FROM cg_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $shortResult = $this->db->execute();
+    
+    // Delete entries from long schedules table
+    $this->db->query('DELETE FROM cg_long_shedules WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $request_id);
+    $longResult = $this->db->execute();
+    
+    // Return true if either deletion was successful
+    return $shortResult || $longResult;
+}
+
 public function getFileById($file_id) {
     $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
     $this->db->bind(':file_id', $file_id);
