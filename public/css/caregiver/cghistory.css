@@ -176,6 +176,15 @@
     border-radius: 8px;
 }
 
+.status.request-completed {
+    
+  padding: 5px 15px;
+  font-size: 12px;
+  background-color: #DFF6DD;
+  color: #28A745;
+  border-radius: 8px;
+}
+
 .status.ongoing {
     
     padding: 5px 15px;

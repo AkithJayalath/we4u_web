@@ -1,8 +1,8 @@
 .container {
-    margin: 20px auto;
+    margin: 10px auto;
     padding: 10px;
     width: 95%;  
-    max-width: 1050px;
+    max-width: 1100px;
     background-color: #f1eded;
     border-radius: 10px;
     min-height: 80vh;
@@ -13,13 +13,44 @@
 .header {
     display: flex;
     justify-content: space-between;
-    height: auto;
-    min-height: 65px;
-    padding: 10px 15px;
     align-items: center;
-    margin-bottom: 15px;
-    background-color: #f1eded;
-    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.average-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-stars i {
+    color: #ddd;
+    font-size: 18px;
+}
+
+.rating-stars i.active {
+    color: #ffc107;
+}
+
+.rating-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
 }
 
 .header h2 {

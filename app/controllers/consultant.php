@@ -181,19 +181,30 @@ public function viewConsultantProfile($id = null) {
         redirect('users/viewConsultants');
     }
     
-    $consultant = $this->consultantModel->getConsultantById($id);
+    $profile = $this->consultantModel->getConsultantById($id);
     
-    if (!$consultant) {
+    if (!$profile) {
         redirect('users/viewConsultants');
     }
     
+    $rating = $this->consultantModel->getAvgRating($id);
+    $reviews = $this->consultantModel->getReviews($id);
+
+    // Calculate age
+    $dob = new DateTime($profile->date_of_birth);
+    $today = new DateTime();
+    $age = $today->diff($dob)->y;
+
     $data = [
-        'consultant' => $consultant,
+        'profile' => $profile,
+        'age' => $age,
+        'rating' => $rating,
+        'reviews' => $reviews,
         'title' => 'Consultant Profile'
     ];
     
     $this->view('consultant/v_consultantprofile', $data);
-  }
+}
 
 
 
@@ -1011,6 +1022,27 @@ public function viewAppointments() {
 
 
 //   comment
+public function consultingHistory(){ 
+
+        $consultantId = $_SESSION['user_id'];
+        $dateSort = $_GET['date_sort'] ?? 'newest';
+        $statusFilter = $_GET['status_filter'] ?? 'all';
+        $paymentFilter = $_GET['payment_filter'] ?? 'all';
+
+        $history = $this->consultantModel->getConsultingHistory(
+            $consultantId,
+            $dateSort,
+            $statusFilter,
+            $paymentFilter
+        );
+
+        $data = [
+          'history' => $history
+        ];
+
+        $this->view('consultant/v_cohistory', $data);
+
+      }
 
 
 }

@@ -14,7 +14,7 @@
     <main class="a-a-a-main-content">
         <div class="a-a-a-stat-card">
             <h2>Submit Your Review</h2>
-            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/careseeker/addReview/<?php echo $data['caregiver_id']; ?>/Caregiver" method="POST" id="review-form">
+            <form class="a-a-a-form" action="<?php echo URLROOT; ?>/careseeker/addReview/<?php echo $data['caregiver_id']; ?>/<?php echo $data['consultant_id']; ?>/Caregiver" method="POST" id="review-form">
                 <div class="a-a-a-form-group">
                     <label for="rating">Rating</label>
                     <div class="star-rating">

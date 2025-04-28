@@ -30,10 +30,39 @@
                 <select id="region-filter" name="region">
                   <option value="">All</option>
                   <?php 
-                  $regions = $data['regions'] ?? [];
-                  foreach($regions as $region): ?>
-                      <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
-                          <?php echo $region; ?>
+                  // Predefined Sri Lankan regions
+                  $sriLankanRegions = [
+                      'Colombo',
+                      'Gampaha',
+                      'Kalutara',
+                      'Kandy',
+                      'Matale',
+                      'Nuwara Eliya',
+                      'Galle',
+                      'Matara',
+                      'Hambantota',
+                      'Jaffna',
+                      'Kilinochchi',
+                      'Mannar',
+                      'Vavuniya',
+                      'Mullaitivu',
+                      'Batticaloa',
+                      'Ampara',
+                      'Trincomalee',
+                      'Kurunegala',
+                      'Puttalam',
+                      'Anuradhapura',
+                      'Polonnaruwa',
+                      'Badulla',
+                      'Moneragala',
+                      'Ratnapura',
+                      'Kegalle'
+                  ];
+                  
+                  foreach($sriLankanRegions as $region): ?>
+                      <option value="<?php echo htmlspecialchars($region); ?>" 
+                              <?php echo (isset($_GET['region']) && $_GET['region'] == $region) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($region); ?>
                       </option>
                   <?php endforeach; ?>
                 </select>
@@ -42,9 +71,9 @@
               <div class="filter-group">
                 <label for="type-filter">Type</label>
                 <select id="type-filter" name="type">
-                  <option value="">All</option>
-                  <option value="Short Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Short Term' ? 'selected' : ''; ?>>Short Term</option>
-                  <option value="Long Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'Long Term' ? 'selected' : ''; ?>>Long Term</option>
+                  <option value="">Both</option>
+                  <option value="Short Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'short' ? 'selected' : ''; ?>>Short Term</option>
+                  <option value="Long Term" <?php echo isset($_GET['type']) && $_GET['type'] == 'long' ? 'selected' : ''; ?>>Long Term</option>
                 </select>
               </div>
 
@@ -53,11 +82,26 @@
                 <select id="speciality-filter" name="speciality">
                     <option value="">All</option>
                     <?php 
-                    $specialities = $data['specialities'] ?? [];
-                    foreach ($specialities as $speciality): ?>
-                        <option value="<?php echo htmlspecialchars($speciality); ?>" 
-                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $speciality) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($speciality); ?>
+                    // Predefined specialization options
+                    $specializationOptions = [
+                        'Dementia Care',
+                        'Wound Care',
+                        'Wheelchair Care',
+                        'Palliative Care',
+                        'Post-Surgery Care',
+                        'Diabetes Care',
+                        'Parkinson\'s Care',
+                        'Stroke Recovery Care',
+                        'Elderly Care',
+                        'Pediatric Care',
+                        'Physical Therapy Assistance',
+                        'Speech Therapy Assistance'
+                    ];
+                    
+                    foreach ($specializationOptions as $specialization): ?>
+                        <option value="<?php echo htmlspecialchars($specialization); ?>" 
+                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $specialization) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($specialization); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

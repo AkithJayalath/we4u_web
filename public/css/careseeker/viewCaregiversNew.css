@@ -226,6 +226,19 @@
             text-align: center;
             width: 30%;
           }
+
+          .caregiver-personal-info-tag-2 {
+            display: inline-block;
+            margin-top: 30px; 
+            padding: 5px 10px;
+            background-color: white; 
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            width: 40%;
+          }
           
           .caregiver-personal-info-details{
         

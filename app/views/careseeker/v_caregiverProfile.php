@@ -24,10 +24,24 @@ echo loadCSS($required_styles);
                             <span class="caregiver-personal-info-tag">Verified</span>
                             <h2><?php echo $data['profile']->username; ?></h2>
                             <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
-                            <p class="consultant-rating">
-                                <?php for ($i = 1; $i <= 5; $i++) : ?>
-                                    <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
-                                <?php endfor; ?>
+                            <p class="consultant-rating" style="display: flex; align-items: center; gap: 6px; margin-bottom: 0;">
+                                <?php
+                                    $rating = isset($data['rating']) ? $data['rating'] : 0;
+                                    $decimal = $rating - floor($rating);
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        if ($i <= floor($rating)) {
+                                            // Full star
+                                            echo '<i class="fa-solid fa-star active"></i>';
+                                        } elseif ($i == ceil($rating) && $decimal >= 0.5) {
+                                            // Half star
+                                            echo '<i class="fa-solid fa-star-half-stroke active"></i>';
+                                        } else {
+                                            // Empty star
+                                            echo '<i class="fa-regular fa-star"></i>';
+                                        }
+                                    }
+                                ?>
+                                <span class="rating-value" style="color: #666; font-size: 18px; margin-left: 4px;">(<?php echo number_format($rating, 1); ?>)</span>
                             </p>
                             <p><?php echo $data['age']; ?> Years</p>
                             <p><?php echo $data['profile']->gender; ?></p>

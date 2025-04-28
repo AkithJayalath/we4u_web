@@ -30,10 +30,39 @@
                 <select id="region-filter" name="region">
                   <option value="">All</option>
                   <?php 
-                  $regions = $data['regions'] ?? [];
-                  foreach($regions as $region): ?>
-                      <option value="<?php echo $region; ?>" <?php echo isset($_GET['region']) && $_GET['region'] == $region ? 'selected' : ''; ?>>
-                          <?php echo $region; ?>
+                  // Predefined Sri Lankan regions
+                  $sriLankanRegions = [
+                      'Colombo',
+                      'Gampaha',
+                      'Kalutara',
+                      'Kandy',
+                      'Matale',
+                      'Nuwara Eliya',
+                      'Galle',
+                      'Matara',
+                      'Hambantota',
+                      'Jaffna',
+                      'Kilinochchi',
+                      'Mannar',
+                      'Vavuniya',
+                      'Mullaitivu',
+                      'Batticaloa',
+                      'Ampara',
+                      'Trincomalee',
+                      'Kurunegala',
+                      'Puttalam',
+                      'Anuradhapura',
+                      'Polonnaruwa',
+                      'Badulla',
+                      'Moneragala',
+                      'Ratnapura',
+                      'Kegalle'
+                  ];
+                  
+                  foreach($sriLankanRegions as $region): ?>
+                      <option value="<?php echo htmlspecialchars($region); ?>" 
+                              <?php echo (isset($_GET['region']) && $_GET['region'] == $region) ? 'selected' : ''; ?>>
+                          <?php echo htmlspecialchars($region); ?>
                       </option>
                   <?php endforeach; ?>
                 </select>
@@ -44,11 +73,26 @@
                 <select id="speciality-filter" name="speciality">
                     <option value="">All</option>
                     <?php 
-                    $specialities = $data['specialities'] ?? [];
-                    foreach ($specialities as $speciality): ?>
-                        <option value="<?php echo htmlspecialchars($speciality); ?>" 
-                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $speciality) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($speciality); ?>
+                    // Predefined specialization options
+                    $specializationOptions = [
+                        'Dementia Care',
+                        'Wound Care',
+                        'Wheelchair Care',
+                        'Palliative Care',
+                        'Post-Surgery Care',
+                        'Diabetes Care',
+                        'Parkinson\'s Care',
+                        'Stroke Recovery Care',
+                        'Elderly Care',
+                        'Pediatric Care',
+                        'Physical Therapy Assistance',
+                        'Speech Therapy Assistance'
+                    ];
+                    
+                    foreach ($specializationOptions as $specialization): ?>
+                        <option value="<?php echo htmlspecialchars($specialization); ?>" 
+                                <?php echo (isset($_GET['speciality']) && $_GET['speciality'] == $specialization) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($specialization); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -85,9 +129,19 @@
             $specialties = explode(',', $consultant->specializations);
             
             $ratingValue = $consultant->rating ?? 0;
+            $decimal = $ratingValue - floor($ratingValue);
             $ratingStars = '';
-            for($i = 1; $i <= 5; $i++) {
-                $ratingStars .= ($i <= $ratingValue) ? '★' : '☆';
+            for ($i = 1; $i <= 5; $i++) {
+                if ($i <= floor($ratingValue)) {
+                    // Full star
+                    $ratingStars .= '<i class="fa-solid fa-star active"></i>';
+                } elseif ($i == ceil($ratingValue) && $decimal >= 0.5) {
+                    // Half star
+                    $ratingStars .= '<i class="fa-solid fa-star-half-stroke active"></i>';
+                } else {
+                    // Empty star
+                    $ratingStars .= '<i class="fa-regular fa-star"></i>';
+                }
             }
             
             $imgPath = !empty($consultant->profile_picture) 
@@ -110,9 +164,12 @@
             <div class="caregiver-personal-info-details">
                 <?php if($consultant->is_approved == 'approved'): ?>
                 <span class="caregiver-personal-info-tag">Verified</span>
+                <?php else: ?>
+                <span class="caregiver-personal-info-tag-2"></span>
                 <?php endif; ?>
                 <p class="consultant-rating">
                     <span class="rating-stars"><?php echo $ratingStars; ?></span>
+                    <span class="rating-value">(<?php echo number_format($ratingValue, 1); ?>)</span>
                 </p>
                 <p><?php echo htmlspecialchars($consultant->gender); ?></p>
                 <p>Rs <?php echo htmlspecialchars($consultant->payment_details ?? 0); ?> per hour</p>

@@ -439,6 +439,17 @@
   transition: width 0.3s ease;
 }
 
+/* Make the active stars gold */
+.fa-solid.fa-star.active, 
+.fa-solid.fa-star-half-stroke.active {
+    color: #FFD700; /* Gold color for active stars */
+}
+
+/* Optional: Set a default color for inactive stars */
+.fa-regular.fa-star {
+    color: #ccc; /* Light gray for inactive stars */
+}
+
 
 
 /* Reviews */

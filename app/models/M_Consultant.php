@@ -602,8 +602,45 @@ public function getCareseekerById($id) {
     return $this->db->single();
 }
 
+public function getConsultingHistory($consultantId, $dateSort = 'newest', $statusFilter = 'all', $paymentFilter = 'all'){
+    $sql = 'SELECT cr.*, u.username, u.profile_picture 
+            FROM consultantrequests cr 
+            JOIN user u ON cr.requester_id = u.user_id 
+            WHERE cr.consultant_id = :consultantId';
 
+    if ($statusFilter !== 'all') {
+        $sql .= ' AND cr.status = :status';
+    }
 
+    // Add payment filter conditions
+    switch ($paymentFilter) {
+        case 'pending':
+            $sql .= ' AND (cr.is_paid = 0 OR cr.is_paid IS NULL)';
+            break;
+        case 'done':
+            $sql .= ' AND cr.is_paid = 1 AND (cr.refund_amount = 0 OR cr.refund_amount IS NULL)';
+            break;
+        case 'refunded':
+            $sql .= ' AND cr.refund_amount IS NOT NULL';
+            break;
+    }
+    
+    // Add sorting
+    if ($dateSort === 'newest') {
+        $sql .= ' ORDER BY cr.created_at DESC';
+    } else {
+        $sql .= ' ORDER BY cr.created_at ASC';
+    }
+    
+    $this->db->query($sql);
+    $this->db->bind(':consultantId', $consultantId);
+
+    if ($statusFilter !== 'all') {
+        $this->db->bind(':status', $statusFilter);
+    }
+
+    return $this->db->resultSet();
+}
 
 
 

@@ -265,54 +265,63 @@
         return $this->db->single()->total;
     }
 
-    public function getConsultants($region, $type, $speciality, $sortBy, $page, $perPage) {
-        $offset = ($page - 1) * $perPage;
+public function getConsultants($region, $type, $speciality, $sortBy, $page, $perPage) {
+    $offset = ($page - 1) * $perPage;
 
-        $query = "SELECT c.*, u.username, u.profile_picture, u.gender 
-                  FROM consultant c 
-                  JOIN user u ON c.consultant_id = u.user_id 
-                  WHERE u.role = 'Consultant'";
+    $query = "SELECT c.*, 
+                     u.username, 
+                     u.profile_picture, 
+                     u.gender, 
+                     (SELECT AVG(r.rating) 
+                      FROM review r 
+                      WHERE r.reviewed_user_id = c.consultant_id 
+                        AND r.review_role = 'Consultant') AS rating
+              FROM consultant c 
+              JOIN user u ON c.consultant_id = u.user_id 
+              WHERE u.role = 'Consultant'";
 
-        if (!empty($region)) {
-            $query .= " AND c.available_regions LIKE :region";
-        }
-        if (!empty($type)) {
-            $query .= " AND c.type = :type";
-        }
-        if (!empty($speciality)) {
-            $query .= " AND c.specializations LIKE :speciality";
-        }
-
-        // Sorting
-        if ($sortBy === 'rating') {
-            $query .= " ORDER BY c.rating DESC";
-        } elseif ($sortBy === 'price-asc') {
-            $query .= " ORDER BY c.payment_details ASC";
-        } elseif ($sortBy === 'price-desc') {
-            $query .= " ORDER BY c.payment_details DESC";
-        } else {
-            $query .= " ORDER BY c.consultant_id DESC";
-        }
-
-        $query .= " LIMIT :offset, :perPage";
-
-        $this->db->query($query);
-
-        if (!empty($region)) {
-            $this->db->bind(':region', '%' . $region . '%');
-        }
-        if (!empty($type)) {
-            $this->db->bind(':type', $type);
-        }
-        if (!empty($speciality)) {
-            $this->db->bind(':speciality', '%' . $speciality . '%');
-        }
-
-        $this->db->bind(':offset', $offset, PDO::PARAM_INT);
-        $this->db->bind(':perPage', $perPage, PDO::PARAM_INT);
-
-        return $this->db->resultSet();
+    // Apply filters
+    if (!empty($region)) {
+        $query .= " AND c.available_regions LIKE :region";
     }
+    if (!empty($type)) {
+        $query .= " AND c.type = :type";
+    }
+    if (!empty($speciality)) {
+        $query .= " AND c.specializations LIKE :speciality";
+    }
+
+    // Sorting
+    if ($sortBy === 'rating') {
+        $query .= " ORDER BY rating DESC";
+    } elseif ($sortBy === 'price-asc') {
+        $query .= " ORDER BY c.payment_details ASC";
+    } elseif ($sortBy === 'price-desc') {
+        $query .= " ORDER BY c.payment_details DESC";
+    } else {
+        $query .= " ORDER BY c.consultant_id DESC";
+    }
+
+    // Pagination
+    $query .= " LIMIT :offset, :perPage";
+
+    $this->db->query($query);
+
+    // Bind parameters
+    if (!empty($region)) {
+        $this->db->bind(':region', '%' . $region . '%');
+    }
+    if (!empty($type)) {
+        $this->db->bind(':type', $type);
+    }
+    if (!empty($speciality)) {
+        $this->db->bind(':speciality', '%' . $speciality . '%');
+    }
+    $this->db->bind(':offset', $offset, PDO::PARAM_INT);
+    $this->db->bind(':perPage', $perPage, PDO::PARAM_INT);
+
+    return $this->db->resultSet();
+}
 
     // === Helper Methods ===
 

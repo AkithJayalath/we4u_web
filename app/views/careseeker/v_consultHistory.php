@@ -82,7 +82,7 @@
 
                         
                         <div class="btn-class">
-                            <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Careseekers/viewCaregiver/<?php echo $entry->caregiver_id; ?>'">Review</button>
+                            <button class="view-profile-btn" onclick="window.location.href='<?php echo URLROOT; ?>/Careseeker/viewConsultantReviews/<?php echo $entry->consultant_id; ?>'">Review</button>
                         </div>
                     </div>
                 </div>
