@@ -249,7 +249,7 @@
         'reviews' => $reviews
       ];
 
-      $this->view('caregiver/v_rate&review', $data);
+      $this->view('caregiver/v_rate&reviewForCaregiver', $data);
   
       
     }
@@ -853,7 +853,7 @@ public function rejectRequest($request_id) {
 
 
       } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+          flash('error', 'Something went wrong. Try again.');
       }
       redirect('caregivers/viewRequests');
   }
@@ -881,7 +881,7 @@ public function cancelRequest($requestId, $flag = false) {
 
   // Check if service has already started
   if ($now > $startDateTime) {
-      flash('request_error', 'Cannot cancel a service that has already started.');
+      flash('error', 'Cannot cancel a service that has already started.');
       redirect('caregivers/viewRequests');
       return;
   }
@@ -899,7 +899,7 @@ public function cancelRequest($requestId, $flag = false) {
       $shouldFlag = true; // Ensure flag is set
   } else {
       // Less than 12 hours before - cannot cancel
-      flash('request_error', 'Requests cannot be cancelled less than 12 hours before start time.');
+      flash('error', 'Requests cannot be cancelled less than 12 hours before start time.');
       redirect('caregivers/viewRequests');
       return;
   }
@@ -932,7 +932,7 @@ $emailBody
       // send a notification to the careseeker
       createNotification($request->requester_id, 'A request you previously sent has been cancelled by the caregiver.', false);
       $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
-      flash('request_success', 'Request cancelled successfully.' . $flagMessage);
+      flash('success', 'Request cancelled successfully.' . $flagMessage);
   } else {
       flash('request_error', 'Failed to cancel the request. Please try again.');
   }

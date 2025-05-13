@@ -13,9 +13,9 @@
  
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
-    <!-- Container -->
+    
     <div class="view-elder-profile">
-        <!-- Personal info section -->
+       
         <div class="personal-info-section">
             <div class="personal-info-left"> 
                 <div class="personal-info-profile">

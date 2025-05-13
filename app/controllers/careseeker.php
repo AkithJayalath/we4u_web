@@ -30,10 +30,10 @@ class careseeker extends controller
         }
         $careseeker_id = $_SESSION['user_id'] ?? '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Sanitize POST data
+            
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Prepare input data and error messages
+           
             $data = [
                 'careseeker_id' =>  $careseeker_id,
                 'first_name' => trim($_POST['first_name']),
@@ -46,6 +46,7 @@ class careseeker extends controller
                 'height' => trim($_POST['height']),
                 'blood_pressure' => trim($_POST['blood_pressure']),
                 'emergency_contact' => trim($_POST['emergency_contact']),
+                'hbc'=>trim($_POST['hbc']),
                 'chronic_disease' => trim($_POST['chronic_disease']),
                 'current_health_issues' => trim($_POST['current_health_issues']),
                 'allergies' => trim($_POST['allergies']),
@@ -56,9 +57,9 @@ class careseeker extends controller
                 'special_needs' => trim($_POST['special_needs']),
                 'dietary_restrictions' => trim($_POST['dietary_restrictions']),
                 'profile_picture' => $_FILES['profile_picture'],
-                'profile_picture_name' => time() . '_' . $_FILES['profile_picture']['name'], // For storing the profile picture path
+                'profile_picture_name' => time() . '_' . $_FILES['profile_picture']['name'], 
 
-                // Error fields
+                
                 'first_name_err' => '',
                 'last_name_err' => '',
                 'age_err' => '',
@@ -67,7 +68,7 @@ class careseeker extends controller
                 'profile_picture_err' => '',
             ];
 
-            // Validation
+            
             if (empty($data['first_name'])) {
                 $data['first_name_err'] = 'Please enter the first name.';
             }
@@ -94,13 +95,13 @@ class careseeker extends controller
                 $data['relationship_to_careseeker_err'] = 'Please specify the relationship to the careseeker.';
             }
 
-            // Profile picture validation (only if a file is uploaded)
+            
             if (!empty($data['profile_picture']['name'])) {
                 $profileImagePath = '/images/profile_imgs/' . $data['profile_picture_name'];
 
-                // Upload the new profile picture
+               
                 if (uploadImage($data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs')) {
-                    $data['profile_pic'] = $profileImagePath; // Assign the correct path
+                    $data['profile_pic'] = $profileImagePath; 
                 } else {
                     $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
                 }
@@ -109,29 +110,29 @@ class careseeker extends controller
             }
 
 
-            // Check for errors
+           
             if (
                 empty($data['first_name_err']) && empty($data['last_name_err']) && empty($data['age_err'])
                 && empty($data['emergency_contact_err']) && empty($data['relationship_to_careseeker_err']) &&
                 empty($data['profile_picture_err'])
             ) {
 
-                // If no errors, proceed to create the profile
+                
                 if ($this->careseekersModel->createElderProfile($data)) {
-                    // Create a notification for the careseeker
+                    
                     createNotification($careseeker_id, 'Your Elder Profile has been Created.', false);
-                    // add flash message
+                   
                     flash('success', 'Elder profile created successfully.');
-                    redirect('careseeker/showElderProfiles'); // Redirect to the elder profiles page
+                    redirect('careseeker/showElderProfiles'); 
                 } else {
                     echo "Error creating profile!";
                 }
             } else {
-                // Load the view with error messages
+                
                 $this->view('careseeker/v_create', $data);
             }
         } else {
-            // If the request is not POST, load an empty form
+           
             $data = [
                 'first_name' => '',
                 'middle_name' => '',
@@ -143,6 +144,7 @@ class careseeker extends controller
                 'height' => '',
                 'blood_pressure' => '',
                 'emergency_contact' => '',
+                'hbc'=>'',
                 'chronic_disease' => '',
                 'current_health_issues' => '',
                 'allergies' => '',
@@ -176,7 +178,7 @@ class careseeker extends controller
 
         $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
 
-        // Pass the data to the view
+       
         $data = [
             'elders' => $elders
         ];
@@ -189,15 +191,15 @@ class careseeker extends controller
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Check if user is logged in
+       
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
-        // Get the careseeker_id from the session
+       
         $careseeker_id = $_SESSION['user_id'];
 
-        // Get the elder profiles for the careseeker
+       
         $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
         $careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
         $caregiverProfile = $this->careseekersModel->showCaregiverProfile($caregiver_id);
@@ -230,15 +232,15 @@ class careseeker extends controller
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Check if user is logged in
+        
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
-        // Get the careseeker_id from the session
+        
         $careseeker_id = $_SESSION['user_id'];
 
-        // Get the elder profiles for the careseeker
+        
         $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
         $careseekerProfile = $this->careseekersModel->showCareseekerProfile($careseeker_id);
         $consultantProfile = $this->careseekersModel->showConsultantProfile($consultant_id);
@@ -278,13 +280,13 @@ class careseeker extends controller
             redirect('pages/permissonerror');
         }
 
-        // Get the careseeker_id from the session
+        
         $careseeker_id = $_SESSION['user_id'];
 
-        // Get the elder profiles for the careseeker
+        
         $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
 
-        // First, check if caregiver exists
+        
         $caregiver = $this->careseekersModel->showCaregiverProfile($caregiver_id);
        
         if (!$caregiver) {
@@ -294,10 +296,10 @@ class careseeker extends controller
         $caregiverEmail= $caregiver->email;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
+          
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            // Extract data from the form
+            
             $data = [
                 'elders' => $elders,
                 'caregiver' => $caregiver,
@@ -317,32 +319,32 @@ class careseeker extends controller
                 'error' => ''
             ];
 
-            // Validate elder profile selection
+           
             if (empty($data['elder_profile'])) {
                 $data['error'] = 'Please select an elder profile';
             }
-            // Validate duration type selection
+           
             elseif (empty($data['duration_type'])) {
                 $data['error'] = 'Please select a duration type';
             }
-            // Validate dates and time slots based on duration type
+           
             elseif ($data['duration_type'] === 'long-term') {
-                // Validate start and end dates for long-term care
+               
                 if (empty($data['from_date'])) {
                     $data['error'] = 'Please select a start date for long-term care';
                 } elseif (empty($data['to_date'])) {
                     $data['error'] = 'Please select an end date for long-term care';
                 } else {
-                    // Check if caregiver type matches the selected duration
+                  
                     if ($caregiver->caregiver_type !== 'long' && $caregiver->caregiver_type !== 'both') {
                         $data['error'] = 'This caregiver does not offer long-term care services';
                     } else {
-                        // Validate date range
+                       
                         $from_date = new DateTime($data['from_date']);
                         $to_date = new DateTime($data['to_date']);
                         $today = new DateTime();
 
-                        // Check if from_date is in the future (at least tomorrow)
+                       
                         $tomorrow = new DateTime();
                         $tomorrow->setTime(0, 0, 0);
                         $tomorrow->modify('+1 day');
@@ -353,22 +355,21 @@ class careseeker extends controller
                         if ($from_date_normalized < $tomorrow) {
                             $data['error'] = 'Start date must be at least tomorrow';
                         }
-                        // Check if to_date is after from_date
+                        
                         elseif ($to_date < $from_date) {
                             $data['error'] = 'End date must be after or equal to start date';
                         } else {
-                            // Calculate days between from_date and to_date
+                           
                             $interval = $from_date->diff($to_date);
-                            $days = $interval->days + 1; // Include both start and end day
-
-                            // Check if the duration exceeds 5 days
+                            $days = $interval->days + 1; 
+                           
                             if ($days > 5) {
                                 $data['error'] = 'Maximum care duration is 5 days';
                             }
 
-                            // Check date range availability - FIXED: Moved this check here
+                          
                             if (empty($data['error'])) {
-                                // Make sure dates are in the correct format
+                               
                                 $fromDate = date('Y-m-d', strtotime($data['from_date']));
                                 $toDate = date('Y-m-d', strtotime($data['to_date']));
 
@@ -386,19 +387,19 @@ class careseeker extends controller
                     }
                 }
             } elseif ($data['duration_type'] === 'short-term') {
-                // Validate date for short-term care
+               
                 if (empty($data['from_date_short'])) {
                     $data['error'] = 'Please select a date for short-term care';
                 }
-                // Validate time slots for short-term care
+              
                 elseif (empty($data['time_slots'])) {
                     $data['error'] = 'Please select at least one time slot';
                 } else {
-                    // Check if caregiver type matches the selected duration
+                    
                     if ($caregiver->caregiver_type !== 'short' && $caregiver->caregiver_type !== 'both') {
                         $data['error'] = 'This caregiver does not offer short-term care services';
                     } else {
-                        // Validate that the short-term date is in the future
+                       
                         $from_date_short = new DateTime($data['from_date_short']);
                         $from_date_short->setTime(0, 0, 0);
 
@@ -411,7 +412,7 @@ class careseeker extends controller
                             $data['error'] = 'Date for short-term care must be at least tomorrow';
                         }
 
-                        // Validate time slots selection
+                        
                         $fullDaySelected = in_array('full-day', $data['time_slots']);
                         $otherSlotsSelected = array_diff($data['time_slots'], ['full-day']);
 
@@ -419,11 +420,11 @@ class careseeker extends controller
                             $data['error'] = 'Cannot select Full Day and other time slots together';
                         }
 
-                        // Check if time slots are available
+                        
                         if (empty($data['error'])) {
                             $allSlotsAvailable = true;
 
-                            // Convert time slot names from frontend to database format
+                           
                             $slotMapping = [
                                 'morning' => 'morning',
                                 'evening' => 'evening',
@@ -432,7 +433,7 @@ class careseeker extends controller
                             ];
 
                             foreach ($data['time_slots'] as $timeSlot) {
-                                // Convert frontend slot name to database format
+                               
                                 $dbSlot = isset($slotMapping[$timeSlot]) ? $slotMapping[$timeSlot] : $timeSlot;
 
                                 $isAvailable = $this->scheduleModel->isTimeSlotAvailable(
@@ -455,17 +456,17 @@ class careseeker extends controller
                 }
             }
 
-            // Validate payment amount
+          
             if (empty($data['error']) && $data['total_payment'] <= 0) {
                 $data['error'] = 'Invalid payment amount';
             }
 
-            //validate service address
+            
             if (empty($data['error']) && empty($data['service_address'])) {
                 $data['error'] = 'Please enter a service address';
             }
 
-            // If no errors, proceed with creating the request
+           
             if (empty($data['error'])) {
                 $requestData = [
                     'careseeker_id' => $careseeker_id,
@@ -483,12 +484,12 @@ class careseeker extends controller
                     'status' => 'pending'
                 ];
 
-                // execute the query and get the resulting data 
+               
                 $result = $this->careseekersModel->sendCareRequest($requestData);
                 if ($result['success']) {
 
                     flash('success', 'Care request sent successfully');
-                    // Send email to caregiver
+                   
                     $emailBody = '<h1>New Request !</h1>
                     <p>You have a new request.Please visit the website for more details</p>';
                 
@@ -498,14 +499,13 @@ class careseeker extends controller
                     $emailBody
                     );
 
-                    // send a notification to caregiver
+                   
                     createNotification($caregiver_id, 'A new care request has been sent to you. Please review the details and respond.', false);
 
 
-                    // update sheduling table for caregiver
-                    // first check duration type if if that is a short term then
+                   
                     if ($data['duration_type'] === 'short-term') {
-                        // if there are several time slots then go through each of them and pass that data in to the model
+                        
                         foreach ($data['time_slots'] as $time_slot) {
                             $sheduleData = [
                                 'caregiver_id' => $data['caregiver_id'],
@@ -533,12 +533,12 @@ class careseeker extends controller
                     $this->view('careseeker/v_requestCaregiver', $data);
                 }
             } else {
-                // If there are errors, pass the data back to the view
+                
                 $data['careseeker'] = $this->careseekersModel->showCareseekerProfile($careseeker_id);
                 $this->view('careseeker/v_requestCaregiver', $data);
             }
         } else {
-            // If someone tries to access this directly without POST, redirect
+           
             redirect('careseeker/showCaregiverRequestForm/' . $caregiver_id);
         }
     }
@@ -554,7 +554,7 @@ class careseeker extends controller
         $careseeker_id = $_SESSION['user_id'];
         $elders = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
 
-        // Check if consultant exists
+       
         $consultant = $this->careseekersModel->showConsultantProfile($consultant_id);
         if (!$consultant) {
             flash('error', 'Consultant not found');
@@ -581,24 +581,24 @@ class careseeker extends controller
                 'error' => ''
             ];
 
-        // Validations
+        
         if (empty($data['elder_profile'])) {
             $data['error'] = 'Please select an elder profile';
         } elseif (empty($data['appointment_date'])) {
             $data['error'] = 'Please select an appointment date';
         } else {
-            // Check if appointment date is at least tomorrow
+            
             $appointment_date = new DateTime($data['appointment_date']);
             $today = new DateTime();
             if ($appointment_date < $today) {
                 $data['error'] = 'Appointment must be at least tomorrow. Please select a different time slot';
-            }        // If basic validations pass, check consultant availability
+            }       
             if (empty($data['error'])) { 
-                // Format times for database queries
+              
                 $startTime = $data['from_time'] . ':00';
                 $endTime = $data['to_time'] . ':00';
                 
-                // Check if consultant is available at this time
+              
                 $isAvailable = $this->scheduleModel->isConsultantAvailable(
                     $consultant_id, 
                     $data['appointment_date'], 
@@ -609,7 +609,7 @@ class careseeker extends controller
                 if (!$isAvailable) {
                     $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
                 } else {
-                    // Check if there are existing bookings for this time slot
+                   
                     $hasBookings = $this->scheduleModel->hasExistingBookings(
                         $consultant_id, 
                         $data['appointment_date'], 
@@ -635,11 +635,11 @@ class careseeker extends controller
             }
 
             if (empty($data['error'])) {
-                // Format times for database queries
+               
                 $startTime = $data['from_time'] . ':00';
                 $endTime = $data['to_time'] . ':00';
                 
-                // Check if consultant is available at this time
+                
                 $isAvailable = $this->scheduleModel->isConsultantAvailable(
                     $consultant_id, 
                     $data['appointment_date'], 
@@ -650,7 +650,7 @@ class careseeker extends controller
                 if (!$isAvailable) {
                     $data['error'] = 'The consultant is not available at this time. Please select a different time slot.';
                 } else {
-                    // Check if there are existing bookings for this time slot
+                   
                     $hasBookings = $this->scheduleModel->hasExistingBookings(
                         $consultant_id, 
                         $data['appointment_date'], 
@@ -664,9 +664,9 @@ class careseeker extends controller
                 }
             }
 
-            // If all validations pass
+           
             if (empty($data['error'])) {
-                // $formattedTimeSlot = $data['from_time'] . ':00-' . $data['to_time'] . ':00';
+                
 
                 $requestData = [
                     'careseeker_id' => $careseeker_id,
@@ -682,7 +682,7 @@ class careseeker extends controller
                 ];
 
                 if ($this->careseekersModel->sendConsultantRequest($requestData)) {
-                    // Send email to caregiver
+                    
                     $emailBody = '<h1>New Request !</h1>
                         <p>You have a new request.Please visit the website for more details</p>';
                                     
@@ -692,7 +692,7 @@ class careseeker extends controller
                         $emailBody
                     );
 
-                    // send a notification to consultant
+                  
                     createNotification($consultant_id, 'A new care request has been sent to you. Please review the details and respond.', false);
 
                     flash('success', 'Consultant request sent successfully');
@@ -706,7 +706,7 @@ class careseeker extends controller
                 $this->view('careseeker/v_requestConsultant', $data);
             }
         } else {
-            // Not a POST request, redirect to form
+            
             redirect('careseeker/showConsultantRequestForm/' . $consultant_id);
         }
     }
@@ -720,7 +720,7 @@ class careseeker extends controller
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Check if the elder profile exists
+        
         if ($this->careseekersModel->deleteElderProfile($elderId)) {
             createNotification($_SESSION['user_id'] , 'Your Elder Profile has been Deleted.', false);
             echo 'Elder profile deleted successfully.';
@@ -728,7 +728,7 @@ class careseeker extends controller
             echo 'Failed to delete elder profile.';
         }
 
-        // Redirect to the profile page
+       
         redirect('careseeker/showElderProfiles');
     }
 
@@ -770,28 +770,28 @@ class careseeker extends controller
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Ensure the user is logged in
+      
         if (!$this->isLoggedIn()) {
             redirect('users/login');
         }
 
-        // Get the careseeker_id from the session
+        
         $careseeker_id = $_SESSION['user_id'] ?? '';
 
-        // Check if elder_id is passed in the GET request
+       
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['elder_id'])) {
-            // Get elder_id from the GET request
+           
             $elderID = $_GET['elder_id'];
 
-            // Fetch the elder profile by elder_id and careseeker_id
+           
             $elderProfile = $this->careseekersModel->getElderProfileById($elderID, $careseeker_id);
 
-            // If no profile found, redirect to the elder profiles page
+            
             if (!$elderProfile) {
                 redirect('careseeker/showElderProfiles');
             }
 
-            // Prefill the form with elder profile data
+            
             $data = [
                 'elder_id' => $elderID,
                 'careseeker_id' => $careseeker_id,
@@ -815,8 +815,8 @@ class careseeker extends controller
                 'special_needs' => $elderProfile->special_needs,
                 'dietary_restrictions' => $elderProfile->dietary_restrictions,
                 'profile_picture' => $elderProfile->profile_picture,
-                'profile_picture_name' => '', // Initial value for profile picture
-                // Error fields
+                'profile_picture_name' => '', 
+                
                 'first_name_err' => '',
                 'last_name_err' => '',
                 'age_err' => '',
@@ -826,20 +826,20 @@ class careseeker extends controller
             ];
 
 
-            // Load the view with pre-filled data
+            
             $this->view('careseeker/v_editElderProfile', $data);
         } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // Handle POST request to update elder profile
-            $elderID = $_POST['elder_id']; // Get elder_id from the form submission
-            $careseeker_id = $_SESSION['user_id'] ?? ''; // Get careseeker_id from the session
+           
+            $elderID = $_POST['elder_id']; 
+            $careseeker_id = $_SESSION['user_id'] ?? ''; 
 
             $elderProfile = $this->careseekersModel->getElderProfileById($elderID, $careseeker_id);
             $currentProfilePicture = $elderProfile->profile_picture;
-            // Sanitize POST data
+           
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Prepare input data and error messages
+            
             $data = [
                 'elder_id' => $elderID,
                 'careseeker_id' => $careseeker_id,
@@ -863,8 +863,8 @@ class careseeker extends controller
                 'special_needs' => trim($_POST['special_needs']),
                 'dietary_restrictions' => trim($_POST['dietary_restrictions']),
                 'profile_picture' => $_FILES['profile_picture'],
-                'profile_picture_name' => time() . '_' . $_FILES['profile_picture']['name'], // Default to current picture if not updated
-                // Error fields
+                'profile_picture_name' => time() . '_' . $_FILES['profile_picture']['name'], 
+              
                 'first_name_err' => '',
                 'last_name_err' => '',
                 'age_err' => '',
@@ -875,7 +875,7 @@ class careseeker extends controller
 
 
 
-            // Validation
+           
             if (empty($data['first_name'])) {
                 $data['first_name_err'] = 'Please enter the first name.';
             }
@@ -900,48 +900,48 @@ class careseeker extends controller
                 $data['relationship_to_careseeker_err'] = 'Please specify the relationship to the careseeker.';
             }
 
-            // Handle profile picture upload/update
-            if (!empty($data['profile_picture']['name'])) { // Only process if a new image is uploaded
+            
+            if (!empty($data['profile_picture']['name'])) { 
                 $profileImagePath = '/images/profile_imgs/' . $data['profile_picture_name'];
 
                 if (!empty($currentProfilePicture)) {
-                    // Update existing profile picture by deleting the old one
+                  
                     $oldImagePath = PUBROOT . '/images/profile_imgs/' . $currentProfilePicture;
                     if (updateImage($oldImagePath, $data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs/')) {
-                        // Successfully updated
+                       
                     } else {
                         $data['profile_picture_err'] = 'Failed to update profile picture.';
                     }
                 } else {
-                    // Upload a new profile picture
+                    
                     if (uploadImage($data['profile_picture']['tmp_name'], $data['profile_picture_name'], '/images/profile_imgs')) {
-                        // Successfully uploaded
+                        
                     } else {
                         $data['profile_picture_err'] = 'Profile picture uploading unsuccessful';
                     }
                 }
             } else {
-                // No new profile picture uploaded, retain the old one
+               
                 $data['profile_picture_name'] = $currentProfilePicture;
             }
-            // Check for errors
+           
             if (
                 empty($data['first_name_err']) && empty($data['last_name_err']) && empty($data['age_err'])
                 && empty($data['emergency_contact_err']) && empty($data['relationship_to_careseeker_err'])
                 && empty($data['profile_picture_err'])
             ) {
-                // No errors, update the profile
+               
                 if ($this->careseekersModel->updateElderProfile($data, $elderID)) {
-                    // Send a notification to the careseeker
+                   
                     createNotification($_SESSION['user_id'] , 'Your Elder Profile has been Changed.', false);
-                    // send flash message
+                   
                     flash('success', 'Your profile has been updated successfully.');
-                    redirect('careseeker/showElderProfiles'); // Redirect to the elder profiles page
+                    redirect('careseeker/showElderProfiles'); 
                 } else {
                     die('Something went wrong. Please try again.');
                 }
             } else {
-                // Load the view with error messages
+               
                 $this->view('careseeker/v_editElderProfile', $data);
             }
         }
@@ -1067,14 +1067,14 @@ class careseeker extends controller
       }
 
 
-    // Cancel Caregiving Request
+   
 
     public function cancelCaregivingRequest($requestId)
     {
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+        date_default_timezone_set('Asia/Colombo'); 
 
         $request = $this->careseekersModel->getRequestById($requestId);
         $caregiver = $this->careseekersModel->getCaregiverById($request->caregiver_id);
@@ -1086,7 +1086,7 @@ class careseeker extends controller
         }
 
         $now = new DateTime();
-        $startDateTime = $this->getStartDateTime($request); // using slot-aware logic
+        $startDateTime = $this->getStartDateTime($request); 
         $canCancel = false;
         $fineAmount = 0;
         $refundAmount = 0;
@@ -1100,7 +1100,7 @@ class careseeker extends controller
                 $canCancel = true;
 
                 if ($request->is_paid) {
-                    $refundAmount = $request->payment_details; // full refund
+                    $refundAmount = $request->payment_details; 
                 }
             } elseif ($hoursLeft > 0) {
                 $canCancel = true;
@@ -1133,14 +1133,14 @@ class careseeker extends controller
         <p>Request ID: ' . $requestId . '</p>
         <p>Please log in to the We4u system for further details.</p>';
   $caregiverEmail = $caregiver->email;
-        // Send email to caregiver  
+        
 $this->sendEmail(
 $caregiverEmail,
 'Request Cancellation Notification - We4u',
 $emailBody
 );
 
-        // send a notification to caregiver
+       
         createNotification($request->caregiver_id, 'A request you previously received has been cancelled by the care seeker.', false);
 
         flash('success', 'Request cancelled successfully.');
@@ -1175,13 +1175,13 @@ $emailBody
     }
 
 
-    // Cancel Consultation Request
+    
     public function cancelConsultRequest($requestId)
     {
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        date_default_timezone_set('Asia/Colombo'); // or your relevant timezone
+        date_default_timezone_set('Asia/Colombo'); 
 
         $request = $this->careseekersModel->getConsultantRequestById($requestId);
         $consultant = $this->careseekersModel->getConsultantById($request->consultant_id);
@@ -1201,7 +1201,7 @@ $emailBody
         if ($request->status === 'pending') {
             $canCancel = true;
             if ($request->is_paid) {
-                $refundAmount = $request->payment_details; // full refund for pending requests
+                $refundAmount = $request->payment_details; 
             }
         } elseif ($request->status === 'accepted') {
             $hoursLeft = ($appointmentDateTime->getTimestamp() - $now->getTimestamp()) / 3600;
@@ -1209,7 +1209,7 @@ $emailBody
             if ($hoursLeft >= 5) {
                 $canCancel = true;
                 if ($request->is_paid) {
-                    $refundAmount = $request->payment_details; // full refund if > 5 hours
+                    $refundAmount = $request->payment_details; 
                 }
             } elseif ($hoursLeft > 0) {
                 $canCancel = true;
@@ -1241,7 +1241,7 @@ $emailBody
         <p>Request ID: ' . $requestId . '</p>
         <p>Please log in to the We4u system for further details.</p>';
   $consultantEmail = $consultant->email;
-        // Send email to caregiver  
+       
 $this->sendEmail(
 $consultantEmail,
 'Request Cancellation Notification - We4u',
@@ -1261,64 +1261,64 @@ $emailBody
         $date = new DateTime($request->appointment_date);
 
         if (!empty($request->start_time)) {
-            // Use the start_time directly since it's now a TIME datatype
+            
             $timeComponents = explode(':', $request->start_time);
             $hours = (int)$timeComponents[0];
             $minutes = (int)$timeComponents[1];
             $date->setTime($hours, $minutes, 0);
         } else {
-            // Default to 8:00 AM if no start time is specified
+           
             $date->setTime(8, 0, 0);
         }
 
         return $date;
     }
 
-    // Delete Caregiving Request
+   
     public function deleteRequest($requestId = null)
     {
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Check if user is logged in
+     
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
-        // Check if user is a careseeker
+        
         if ($_SESSION['user_role'] !== 'Careseeker') {
             flash('error', 'You do not have permission to delete requests', 'alert alert-danger');
             redirect('pages/index');
         }
 
-        // If no request ID provided, redirect back
+       
         if (!$requestId) {
             flash('error', 'No request specified', 'alert alert-danger');
             redirect('careseeker/viewRequests');
         }
 
-        // Verify the request belongs to this careseeker
+        
         $request = $this->careseekersModel->getRequestById($requestId);
         if (!$request || $request->requester_id != $_SESSION['user_id']) {
             flash('error', 'You do not have permission to delete this request', 'alert alert-danger');
             redirect('careseeker/dashboard');
         }
 
-        // Check if the request is in a deletable state (cancelled, rejected, or completed)
+       
         $deletableStates = ['cancelled', 'rejected', 'completed'];
         if (!in_array(strtolower($request->status), $deletableStates)) {
             flash('warning', 'Only cancelled, rejected, or completed requests can be deleted', 'alert alert-danger');
             redirect('careseeker/viewRequestInfo/' . $requestId);
         }
 
-        // Delete the request
+       
         if ($this->careseekersModel->deleteRequest($requestId)) {
             flash('success', 'Request successfully deleted', 'alert alert-success');
         } else {
             flash('error', 'Failed to delete request. Please try again.', 'alert alert-danger');
         }
 
-        // Redirect to dashboard
+      
         redirect('careseeker/viewRequests');
     }
 
@@ -1375,10 +1375,10 @@ $emailBody
             redirect('pages/permissonerror');
         }
 
-        // Get caregiver ID from session
+       
         $careseeker_id = $_SESSION['user_id'];
 
-        // Get all requests for this consultant
+       
         $consultant_sessions = $this->careseekersModel->getAllConsultantSessions($careseeker_id);
         $elderProfiles = $this->careseekersModel->getElderProfilesByCareseeker($careseeker_id);
 
@@ -1392,7 +1392,7 @@ $emailBody
     }
 
 
-    //upload files for session
+   
     public function uploadSessionFile()
     {
         if ($_SESSION['user_role'] != 'Careseeker') {
@@ -1400,16 +1400,16 @@ $emailBody
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Check login and role
+           
             if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'Careseeker') {
                 redirect('users/login');
             }
 
             $session_id = $_POST['session_id'];
             $file_type = $_POST['file_type'];
-            $uploaded_by = 'careseeker'; // Or 'careseeker' if you're in that controller
+            $uploaded_by = 'careseeker'; 
 
-            // Handle link upload
+          
             if ($file_type === 'link') {
                 $link = trim($_POST['link']);
                 if (!empty($link)) {
@@ -1420,15 +1420,15 @@ $emailBody
                 }
             }
 
-            // Handle file upload
+           
             elseif (!empty($_FILES['file']['name'])) {
                 $file_name = time() . '_' . basename($_FILES['file']['name']);
 
-                // Define file system and public path
+                
                 $target_dir = dirname(APPROOT) . '/public/documents/sessionDocuments/';
                 $public_path = 'documents/sessionDocuments/' . $file_name;
 
-                // Create directory if not exists
+                
                 if (!is_dir($target_dir)) {
                     mkdir($target_dir, 0777, true);
                 }
@@ -1450,17 +1450,17 @@ $emailBody
 
     public function deleteSessionFile($file_id)
     {
-        // You can add role-based security here if needed
+      
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
 
-        // Load the file first to get session_id for redirection after delete
-        $file = $this->careseekersModel->getFileById($file_id); // See helper below
+       
+        $file = $this->careseekersModel->getFileById($file_id); 
 
         if (!$file) {
             flash('error', 'File not found');
-            redirect('pages/notfound'); // or wherever you prefer
+            redirect('pages/notfound'); 
         }
 
         if ($this->careseekersModel->deleteSessionFile($file_id)) {
@@ -1478,10 +1478,10 @@ $emailBody
         if ($_SESSION['user_role'] != 'Careseeker') {
             redirect('pages/permissonerror');
         }
-        // Get session details
+       
         $session = $this->careseekersModel->getAllConsultantSessionsById($session_id);
 
-        // Check if session exists and belongs to the current user
+       
         if (!$session || $session->careseeker_id != $_SESSION['user_id']) {
             flash('error', 'Unauthorized access or session not found');
             redirect('careseeker/dashboard');
@@ -1489,13 +1489,13 @@ $emailBody
 
 
 
-        // Get files uploaded by careseeker
+       
         $your_files = $this->careseekersModel->getSessionFilesByUploader($session_id, 'careseeker');
 
-        // Get files uploaded by consultant
+        
         $consultant_files = $this->careseekersModel->getSessionFilesByUploader($session_id, 'consultant');
 
-        // Prepare data for view
+        
         $data = [
             'session_id' => $session_id,
             'session' => $session,
@@ -1503,7 +1503,7 @@ $emailBody
             'consultant_files' => $consultant_files
         ];
 
-        // Load view
+        
         $this->view('careseeker/v_viewConsultantSession', $data);
     }
 
@@ -1601,7 +1601,7 @@ $emailBody
     }
 
 
-    //caregiver history for careseeker
+    
     public function careseekerCaregivingHistory(){ 
         $careseekerId = $_SESSION['user_id'];
         $history = $this->careseekersModel->getCareseekerCaregivingHistory($careseekerId);
@@ -1632,9 +1632,9 @@ $emailBody
     
     
 
-// Send email helper method
+
 private function sendEmail($to, $subject, $body) {
-    // This is a wrapper for your existing sendEmail function
+   
     $result = sendEmail($to, $subject, $body);
     
     if ($result['success']) {
@@ -1767,32 +1767,18 @@ public function addReview($reviewed_user_id, $role) {
             'rating' => $review->rating,
             'review_text_err' => '',
             'rating_err' => '',
-            'review_err' => '' // Initialize review_err
+            'review_err' => '' 
         ];
         $this->view('careseeker/v_editreview', $data);
     }
 }
 
-// public function deletereview($review_id) {
-//     $review = $this->careseekersModel->getReviewById($review_id);
 
-//     // Ensure the logged-in user is the reviewer
-//     if ($review->reviewer_id != $_SESSION['user_id']) {
-//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
-//     }
-
-//     if ($this->careseekerModel->deleteReview($review_id)) {
-//         flash('review_message', 'Review deleted successfully');
-//         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);
-//     } else {
-//         die('Something went wrong');
-//     }
-// }
 
 public function deleteReview($review_id) {
     $review = $this->careseekersModel->getReviewById($review_id);
 
-    // Ensure the logged-in user is the reviewer
+    
     if ($review->reviewer_id != $_SESSION['user_id']) {
         flash('review_message', 'You are not authorized to delete this review.');
         redirect('careseeker/viewCaregiverReviews/' . $review->reviewed_user_id);

@@ -10,16 +10,15 @@
     }
 
     public function index() {
-      // Redirect to the blogs page or another appropriate page
+      
       redirect('users/blogs');
   }
     public function register(){
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        // Now the form is submitting
-        // Value the data
+        
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-        // INPUT DATA
+       
         $data = [
           'username' => trim($_POST['username']),
           'email' => trim($_POST['email']),
@@ -36,22 +35,21 @@
           'confirm_password_err' => ''
         ];
 
-        // validation part
-        // validate username
+       
         if(empty($data['username'])){
           $data['username_err'] = 'Please enter username';
         }
 
-        // validate email
+      
         if(empty($data['email'])){
           $data['email_err'] = 'Please enter email';
         }else{
-          // check email
+          
           if($this->usersModel->findUserByEmail($data['email'])){
             $data['email_err'] = 'Email is already taken';
           }
         }
-        // validate gender
+      
         if(empty($data['gender'])){
           $data['gender_err'] = 'Please add gender';
         }
@@ -61,7 +59,7 @@
       } elseif (!$this->usersModel->validateDate($data['dob'])) { 
           $data['dob_err'] = 'Invalid date format. Please use YYYY-MM-DD';
       }else {
-        // Calculate age from DOB
+      
         $dob = new DateTime($data['dob']);
         $today = new DateTime();
         $age = $today->diff($dob)->y;
@@ -71,7 +69,7 @@
         }
     }
 
-        // validate password
+        
         if(empty($data['password'])){
           $data['password_err'] = 'Please enter password';
         } elseif(strlen($data['password']) < 6){
@@ -86,7 +84,7 @@
           $data['confirm_password_err'] = 'Passwords do not match';
         }
 
-        // confirm password
+       
         if(empty($data['confirm_password'])){
           $data['confirm_password_err'] = 'Please confirm password';
         } else{
@@ -95,17 +93,16 @@
           }
         }
 
-        // if the validation completes successfully
+        
         if(empty($data['username_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['gender_err']) && empty($data['dob_err'])){
-          // now we can register the user
-          // Hash the password
+         
           $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-          // REGISTER THE USER
+         
           if($this->usersModel->register($data)){
-            // after registering the user, redirect him to the login page
+            
             redirect('users/login');
-            // die('User Registered');
+            
           } else {
             die('Something went wrong');
           }   
@@ -115,7 +112,7 @@
         }
 
       } else {
-        // the form is not submitting
+        
         $data =[
           'username' => '',
           'email' => '',
@@ -132,7 +129,7 @@
           'confirm_password_err' => ''
         ];
 
-        // load the view
+       
         $this->view('users/v_register', $data);
       }
 
@@ -140,7 +137,7 @@
 
   public function login(){
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
-      // FORM IS SUBMITTING
+      
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
       $data = [
@@ -150,79 +147,78 @@
         'password_err' => '',
       ];
 
-      // VALIDATE
-      // validate email
+     
       if(empty($data['email'])){
         $data['email_err'] = 'Please Enter The Email' ; 
       }
       else {
         if($this->usersModel->findUserByEmail($data['email'])){
-          // user is found
+         
         }
         else{
-          // user is not found
+          
           $data['email_err'] = 'User Not Found';
         }
       }
 
-      // validte password
+      
       if(empty($data['password'])){
         $data['password_err'] = 'Please Enter The Password';
       }
 
-      // If no error found login the user
+      
       if(empty($data['email_err']) && empty($data['password_err'])){
-        // log the user
+        
         $loggedUser = $this->usersModel->login($data['email'], $data['password']);
 
         if($loggedUser){
-          // Check if user is deactivated
+          
           if($loggedUser->is_deactive == 1){
             $data['email_err'] = 'Your account has been deactivated. Please contact support for assistance.';
             $this->view('users/v_login', $data);
             return;
           }
           
-          // Check if user is a Caregiver or Consultant and needs approval
+          
           if ($loggedUser->role == 'Caregiver' || $loggedUser->role == 'Consultant') {
             $approvalStatus = $this->usersModel->getApprovalStatus($loggedUser->user_id, $loggedUser->role);
 
             if ($approvalStatus === 'pending') {
-                // Approval pending - show message
+                
                 $data['email_err'] = 'Your account is pending approval. Please wait for confirmation.';
                 $this->view('users/v_login', $data);
                 return;
             } elseif ($approvalStatus === 'rejected') {
-                // Account rejected - show message
+             
                 $data['email_err'] = 'Your account has been rejected. Please contact support for further assistance.';
                 $this->view('users/v_login', $data);
                 return;
             }
           }
           
-          // If approved and not deactivated, create session
+         
           $this->createUserSession($loggedUser);
         }
         else{
           $data['password_err'] = 'Password Incorrect';
-          // load view with errors
+         
           $this->view('users/v_login', $data);
         }
       }
       else {
-        // load view with error
+     
         $this->view('users/v_login', $data);
       }
     }
     else {
-      // initial form 
+     
       $data = [
         'email' => '',
         'password' => '',
         'email_err' => '',
         'password_err' => '',
       ];
-      // load the view
+     
       $this->view('users/v_login', $data);
     }
 }
@@ -641,26 +637,26 @@ public function viewCaregiverProfile($id = null) {
 
 
 
-// Password Reset
+
 
 
 
 public function sendResetCode() {
-  // Check for POST
+
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Process form
+    
       $email = trim($_POST['email']);
       
-      // Check if email exists in the database
+      
       if($this->usersModel->findUserByEmail($email)) {
-          // Generate a random 5-digit code
+         
           $resetCode = sprintf("%05d", rand(0, 99999));
           
-          // Store the code in the database with an expiration time (1 hour from now)
-          $expiryTime = date('Y-m-d H:i:s', time() + 3600); // 1 hour from now
+       
+          $expiryTime = date('Y-m-d H:i:s', time() + 3600); 
           
           if($this->usersModel->storeResetCode($email, $resetCode, $expiryTime)) {
-              // Send the code by email
+             
               $emailBody = '<h1>Password Reset Code</h1>
                   <p>You requested a password reset. Use the following code to reset your password:</p>
                   <h2>' . $resetCode . '</h2>
@@ -674,32 +670,32 @@ public function sendResetCode() {
               );
               
               if($result) {
-                  // Redirect to verify code page
-                  flash('reset_message', 'Reset code sent to your email');
+                
+                  flash('success', 'Reset code sent to your email');
                   redirect('users/verifyResetCode/' . urlencode($email));
               } else {
-                  // Email sending failed
-                  flash('reset_error', 'Failed to send reset code, please try again', 'alert alert-danger');
+                  
+                  flash('error', 'Failed to send reset code, please try again');
                   redirect('users/login');
               }
           } else {
-              flash('reset_error', 'Something went wrong, please try again', 'alert alert-danger');
+              flash('error', 'Something went wrong, please try again');
               redirect('users/login');
           }
       } else {
-          // Email doesn't exist
-          flash('reset_error', 'No account found with that email', 'alert alert-danger');
+         
+          flash('error', 'No account found with that email');
           redirect('users/login');
       }
   } else {
-      // Redirect to login page if accessed directly
+     
       redirect('users/login');
   }
 }
 
 public function verifyResetCode($email = '') {
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Process verification form
+    
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
       
       $data = [
@@ -708,25 +704,24 @@ public function verifyResetCode($email = '') {
           'code_err' => ''
       ];
       
-      // Validate code
+      
       if(empty($data['code'])) {
           $data['code_err'] = 'Please enter the verification code';
       } elseif(strlen($data['code']) != 5 || !is_numeric($data['code'])) {
           $data['code_err'] = 'Invalid code format';
       }
       
-      // Check if code is valid
+     
       if(empty($data['code_err'])) {
           $codeData = $this->usersModel->verifyResetCode($data['email'], $data['code']);
           
           if($codeData) {
-              // Check if code is expired
+              
               $currentTime = date('Y-m-d H:i:s');
               if($currentTime > $codeData->expiry_time) {
                   $data['code_err'] = 'This code has expired. Please request a new one.';
               } else {
-                  // Code is valid, redirect to reset password page
-                  // Store code verification in session to prevent direct access to reset page
+                  
                   $_SESSION['reset_verified'] = true;
                   $_SESSION['reset_email'] = $data['email'];
                   
@@ -740,7 +735,7 @@ public function verifyResetCode($email = '') {
       
       $this->view('users/v_verifyCode', $data);
   } else {
-      // Initial form load
+     
       $data = [
           'email' => urldecode($email),
           'code' => '',
@@ -752,13 +747,13 @@ public function verifyResetCode($email = '') {
 }
 
 public function resetPassword() {
-  // Check if user is verified
+  
   if(!isset($_SESSION['reset_verified']) || $_SESSION['reset_verified'] !== true) {
       redirect('users/login');
   }
   
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Process form
+     
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
       
       $data = [
@@ -769,46 +764,46 @@ public function resetPassword() {
           'confirm_password_err' => ''
       ];
       
-      // Validate password
+      
       if(empty($data['password'])) {
           $data['password_err'] = 'Please enter a password';
       } elseif(strlen($data['password']) < 6) {
           $data['password_err'] = 'Password must be at least 6 characters';
       }
       
-      // Validate confirm password
+      
       if(empty($data['confirm_password'])) {
           $data['confirm_password_err'] = 'Please confirm password';
       } elseif($data['password'] != $data['confirm_password']) {
           $data['confirm_password_err'] = 'Passwords do not match';
       }
       
-      // If no errors
+      
       if(empty($data['password_err']) && empty($data['confirm_password_err'])) {
-          // Hash password
+          
           $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
           
-          // Update password
+         
           if($this->usersModel->updatePassword($data['email'], $data['password'])) {
-              // Remove verification from session
+              
               unset($_SESSION['reset_verified']);
               unset($_SESSION['reset_email']);
               
-              // Invalidate used reset codes
+             
               $this->usersModel->invalidateResetCodes($data['email']);
               
-              flash('password_success', 'Your password has been updated successfully');
+              flash('success', 'Your password has been updated successfully');
               redirect('users/login');
           } else {
-              flash('password_error', 'Something went wrong, please try again', 'alert alert-danger');
+              flash('error', 'Something went wrong, please try again');
               $this->view('users/v_reset_password', $data);
           }
       } else {
-          // Load view with errors
+          
           $this->view('users/v_resetPassword', $data);
       }
   } else {
-      // Initial form load
+      
       $data = [
           'email' => $_SESSION['reset_email'],
           'password' => '',
@@ -821,9 +816,9 @@ public function resetPassword() {
   }
 }
 
-// Send email helper method
+
 private function sendEmail($to, $subject, $body) {
-  // This is a wrapper for your existing sendEmail function
+  
   $result = sendEmail($to, $subject, $body);
   
   if ($result['success']) {
@@ -879,7 +874,7 @@ public function viewblog($blogId = null) {
   
   // Check if blog exists
   if (!$blog) {
-      flash('blog_message', 'Blog not found', 'alert alert-danger');
+      flash('error', 'Blog not found');
       redirect('users/blogs');
   }
   

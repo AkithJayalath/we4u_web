@@ -7,7 +7,7 @@ class M_payment{
         $this->db = new Database();
     }
 
-    public function storeCaregiverPayment($data) {
+    public function storeCaregiverPayment($data) { 
         $this->db->query("INSERT INTO care_payments 
             (care_request_id, payer_id, caregiver_id, amount ,stripe_charge_id) 
             VALUES (:requestId, :payerId, :caregiverId, :amount , :stripeChargeId)");

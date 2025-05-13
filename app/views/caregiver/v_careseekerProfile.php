@@ -63,9 +63,7 @@
                     <div class="personal-info-diagnosis">
                         <p><strong>Health Barriers:</strong> <?php echo $data['elderProfile']->health_barriers?></p>
                     </div>
-                    <button class="caregiver-chat-button">
-                    <i class="fas fa-comments"></i> Chat
-                    </button>
+                    
                     
                 </div>
             </div>

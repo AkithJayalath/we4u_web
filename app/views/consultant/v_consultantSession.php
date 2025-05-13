@@ -30,9 +30,9 @@ echo loadCSS($required_styles);
                             <h2>Request ID #154</h2>
                             <h2>Dr. Amala Silva</h2>
                             <span class="tag accepted">On going</span>
-                            <p class="consultant-rating">
+                            <!-- <p class="consultant-rating">
                                 <span class="rating-stars" id="rating-stars"></span>
-                            </p>
+                            </p> -->
                         </div>
                         <div class="session-info-personal-info-details">
                         <h2>Profile ID #184</h2>

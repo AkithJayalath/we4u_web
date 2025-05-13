@@ -28,7 +28,7 @@
     <button type="submit" class="view-profile-btn">View Profile</button>
 </form>
 
-            <!-- Add a form to submit the delete request -->
+           
             <form action="<?php echo URLROOT; ?>/careseeker/deleteElderProfile/<?php echo $elder->elder_id; ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this profile?');">
                 <button type="submit" class="delete-profile-btn">Delete</button>
             </form>

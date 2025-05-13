@@ -363,9 +363,7 @@
 
     
 
- // for password reset   
-
-// Find user by email for password reset
+ 
 public function findUserByEmailCode($email) {
     $this->db->query('SELECT * FROM user WHERE email = :email');
     $this->db->bind(':email', $email);
@@ -374,9 +372,9 @@ public function findUserByEmailCode($email) {
 
 
 
-    // Store reset code in database
+    
 public function storeResetCode($email, $code, $expiryTime) {
-    // First, get the user ID
+   
     $user = $this->findUserByEmailCode($email);
     if (!$user) {
         return false;
@@ -384,13 +382,13 @@ public function storeResetCode($email, $code, $expiryTime) {
     
     $userId = $user->user_id;
     
-    // Check if we need to create a new record or update existing one
+   
     $this->db->query("SELECT * FROM password_resets WHERE user_id = :user_id");
     $this->db->bind(':user_id', $userId);
     $existingReset = $this->db->single();
     
     if ($existingReset) {
-        // Update existing record
+       
         $this->db->query("UPDATE password_resets SET 
                         reset_code = :reset_code, 
                         expiry_time = :expiry_time, 
@@ -398,7 +396,7 @@ public function storeResetCode($email, $code, $expiryTime) {
                         is_used = 0
                         WHERE user_id = :user_id");
     } else {
-        // Create new record
+        
         $this->db->query("INSERT INTO password_resets (user_id, reset_code, expiry_time, created_at) 
                         VALUES (:user_id, :reset_code, :expiry_time, NOW())");
     }
@@ -410,9 +408,9 @@ public function storeResetCode($email, $code, $expiryTime) {
     return $this->db->execute();
 }
 
-// Verify reset code
+
 public function verifyResetCode($email, $code) {
-    // Get user ID from email
+    
     $user = $this->findUserByEmailCode($email);
     if (!$user) {
         return false;
@@ -420,7 +418,7 @@ public function verifyResetCode($email, $code) {
     
     $userId = $user->user_id;
     
-    // Check if code is valid and not used
+    
     $this->db->query("SELECT * FROM password_resets 
                     WHERE user_id = :user_id 
                     AND reset_code = :reset_code 
@@ -434,7 +432,7 @@ public function verifyResetCode($email, $code) {
     return $reset ? $reset : false;
 }
 
-// Update user password
+
 public function updatePassword($email, $hashedPassword) {
     $this->db->query("UPDATE user SET password = :password WHERE email = :email");
     $this->db->bind(':email', $email);
@@ -443,9 +441,9 @@ public function updatePassword($email, $hashedPassword) {
     return $this->db->execute();
 }
 
-// Invalidate used reset codes
+
 public function invalidateResetCodes($email) {
-    // Get user ID from email
+    
     $user = $this->findUserByEmailCode($email);
     if (!$user) {
         return false;
@@ -453,7 +451,7 @@ public function invalidateResetCodes($email) {
     
     $userId = $user->user_id;
     
-    // Mark all codes as used
+    
     $this->db->query("UPDATE password_resets SET is_used = 1 WHERE user_id = :user_id");
     $this->db->bind(':user_id', $userId);
     
@@ -461,15 +459,15 @@ public function invalidateResetCodes($email) {
 }
 
 public function getAllBlogs($page, $perPage) {
-    // Calculate the offset for pagination
+    
     $offset = ($page - 1) * $perPage;
 
-    // Select all blogs along with their authors' information
+    
     $this->db->query('SELECT b.*, u.username, u.profile_picture
                       FROM blogs b
                       JOIN user u ON b.user_id = u.user_id
                       ORDER BY b.created_at DESC
-                      LIMIT :offset, :perPage'); // Fetch blogs with pagination
+                      LIMIT :offset, :perPage'); 
     $this->db->bind(':offset', $offset, PDO::PARAM_INT);
     $this->db->bind(':perPage', $perPage, PDO::PARAM_INT);
 

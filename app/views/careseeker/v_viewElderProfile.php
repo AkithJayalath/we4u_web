@@ -10,9 +10,9 @@ echo loadCSS($required_styles);
 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
-    <!-- Container -->
+   
     <div class="view-elder-profile">
-        <!-- Personal info section -->
+
         <div class="personal-info-section">
             <div class="personal-info-left">
                 <div class="personal-info-profile">
@@ -32,7 +32,7 @@ echo loadCSS($required_styles);
             </div>
 
             <div class="personal-info-right">
-                <!-- Stats Section -->
+               
                 <div class="personal-info-right-left">
                     <div class="personal-info-stat">
                         <p>BMI</p>
@@ -52,7 +52,7 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
 
-                <!-- Diagnosis Section -->
+                
                 <div class="personal-info-right-right">
                     <div class="personal-info-diagnosis">
                         <p><strong>Emergency Contact:</strong><?php echo $data['elderData']->emergency_contact ?> </p>
@@ -73,9 +73,9 @@ echo loadCSS($required_styles);
             </div>
         </div>
 
-<!-- other info section -->
+
         <div class="other-info-section">
-            <!-- Health concerns -->
+           
             <div class="health-concern-section">
                 <div class="health-concern-section-header">
                     <div class="header-with-icon">
@@ -119,9 +119,29 @@ echo loadCSS($required_styles);
                             <p><?php echo $data['elderData']->allergies ?></p>
                         </div>
                     </div>
+                    <div class="health-concern-item">
+                        <i class="fas fa-tint icon"></i>
+                        <div>
+                            <h4>HBC</h4>
+                            <?php
+                 
+                  $hbc = $data['elderData']->hbc;
+
+    
+                  if ($hbc>12) {
+                    $status = "High";
+                  } elseif ($hbc>=10) {
+                    $status = "Normal";
+                  } else {
+                    $status = "Low"; 
+                  }
+                  ?>
+                            <p><?php echo $data['elderData']->hbc ?>(<?php echo $status ?>)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- Other concerns -->
+           
             <div class="other-concern-section">
                 <div class="other-concern-section-header">
                     <div class="header-with-icon">

@@ -19,6 +19,7 @@ class M_Careseekers{
             height,
             blood_pressure,
             emergency_contact,
+            hbc,
             chronic_disease,
             current_health_issues,
             allergies,
@@ -40,6 +41,7 @@ class M_Careseekers{
             :height,
             :blood_pressure,
             :emergency_contact,
+            :hbc,
             :chronic_disease,
             :current_health_issues,
             :allergies,
@@ -64,6 +66,7 @@ class M_Careseekers{
         $this->db->bind(':height', $data['height']);
         $this->db->bind(':blood_pressure', $data['blood_pressure']);
         $this->db->bind(':emergency_contact', $data['emergency_contact']);
+        $this->db->bind(':hbc', $data['hbc']);
         $this->db->bind(':chronic_disease', $data['chronic_disease']);
         $this->db->bind(':current_health_issues', $data['current_health_issues']);
         $this->db->bind(':allergies', $data['allergies']);
@@ -74,7 +77,7 @@ class M_Careseekers{
         $this->db->bind(':dietary_restrictions', $data['dietary_restrictions']);
         $this->db->bind(':profile_pic', $data['profile_picture_name']);
 
-        // Execute the query
+       
         if ($this->db->execute()) {
             return true;
         } else {
@@ -82,14 +85,14 @@ class M_Careseekers{
         }
     }
 
-    // Method to get all elder profiles
+   
     public function getAllElders() {
         $query = "SELECT * FROM elders";
         $this->db->query($query);
         return $this->db->resultSet();
     }
 
-    // Method to get all elder profiles of a specific careseeker
+    
     public function getElderProfilesByCareseeker($careseeker_id) {
         $this->db->query('SELECT * FROM elderprofile WHERE careseeker_id = :careseeker_id');
         $this->db->bind(':careseeker_id', $careseeker_id);
@@ -105,7 +108,7 @@ class M_Careseekers{
         return $this->db->single();
     }
 
-    // Method to get a single elder profile by ID
+    
     public function getElderProfileById($elderID, $careseeker_id)
 {
     $this->db->query('SELECT * FROM elderprofile WHERE elder_id = :elder_id AND careseeker_id = :careseeker_id');
@@ -114,25 +117,25 @@ class M_Careseekers{
 
     $row = $this->db->single();
 
-    // Check if a profile was found
+    
     if ($this->db->rowCount() > 0) {
-        return $row; // Return the elder profile as an object
+        return $row; 
     } else {
-        return false; // Return false if no matching profile
+        return false; 
     }
 }
 
 
     public function deleteElderProfile($elderId) {
-        // Prepare query to delete profile
+      
         $query = 'DELETE FROM elderprofile WHERE elder_id = :elder_id AND careseeker_id = :careseeker_id';
 
-        // Bind parameters
+        
         $this->db->query($query);
         $this->db->bind(':elder_id', $elderId);
-        $this->db->bind(':careseeker_id', $_SESSION['user_id']);  // Ensure the careseeker can only delete their own profiles
+        $this->db->bind(':careseeker_id', $_SESSION['user_id']);  
 
-        // Execute query
+        
         if ($this->db->execute()) {
             return true;
         } else {
@@ -166,10 +169,10 @@ class M_Careseekers{
                 profile_picture = :profile_picture
             WHERE elder_id = :elder_id AND careseeker_id=:careseeker_id";
 
-    // Prepare the query
+   
     $this->db->query($sql);
 
-    // Bind parameters to the query
+    
     $this->db->bind(':first_name', $data['first_name']);
     $this->db->bind(':middle_name', $data['middle_name']);
     $this->db->bind(':last_name', $data['last_name']);
@@ -193,7 +196,7 @@ class M_Careseekers{
     $this->db->bind(':elder_id', $elderID);
     $this->db->bind(':careseeker_id', $_SESSION['user_id']);
 
-    // Execute the query
+    
     if ($this->db->execute()) {
        return true;
     } else {
@@ -210,7 +213,7 @@ public function sendCareRequest($data) {
     VALUES 
     (:careseeker_id, :elder_id, :caregiver_id, :duration_type, :start_date, :end_date, :time_slots, :expected_services, :additional_notes, :status, :payment_details,:service_address)');
 
-    // Bind common values
+    
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
     $this->db->bind(':elder_id', $data['elder_id']);
     $this->db->bind(':caregiver_id', $data['caregiver_id']);
@@ -222,17 +225,17 @@ public function sendCareRequest($data) {
     $this->db->bind(':payment_details', $data['total_payment']);
     $this->db->bind(':service_address', $data['service_address']);
 
-    // Handle date fields based on duration type
+   
     if ($data['duration_type'] === 'long-term') {
         $this->db->bind(':start_date', $data['from_date']);
         $this->db->bind(':end_date', $data['to_date']);
     } else {
         $this->db->bind(':start_date', $data['from_date_short']);
-        $this->db->bind(':end_date', $data['from_date_short']); // For short-term, end_date is same as start_date
+        $this->db->bind(':end_date', $data['from_date_short']); 
     }
     
     if ($this->db->execute()) {
-        // Return this success states and the ID
+
         return [
             'success' => true,
             'id' => $this->db->lastInsertId()
@@ -258,7 +261,7 @@ public function getCaregiverById($caregiverId) {
 }
 
 public function sendConsultantRequest($data) {
-    // to convert time to correct format
+    
     $startTime = sprintf('%02d:00:00', $data['from_time']);
     $endTime = sprintf('%02d:00:00', $data['to_time']);
     $this->db->query('INSERT INTO consultantrequests 
@@ -266,7 +269,7 @@ public function sendConsultantRequest($data) {
     VALUES 
     (:careseeker_id, :elder_id, :consultant_id, :appointment_date, :start_time,:end_time, :expected_services, :additional_notes, :payment_amount, :status)');
 
-    // Bind values
+   
     $this->db->bind(':careseeker_id', $data['careseeker_id']);
     $this->db->bind(':elder_id', $data['elder_id']);
     $this->db->bind(':consultant_id', $data['consultant_id']);
@@ -280,7 +283,7 @@ public function sendConsultantRequest($data) {
     
     return $this->db->execute();
 }
-//To get carerequests of a careseeker
+
 public function getAllCareRequestsByUser($userId)
 {
     $this->db->query("
@@ -295,7 +298,7 @@ public function getAllCareRequestsByUser($userId)
     return $this->db->resultSet();
 }
 
-//similar function to get consultat requests of a careseeker
+
 public function getAllConsultRequestsByUser($userId)
 {
     $this->db->query("
@@ -309,7 +312,7 @@ public function getAllConsultRequestsByUser($userId)
     $this->db->bind(':user_id', $userId);
     return $this->db->resultSet();
 }
-// To get all request details
+
 public function getFullCareRequestInfo($requestId)
 { 
     $this->db->query("SELECT cr.*, 
@@ -358,7 +361,7 @@ public function getFullConsultRequestInfo($requestId)
 
 
 
-//to view caregiver profile
+
 public function getReviews($caregiver_id) {
     $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date, r.updated_date
                       FROM review r
@@ -395,7 +398,6 @@ public function showCaregiverProfile($caregiver_id) {
 
 
 
-//to view careseeker profile
 
 public function showCareseekerProfile($careseeker_id) {
     $this->db->query('SELECT u.*, c.*
@@ -408,7 +410,7 @@ public function showCareseekerProfile($careseeker_id) {
 }
 
 
-// To view consultant profile
+
 
 public function getReviewsConsultant($consultant_id) {
     $this->db->query('SELECT r.*, u.username, u.profile_picture, r.rating, r.review_date
@@ -476,7 +478,7 @@ public function markFineAsPaid($requestId) {
     return $this->db->execute();
 }
 
-//consultant request cancellation
+
 
 public function getConsultantRequestById($id) {
     $this->db->query("SELECT * FROM consultantrequests WHERE request_id = :id");
@@ -514,7 +516,7 @@ public function deleteRequest($requestId) {
     $this->db->query('DELETE FROM carerequests WHERE request_id = :request_id');
     $this->db->bind(':request_id', $requestId);
     
-    // Execute query
+   
     if ($this->db->execute()) {
         return true;
     } else {
@@ -536,7 +538,7 @@ public function markConsultRequestAsPaid($requestId) {
 
 
 
-// sessions
+
 
 public function getAllConsultantSessions($careseeker_id) {
     $this->db->query("SELECT 
@@ -587,7 +589,7 @@ public function getAllConsultantSessionsById($session_id) {
 }
 
 
-// upload session documents
+
 public function uploadSessionFile($session_id, $uploaded_by, $file_type, $file_value) {
     $this->db->query("INSERT INTO sessionfiles 
                       (session_id, uploaded_by, file_type, file_value) 
@@ -609,27 +611,27 @@ public function getSessionFiles($session_id) {
 
 
 public function deleteSessionFile($file_id) {
-    // First, get the file info
+    
     $this->db->query("SELECT * FROM sessionfiles WHERE file_id = :file_id");
     $this->db->bind(':file_id', $file_id);
     $file = $this->db->single();
 
     if ($file && $file->file_type !== 'link') {
-        // It's a file, so delete from filesystem
+        
         $file_path = dirname(APPROOT) . '/public/' . $file->file_value;
         if (file_exists($file_path)) {
-            unlink($file_path); // delete the physical file
+            unlink($file_path);
         }
     }
 
-    // Delete from DB
+   
     $this->db->query("DELETE FROM sessionfiles WHERE file_id = :file_id");
     $this->db->bind(':file_id', $file_id);
     return $this->db->execute();
 }
 
 public function deleteSchedulesByRequestId($request_id) {
-    // Delete entries from short schedules table
+    
     $this->db->query('DELETE FROM cg_shedules WHERE request_id = :request_id');
     $this->db->bind(':request_id', $request_id);
     $shortResult = $this->db->execute();
@@ -652,7 +654,7 @@ public function getFileById($file_id) {
 
 
 
-// Get files by uploader type (careseeker or consultant)
+
 public function getSessionFilesByUploader($session_id, $uploaded_by) {
     $this->db->query("SELECT * FROM sessionfiles 
                     WHERE session_id = :session_id 
@@ -709,7 +711,7 @@ public function getCareseekerConsultHistory($careseekerId){
 }
 
 
-//review
+
 public function addReview($data) {
     $this->db->query('INSERT INTO review (reviewer_id, reviewed_user_id, review_role, rating, review_text, review_date,updated_date) 
                       VALUES (:reviewer_id, :reviewed_user_id, :review_role, :rating, :review_text, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');

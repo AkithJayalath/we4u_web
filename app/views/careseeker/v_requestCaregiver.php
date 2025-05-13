@@ -46,9 +46,9 @@ echo loadCSS($required_styles);
                             <span class="request-personal-info-tag">Verfied</span>
                             <h2><?php echo $data['caregiver']->username; ?></h2>
                             <span class="request-email"><?php echo $data['caregiver']->email; ?></span>
-                            <p class="consultant-rating">
+                            <!-- <p class="consultant-rating">
                                 <span class="rating-stars" id="rating-stars"></span>
-                            </p>
+                            </p> -->
                             <p><?php echo $data['age']; ?></p>
                             <p><?php echo $data['caregiver']->gender; ?></p>
                             <p><?php echo $data['caregiver']->caregiver_type; ?> Term Care</p> 

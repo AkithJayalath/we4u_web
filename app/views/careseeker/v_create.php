@@ -11,7 +11,7 @@
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
     <div class="total-container">
-        <!-- Gradient bar with heading -->
+        
         <div class="gradient-bar-profile">
             <h1>Create Elderly Profile</h1>
         </div>
@@ -19,7 +19,7 @@
         <div class="container-profile">
             <div class="form-section">
                 <form action="<?php echo URLROOT; ?>/careseeker/createProfile" method="POST" enctype="multipart/form-data">
-                    <!-- Profile Picture Section -->
+                   
                     <div class="profile-picture-section">
                     <div class="profile-pic-container" onclick="triggerUpload()">
                 <img src="<?= isset($data['profile_picture']) && $data['profile_picture'] 
@@ -41,7 +41,7 @@
                         <span class="form-invalid"><?php echo $data['profile_picture_err'] ?? ''; ?></span>
                     </div>
 
-                    <!-- Personal Details Section -->
+                   
                     <div class="form-column">
                         <h2>Personal Details</h2>
                         <label for="F_elderlyName">*First Name:</label>
@@ -85,6 +85,9 @@
                         <input type="text" id="emergencyContact" name="emergency_contact" placeholder="Enter valid contact" value="<?php echo $data['emergency_contact']; ?>" required>
                         <span class="form-invalid"><?php echo $data['emergency_contact_err']; ?></span>
 
+                        <label for="hbc">HBC</label>
+                        <input type="number" id="hbc" name="hbc"  value="<?php echo $data['hbc']; ?>">
+
                         <label for="chronicDiseases">Chronic Diseases:</label>
                         <textarea id="chronicDiseases" name="chronic_disease" rows="3" placeholder="List chronic illnesses, if any..."><?php echo htmlspecialchars($data['chronic_disease']); ?></textarea>
 
@@ -95,7 +98,7 @@
                         <textarea id="health_barriers" name="health_barriers" rows="3" placeholder="List health barriers(eg:Fear of medication)"><?php echo htmlspecialchars($data['health_barriers']); ?></textarea>
                     </div>
 
-                    <!-- Health & Medical Details Section -->
+                   
                     <div class="form-column">
                         <h2>Health Details</h2>
                         <label for="currentHealthConcerns">Current Health Concerns:</label>
@@ -111,7 +114,7 @@
                         <textarea id="currentMedications" name="current_medications" rows="3" placeholder="Current medications,if any..."><?php echo htmlspecialchars($data['current_medications']); ?></textarea>
                     </div>
 
-                    <!-- Special Care Requirements -->
+                   
                     <div class="form-column">
                         <h2>Special Care Details</h2>
                         <label for="specialNeeds">Special Needs:</label>
@@ -121,7 +124,7 @@
                         <textarea id="dietaryRestrictions" name="dietary_restrictions" rows="3" placeholder="Diatery restrictions,if any..."><?php echo htmlspecialchars($data['dietary_restrictions']); ?></textarea>
                     </div>
 
-                    <!-- Submit and Cancel Buttons -->
+                  
                     <div class="form-actions">
                         <button type="submit" class="profile-create-btn">Create Profile</button>
                         <button type="button" class="profile-cancel-btn" onclick="window.location.href='<?php echo URLROOT; ?>/careseeker/showElderProfiles'">Cancel</button>

@@ -10,9 +10,9 @@ echo loadCSS($required_styles);
 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
-    <!-- Container -->
+   
     <div class="view-caregiver-profile">
-        <!-- Personal info section -->
+        
         <div class="caregiver-personal-info-section">
             <div class="caregiver-personal-info-left">
                 <div class="caregiver-personal-info-left-left">
@@ -24,11 +24,7 @@ echo loadCSS($required_styles);
                             <span class="caregiver-personal-info-tag">Verified</span>
                             <h2><?php echo $data['profile']->username; ?></h2>
                             <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
-                            <p class="consultant-rating">
-                                <?php for ($i = 1; $i <= 5; $i++) : ?>
-                                    <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
-                                <?php endfor; ?>
-                            </p>
+                            
                             <p><?php echo $data['age']; ?> Years</p>
                             <p><?php echo $data['profile']->gender; ?></p>
                         </div>
@@ -47,7 +43,7 @@ echo loadCSS($required_styles);
             </div>
         </div>
 
-        <!-- other info section -->
+       
         <div class="caregiver-other-info-section">
             <div class="caregiver-other-concern-section">
                 <div class="caregiver-other-concern-section-header">
@@ -60,7 +56,7 @@ echo loadCSS($required_styles);
                 </div>
             </div>
 
-            <!-- Health concerns -->
+           
             <div class="caregiver-health-concern-section">
                 <div class="caregiver-health-concern-section-header">
                     <div class="caregiver-header-with-icon">
@@ -134,7 +130,7 @@ echo loadCSS($required_styles);
                 </div>
             </div>
 
-            <!-- Other concerns -->
+           
             <div class="caregiver-other-concern-section">
                 <div class="caregiver-other-concern-section-header">
                     <div class="caregiver-header-with-icon">
@@ -142,7 +138,7 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
                 <div class="caregiver-other-concern-section-content">
-                    <!-- Availability content here -->
+                   
                 </div>
             </div>
         </div>
@@ -155,15 +151,15 @@ echo loadCSS($required_styles);
                     </div>
                 </div>
                 <div class="rating-section-content">
-                    <!-- ratings.js -->
+                 
                 </div>
                 <div class="reviews-section-content">
-                    <!-- reviews.js -->
+                   
                 </div>
             </div>
         </div>
     </div>
-    <!-- Container for the chat popup -->
+  
 <div id="chat-popup-container" class="hidden"></div>
 
 </page-body-container>

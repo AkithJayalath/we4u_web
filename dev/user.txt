@@ -1,0 +1,41 @@
+Explanation of the pattern /^[1-9][0-9]*7$/:
+^ ➔ Start of the string
+
+[1-9] ➔ First digit must be 1-9 (not 0)
+
+[0-9]* ➔ Followed by zero or more digits (0-9)
+
+7 ➔ Ends with 7
+
+$ ➔ End of the string
+
+// validate national ID start without 0 and last digit is 7
+if(empty($data['national_id'])){
+    $data['national_id_err'] = 'Please enter your National ID';
+} elseif(!preg_match('/^[1-9][0-9]*7$/', $data['national_id'])) {
+    $data['national_id_err'] = 'National ID must not start with 0 and must end with 7';
+}
+
+
+<form method="post" action="">
+
+    <label>Availability:</label><br>
+
+    <input type="radio" id="available" name="availability" value="available" checked>
+    <label for="available">Available</label><br>
+
+    <input type="radio" id="not_available" name="availability" value="not_available">
+    <label for="not_available">Not Available</label><br>
+
+    <button type="submit">Submit</button>
+
+</form>
+
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $availability = isset($_POST['availability']) ? trim($_POST['availability']) : 'available';
+
+    echo "Selected availability: " . $availability;
+}
+?>

@@ -11,7 +11,7 @@
 <page-body-container>
     <?php require APPROOT.'/views/includes/components/sidebar.php'; ?>
     <div class="total-container">
-        <!-- Gradient bar with heading -->
+       
         <div class="gradient-bar-profile">
             <h1>Edit Elderly Profile</h1>
         </div>
@@ -19,13 +19,13 @@
         <div class="container-profile">
             <div class="form-section">
             <?php
-// Assuming $data['elder_id'] is already set
+
 $elder_id = $data['elder_id'];
 ?>
             <form action="<?php echo URLROOT; ?>/careseeker/editElderProfile/" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="elder_id" value="<?php echo htmlspecialchars($elder_id); ?>">
 
-                    <!-- Profile Picture Section -->
+                   
                     <div class="profile-picture-section">
                     <div class="profile-pic-container" onclick="triggerUpload()">
                     <img src="<?= isset($data['profile_picture']) && $data['profile_picture'] 
@@ -48,7 +48,7 @@ $elder_id = $data['elder_id'];
                         <span class="form-invalid"><?php echo $data['profile_picture_err'] ?? ''; ?></span>
                     </div>
 
-                    <!-- Personal Details Section -->
+                   
                     <div class="form-column">
                         <h2>Personal Details</h2>
                         <label for="F_elderlyName">*First Name:</label>
@@ -102,7 +102,7 @@ $elder_id = $data['elder_id'];
                         <textarea id="health_barriers" name="health_barriers" rows="3" placeholder="List health barriers, if any..."><?php echo htmlspecialchars($data['health_barriers']); ?></textarea>
                     </div>
 
-                    <!-- Health & Medical Details Section -->
+                 
                     <div class="form-column">
                         <h2>Health Details</h2>
                         <label for="currentHealthConcerns">Current Health Concerns:</label>
@@ -118,7 +118,7 @@ $elder_id = $data['elder_id'];
                         <textarea id="currentMedications" name="current_medications" rows="3" placeholder="Current medications,if any..."><?php echo htmlspecialchars($data['current_medications']); ?></textarea>
                     </div>
 
-                    <!-- Special Care Requirements -->
+                
                     <div class="form-column">
                         <h2>Special Care Details</h2>
                         <label for="specialNeeds">Special Needs:</label>
@@ -128,7 +128,7 @@ $elder_id = $data['elder_id'];
                         <textarea id="dietaryRestrictions" name="dietary_restrictions" rows="3" placeholder="Diatery restrictions,if any..."><?php echo htmlspecialchars($data['dietary_restrictions']); ?></textarea>
                     </div>
 
-                    <!-- Submit and Cancel Buttons -->
+                   
                     <div class="save-cancel">
                     <button type="submit" class="save-btn">Save</button>
                     <a href="<?php echo URLROOT; ?>/careseeker/viewElderProfile" class="cancel-button">Cancel</a>
