@@ -7,8 +7,13 @@
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
 
-    <div class="edit-profile-container">
-        <div class="edit-profile-header">
+    <div class="request-info">
+
+
+<!-- Container -->
+<div class="view-requests-m-c-r-container">
+
+  <div class="view-requests-m-c-r-table-container">
             <h2>Edit Profile</h2>
         </div>
 
@@ -260,6 +265,7 @@
             </div>
         </div>
     </div>
+                    </div>
 </page-body-container>
 
 <script>

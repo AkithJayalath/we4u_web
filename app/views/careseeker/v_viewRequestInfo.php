@@ -10,19 +10,19 @@ echo loadCSS($required_styles);
 
 <page-body-container>
     <?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
-    <!-- Container -->
+    
     <div class="request-info">
         <div class="request-info-heading">
             <p>Request Information</p>
         </div>
 
-        <!-- Personal info section -->
+        
         <div class="request-info-header">
             <div class="request-info-header-left">
                 <div class="request-info-header-left-left">
                     <?php
 
-                    // Determine which image to display
+                    
                     $CaregiverprofilePic = !empty($data->caregiver_pic)
                         ? URLROOT . '/public/images/profile_imgs/' . $data->caregiver_pic
                         : URLROOT . '/public/images/def_profile_pic2.jpg';
@@ -64,31 +64,31 @@ echo loadCSS($required_styles);
                 <?php endif; ?>
 
                 <?php
-// Determine if button should be shown at all - only for non-disabled statuses
+
 $disabledStatuses = ['cancelled', 'rejected', 'completed'];
 $showButton = !in_array(strtolower($data->status), $disabledStatuses);
 
-// Only proceed if button should be shown
+
 if ($showButton) {
-    // Calculate if cancel button should be disabled
+    
     $isDisabled = false;
-    $currentDateTime = new DateTime(); // Current date and time
+    $currentDateTime = new DateTime(); 
     $startDate = new DateTime($data->start_date);
     
-    // Set start time based on service type
+    
     if (isset($data->duration_type) && $data->duration_type === 'long-term') {
-        // For long term, start time is 8:00 AM
+       
         $startDate->setTime(8, 0, 0);
     } else {
-        // For short term, determine the earliest time slot
+       
         $earliestTime = null;
 
-        // First, clean up and decode time slots
+       
         $raw = trim($data->time_slots, " \t\n\r\0\x0B\"");
         $cleaned = stripslashes($raw);
         $slots = json_decode($cleaned);
 
-        // Define the mapping of time slot names to actual times
+       
         $timeSlotMap = [
             'morning' => '08:00',
             'evening' => '13:00',
@@ -96,9 +96,9 @@ if ($showButton) {
             'full-day' => '08:00'
         ];
 
-        // Find the earliest time slot
+        
         if (is_array($slots)) {
-            $earliestHour = 24; // Initialize with a high value
+            $earliestHour = 24; 
 
             foreach ($slots as $slot) {
                 $slot = strtolower($slot);
@@ -112,7 +112,7 @@ if ($showButton) {
             }
         }
 
-        // Set the time to the earliest slot time or default to 8:00 AM if no valid slot found
+       
         if ($earliestTime) {
             list($hour, $minute) = explode(':', $earliestTime);
             $startDate->setTime((int)$hour, (int)$minute, 0);

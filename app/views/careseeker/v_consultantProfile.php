@@ -24,11 +24,7 @@ echo loadCSS($required_styles);
                             <span class="caregiver-personal-info-tag">Verified</span>
                             <h2><?php echo $data['profile']->username; ?></h2>
                             <span class="caregiver-email"><?php echo $data['profile']->email; ?></span>
-                            <p class="consultant-rating">
-                                <?php for($i=1; $i<=5; $i++) : ?>
-                                    <i class="fa-solid fa-star <?php echo ($i <= $data['rating']) ? 'active' : ''; ?>"></i>
-                                <?php endfor; ?>
-                            </p>
+                            
                             <p><?php echo $data['age']; ?> Years</p>
                             <p><?php echo $data['profile']->gender; ?></p>
                         </div>

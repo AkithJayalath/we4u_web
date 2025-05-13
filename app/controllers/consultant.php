@@ -4,9 +4,11 @@
       private $consultantModel;
       private $caregiversModel;
       private $sheduleModel;
+      private $sessionChatModel;
 
       public function __construct() {
           $this->consultantModel = $this->model('M_Consultant');
+          $this->sessionChatModel= $this->model('M_SessionChat');
           $this->caregiversModel = $this->model('M_Caregivers'); 
           $this->sheduleModel = $this->model('M_Shedules');
       }
@@ -242,7 +244,7 @@ public function acceptRequest($request_id) {
       $request = $this->consultantModel->getRequestById($request_id);
       $careseeker = $this->consultantModel->getCareseekerById($request->requester_id);
       if (!$request || $request->consultant_id != $consultantId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          flash('request_message', 'Unauthorized access!');
           redirect('consultant/viewRequests');
           return;
       }
@@ -259,16 +261,16 @@ public function acceptRequest($request_id) {
           // Send email to caregiver  
   $this->sendEmail(
   $careseekerEmail,
-  'Request Cancellation Notification - We4u',
+  'Request Accepted Notification - We4u',
   $emailBody
   );
           if ($session_id) {
             // Create or get chat for this session
-            $chat_id = $this->consultantModel->getOrCreateChatForSession($session_id);
-          flash('request_message', 'Request has been accepted and session is now active.');
+            $chat_id = $this->sessionChatModel->getOrCreateChatForSession($session_id);
+          flash('success', 'Request has been accepted and session is now active.');
           }
       } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+          flash('error', 'Something went wrong. Try again.');
       }
       redirect('consultant/viewRequests');
   }
@@ -280,7 +282,7 @@ public function rejectRequest($request_id) {
       $request = $this->consultantModel->getRequestById($request_id);
       $careseeker = $this->consultantModel->getCareseekerById($request->requester_id);
       if (!$request || $request->consultant_id != $consultantId) {
-          flash('request_message', 'Unauthorized access!', 'alert alert-danger');
+          flash('error', 'Unauthorized access!');
           redirect('consultant/viewRequests');
           return;
       }
@@ -297,9 +299,9 @@ $careseekerEmail,
 'Request Rejection Notification - We4u',
 $emailBody
 );
-          flash('request_message', 'Request has been rejected.');
+          flash('success', 'Request has been rejected.');
       } else {
-          flash('request_message', 'Something went wrong. Try again.', 'alert alert-danger');
+          flash('error', 'Something went wrong. Try again.');
       }
       redirect('consultant/viewRequests');
   }
@@ -359,7 +361,7 @@ public function cancelRequest($requestId, $flag = false) {
 
     if ($result) {
         $flagMessage = $shouldFlag ? " A cancellation flag has been added to your account." : "";
-        flash('request_success', 'Appointment cancelled successfully.' . $flagMessage);
+        flash('success', 'Appointment cancelled successfully.' . $flagMessage);
 
 
         $emailBody = '<h1>Request Cancelled</h1>
@@ -714,9 +716,9 @@ public function uploadSessionFile() {
             $link = trim($_POST['link']);
             if (!empty($link)) {
                 $this->consultantModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $link);
-                flash('upload_success', 'Link shared successfully');
+                flash('success', 'Link shared successfully');
             } else {
-                flash('upload_error', 'Link cannot be empty');
+                flash('error', 'Link cannot be empty');
             }
         }
 
@@ -737,9 +739,9 @@ public function uploadSessionFile() {
 
             if (move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
                 $this->consultantModel->uploadSessionFile($session_id, $uploaded_by, $file_type, $public_path);
-                flash('upload_success', 'File uploaded successfully');
+                flash('success', 'File uploaded successfully');
             } else {
-                flash('upload_error', 'File upload failed');
+                flash('error', 'File upload failed');
             }
         }
 
@@ -758,14 +760,14 @@ public function deleteSessionFile($file_id) {
     $file = $this->consultantModel->getFileById($file_id); // See helper below
 
     if (!$file) {
-        flash('upload_error', 'File not found');
+        flash('error', 'File not found');
         redirect('pages/notfound'); // or wherever you prefer
     }
 
     if ($this->consultantModel->deleteSessionFile($file_id)) {
-        flash('upload_success', 'File deleted successfully');
+        flash('success', 'File deleted successfully');
     } else {
-        flash('upload_error', 'File deletion failed');
+        flash('error', 'File deletion failed');
     }
 
     redirect('consultant/viewConsultantSession/' . $file->session_id);
@@ -778,7 +780,7 @@ public function viewConsultantSession($session_id) {
     
     // Check if session exists and belongs to the current user
     if (!$session || $session->consultant_id != $_SESSION['user_id']) {
-        flash('session_error', 'Unauthorized access or session not found');
+        flash('error', 'Unauthorized access or session not found');
         redirect('careseeker/');
     }
     
@@ -1011,6 +1013,126 @@ public function viewAppointments() {
 
 
 //   comment
+ //payment method controllers
+ public function payMethodView(){
+        
+       
+    $email = $_SESSION['user_email'];
+
+   
+    $payment = $this->caregiversModel->getPaymentMethodByEmail($email);
+
+    // Pass data to the view
+    $data = [
+        'email' => $email,
+        'mobile_number' => $payment->mobile_number ?? '',
+        'bank_name' => $payment->bank_name ?? '',
+        'account_number' => $payment->account_number ?? '',
+        'branch_name' => $payment->branch_name ?? '',
+        'account_holder_name' => $payment->account_holder_name ?? '',
+        'edit_mode' => false,
+
+        // Error placeholders
+        'mobile_err' => '',
+        'bank_name_err' => '',
+        'account_number_err' => '',
+        'branch_name_err' => '',
+        'account_holder_err' => '',
+    ];
+
+    $this->view('consultant/v_paymentMethodnew', $data);
+}
+
+public function updatePayMethod(){
+ 
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Sanitize POST data
+    $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+    $email = $_SESSION['user_email'];
+    $user_id = $_SESSION['user_id'];
+    
+    $paymentData = $this->caregiversModel->getPaymentMethodByEmail($email);
+    $data = [
+        'edit_mode' => true,
+        'email' => $email,
+        'user_id' => $user_id,
+        'mobile_number' => trim($_POST['mobile_number']),
+        'bank_name' => trim($_POST['bank_name']),
+        'account_number' => trim($_POST['account_number']),
+        'branch_name' => trim($_POST['branch_name']),
+        'account_holder_name' => trim($_POST['account_holder_name']),
+
+        // Error placeholders
+        'mobile_err' => '',
+        'bank_name_err' => '',
+        'account_number_err' => '',
+        'branch_name_err' => '',
+        'account_holder_err' => '',
+    ];
+
+    // Validate fields
+    if (empty($data['mobile_number'])) {
+        $data['mobile_err'] = 'Please enter mobile number';
+    }
+    
+    if (empty($data['bank_name'])) {
+        $data['bank_name_err'] = 'Please enter bank name';
+    }
+    
+    if (empty($data['account_number'])) {
+        $data['account_number_err'] = 'Please enter account number';
+    }
+    
+    if (empty($data['branch_name'])) {
+        $data['branch_name_err'] = 'Please enter branch name';
+    }
+    
+    if (empty($data['account_holder_name'])) {
+        $data['account_holder_err'] = 'Please enter account holder name';
+    }
+
+    // Check if there are any errors
+    if (empty($data['mobile_err']) && 
+        empty($data['bank_name_err']) && 
+        empty($data['account_number_err']) && 
+        empty($data['branch_name_err']) && 
+        empty($data['account_holder_err'])) {
+        
+        // No errors - proceed with update
+        if($this->caregiversModel->updatePayMethod($email, $data)) {
+            flash('update_success', 'Payment method updated successfully!');
+            redirect('consultant/payMethodView');
+        } else {
+            die("Something went wrong");
+        }
+    } else {
+        // There are errors - reload the edit view with errors
+        $this->view('consultant/v_paymentMethodnew', $data);
+    }
+} else {
+    // Not a POST request - redirect to view
+    redirect('consultant/payMethodView');
+}
+
+}
+
+
+public function deletePayMethod(){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($this->caregiversModel->deletePayMethod($_SESSION['user_email'])) { // Assuming you store user id in session
+        flash('payment_success', 'Payment method deleted successfully');
+        redirect('consultant/payMethodView');
+    } else {
+        flash('payment_error', 'Something went wrong, please try again');
+        redirect('consultant/payMethodView');
+    }
+} else {
+    redirect('consultant/payMethodView');
+}
+}
+
 
 
 }

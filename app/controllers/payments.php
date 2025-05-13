@@ -14,7 +14,7 @@ class payments extends controller{
         $this->caregiversModel = $this->model('M_caregivers');
        
     }
-    public function index(){
+    public function index(){ 
         
     }
 
