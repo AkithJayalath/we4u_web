@@ -2,8 +2,10 @@
 <body>
 <!--Top navbar  -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-<div class="top-container">
-    <div class="container">
+<page-body-container>
+<?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+<div class="user-careseeker-top-container">
+    <div class="user-careseeker-container">
    
         <div class="gradient-bar"> <a href="<?php echo URLROOT; ?>/users/editProfile" class="edit-button">Edit</a></div> <!-- Gradient bar behind the profile section -->
         
@@ -19,11 +21,11 @@
         </header>
 
         <div class="profile-section">
-            <div class="profile-pic">
+            <div class="profile-pic-b">
             <img src="<?= isset($data['profileData'][0]->profile_picture) && $data['profileData'][0]->profile_picture 
                         ? URLROOT . '/images/profile_imgs/' . $data['profileData'][0]->profile_picture 
                         : URLROOT . '/images/def_profile_pic.jpg'; ?>" 
-                        alt="Profile Picture" class="profile-pic" id="profile_image_placeholder">
+                        alt="Profile Picture" class="profile-pic-b" id="profile_image_placeholder">
 
 
             </div>
@@ -53,7 +55,7 @@
                 <input type="date" value="<?php echo $data['profileData'][0]->date_of_birth; ?>" readonly>
 
                 <label>Password</label>
-                <input type="password" placeholder="****************">
+                <input type="password" placeholder="****************" readonly>
             </div>
 
             <div class="form-right">
@@ -71,9 +73,9 @@
             </div>
             
         </form>
-        <div class="save-cancel"><a href="<?php echo URLROOT; ?>/users/deleteUser" class="cancel-button">Delete User</a>
-            </div>
+        
 
     </div>
 </div>
+</page-body-container>
 <?php require APPROOT.'/views/includes/footer.php' ?>

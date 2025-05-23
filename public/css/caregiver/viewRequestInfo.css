@@ -1,0 +1,817 @@
+.request-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 15px;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.request-info-heading p{
+    padding-left: 20;
+    font-weight: 500;
+    font-size:x-large;
+    color: var(--color-text-secondary);
+}
+
+.request-info-header {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--color-background-secondary);
+    border-radius: 20px;
+    gap: 20px;
+}
+
+.request-info-header-left {
+    display: flex;
+    flex: 2;  /* Take more space for the left content */
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.request-info-header-left-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background-color: var(--white);
+    margin-left: 20px; /* Space between the two sections */
+}
+
+.request-info-header-left-left {
+    flex: 0.5;
+    display: flex;
+    position: relative;
+    background-color: var(--white);
+    align-items:center;
+}
+
+.info-circle {
+    width: 150px; /* Adjust size of circles */
+    height: 150px;
+    border-radius: 50%; /* Creates the circular shape */
+    overflow: hidden; /* Ensures the image stays within the circle */
+    position: relative;
+    border: 10px solid white;
+}
+
+.info-circle img {
+    width: 100%; /* Makes the image fit inside the circle */
+    height: 100%;
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+}
+
+.image1 {
+    z-index: 2; /* Ensures this image appears on top */
+    margin-right: -40px; /* Adjust for overlap */
+}
+
+.image2 {
+    z-index: 1; /* Places this image behind the first */
+}
+
+.request-info-personal-info-tag {
+    display: inline-block;
+    margin-top: 10px; 
+    padding: 5px 10px; 
+    background-color: #dddddd; 
+    color: #6b6b6b;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px; 
+    max-width: 15%;
+    width: auto; 
+    box-sizing: border-box; 
+    white-space: nowrap; 
+}
+
+/* Personal info right section */
+.request-info-header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 10px; /* Space between the buttons */
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+/* Other concerns section */
+.request-info-other-concern-section {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1 1 100%; /* Full-width section */
+    margin: 0; /* Ensure alignment with other sections */
+}
+
+.request-info-buttons {
+    flex: 1;  /* Take less space for the buttons */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.request-info-buttons form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.request-send-button {
+    background-color: #00D1B2;  /* Teal color like in the image */
+    width: 100%;
+}
+
+.request-reject-button,.request-delete-button {
+    background-color: #b60000;  /* Dark blue color like in the image */
+    width: 100%;
+}
+
+.request-cancel-button {
+    background-color: #0F5D88;  /* Orange color like in the image */
+    width: 100%;
+}
+.request-send-button, .request-cancel-button,.request-reject-button,.request-delete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;  /* More rounded corners like in the image */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    height: 50px;
+    box-sizing: border-box;
+    position: relative;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.request-send-button:hover {
+    background-color: #00bfa5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.request-cancel-button:hover {
+    background-color: #0C4A6E;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.request-reject-button:hover,.request-delete-button:hover {
+    background-color: #880000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.request-send-button:active, .request-cancel-button:active ,.request-reject-button:active,.request-delete-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure the parent container fills its space */
+.request-infos-section {
+    display: flex;
+    justify-content: space-between; /* Space between the two columns */
+    align-items: stretch;
+    gap: 20px; /* Space between the columns */
+    padding: 20px;
+    background-color: #ffffff; /* Optional: Slight background for the section */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for the section */
+    box-sizing: border-box;
+}
+
+/* Each column */
+.request-info-column {
+    flex: 1; /* Columns take equal space */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    /* Light shadow for columns */
+}
+
+/* Individual cells within columns */
+.request-info-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for rows */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow for rows */
+}
+
+/* Labels and values styling */
+.request-info-row label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555555;
+    margin-bottom: 5px;
+}
+
+.request-info-row p {
+    font-size: 1rem;
+    color: #333333;
+    margin: 0;
+    font-weight: 500; /* Slightly bolder text for readability */
+}
+
+.view-elder-profile-link {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.view-elder-profile-link:hover {
+    text-decoration: underline;
+}
+
+/* Status tag styling */
+.tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pending {
+    background-color: #f0f0f0;  /* Light gray like in the image */
+    color: #6b6b6b;
+    border: none;
+}
+
+.accepted {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.completed {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+.cancelled {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+.request-info-personal-info-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.request-info-personal-info-details h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+
+/* cancel Modal styles */
+.cancel-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cancel-modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 600px;
+    animation: modalFadeIn 0.3s;
+}
+
+.cancel-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.cancel-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #555;
+}
+
+.cancel-modal-body {
+    padding: 20px;
+}
+
+.cancel-icon {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.cancel-icon i {
+    font-size: 48px;
+    color: #ff9800;
+}
+
+.status-message {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.status-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-message.warning {
+    background-color: #fff8e1;
+    color: #f57c00;
+}
+
+.status-message.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.cancellation-details {
+    margin-top: 20px;
+}
+
+.fee-info-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.fee-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.fee-info.no-fee {
+    display: none;
+}
+
+.fee-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.fee-amount {
+    font-size: 1.1rem;
+}
+
+.fee-amount.positive {
+    color: #2e7d32;
+}
+
+.fee-amount.negative {
+    color: #c62828;
+}
+
+.cancellation-reason {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.cancellation-reason.success {
+    background-color: #e8f5e9;
+}
+
+.cancellation-reason.warning {
+    background-color: #fff8e1;
+}
+
+.cancellation-policy {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    font-size: 0.9rem;
+}
+
+.cancellation-policy ul {
+    padding-left: 20px;
+}
+
+.cancel-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    gap: 10px;
+}
+
+.confirm-cancel-btn, .pay-fine-btn {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.confirm-cancel-btn:hover, .pay-fine-btn:hover {
+    background-color: #d32f2f;
+}
+
+.keep-request-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.keep-request-btn:hover {
+    background-color: #bdbdbd;
+}
+
+
+
+@keyframes modalFadeIn {
+    from {opacity: 0; transform: translateY(-50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+
+
+/* Floating Chat Button */
+.floating-chat-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--color-btn-update, #007bff);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 999;
+    transition: all 0.3s ease;
+  }
+  
+  .floating-chat-button i {
+    font-size: 24px;
+  }
+  
+  .floating-chat-button:hover {
+    background-color: var(--color-btn-update-hover, #0056b3);
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Chat Popup Styles */
+     
+  
+  .chat-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+  
+  .chat-popup.minimized {
+    height: 50px;
+    overflow: hidden;
+  }
+  
+  .chat-popup-header {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .chat-popup-controls {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .minimize-btn, .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 3px 5px;
+    border-radius: 3px;
+  }
+  
+  .minimize-btn:hover, .close-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .minimize-btn {
+    color: #555;
+  }
+  
+  .close-btn {
+    color: #f44336;
+  }
+  
+  .chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+  }
+  
+  .no-messages {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }
+  
+  .message {
+    margin-bottom: 10px;
+    display: flex;
+  }
+  
+  .message.outgoing {
+    justify-content: flex-end;
+  }
+  
+  .message-content {
+    max-width: 80%;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .message.incoming .message-content {
+    background-color: #fff;
+  }
+  
+  .message.outgoing .message-content {
+    background-color: #e3f2fd;
+  }
+  
+  .message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .message-pic {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+  }
+  
+  .message-username {
+    font-weight: bold;
+    font-size: 12px;
+    margin-right: 5px;
+  }
+  
+  .message-time {
+    font-size: 10px;
+    color: #888;
+  }
+  
+  .message-text {
+    word-break: break-word;
+    font-size: 14px;
+  }
+  
+  .chat-input {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  #message-form {
+    display: flex;
+  }
+  
+  #message {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    resize: none;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  #send-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  #send-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .elder-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+  }
+  
+  .elder-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .elder-info h3 {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .elder-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  
+  /* Message badge for notification */
+  .session-send-button {
+    position: relative; /* Needed for absolute positioning of the badge */
+  }
+  
+  .message-badge {
+    position: absolute;
+    background-color: #f44336; /* Red color */
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Date separator styling */
+  .date-separator {
+    text-align: center;
+    margin: 15px 0;
+    position: relative;
+  }
+  
+  .date-separator:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e0e0e0;
+    z-index: 1;
+  }
+  
+  .date-separator span {
+    background-color: #f9f9f9;
+    padding: 0 10px;
+    position: relative;
+    z-index: 2;
+    font-size: 12px;
+    color: #777;
+    font-weight: bold;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .message-badge.hidden {
+    display: none;
+  }
+  
+  
+  
+  .message-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #f44336; /* Red color */
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .message-badge.hidden {
+    display: none !important;
+  }

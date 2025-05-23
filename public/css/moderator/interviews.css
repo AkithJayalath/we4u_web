@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Main container styling */
+.interview-main-container {
+  font-family: 'Poppins', sans-serif;
+  margin: 20px;
+  padding: 20px;
+  background-color: var(--color-background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Header styling */
+.interview-header {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.interview-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #333333;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Search styling */
+.interview-search-wrapper {
+  display: flex;
+  align-items: center;
+  min-width: 400px;
+  position: relative;
+}
+
+.interview-search-wrapper input {
+  width: 100%;
+  padding: 10px 15px;
+  padding-right: 40px; /* Add space for the button */
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.interview-search-wrapper input:focus {
+  outline: none;
+  border-color: var(--color-btn-primary);
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.interview-search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.interview-search-btn:hover {
+  color: var(--color-btn-primary);
+}
+
+/* Content styling */
+.interview-content {
+  margin-top: 20px;
+}
+
+/* Table container styling */
+.interview-table-container {
+  background: var(--white);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.interview-table-container h2 {
+  font-size: 18px;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Table styling using actual HTML table */
+.interview-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #f0f2f5;
+}
+
+.interview-table thead {
+  background-color: #f9fafb;
+}
+
+.interview-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.interview-table tbody {
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+}
+
+.interview-table tr {
+  border-bottom: 1px solid #f0f2f5;
+  transition: background-color 0.2s ease;
+}
+
+.interview-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.interview-table td {
+  padding: 16px;
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+/* Status styling */
+.interview-table td.status-pending {
+  color: var(--color-status-pending);
+  font-weight: 600;
+}
+
+.interview-table td.status-done {
+  color: var(--color-status-rejected);
+  font-weight: 600;
+}
+
+/* Action button styling */
+.interview-action-btn {
+  background: var(--color-btn-primary);
+  color: var(--white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.interview-action-btn:hover {
+  background-color: var(--color-btn-primary-hover);
+  transform: translateY(-1px);
+}

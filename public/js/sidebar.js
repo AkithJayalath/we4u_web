@@ -1,24 +1,36 @@
-const toggleButton = document.getElementById("toggle-btn");
 const sidebar = document.getElementById("sidebar");
+const sidebarToggler = document.querySelector(".sidebar-toggler");
 
 function toggleSidebar() {
-  sidebar.classList.toggle("close");
-  toggleButton.classList.toggle("rotate");
+  // Only toggle if screen is larger than 800px
+  if (window.innerWidth > 800) {
+    sidebar.classList.toggle("close");
 
-  closeAllSubMenus();
+    if (sidebar.classList.contains("close")) {
+      closeAllSubMenus();
+    }
+  }
 }
 
+// Add this to handle resize
+window.addEventListener("resize", () => {
+  if (window.innerWidth <= 800) {
+    sidebar.classList.add("close");
+  }
+});
+
 function toggleSubMenu(button) {
-  if (!button.nextElementSibling.classList.contains("show")) {
+  const subMenu = button.nextElementSibling;
+
+  if (!subMenu.classList.contains("show")) {
     closeAllSubMenus();
   }
 
-  button.nextElementSibling.classList.toggle("show");
+  subMenu.classList.toggle("show");
   button.classList.toggle("rotate");
 
   if (sidebar.classList.contains("close")) {
-    sidebar.classList.toggle("close");
-    toggleButton.classList.toggle("rotate");
+    sidebar.classList.remove("close");
   }
 }
 

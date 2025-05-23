@@ -1,0 +1,359 @@
+.container {
+    margin: 40px auto;
+    padding: 10px;
+    width: 95%;  
+    max-width: 1200px;
+    background-color: #f1eded;
+    border-radius: 10px;
+    min-height: 80vh;
+    overflow: hidden;
+}
+
+/* Header responsive styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    min-height: 65px;
+    padding: 10px 15px;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #f1eded;
+    flex-wrap: wrap;
+}
+
+.header h2 {
+    font-size: clamp(20px, 4vw, 28px);
+    color: #1a237e;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Style for the Add Review button */
+.add-review-btn {
+    width: 200px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #08DCC1;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for the Add Review button */
+.add-review-btn:hover {
+    background-color: #06b5a1;
+}
+
+.header i {
+    margin-right: 15px; /* Reduced from 100px */
+}
+
+/* Review container responsive styles */
+.review {
+    max-height: calc(85vh - 100px); /* Adjusted for better mobile view */
+    overflow-y: auto;
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+}
+
+/* Review card responsive styles */
+.review-card {
+    padding: 15px;
+    border-radius: 15px;
+    min-height: auto; /* Remove fixed height */
+    background-color: #F7F6FA;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review-card:hover {
+    background-color: #f0f8ff; /* Light blue background on hover */
+}
+
+.review-card[style*="cursor: pointer"]:hover {
+    background-color: #e6f7ff; /* Slightly darker blue for clickable reviews */
+}
+
+/* User details responsive styles */
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+    position: relative;
+}
+
+.user-details img {
+    width: 40px; /* Slightly smaller on mobile */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details h3 {
+    font-size: clamp(14px, 3vw, 16px);
+    margin: 0;
+    color: #333;
+}
+
+/* Review date responsive styles */
+.review-date {
+    font-size: 12px;
+    color: #777;
+    margin-left: auto; /* Changed from fixed percentage */
+}
+
+/* Review content responsive styles */
+.review-cont {
+    font-size: clamp(13px, 2.5vw, 14px);
+    line-height: 1.5;
+    margin: 10px 0;
+    word-wrap: break-word; /* Ensures text wraps properly */
+}
+
+/* Rating responsive styles */
+.rating {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.rating i {
+    font-size: clamp(14px, 2.5vw, 18px);
+    color: #ffc107;
+}
+
+/* Custom scrollbar for better mobile experience */
+.review::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.review::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 8px;
+    border: 2px solid #f1f1f1;
+}
+
+.review::-webkit-scrollbar-thumb:hover {
+    background-color: #7d7b7b; /* Darker color when hovering */
+  }
+
+/* Add styles for the Rate button */
+.btn {
+    background-color: #013CC6;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #0132a3;
+}
+
+/* Add styles for edit/delete buttons */
+.review-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.edit-btn, .delete-btn {
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.edit-btn:hover {
+    color: #013CC6;
+}
+
+.delete-btn:hover {
+    color: #dc3545;
+}
+
+/* Style for active stars */
+.rating i.active {
+    color: #ffc107;
+}
+
+.rating i:not(.active) {
+    color: #ddd;
+}
+
+.no-reviews{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 1000px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.no-reviews img{
+    width: 500px;
+    height: 400px;
+    opacity: 0.7;
+    
+}
+
+.no-reviews p{
+   font-size: 24px;
+   opacity: 0.7;
+}
+
+/* Add styles for the review form */
+.add-review {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-review h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.rating-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.rating-input label {
+    margin-right: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Reset all stars */
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 5px;
+}
+
+/* Hide radio buttons completely */
+.stars input[type="radio"] {
+    display: none;
+}
+
+/* Default star style */
+.stars label {
+    font-size: 2rem; /* Increased size */
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+/* Highlight up to the selected star */
+.stars input[type="radio"]:checked + label,
+.stars input[type="radio"]:checked + label ~ label {
+    color: #f5c518;
+}
+
+/* Highlight on hover */
+.stars label:hover,
+.stars label:hover ~ label {
+    color: #f5c518;
+}
+
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 1rem;
+    color: #333;
+}
+
+.btn-submit {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries for different screen sizes */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .review {
+        gap: 12px;
+        padding: 8px;
+    }
+
+    .review-card {
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .user-details {
+        gap: 8px;
+    }
+    
+    .review-date {
+        width: 100%;
+        text-align: right;
+        margin-top: 5px;
+    }
+    
+    .header {
+        padding: 8px 12px;
+    }
+    
+    .rating {
+        padding: 4px 6px;
+    }
+}

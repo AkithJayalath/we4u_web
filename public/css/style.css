@@ -7,14 +7,120 @@
 @import url('components/footer_styles.css');
 @import url('components/topnavbar_styles.css');
 @import url('components/form_styles.css');
-@import url('components/userProfile_styles.css');
-@import url('components/homepage_styles.css');
+/* @import url('moderator/careseekerrequests.css');  */
+ @import url('components/userProfile_styles.css');
+ @import url('components/homepage_styles.css');
 
 
+/* root colors */
+:root {
+    /* Base Colors */
+    --color-base: #DBFEFA;           /* Main base color - soft, calming teal for a healthcare setting */
+    --color-background-primary: #F9F9F9;  /* Light neutral background for main content */
+    --color-background-secondary: #F7F6FA; /* Slightly different background for variation and depth */
+
+    /* Text Colors */
+    --color-text-primary: #000000;   /* Primary text color - deep black for main content readability */
+    --color-text-secondary: #666666; /* Secondary text color - softer gray for less critical text */
+    --color-text-accent: #384F6F;    /* Accent text color - muted blue-gray for additional contrast */
+
+    /* Link Colors */
+    --color-link: #5182FF;           /* Clean, professional link color */
+    --color-link-hover: #3A6AD6;     /* Darker blue on hover for interaction feedback */
+
+    /* Button Colors */
+    --color-btn-cancel: #D43B3B;     /* Red for cancel/delete actions */
+    --color-btn-cancel-hover: #B22828; /* Darker red for hover state */
+
+    /* Button Colors */
+    --color-btn-rate: #eff493;     /* Red for cancel/delete actions */
+    --color-btn-rate-hover: #f5fd08; /* Darker red for hover state */
+
+    --color-btn-update: #08DCC1;     /* Teal for update/edit/create actions */
+    --color-btn-update-hover: #06B09C; /* Slightly darker teal for hover */
+
+    --color-btn-primary: #0B63F8;    /* Blue for primary actions like submit/save */
+    --color-btn-primary-hover: #0950C4; /* Darker blue for hover state */
+
+    --color-btn-signup: #4089FF;     /* Bright blue for signup/signin */
+    --color-btn-signup-hover: #2670E2; /* Slightly darker blue for hover */
+
+    --color-btn-upload: #0F5D88;     /* Deep blue for upload actions */
+    --color-btn-upload-hover: #0C4A6E; /* Darker blue for hover */
+
+    --color-btn-delete: #FF5252;     /* Bright red for delete actions */
+    --color-btn-delete-hover: #C41641; /* Darker red for hover state */
+
+    /* Status Colors */
+    --color-status-accepted: #4CAF50; /* Light green for accepted status */
+    --color-status-rejected: #FF5252; /* Light red for rejected status */
+    --color-status-pending: #2196F3; /* Light blue for pending status */
+
+    /* Error and Important Colors */
+    --color-error: #EE1D52;          /* Bright red for errors or critical notifications */
+    --color-error-hover: #C41641;    /* Darker red for hover state */
+
+    /* Additional Recommended Caregiving Colors */
+    --color-trust-blue: #3BA5B7;     /* Soft, trustworthy blue - suggests care and professionalism */
+    --color-calm-green: #2E8B57;     /* Muted green - represents health, growth, and wellbeing */
+    --color-warm-gray: #8C8C8C;      /* Neutral warm gray for subtle backgrounds or icons */
+
+    --white: #ffffff;
 
 
+    /* Table Colors */
+    --color-table-header: var(--color-background-secondary);
+    --color-table-row-hover: var(--color-background-primary);
 
-/* Body */
+    /* reject form colors  */
+    --color-form-border: #e0e0e0;
+    --color-form-background: #f8f9fa;
+
+    
+        /* Add these new essential variables */
+    --color-header-title: #1a237e;
+    --color-application-id: #546e7a;
+    --color-info-label: #6b7280;
+    --color-info-value: #1f2937;
+    
+
+
+    /* tags colors */
+    --tag-status-accepted: #28a745;
+    --tag-status-rejected:rgb(248, 26, 26);
+    --tag-status-completed:#007bff;
+    --tag-status-pending: #3c3e3f;
+    --tag-status-cancelled: #600197;
+
+
+    --tag-status-accepted-background:#e5f7e9;
+    --tag-status-rejected-background:#fcdbdf; 
+    --tag-status-completed-background: #d1e7ff; 
+    --tag-status-pending-background: #e2e2e2; 
+    --tag-status-cancelled-background: #efd3ff; 
+
+
+}
+
+page-body-container{
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* background-color: var(--base-clr); */
+    /* color: var(--text-clr); */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    /* margin-top: 80px; */
+    padding-top: 100px;
+    overflow: visible;
+    margin-bottom: 10px;
+}
+container{
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 body {
     
     font-family: Arial, sans-serif;
@@ -23,19 +129,16 @@ body {
     
 }
 
-/* Add this div class to container the content of each page */
 .top-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 100px;
-    padding-bottom: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     width: 100%;
-    max-width: 1200px;
-    margin: auto;
+    max-width: 1400px;
+    margin: 0 auto;
 }
-
-
 
 .sign-up-btn {
     padding: 12px 24px;
@@ -45,5 +148,45 @@ body {
     font-weight: bold;
     text-decoration: none;
 }
+.tag {
+    display: inline-flex; /* Use flex for easy centering */
+    justify-content: center; /* Horizontally center text */
+    align-items: center; /* Vertically center text */
+    padding: 0.2em 0.5em;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    font-weight: 500;
+    margin: 0.2em;
+    /* Define a fixed size for uniformity */
+    width: 100px; /* Adjust this value as needed */
+    height: 30px; /* Adjust this value as needed */
+    box-sizing: border-box; /* Ensure padding is included in dimensions */
+}
+
+.tag.accepted {
+    color: var(--tag-status-accepted);
+    background-color: var(--tag-status-accepted-background); /* Green */
+}
+
+.tag.rejected {
+    color: var(--tag-status-rejected);
+    background-color: var(--tag-status-rejected-background); /* Red */
+}
+
+.tag.pending {
+    background-color: var(--tag-status-pending-background); /* Yellow */
+    color: var(--tag-status-pending); /* Dark text for better contrast */
+}
+
+.tag.completed {
+    color: var(--tag-status-completed);
+    background-color: var(--tag-status-completed-background); /* Blue */
+}
+
+.tag.cancelled {
+    color: var(--tag-status-cancelled);
+    background-color: var(--tag-status-cancelled-background); /* Blue */
+}
+
 
 

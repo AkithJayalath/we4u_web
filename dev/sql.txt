@@ -50,10 +50,14 @@ CREATE TABLE MedicalRecord (
 CREATE TABLE Consultant ( 
     consultant_id INT PRIMARY KEY, 
     FOREIGN KEY (consultant_id) REFERENCES User(user_id) ON DELETE CASCADE, 
-    expertise TEXT, 
+    expertise TEXT,
+    qualifications Text, 
+    consultant_type ENUM('doctor','therapist','pshycho'),
     availability_status BOOLEAN,  
     rating DECIMAL(3, 2) DEFAULT 0,  
-    bio TEXT 
+    bio TEXT ,
+    is_approved ENUM('pending', 'approved', 'rejected') DEFAULT 'pending'
+    
 ); 
 
 -- ApprovalRequest table for handling approval requests 
@@ -64,6 +68,7 @@ CREATE TABLE ApprovalRequest (
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     status ENUM('Pending', 'Approved', 'Declined') DEFAULT 'Pending', 
     comments TEXT, 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE 
 ); 
 
@@ -138,7 +143,168 @@ CREATE TABLE Announcement (
     FOREIGN KEY (admin_id) REFERENCES User(user_id) ON DELETE SET NULL 
 );
 
+-- Interview table for storing interviews for approval requests by the moderator
+CREATE TABLE interviews (
+    interview_id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id INT NOT NULL,
+    request_date DATE NOT NULL,
+    interview_time TIME NOT NULL,
+    service VARCHAR(255) NOT NULL,
+    platform VARCHAR(255) NOT NULL,
+    meeting_link VARCHAR(255),
+    provider_id VARCHAR(255) NOT NULL,
+    provider_name VARCHAR(255) NOT NULL,
+    provider_email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (request_id) REFERENCES approvalrequest(request_id) ON DELETE CASCADE
+);
+
+-- ElderProfile table for storing elder profiles of the careseeker
+CREATE TABLE ElderProfile (
+    elder_id INT PRIMARY KEY AUTO_INCREMENT,
+    careseeker_id INT NOT NULL, -- Reference to the Careseeker
+    first_name VARCHAR(100),
+    middle_name VARCHAR(100),
+    last_name VARCHAR(100),
+    relationship_to_careseeker VARCHAR(50),
+    age INT,
+    gender ENUM('Male', 'Female', 'Other'),
+    weight DECIMAL(5, 2),
+    height DECIMAL(5, 2),
+    blood_pressure VARCHAR(20),
+    emergency_contact VARCHAR(20),
+    chronic_disease TEXT,
+    current_health_issues TEXT,
+    allergies TEXT,
+    surgical_history TEXT,
+    family_diseases TEXT,
+    current_medications TEXT,
+    special_needs TEXT,
+    dietary_restrictions TEXT,
+    health_barriers TEXT, -- New column for health barriers
+    profile_picture VARCHAR(255), -- Path or URL of the profile picture
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (careseeker_id) REFERENCES Careseeker(careseeker_id) ON DELETE CASCADE
+);
+
+
+
 
 -- create a view to get profile info
 CREATE VIEW careseeker_profile AS 
 SELECT * FROM user JOIN careseeker ON user.user_id =careseeker.careseeker_id;
+
+
+CREATE TABLE cg_shedules(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    caregiver_id INT NOT NULL,
+    sheduled_date DATE NOT NULL,
+    status ENUM('approved', 'pending', 'unavailable') NOT NULL,
+    shift ENUM('morning', 'evening', 'overnight', 'fullday') NOT NULL,
+    request_id INT,
+    FOREIGN KEY (caregiver_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES care_requests(id)
+);
+
+CREATE TABLE cg_long_shedules(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    caregiver_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    status ENUM('approved', 'pending', 'unavailable') NOT NULL,
+    request_id INT,
+    FOREIGN KEY (caregiver_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES care_requests(id)
+);
+
+
+CREATE TABLE co_availability_patterns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    consultant_id INT NOT NULL,
+    day_of_week TINYINT NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL, 
+    FOREIGN KEY (consultant_id) REFERENCES consultant(consultant_id)
+);
+
+-- Table for actual availability instances
+CREATE TABLE co_availability_instances (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    consultant_id INT NOT NULL,
+    available_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    FOREIGN KEY (consultant_id) REFERENCES consultant(consultant_id)
+);
+
+
+
+
+
+
+
+CREATE TABLE `care_payments` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `care_request_id` int(11) NOT NULL,
+  `payer_id` int(11) NOT NULL,
+  `caregiver_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) DEFAULT 'Stripe',
+  `payment_date` datetime DEFAULT current_timestamp(),
+  `is_refunded` tinyint(1) DEFAULT 0,
+  `refund_reason` text DEFAULT NULL,
+  `refund_date` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`payment_id`),
+  KEY `fk_care_request_id` (`care_request_id`),
+  KEY `fk_payer_id` (`payer_id`),
+  KEY `fk_caregiver_id` (`caregiver_id`),
+  CONSTRAINT `fk_care_request_id` FOREIGN KEY (`care_request_id`) REFERENCES `carerequest` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_payer_id` FOREIGN KEY (`payer_id`) REFERENCES `careseeker` (`careseeker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_caregiver_id` FOREIGN KEY (`caregiver_id`) REFERENCES `caregiver` (`caregiver_id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+alter table consultant_payments
+add COLUM we4u_earn decimal(10,2);
+
+alter table consultant_payments
+add COLUM is_paid boolean;
+
+alter table care_payments
+add COLUM we4u_earn decimal(10,2);
+
+alter table care_payments
+add COLUM is_paid boolean;
+
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    is_announcement BOOLEAN DEFAULT FALSE,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (user_id),
+    INDEX (is_announcement),
+    INDEX (created_at)
+);
+
+
+--blog table--
+CREATE TABLE blogs (
+    blog_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    image_path VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+);
+
+
+

@@ -1,0 +1,302 @@
+/* Additional styles specific to the payments view */
+
+/* Payment amount styling */
+.payment-amount {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.commission-amount {
+    font-weight: 600;
+    color: #013CC6;
+}
+
+/* Payment status badges */
+.payment-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.payment-status.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.payment-status.pending {
+    background-color: #fff8e1;
+    color: #f57c00;
+}
+
+.payment-status.cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Payment details modal */
+.payment-details-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-details-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-details-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.payment-details-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.payment-detail-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.payment-detail-label {
+    width: 40%;
+    font-weight: 600;
+    color: #555;
+}
+
+.payment-detail-value {
+    width: 60%;
+    color: #333;
+}
+
+/* Payment date range picker */
+.date-range-picker {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.date-filter-btn {
+    padding: 8px 12px;
+    background-color: #013CC6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Payment summary section */
+.payment-summary {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.payment-summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.payment-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.payment-summary-label {
+    color: #555;
+}
+
+.payment-summary-value {
+    font-weight: 600;
+    color: #333;
+}
+
+.payment-summary-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Payment method badges */
+.payment-method {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    background-color: #e3f2fd;
+    color: #1565c0;
+    margin-right: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .payment-detail-row {
+        flex-direction: column;
+    }
+    
+    .payment-detail-label,
+    .payment-detail-value {
+        width: 100%;
+    }
+    
+    .payment-detail-label {
+        margin-bottom: 5px;
+    }
+    
+    .date-range-picker {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .date-input {
+        width: 100%;
+    }
+}
+
+/* Hover effect for payment rows */
+.ad-dashboard-jobs-table tbody tr:hover {
+    background-color: #f5f9ff;
+    cursor: pointer;
+}
+
+/* Payment action buttons */
+.payment-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.payment-action-btn {
+    background: none;
+    border: none;
+    color: #013CC6;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.payment-action-btn:hover {
+    text-decoration: underline;
+}
+
+/* Payment filter tags */
+.payment-filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.payment-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.payment-filter-tag-remove {
+    background: none;
+    border: none;
+    color: #1565c0;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Payment chart container */
+.payment-chart-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.payment-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.payment-chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.payment-chart-period {
+    display: flex;
+    gap: 10px;
+}
+
+.payment-chart-period-btn {
+    padding: 4px 8px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.payment-chart-period-btn.active {
+    background-color: #013CC6;
+    color: white;
+    border-color: #013CC6;
+}
+
+.payment-chart {
+    height: 300px;
+    width: 100%;
+}

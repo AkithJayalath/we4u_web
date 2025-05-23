@@ -1,0 +1,435 @@
+ /* Contains everthing */
+ .view-elder-profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 10px;
+  background-color: var(--color-background-secondary);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Personal infor section */
+.personal-info-section {
+  display: flex;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  padding: 20px;
+  gap: 20px;
+}
+/* Personal info left section */
+.personal-info-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.personal-info-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+}
+
+.personal-info-tag {
+  display: inline-block;
+  margin-top: 5px; 
+  padding: 5px 10px;
+  background-color: #e8eaf5; 
+  color: #007bff; 
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  
+}
+
+.personal-info-details h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #013CC6;
+}
+
+.personal-info-details p {
+  margin: 5px 0;
+  color: #444343;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* Personal info right section */
+.personal-info-right {
+  display: flex;
+  flex: 2;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+}
+
+.caregiver-chat-button,.caregiver-review-button,.caregiver-delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the icon and text */
+  width: 60%; /* Buttons take 80% of the container's width */
+  max-width: 300px; /* Ensures consistent button width */
+  padding: 10px 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  height: 50px; /* Set a fixed height for consistency */
+  box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+  margin-top: 10px;
+  margin-left: 60px;
+}
+
+.caregiver-chat-button {
+  background-color: var(--color-btn-upload);
+}
+
+.caregiver-review-button i, .caregiver-chat-button i {
+  font-size: 1.2rem; /* Icon size */
+}
+.caregiver-review-button {
+  background-color: var(--color-btn-update);
+}
+
+.caregiver-review-button:hover {
+  background-color: var( --color-btn-update-hover); /* Darker shade on hover */
+}
+
+.caregiver-chat-button:hover {
+  background-color: var(--color-btn-upload-hover); /* Darker shade on hover */
+}
+
+.caregiver-delete-button {
+  background-color: #EE1D52;
+}
+.caregiver-delete-button:hover {
+  background-color: #C31945;
+}
+
+
+
+  /* Personal info right section-->left side */
+.personal-info-right-left {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.personal-info-stat {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.personal-info-stat p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.personal-info-stat h3 {
+  margin: 5px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.personal-info-stat:hover{
+  transform: scale(1.01); /* Slight zoom */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+   /* Personal info right section-->left side */
+
+.personal-info-right-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: relative;
+  padding-bottom: 50px;
+}
+
+.personal-info-diagnosis {
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  color: #555;
+}
+.personal-info-edit-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info-edit-btn:hover {
+  background-color: #0056b3;
+}
+
+
+/* Other info section */
+.other-info-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: var(--color-background-secondary);
+  padding: 20px;
+  border-radius: 20px;
+  justify-content: space-between;
+}
+
+
+  /* Other concerns section */
+.other-concern-section,.caregiving-history-section,.reviews-section {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  flex: 1 1 100%; /* Full-width section */
+  margin: 0; /* Ensure alignment with other sections */
+}
+
+
+  /* Health concerns section */
+.health-concern-section {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  flex: 1 1 48%; /* Half-width section for two-column layout */
+}
+
+.other-concern-section-header,
+.health-concern-section-header ,.caregiving-history-section-header,.reviews-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 20px;
+  border-bottom: 2px solid #d3d2d2;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.other-concern-section-content,.caregiving-history-section-content ,.reviews-section-content {
+  display: flex;
+  flex-direction: column; /* Single-column layout */
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  flex: 1;
+}
+
+.health-concern-section-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.health-concern-item,
+.other-concern-item,.caregiving-history-item,.reviews-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px; /* Space between icon and text */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1 1 calc(50% - 20px); /* Two-column layout for health-concern-section */
+}
+
+.other-concern-item {
+  flex: 1 1 100%; /* Single-column layout for other-concern-section */
+}
+
+.health-concern-item:hover,
+.other-concern-item:hover,.caregiving-history-item:hover,.reviews-item:hover {
+  transform: scale(1.01); /* Slight zoom */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.icon {
+  font-size: 1.5rem;
+  color: #007bff;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.health-concern-item h4,
+.other-concern-item h4, .caregiving-history-item h4,.reviews-item h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #555555;
+}
+
+.health-concern-item p,
+.other-concern-item p,.caregiving-history-item p {
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.reviews-item p{
+margin: 5px 0 0 0;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.reviews-item .date{
+font-size: 0.8rem;
+color: #666;
+  margin-top: 5px;
+}
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+}
+
+.header-icon {
+  font-size: 3rem;
+  color: #024b99; /* Same color as the icons for consistency */
+}
+
+.r-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.r-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  height: 400px;
+  margin: 20vh auto;
+  padding: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 30px;
+  margin-right: 20px;
+}
+
+.modal-img{
+  width: 150px;
+  margin-right: 10px;
+}
+
+.modal-header h2{
+  font-size: 30px;
+  font-weight: 700;
+  color: #EE1D52; 
+  margin-bottom: 30px;
+}
+
+.r-modal-content p{
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #090909;
+  border-radius: 15px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  width: 450px;
+  height:100px
+}
+
+.modal-buttons .btn-submit{
+  background-color: #0B63F8;
+}
+.modal-buttons .btn-submit:hover{
+  background-color: #0953D6;
+}
+.modal-buttons .btn-cancel{
+  background-color: #EE1D52;
+}
+.modal-buttons .btn-cancel:hover{
+  background-color: #C31945;
+}
+
+.modal-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 80px;
+}
+
+.modal-buttons button{
+  padding: 10px 15px;
+  
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}

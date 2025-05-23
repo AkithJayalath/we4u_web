@@ -10,6 +10,10 @@ class home extends controller{
     public function index(){
         $this->view('home/v_home');
     }
+
+    public function index1(){
+        $this->view('home/v_home');
+    }
 }
 
-?>
+?> 

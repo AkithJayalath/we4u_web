@@ -1,0 +1,166 @@
+page-body-container {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.total-container {
+    width: 100%;
+    max-width: 1200px; /* Optional: Restrict max width for better readability */
+    margin: 2rem auto;
+    padding: 32px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Careseeker profile container */
+.careseeker-profile-container {
+    background: #f1eded;
+    padding: 24px 32px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+/* Profile heading */
+.careseeker-profile-container h2 {
+    font-size: 1.8rem;
+    color: #1a237e;
+    margin-bottom: 32px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Individual profile cards */
+/* Profile cards */
+.profile-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    margin: 20px 0;
+    gap: 10px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+/* Hover effect */
+.profile-card:hover {
+    transform: scale(1.01); /* Slight zoom */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+
+.profile-card p {
+    display: inline-block; /* Ensure the badge doesn't stretch */
+    padding: 1px 6px; /* Add padding for the badge */
+    font-size: 14px; /* Adjust font size */
+    font-weight: bold; /* Bold text */
+    color: #28a745; /* Green text color */
+    background-color: #e9f8ec; /* Light green background */
+    border-radius: 12px; /* Rounded corners */
+    text-align: center; /* Center the text */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+
+/* Adjust gap for smaller screens */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column; /* Stack elements vertically */
+        text-align: center;
+        gap: 15px; /* Smaller gap for compact layout */
+    }
+}
+
+/* Profile card image */
+.profile-card img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+/* Profile card text */
+.profile-card div {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* View profile button */
+.view-profile-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #4596e7;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.view-profile-btn:hover {
+    background-color: #004c99;
+}
+
+.delete-profile-btn{
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #c73333;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.delete-profile-btn:hover {
+    background-color: #a10101;
+}
+
+/* Create profile button */
+.create-profile-btn {
+    margin-top: 30px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #08DCC1;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.create-profile-btn:hover {
+    background-color: #06b5a1;
+}
+
+/* Ensure responsiveness for smaller devices */
+@media (max-width: 768px) {
+    .total-container {
+        padding: 20px; /* Reduce padding */
+    }
+
+    .profile-card {
+        padding: 15px;
+        gap: 10px; /* Adjust gap for smaller screens */
+    }
+
+    .profile-card img {
+        margin-bottom: 10px; /* Adjust margin for stacked layout */
+    }
+
+    .create-profile-btn {
+        width: 100%; /* Full-width button on smaller screens */
+    }
+}

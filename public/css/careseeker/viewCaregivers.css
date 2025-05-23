@@ -1,0 +1,339 @@
+        /* Container styles */
+    .caregivers-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+       
+      }
+  
+      .caregivers-header {
+        margin-bottom: 32px;
+      }
+  
+      
+
+  
+      .caregivers-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+        max-width: 1400px; /* Ensure container width is consistent */
+       
+
+      }
+  
+      /* Blog post styles */
+      .caregivers-post {
+        display: flex;
+        flex-direction: column;
+        background: var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+        box-shadow: 12px 12px 12px rgba(63, 63, 63, 0.15);
+      }
+
+      .caregivers-post-header{
+        flex: 1;
+        align-content: center;
+        background-color:aquamarine;
+        padding: 20px;
+      }
+
+      .caregivers-post-header-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 50%;
+        padding: 10px; /* Add padding around the image */
+        width: 200px; /* Fixed width for the circular header */
+        height: 200px; /* Fixed height for the circular header */
+        margin: 0 auto; /* Center the header within the post */
+      }
+      
+  
+      .caregivers-post-header-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ensure the image scales properly */
+        border-radius: 50%; /* Makes the image circular */
+      }
+  
+      .caregivers-post-content h2 {
+        text-align: center;
+        margin: 0;
+        font-size:xx-large;
+        color: var(--color-header-title);
+      }
+  
+      
+
+
+      .caregivers-post-content {
+        flex:1.5;
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+      }
+      
+     
+      
+      
+      .caregiver-tags-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Two equal-width columns */
+        place-items: center;
+        
+    }
+    
+    .tags-group {
+        display: flex;
+        flex-direction: column; /* Tags stack vertically within each group */
+        
+    }
+    
+    
+    .tags-group .tag {
+        background-color: #d9dbdb;
+        color: rgb(85, 85, 85);
+        font-size: 0.75rem;
+        padding:2;
+        border-radius: 10px;
+        text-align: center;
+        white-space: nowrap; /* Prevent tags from breaking into multiple lines */
+       
+    }
+     
+      .caregivers-read-more {
+        flex: 0.2;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        background-color: rgb(233, 231, 231);
+       padding: 10px;
+      }
+  
+      .caregivers-read-more a {
+        display: inline-block;
+        padding: 8px 24px;
+        background:#39b0ff;
+        color: var(--white);
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.2s ease;
+      }
+  
+      .caregivers-see-more {
+        display: flex; /* Enables flexbox for alignment */
+    justify-content: center; /* Horizontally centers the button */
+    align-items: center; /* Vertically centers the button */
+    margin: 20px 0; /* Add spacing above and below the button */
+    text-align: center;
+      }
+  
+      .caregivers-see-more button {
+        padding: 12px 32px;
+        background: var(--color-trust-blue);
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+  
+      /* Hover Effects */
+      .caregivers-post:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+  
+      
+  
+      .caregivers-read-more a:hover {
+        background: var(--color-btn-primary-hover);
+      }
+  
+      .caregivers-see-more button:hover {
+        background: var(--color-btn-upload-hover);
+      }
+   
+    .a-b-action-buttons i {
+      width: 16px;
+      height: 16px;
+    }
+  
+    
+
+    .caregiver-personal-info-tag {
+        display: inline-block;
+        margin-top: 10px; 
+        padding: 5px 10px;
+        background-color: #e8f5e9; 
+        color: #43a047;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-align: center;
+        width: 30%;
+      }
+      
+      .caregiver-personal-info-details{
+    
+        display: flex;
+        flex-direction: column;
+        justify-content:center;
+        align-items: center;
+       
+      }
+      .caregiver-personal-info-details h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #000000;
+      }
+      
+      .caregiver-personal-info-details p {
+        
+        color: #444343;
+        display: flex;
+        align-items: center;
+       
+    }
+    
+    .consultant-rating .rating-stars {
+      display: flex; /* Keeps stars aligned horizontally */
+      gap: 5px; /* Space between stars */
+      color: #FFD700; /* Gold color for stars */
+      font-size: 1.5rem; /* Increase font size for larger stars */
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Add depth to stars */
+      border-radius: 5px; /* Slight rounding for a smoother look */
+  }
+    
+
+    .filter-sort-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap; /* Ensure everything stays in one line */
+}
+
+.filters, .sort-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.filters input[type="date"] {
+  -webkit-appearance: none; /* Remove browser-specific styles */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.filter-group, .sort-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align label and input on the left */
+}
+
+.filter-group label, .sort-group label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 4px; 
+  background-color: #000000;/* Space between label and input/select */
+}
+
+.filter-group select, .sort-group select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  width: 150px; /* Consistent width for all fields */
+  max-width: 100%;
+  box-sizing: border-box; /* Ensure padding doesn't overflow the width */
+  background-color: #000000;
+}
+.filter-group input{
+ 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  width: 150px; /* Consistent width for all fields */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.apply-button {
+  padding: 8px 16px;
+  background: #39b0ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: center; /* Align button in the middle of the bar */
+}
+
+.apply-button:hover {
+  background: #007acc;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 3px;
+  border: 1px solid #ddd;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  background-color: #f5f5f5;
+}
+
+.current-page {
+  background-color: #2d9cf7;
+  color: white;
+  border-color: #2d9cf7;
+}
+
+.page-ellipsis {
+  padding: 8px 5px;
+  margin: 0 3px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pagination {
+      margin: 20px 0;
+  }
+  
+  .page-link {
+      padding: 6px 10px;
+      margin: 2px;
+  }
+
+  #date-filter,
+#availability-filter {
+  margin-left: 10px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+}

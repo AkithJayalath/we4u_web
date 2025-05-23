@@ -1,0 +1,253 @@
+.container{
+  margin: auto;
+  padding: 10px;
+  width: 100%;
+  max-width: 1050px;
+  background-color: #fff;
+  border-radius: 10px;
+  min-height: 90vh;
+  overflow: hidden;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  height: 65px;
+  align-items: center;
+  margin-bottom: 15px;
+  background-color: #F7F6FA;
+}
+
+.header i{
+  margin-right: 100px;
+}
+
+.header h2{
+  font-size: 28px;
+  color: #013CC6;
+  margin-left: 20px;
+}
+
+.btn-history{
+  justify-items: center;
+  margin-bottom: 15px;
+  margin-top: 5px;
+  margin-left: 850px;
+ 
+}
+
+
+.btn-history button{
+  padding: 10px 10px;
+  margin-right: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #0B63F8;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn-history button:hover{
+  background-color: #0953D6;
+}
+
+.details{
+  background-color: #F7F6FA;
+  border-radius: 25px;
+  padding: 20px;
+  /* display: grid;
+  grid-template-columns: repeat(2, 1fr); */
+  justify-items: center;
+}
+
+.details lable{
+  font-size: 14px;
+  color: #0B63F8;
+  font-weight: 500;
+}
+
+.required {
+  color: red;
+  font-weight: bold; /* Optional: To emphasize */
+}
+
+.details p{
+  font-size: 14px;
+  color: #000;
+  font-weight: 400;
+}
+.content-box{
+    border-radius: 8px;
+    width: 300px;
+    height: 60px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); 
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(220, 53, 69, 0.1);
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+}
+
+/* Add visual feedback for invalid inputs */
+input:invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+
+.card select {
+  width: 100%;
+  padding: 8px;
+  padding-bottom: 2px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.card select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.btn-container{
+  display: flex;
+  align-items: center;
+  margin: auto;
+  gap: 20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.btn-container button{
+  
+  margin-right: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit{
+  background-color: #08DCC1;
+  padding: 10px 30px;
+}
+
+
+.btn-edit:hover{
+  background-color: #06C5AD;
+}
+
+.btn-delete{
+  padding: 10px 15px;
+  background-color: #EE1D52;
+}
+
+.btn-delete:hover{
+  background-color: #C31945;
+}
+
+
+.modal{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-content{
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  height: 300px;
+  margin: 20vh auto;
+  padding: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.modal-content i{
+  color: #EE1D52;
+  font-size: 80px;
+  margin-bottom: 1rem;
+}
+
+.modal-content h2 {
+  color: #013CC6;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.modal-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  margin-bottom: 80px;
+}
+
+.modal-buttons button{
+  padding: 10px 15px;
+  
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+.modal-buttons .modal-confirm-btn{
+  background-color: #0B63F8;
+}
+.modal-buttons .modal-confirm-btn:hover{
+  background-color: #0953D6;
+}
+.modal-buttons .modal-cancel-btn{
+  background-color: #EE1D52;
+}
+.modal-buttons .modal-cancel-btn:hover{
+  background-color: #C31945;
+}
+
+.card-wrapper{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 45px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .details {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+}
+

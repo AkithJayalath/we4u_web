@@ -6,11 +6,15 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel ="stylesheet" href="<?php echo URLROOT; ?>/css/style.css"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        
 
         
 
             <title><?php echo SITENAME?></title>  
 
     </head>
-    <!-- testing commit -->
+    
+<!--  flash message  -->
+    <?php echo FlashHelper::render(); ?>
+    
     

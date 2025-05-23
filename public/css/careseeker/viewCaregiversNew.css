@@ -1,0 +1,539 @@
+        /* Container styles */
+        .caregivers-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+           
+          }
+      
+          .caregivers-header {
+            margin-bottom: 32px;
+          }
+      
+          
+    
+      
+          .caregivers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+            max-width: 1400px; /* Ensure container width is consistent */
+           
+    
+          }
+      
+          /* Blog post styles */
+          .caregivers-post {
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            box-shadow: 12px 12px 12px rgba(63, 63, 63, 0.15);
+          }
+    
+          .caregivers-post-header{
+            flex: 1;
+            align-content: center;
+            background-color:aquamarine;
+            padding: 20px;
+          }
+    
+          .caregivers-post-header-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 50%;
+            padding: 10px; /* Add padding around the image */
+            width: 200px; /* Fixed width for the circular header */
+            height: 200px; /* Fixed height for the circular header */
+            margin: 0 auto; /* Center the header within the post */
+          }
+          
+      
+          .caregivers-post-header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure the image scales properly */
+            border-radius: 50%; /* Makes the image circular */
+          }
+      
+          .caregivers-post-content h2 {
+            text-align: center;
+            margin: 0;
+            font-size:xx-large;
+            color: var(--color-header-title);
+          }
+      
+          
+    
+    
+          .caregivers-post-content {
+            flex:1.5;
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+          }
+          
+         
+          
+          
+          .caregiver-tags-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Two equal-width columns */
+            place-items: center;
+            
+        }
+        
+        .tags-group {
+            display: flex;
+            flex-direction: column; /* Tags stack vertically within each group */
+            
+        }
+        
+        
+        .tags-group .tag {
+            background-color: #d9dbdb;
+            color: rgb(85, 85, 85);
+            font-size: 0.75rem;
+            padding:2;
+            border-radius: 10px;
+            text-align: center;
+            white-space: nowrap; /* Prevent tags from breaking into multiple lines */
+           
+        }
+        
+       
+        
+        @media (max-width: 768px) {
+            .caregiver-tags-section {
+                grid-template-columns: repeat(2, 1fr); /* Ensure two columns even on medium screens */
+               
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .caregiver-tags-section {
+                grid-template-columns: 1fr; /* Single column layout for small screens */
+            }
+        }
+    
+        
+        
+        
+        
+        
+        
+        
+          .caregivers-read-more {
+            flex: 0.2;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            background-color: rgb(233, 231, 231);
+           padding: 10px;
+          }
+      
+          .caregivers-read-more a {
+            display: inline-block;
+            padding: 8px 24px;
+            background:#39b0ff;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+          }
+      
+          .caregivers-see-more {
+            display: flex; /* Enables flexbox for alignment */
+        justify-content: center; /* Horizontally centers the button */
+        align-items: center; /* Vertically centers the button */
+        margin: 20px 0; /* Add spacing above and below the button */
+        text-align: center;
+          }
+      
+          .caregivers-see-more button {
+            padding: 12px 32px;
+            background: var(--color-trust-blue);
+            color: var(--white);
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+          }
+      
+          /* Hover Effects */
+          .caregivers-post:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          }
+      
+          
+      
+          .caregivers-read-more a:hover {
+            background: var(--color-btn-primary-hover);
+          }
+      
+          .caregivers-see-more button:hover {
+            background: var(--color-btn-upload-hover);
+          }
+      
+          /* Media Queries */    @media (max-width: 768px) {
+            .caregivers-wrapper {
+              padding: 16px;
+            }
+        
+            .caregivers-container {
+              gap: 16px;
+            }
+          }
+      
+          @media (max-width: 480px) {
+        
+            .caregivers-post {
+              margin: 0 auto;
+              max-width: 100%;
+            }
+          }
+      
+        
+      
+       
+        .a-b-action-buttons i {
+          width: 16px;
+          height: 16px;
+        }
+      
+        
+      
+    
+    
+    
+    
+        .caregiver-personal-info-tag {
+            display: inline-block;
+            margin-top: 10px; 
+            padding: 5px 10px;
+            background-color: #e8f5e9; 
+            color: #43a047;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            width: 30%;
+          }
+          
+          .caregiver-personal-info-details{
+        
+            display: flex;
+            flex-direction: column;
+            justify-content:center;
+            align-items: center;
+           
+          }
+          .caregiver-personal-info-details h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #000000;
+          }
+          
+          .caregiver-personal-info-details p {
+            
+            color: #444343;
+            display: flex;
+            align-items: center;
+           
+        }
+        
+        .consultant-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+    
+        .consultant-rating i {
+            color: #ddd;
+            font-size: 1.2rem;
+        }
+    
+        .consultant-rating i.active {
+            color: #FFD700;
+        }
+    
+        .consultant-rating .rating-value {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+        
+    
+       
+    
+        @media (max-width: 1068px) {
+            .caregivers-container {
+                grid-template-columns: repeat(3, 1fr); /* Two columns for medium screens */
+            }
+        }
+        @media (max-width: 768px) {
+            .caregivers-container {
+                grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+            }
+        }
+    
+        
+        @media (max-width: 480px) {
+            .caregivers-container {
+                grid-template-columns: 1fr; /* Single column for smaller screens */
+            }
+        }
+    
+    
+    
+    
+    
+    
+    
+        .filter-sort-bar {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      background: #f1eded;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .filter-sort-bar form {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 15px;
+      flex: 1;
+    }
+    
+    .sort-options {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .sort-options .filter-group {
+      min-width: 100px;
+      margin-bottom: 18px;
+    }
+    
+    .filter-group, .sort-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 130px;
+    }
+    
+    .filter-group label, .sort-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a237e;
+    }
+    
+    .filter-group select, 
+    .filter-group input,
+    .sort-group select {
+      padding: 8px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      width: 100%;
+      height: 38px;
+      box-sizing: border-box;
+      background-color: #fff;
+      outline: none;
+    }
+    
+    /* Placeholder styles */
+    .filter-group input::placeholder,
+    .filter-group select::placeholder,
+    .sort-group select::placeholder {
+        font-size: 0.8rem;
+        color: #999;
+    }
+    
+    /* For select elements that don't support placeholder directly */
+    .filter-group select option:first-child,
+    .sort-group select option:first-child {
+        font-size: 0.8rem;
+        color: #999;
+    }
+    
+    /* For date input placeholder */
+    .filter-group input[type="date"]::placeholder {
+        font-size: 0.8rem;
+        color: #999;
+    }
+    
+    /* For search input placeholder */
+    .filter-group input[type="search"]::placeholder {
+        font-size: 0.8rem;
+        color: #999;
+    }
+    
+    .filter-group input[type="search"] {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3ccircle cx='11' cy='11' r='8'%3e%3c/circle%3e%3cline x1='21' y1='21' x2='16.65' y2='16.65'%3e%3c/line%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px;
+      padding-right: 35px;
+    }
+    
+    .filter-group input[type="date"] {
+      padding-right: 12px;
+    }
+    
+    .apply-button {
+      width: 120px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: white;
+      background-color: #08DCC1;
+      transition: background-color 0.3s;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      margin-bottom: 16px;
+    }
+    
+    .apply-button:hover {
+      background-color: #06b5a1;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+      .filter-sort-bar form {
+        flex-wrap: wrap;
+      }
+      
+      .filters {
+        flex-wrap: wrap;
+      }
+      
+      .filter-group, .sort-group {
+        min-width: 150px;
+        flex: 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .filter-sort-bar {
+        padding: 12px;
+      }
+      
+      .sort-options {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .apply-button {
+        margin-top: 0;
+        width: 100px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .filter-group, .sort-group {
+        width: 100%;
+      }
+      
+      .apply-button {
+        width: 100%;
+      }
+    }
+    
+    /* Add this to your existing CSS file for careseeker/viewCaregivers */
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    
+    .page-link {
+      display: inline-block;
+      padding: 8px 12px;
+      margin: 0 3px;
+      border: 1px solid #ddd;
+      color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .page-link:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .current-page {
+      background-color: #2d9cf7;
+      color: white;
+      border-color: #2d9cf7;
+    }
+    
+    .page-ellipsis {
+      padding: 8px 5px;
+      margin: 0 3px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .pagination {
+          margin: 20px 0;
+      }
+      
+      .page-link {
+          padding: 6px 10px;
+          margin: 2px;
+      }
+    
+      #date-filter,
+    #availability-filter {
+      margin-left: 10px;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    
+    }
+    
+    /* No Results Message */
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    
+    .no-results h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .no-results p {
+        color: #666;
+    }
+    

@@ -1,0 +1,224 @@
+.m-i-main-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+}
+  .m-i-profile-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .m-i-profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+  }
+
+  .m-i-profile-image:hover {
+    transform: scale(1.02);
+  }
+
+  .m-i-profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .m-i-profile-info .name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+
+  .m-i-profile-info .email {
+    font-size: 1.1rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .m-i-profile-info .email svg {
+    width: 20px;
+    height: 20px;
+    fill: #64748b;
+  }
+.m-i-request-id {
+  font-size: 1.4rem;
+  color: #1a237e;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.m-i-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.m-i-input-group {
+  margin-bottom: 24px;
+}
+
+.m-i-input-group span {
+  display: block;
+  color: #4a5568;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.m-i-input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.m-i-input-group input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.m-i-input-group input[readonly] {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+}
+
+.m-i-button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.m-i-submit-btn,
+.m-i-cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.m-i-submit-btn {
+  background: var(--color-btn-update);
+  color: var(--white);
+}
+
+.m-i-submit-btn:hover {
+  background: var(--color-btn-update-hover);
+  transform: translateY(-1px);
+}
+
+.m-i-cancel-btn {
+  background: var(--color-btn-cancel);
+  color: var(--white);
+}
+
+.m-i-cancel-btn:hover {
+  background: var(--color-btn-cancel-hover);
+  transform: translateY(-1px);
+}
+
+
+.m-i-submit-btn[disabled] {
+  pointer-events: none;
+  background: var(--color-warm-gray);
+  color: var(--color-text-secondary);
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+  .m-i-main-container {
+    margin: 1rem;
+    padding: 24px;
+  }
+  
+  .m-i-form-grid {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .m-i-profile-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .m-i-profile-image {
+    margin: 0 auto;
+  }
+
+  .m-i-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .m-i-button-group {
+    flex-direction: column;
+  }
+
+  .m-i-submit-btn,
+  .m-i-cancel-btn {
+    width: 100%;
+  }
+}
+
+.m-i-countdown {
+  padding: 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.m-i-countdown.upcoming {
+  background-color: #e6fffa;
+  color: #38a169;
+  border: 1px solid #38a169;
+}
+
+.m-i-countdown.overdue {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+}
+
+.m-i-delete-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: #dc3545;
+    color: var(--white);
+}
+
+.m-i-delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}

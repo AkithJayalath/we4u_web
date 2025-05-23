@@ -2,7 +2,9 @@
 <body>
 <!-- Top navbar -->
 <?php require APPROOT.'/views/includes/components/topnavbar.php'; ?>
-<div class="top-container">
+<page-body-container>
+<?php require APPROOT . '/views/includes/components/sidebar.php'; ?>
+<div class="user-careseeker-top-container">
     <div class="container-edit">
    
        
@@ -10,11 +12,11 @@
         <header>
             <h2>Edit Profile</h2>
         </header>
-        <div class="gradient-bar-edit"></div> <!-- Gradient bar behind the profile section -->
+        <div class="gradient-bar-edit"></div> 
 
-        <!-- Profile form -->
+       
         <form action="<?php echo URLROOT; ?>/users/editProfile" method="POST" class="profile-form" enctype="multipart/form-data">
-            <!-- Profile image section inside form with new class -->
+           
             <div class="profile-image-wrapper">
                 <div class="profile-pic-container" onclick="triggerUpload()">
                 <img src="<?= isset($data['profile_picture']) && $data['profile_picture'] 
@@ -23,7 +25,7 @@
                             alt="Profile Picture" class="profile-pic" id="profile_image_placeholder">
 
                     <div class="upload-overlay">
-                        <span>Upload your photo</span>
+                        <span>Upload  photo</span>
                     </div>
                     <input type="file" id="profileImageUpload" name="profile_picture" accept="image/*" style="display: none;" onchange="previewImage(event)">
                 </div>
@@ -36,7 +38,7 @@
             </div>
             <span class="form-invalid"><?php echo $data['profile_picture_err']; ?></span>
 
-            <!-- Form fields in two columns -->
+           
             <div class="form-left">
                 <label>Username</label>
                 <input type="text" name="username" value="<?php echo $data['username']; ?>">
@@ -80,5 +82,6 @@
         </form>
     </div>
 </div>
+</page-body-container>
 <script src="<?php echo URLROOT; ?>/js/profilePicUpload.js"></script>
 <?php require APPROOT.'/views/includes/footer.php' ?>
